@@ -775,7 +775,6 @@ export default {
     exploreProgramsSub: 'Learn how KKOO works for shoppers, sellers, partners, and couriers.',
     explorePersonalDesc: 'Shop, eat, ride, and earn rewards',
     exploreBusinessDesc: 'Sell with catalog, orders, and payouts',
-    exploreMerchantDesc: 'Partner program for growing shops',
     exploreRestaurants: 'Restaurants',
     exploreRestaurantsDesc: 'Menus, storefronts, and delivery',
     exploreHotels: 'Hotels',
