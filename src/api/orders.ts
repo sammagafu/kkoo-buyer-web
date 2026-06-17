@@ -3,8 +3,10 @@ import client from './client'
 /** User orders (auth). API.md: create, list, get, cancel. */
 export const ordersUserApi = {
   create(data: {
-    delivery_address_id: number
+    delivery_address_id?: number
     delivery_location_text?: string
+    fulfillment_type?: string
+    party_size?: number
     delivery_lat?: number
     delivery_lng?: number
     delivery_zone?: string

@@ -221,7 +221,12 @@ function flattenMenu(data: RestaurantMenuResponse | HotelMenuResponse): GridProd
 }
 
 function setVenueFromMenu(data: RestaurantMenuResponse | HotelMenuResponse) {
-  const entity = data.restaurant ?? data.hotel
+  const entity =
+    'restaurant' in data
+      ? data.restaurant
+      : 'hotel' in data
+        ? data.hotel
+        : undefined
   if (entity) {
     venueName.value = entity.business_name || venueName.value
     venueAddress.value = entity.business_address || ''

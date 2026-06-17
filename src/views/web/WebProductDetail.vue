@@ -113,7 +113,10 @@ const addError = ref('')
 const quantity = ref(1)
 const selectedSkuId = ref<number | null>(null)
 
-const price = computed(() => product.value?.discount_price ?? product.value?.price ?? product.value?.base_price)
+const price = computed(() => {
+  const p = product.value as { discount_price?: number; price?: number; base_price?: number } | null
+  return p?.discount_price ?? p?.price ?? p?.base_price
+})
 const imageUrl = computed(() => resolveAssetUrl(product.value?.cover_image ?? product.value?.image_url))
 const skuOptions = computed(() => {
   const skus = (product.value?.skus ?? []) as SkuRow[]

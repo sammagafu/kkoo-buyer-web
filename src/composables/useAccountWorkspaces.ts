@@ -1,9 +1,22 @@
 import { computed } from 'vue'
+import type { RouteLocationRaw } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { ROLES } from '@/acl'
 import { BUYER_ACCOUNT_ROLE, useAuthStore, type AccountRole } from '@/stores/auth'
 import { adminWebPath, bizWebPath } from '@/config/cross-app-links'
+
+type WorkspaceCard = {
+  title: string
+  icon: string
+  available: boolean
+  status: string
+  role: AccountRole | null
+  route?: RouteLocationRaw
+  href?: string
+  cta: string
+  fallbackCta?: string
+}
 
 const roleMeta: Record<AccountRole, { label: string; icon: string }> = {
   [BUYER_ACCOUNT_ROLE]: { label: 'Buyer', icon: 'solar:cart-large-2-bold' },
@@ -36,7 +49,7 @@ export function useAccountWorkspaces() {
 
   const roleAvailability = computed(() => new Set(availableAccountRoles.value))
 
-  const workspaceCards = computed(() => [
+  const workspaceCards = computed((): WorkspaceCard[] => [
     {
       title: 'Buyer account',
       icon: 'solar:user-circle-bold',

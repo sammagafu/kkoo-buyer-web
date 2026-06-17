@@ -81,7 +81,7 @@ async function load() {
 async function cancel(ride: RideRow) {
   if (!ride.id) return
   try {
-    await ridesApi.cancelRide(ride.id)
+    await ridesApi.cancelRide(ride.id as string | number)
     await load()
   } catch (e) {
     error.value = formatApiError(e, t('buyerXp.ride.couldNotCancel'))

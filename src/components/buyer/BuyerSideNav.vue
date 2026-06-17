@@ -81,7 +81,8 @@ import { supportedLocales, setLocale, type LocaleCode } from '@/i18n'
 import logoLight from '@/assets/images/logo-light.svg'
 import logoDark from '@/assets/images/logo-dark.svg'
 
-type NavItem = { name: string; labelKey: string; icon: string; to: RouteLocationRaw; match?: string[] }
+type NavItemBase = { name: string; labelKey: string; icon: string; to: RouteLocationRaw; match?: string[] }
+type NavItem = NavItemBase & { label: string }
 
 const route = useRoute()
 const layoutStore = useLayoutStore()
@@ -124,7 +125,7 @@ const initials = computed(() => {
   return `${a}${b}`.toUpperCase() || '?'
 })
 
-const shopLinks = computed<NavItem[]>(() => {
+const shopLinks = computed((): NavItem[] => {
   // Make labels reactive to language switch.
   // `t()` alone isn't always tracked in computed chains depending on usage.
   void locale.value
@@ -140,7 +141,7 @@ const shopLinks = computed<NavItem[]>(() => {
 ].map((item) => ({ ...item, label: t(item.labelKey) }))
 })
 
-const accountLinks = computed<NavItem[]>(() => {
+const accountLinks = computed((): NavItem[] => {
   void locale.value
   return [
   { name: 'orders', labelKey: 'buyerXp.nav.orders', icon: 'solar:bag-check-bold', to: { name: 'buyer.orders' }, match: ['buyer.orders', 'buyer.order'] },
@@ -152,7 +153,7 @@ const accountLinks = computed<NavItem[]>(() => {
 ].map((item) => ({ ...item, label: t(item.labelKey) }))
 })
 
-function isActive(item: NavItem & { label: string }) {
+function isActive(item: NavItem) {
   const name = String(route.name ?? '')
   if (item.match?.includes(name)) return true
   return name === item.name

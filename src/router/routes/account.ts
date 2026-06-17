@@ -1,3 +1,4 @@
+import type { RouteLocationGeneric } from 'vue-router'
 import { setTitle } from './meta'
 
 const accountShell = { authRequired: true, buyerShell: true, buyerShoppingLayout: true }
@@ -6,7 +7,7 @@ export const accountRoutes = [
     {
         path: '/account',
         name: 'account.home',
-        redirect: (to) => ({ name: 'buyer.settings', query: to.query }),
+        redirect: (to: RouteLocationGeneric) => ({ name: 'buyer.settings', query: to.query }),
     },
     {
         path: '/account/profile',

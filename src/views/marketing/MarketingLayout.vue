@@ -301,6 +301,7 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import { useRouter } from 'vue-router'
+import type { RouteLocationRaw } from 'vue-router'
 import { ROLES } from '@/acl'
 import { supportedLocales, setLocale } from '@/i18n'
 import { appLinks } from '@/config/app-links'
@@ -389,7 +390,7 @@ const roleSwitchOptions = computed(() =>
 )
 
 const appLauncherItems = computed(() => {
-  const items: Array<{ label: string; icon: string; to?: { name: string }; href?: string }> = [
+  const items: Array<{ label: string; icon: string; to?: RouteLocationRaw; href?: string }> = [
     { label: 'Buyer account', icon: 'solar:user-circle-bold', to: isAuthenticated.value ? buyerRoutes.account : buyerRoutes.signIn },
     { label: 'Marketplace', icon: 'solar:cart-large-2-bold', to: buyerRoutes.marketplace },
     { label: 'Groceries', icon: 'solar:bag-2-bold', to: buyerRoutes.grocery },

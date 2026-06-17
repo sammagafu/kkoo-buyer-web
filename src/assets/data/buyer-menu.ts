@@ -1,4 +1,5 @@
 import type { MenuItemType } from '@/types/menu'
+import type { RouteType } from '@/types/index'
 import { buyerRoutes } from '@/config/landing-links'
 import { adminWebPath, bizWebPath } from '@/config/cross-app-links'
 import { ROLES } from '@/acl'
@@ -41,25 +42,25 @@ export function getBuyerMenuItems(
       key: 'marketplace',
       icon: 'solar:cart-large-2-bold',
       label: 'Marketplace',
-      route: buyerRoutes.marketplace,
+      route: buyerRoutes.marketplace as RouteType,
     },
     {
       key: 'eats',
       icon: 'solar:cup-hot-bold',
       label: 'Eats',
-      route: buyerRoutes.eats,
+      route: buyerRoutes.eats as RouteType,
     },
     {
       key: 'grocery',
       icon: 'solar:bag-2-bold',
       label: 'Groceries',
-      route: buyerRoutes.grocery,
+      route: buyerRoutes.grocery as RouteType,
     },
     {
       key: 'discover',
       icon: 'solar:calendar-bold',
       label: 'Discover',
-      route: buyerRoutes.discover,
+      route: buyerRoutes.discover as RouteType,
     },
   ]
 

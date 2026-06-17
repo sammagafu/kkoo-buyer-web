@@ -207,6 +207,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import type { RouteLocationRaw } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
@@ -252,7 +253,7 @@ const localeShortLabel = computed(() => {
 
 type MobileNavItem = {
   label: string
-  to?: { name: string; hash?: string }
+  to?: RouteLocationRaw
   href?: string
   icon?: string
   external?: boolean
