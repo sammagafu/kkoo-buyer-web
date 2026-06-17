@@ -139,18 +139,14 @@
             class="d-flex align-items-center justify-content-start flex-wrap gap-1 gap-lg-2 gap-xl-3 lp-nav-links lp-header-nav flex-grow-1 min-w-0"
             aria-label="Primary"
           >
-            <router-link to="/" class="lp-nav-link">{{ t('landing.navHome') }}</router-link>
             <router-link
-              v-for="vertical in shopVerticals"
-              :key="vertical.key"
-              :to="vertical.route"
+              v-for="item in primaryNavItems"
+              :key="item.key"
+              :to="item.route"
               class="lp-nav-link"
             >
-              {{ t(vertical.labelKey) }}
+              {{ t(item.labelKey) }}
             </router-link>
-            <router-link :to="buyerRoutes.business" class="lp-nav-link">{{ t('landing.navSell') }}</router-link>
-            <router-link :to="landingAnchors.work" class="lp-nav-link">{{ t('landing.navWork') }}</router-link>
-            <router-link :to="buyerRoutes.community" class="lp-nav-link">{{ t('landing.navCommunity') }}</router-link>
           </nav>
           <div class="d-flex align-items-center gap-2 flex-shrink-0 ms-auto lp-header-actions">
             <button
@@ -169,66 +165,30 @@
                 <Icon icon="solar:moon-bold" class="lp-theme-switch-icon lp-theme-switch-icon--moon" aria-hidden="true" />
               </span>
             </button>
-            <b-dropdown
+            <KkooAccountButton v-if="!isAuthenticated" variant="accent" size="sm" />
+            <b-button
+              v-else
               variant="link"
               size="sm"
-              no-caret
-              toggle-class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--sm lp-app-launcher-trigger border-0 p-0 d-inline-flex align-items-center justify-content-center text-decoration-none shadow-none"
-              menu-class="dropdown-menu-end lp-app-launcher-menu"
+              class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--sm border-0 p-0 d-inline-flex align-items-center text-decoration-none shadow-none"
+              :to="accountButtonRoute"
             >
-              <template #button-content>
-                <Icon icon="solar:widget-4-bold" class="lp-app-launcher-trigger-icon" />
-              </template>
-              <div class="lp-app-launcher-panel">
-                <div class="lp-app-launcher-head">
-                  <div>
-                    <p class="lp-app-launcher-title mb-0">All apps</p>
-                    <p class="lp-app-launcher-copy mb-0">Open any KKOO experience from one menu.</p>
-                  </div>
-                </div>
-                <div v-if="isAuthenticated" class="lp-app-launcher-account">
-                  <div class="lp-app-launcher-account-head">
-                    <span class="lp-app-launcher-account-avatar">
-                      <Icon icon="solar:user-circle-bold-duotone" />
-                    </span>
-                    <div>
-                      <p class="lp-app-launcher-account-label mb-0">Signed in</p>
-                      <p class="lp-app-launcher-account-name mb-0">{{ signedInName }}</p>
-                    </div>
-                  </div>
-                  <div class="lp-app-launcher-role-row">
-                    <button
-                      v-for="roleOption in roleSwitchOptions"
-                      :key="roleOption.role"
-                      type="button"
-                      class="lp-app-launcher-role-chip"
-                      :class="{ 'lp-app-launcher-role-chip--active': activeAccountRole === roleOption.role }"
-                      @click="switchLauncherRole(roleOption.role)"
-                    >
-                      <Icon :icon="roleOption.icon" />
-                      <span>{{ roleOption.label }}</span>
-                    </button>
-                  </div>
-                </div>
-                <div class="lp-app-launcher-grid">
-                  <component
-                    v-for="item in appLauncherItems"
-                    :key="item.label"
-                    :is="item.href ? 'a' : 'router-link'"
-                    :href="item.href"
-                    :to="item.to"
-                    class="lp-app-launcher-item"
-                    :target="item.href ? '_blank' : undefined"
-                    :rel="item.href ? 'noopener noreferrer' : undefined"
-                  >
-                    <span class="lp-app-launcher-item-icon">
-                      <Icon :icon="item.icon" />
-                    </span>
-                    <span class="lp-app-launcher-item-label">{{ item.label }}</span>
-                  </component>
-                </div>
-              </div>
-            </b-dropdown>
+              <span class="lp-btn-pill__label">{{ accountButtonLabel }}</span>
+              <span class="lp-btn-pill__well" aria-hidden="true">
+                <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
+              </span>
+            </b-button>
+            <b-button
+              variant="link"
+              size="sm"
+              class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--sm border-0 p-0 d-inline-flex align-items-center text-decoration-none shadow-none"
+              :to="landingAnchors.download"
+            >
+              <span class="lp-btn-pill__label">{{ t('landing.headerGetApp') }}</span>
+              <span class="lp-btn-pill__well" aria-hidden="true">
+                <Icon icon="solar:smartphone-2-bold" class="lp-btn-pill__icon" />
+              </span>
+            </b-button>
             <b-dropdown variant="link" size="sm" no-caret toggle-class="lp-btn-pill lp-btn-pill--ghost lp-btn-pill--sm border-0 p-0 d-inline-flex align-items-center lp-lang-toggle text-decoration-none shadow-none" menu-class="dropdown-menu-end">
               <template #button-content>
                 <span class="lp-lang-label lp-btn-pill__label">{{ currentLocaleName }}</span>
@@ -245,17 +205,6 @@
                 {{ loc.name }}
               </b-dropdown-item>
             </b-dropdown>
-            <b-button
-              variant="link"
-              size="sm"
-              class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--sm border-0 p-0 d-inline-flex align-items-center text-decoration-none shadow-none"
-              :to="accountButtonRoute"
-            >
-              <span class="lp-btn-pill__label">{{ accountButtonLabel }}</span>
-              <span class="lp-btn-pill__well" aria-hidden="true">
-                <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
-              </span>
-            </b-button>
           </div>
         </div>
       </b-container>
@@ -273,23 +222,23 @@
           </div>
         </template>
         <nav class="d-flex flex-column gap-2 mb-4 lp-mobile-drawer-nav" aria-label="Primary">
-          <router-link to="/" class="lp-nav-link py-3" @click="mobileMenuOpen = false">{{ t('landing.navHome') }}</router-link>
           <router-link
-            v-for="vertical in shopVerticals"
-            :key="vertical.key"
-            :to="vertical.route"
+            v-for="item in primaryNavItems"
+            :key="item.key"
+            :to="item.route"
             class="lp-nav-link py-3"
             @click="mobileMenuOpen = false"
           >
-            {{ t(vertical.labelKey) }}
+            {{ t(item.labelKey) }}
           </router-link>
-          <router-link :to="buyerRoutes.business" class="lp-nav-link py-3" @click="mobileMenuOpen = false">{{ t('landing.navSell') }}</router-link>
-          <router-link :to="landingAnchors.work" class="lp-nav-link py-3" @click="mobileMenuOpen = false">{{ t('landing.navWork') }}</router-link>
-          <router-link :to="buyerRoutes.community" class="lp-nav-link py-3" @click="mobileMenuOpen = false">{{ t('landing.navCommunity') }}</router-link>
-          <a :href="bizWebUrl" target="_blank" rel="noopener noreferrer" class="lp-nav-link py-3" @click="mobileMenuOpen = false">{{ t('landing.navBusiness') }}</a>
+          <router-link :to="landingAnchors.download" class="lp-nav-link py-3" @click="mobileMenuOpen = false">
+            {{ t('landing.headerGetApp') }}
+          </router-link>
         </nav>
-        <div class="mb-4">
+        <div class="mb-4 d-flex flex-column gap-2">
+          <KkooAccountButton v-if="!isAuthenticated" variant="accent" size="sm" block @click="mobileMenuOpen = false" />
           <b-button
+            v-else
             variant="link"
             class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--sm w-100 border-0 p-0 d-flex text-decoration-none shadow-none"
             :to="accountButtonRoute"
@@ -359,7 +308,8 @@ import { useLayoutStore } from '@/stores/layout'
 import { BUYER_ACCOUNT_ROLE, useAuthStore, type AccountRole } from '@/stores/auth'
 import LandingHeader from '@/views/marketing/partials/LandingHeader.vue'
 import LandingFooter from '@/views/marketing/partials/LandingFooter.vue'
-import { buyerRoutes, landingAnchors, shopVerticals, bizWebUrl } from '@/config/landing-links'
+import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
+import { buyerRoutes, landingAnchors, primaryNavItems, bizWebUrl } from '@/config/landing-links'
 import logoLight from '@/assets/images/logo-light.svg'
 import logoDark from '@/assets/images/logo-dark.svg'
 

@@ -31,6 +31,24 @@ export const authRoutes = [
         redirect: (to: RouteLocationGeneric) => ({ name: 'auth.sign-up', query: { ...to.query, as: 'seller' } }),
     },
     {
+        path: '/auth/oauth/callback',
+        name: 'auth.oauth-callback',
+        meta: { title: setTitle('Signing in') },
+        component: () => import('@/views/auth/oauth-callback.vue'),
+    },
+    {
+        path: '/account/oauth',
+        name: 'account.oauth',
+        meta: { title: setTitle('KKOO Account') },
+        component: () => import('@/views/account/OAuthAuthorize.vue'),
+    },
+    {
+        path: '/mobile/oauth/callback',
+        name: 'mobile.oauth-callback',
+        meta: { title: setTitle('Mobile sign-in') },
+        component: () => import('@/views/auth/mobile-oauth-callback.vue'),
+    },
+    {
         path: '/auth/lock-screen',
         name: 'auth.lock-screen',
         meta: {

@@ -1,8 +1,9 @@
 <template>
-  <router-link
-    :to="targetRoute"
-    class="text-decoration-none d-inline-flex align-items-center"
+  <button
+    type="button"
+    class="text-decoration-none d-inline-flex align-items-center border-0 bg-transparent p-0"
     :class="buttonClass"
+    @click="onClick"
   >
     <span class="lp-btn-pill__label d-inline-flex align-items-center gap-2">
       <Icon :icon="iconName" class="kkoo-account-btn__lead-icon" aria-hidden="true" />
@@ -11,11 +12,12 @@
     <span class="lp-btn-pill__well" aria-hidden="true">
       <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
     </span>
-  </router-link>
+  </button>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
 import { useKkooAccountAuth } from '@/composables/useKkooAccountAuth'
@@ -40,14 +42,16 @@ const props = withDefaults(
 )
 
 const { t } = useI18n()
-const { isAuthenticated, signInRoute, dashboardRoute } = useKkooAccountAuth()
+const router = useRouter()
+const { isAuthenticated, signInWithKkooAccount, dashboardRoute } = useKkooAccountAuth()
 
-const targetRoute = computed(() => {
+function onClick() {
   if (isAuthenticated.value && !props.forceSignIn) {
-    return dashboardRoute.value
+    void router.push(dashboardRoute.value)
+    return
   }
-  return signInRoute(props.redirectFrom)
-})
+  signInWithKkooAccount(props.redirectFrom)
+}
 
 const label = computed(() => {
   if (isAuthenticated.value && !props.forceSignIn) {

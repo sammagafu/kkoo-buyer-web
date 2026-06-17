@@ -1,6 +1,6 @@
 {
-  "name": "KKOO Admin Dashboard",
-  "short_name": "KKOO Admin",
+  "name": "KKOO — Shop, eat, order",
+  "short_name": "KKOO",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -9,12 +9,8 @@
     {
       "src": "/favicon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
-    },
-    {
-      "src": "/favicon.ico",
-      "sizes": "16x16 32x32 48x48",
-      "type": "image/x-icon"
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ]
 }

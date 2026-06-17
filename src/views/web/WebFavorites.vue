@@ -18,7 +18,7 @@
     <section class="lp-section">
       <b-container class="px-3 px-sm-4 px-lg-4">
         <b-alert v-if="!auth.isAuthenticated" variant="warning" show class="web-fav-auth-alert">
-          <p class="mb-3 mb-md-0">Sign in with your KKOO Account to view and manage saved items.</p>
+          <p class="mb-3 mb-md-0">{{ t('auth.favoritesSignInPrompt') }}</p>
           <KkooAccountButton variant="primary" size="sm" redirect-from="/favorites" force-sign-in />
         </b-alert>
         <div v-else class="fav-grid">
@@ -51,10 +51,12 @@ import MarketingLayout from '@/views/marketing/MarketingLayout.vue'
 import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
 import { wishlistApi, cartApi } from '@/api'
 import { useAuthStore } from '@/stores/auth'
+import { useI18n } from 'vue-i18n'
 
 type FavItem = { id?: number; product_id?: number; title?: string; description?: string; price?: number; base_price?: number; skus?: { id?: number }[] }
 
 const auth = useAuthStore()
+const { t } = useI18n()
 const favorites = ref<FavItem[]>([])
 const message = ref('')
 const error = ref('')

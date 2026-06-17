@@ -29,7 +29,7 @@
     <section class="lp-section">
       <b-container class="px-3 px-sm-4 px-lg-4">
         <b-alert v-if="!isAuthenticated" variant="warning" show class="mb-4 webcheckout-auth-alert">
-          <p class="mb-3 mb-md-0">Sign in with your KKOO Account to place web orders — same phone number as the app.</p>
+          <p class="mb-3 mb-md-0">{{ t('auth.checkoutSignInPrompt') }}</p>
           <KkooAccountButton variant="primary" size="sm" redirect-from="/checkout" force-sign-in />
         </b-alert>
 
@@ -126,11 +126,13 @@ import MarketingLayout from '@/views/marketing/MarketingLayout.vue'
 import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
 import { cartApi, addressesApi, ordersUserApi } from '@/api'
 import { useAuthStore } from '@/stores/auth'
+import { useI18n } from 'vue-i18n'
 import type { AddressPayload } from '@/api/addresses'
 
 type CartItem = { id?: number; item_id?: number; quantity: number; product?: { title?: string; price?: number; base_price?: number } }
 
 const auth = useAuthStore()
+const { t } = useI18n()
 const loadingCart = ref(false)
 const updating = ref(false)
 const loadingAddresses = ref(false)

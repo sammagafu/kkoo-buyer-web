@@ -186,7 +186,7 @@ const roleMeta: Record<AccountRole, { label: string; icon: string }> = {
 }
 
 const roleDefaultRoutes: Record<AccountRole, { name?: string; href?: string }> = {
-  [BUYER_ACCOUNT_ROLE]: { name: 'account.home' },
+  [BUYER_ACCOUNT_ROLE]: { name: 'buyer.marketplace' },
   [ROLES.SELLER]: { href: bizWebPath('/seller') },
   [ROLES.ADMIN]: { href: adminWebPath('/dashboard') },
   [ROLES.STAFF]: { href: adminWebPath('/dashboard') },
@@ -239,21 +239,21 @@ const frontendApps = computed(() => [
     icon: 'solar:cart-large-2-bold',
     badge: 'Buyer',
     copy: 'Shop products, browse storefronts, and stay on the buyer journey from discovery to delivery.',
-    to: { name: 'pages.personal' },
+    to: { name: 'buyer.marketplace' },
   },
   {
     title: 'Restaurants',
     icon: 'solar:chef-hat-bold',
     badge: 'Eat',
     copy: 'Open restaurant frontends, discover menus, and send buyers into storefront-led ordering flows.',
-    to: { name: 'pages.restaurants' },
+    to: { name: 'buyer.eats' },
   },
   {
     title: 'Hotels',
     icon: 'solar:bed-bold',
     badge: 'Stay',
     copy: 'Browse hotel listings and hospitality storefronts through the public stay frontend.',
-    to: { name: 'pages.hotels' },
+    to: { name: 'buyer.booking' },
   },
   {
     title: 'Community',

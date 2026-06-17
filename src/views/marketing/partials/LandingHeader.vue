@@ -51,27 +51,13 @@
 
         <nav class="mk-nav" aria-label="Primary">
           <router-link
-            v-for="item in desktopNavItems"
-            :key="item.label"
-            :to="item.to"
+            v-for="item in primaryNavItems"
+            :key="item.key"
+            :to="item.route"
             class="mk-link mk-nav__link"
           >
-            {{ t(item.label) }}
+            {{ t(item.labelKey) }}
           </router-link>
-          <b-dropdown variant="link" no-caret toggle-class="mk-nav__link mk-nav__link--dropdown p-0 border-0 shadow-none text-decoration-none">
-            <template #button-content>
-              {{ t('landing.navShop') }}
-              <Icon icon="solar:alt-arrow-down-linear" class="ms-1" />
-            </template>
-            <b-dropdown-item
-              v-for="vertical in shopVerticals"
-              :key="vertical.key"
-              :to="vertical.route"
-            >
-              <Icon :icon="vertical.icon" class="me-2" />
-              {{ t(vertical.labelKey) }}
-            </b-dropdown-item>
-          </b-dropdown>
         </nav>
 
         <div class="mk-header__actions">
@@ -125,10 +111,10 @@
             <KkooAccountButton variant="accent" size="sm" />
 
             <router-link
-              :to="{ name: 'auth.sign-up' }"
+              :to="landingAnchors.download"
               class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--sm text-decoration-none text-white d-inline-flex align-items-center"
             >
-              <span class="lp-btn-pill__label">{{ t('landing.heroCtaSignIn') }}</span>
+              <span class="lp-btn-pill__label">{{ t('landing.headerGetApp') }}</span>
               <span class="lp-btn-pill__well" aria-hidden="true">
                 <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
               </span>
@@ -204,11 +190,11 @@
           <KkooAccountButton variant="accent" size="sm" block @click="closeMobileNav" />
 
           <router-link
-            :to="{ name: 'auth.sign-up' }"
+            :to="landingAnchors.download"
             class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--sm w-100 border-0 p-0 d-flex text-decoration-none shadow-none text-white"
             @click="closeMobileNav"
           >
-            <span class="lp-btn-pill__label">{{ t('landing.heroCtaSignIn') }}</span>
+            <span class="lp-btn-pill__label">{{ t('landing.headerGetApp') }}</span>
             <span class="lp-btn-pill__well" aria-hidden="true">
               <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
             </span>
@@ -228,7 +214,7 @@ import { supportedLocales, setLocale } from '@/i18n'
 import { useLayoutStore } from '@/stores/layout'
 import { useKkooAccountAuth } from '@/composables/useKkooAccountAuth'
 import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
-import { buyerRoutes, landingAnchors, shopVerticals, marketingPrograms, bizWebUrl } from '@/config/landing-links'
+import { buyerRoutes, landingAnchors, primaryNavItems } from '@/config/landing-links'
 import logoLight from '@/assets/images/logo-light.svg'
 
 const { t, locale } = useI18n()
@@ -264,15 +250,6 @@ const localeShortLabel = computed(() => {
   return String(c).toUpperCase().slice(0, 2)
 })
 
-const desktopNavItems = [
-  { label: 'landing.navPersonal', to: buyerRoutes.personal },
-  { label: 'landing.navBusiness', to: buyerRoutes.business },
-  { label: 'landing.navSolutions', to: landingAnchors.solutions },
-  { label: 'landing.navOnboarding', to: landingAnchors.work },
-  { label: 'landing.navApps', to: landingAnchors.download },
-  { label: 'landing.navCommunity', to: buyerRoutes.community },
-] as const
-
 type MobileNavItem = {
   label: string
   to?: { name: string; hash?: string }
@@ -284,27 +261,13 @@ type MobileNavItem = {
 
 const mobileNavItems = computed((): MobileNavItem[] => [
   { label: 'landing.navHome', to: buyerRoutes.landing, icon: 'solar:home-2-bold', kind: 'route' },
-  ...shopVerticals.map((v) => ({
-    label: v.labelKey,
-    to: v.route,
-    icon: v.icon,
+  ...primaryNavItems.map((item) => ({
+    label: item.labelKey,
+    to: item.route,
+    icon: item.icon,
     kind: 'route' as const,
   })),
-  { label: 'landing.navSolutions', to: landingAnchors.solutions, icon: 'solar:widget-5-bold', kind: 'route' },
-  { label: 'landing.navOnboarding', to: landingAnchors.work, icon: 'solar:clipboard-list-bold', kind: 'route' },
-  { label: 'landing.navApps', to: landingAnchors.download, icon: 'solar:smartphone-2-bold', kind: 'route' },
-  { label: 'landing.navPersonal', to: buyerRoutes.personal, icon: 'solar:user-heart-bold', kind: 'route' },
-  { label: 'landing.navSell', to: buyerRoutes.business, icon: 'solar:shop-2-bold', kind: 'route' },
-  ...marketingPrograms
-    .filter((p) => !['personal', 'business', 'community'].includes(p.key))
-    .map((p) => ({
-      label: p.labelKey,
-      to: p.route,
-      icon: p.icon,
-      kind: 'route' as const,
-    })),
-  { label: 'landing.navCommunity', to: buyerRoutes.community, icon: 'solar:users-group-rounded-bold', kind: 'route' },
-  { label: 'landing.navBusiness', href: bizWebUrl, icon: 'solar:buildings-3-bold', external: true, kind: 'href' },
+  { label: 'landing.headerGetApp', to: landingAnchors.download, icon: 'solar:smartphone-2-bold', kind: 'route' },
 ])
 </script>
 
@@ -419,8 +382,9 @@ const mobileNavItems = computed((): MobileNavItem[] => [
 }
 
 .mk-header__row.d-lg-flex .mk-nav {
-  flex-wrap: nowrap;
-  gap: clamp(0.45rem, 0.9vw, 1rem);
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(0.4rem, 0.85vw, 0.9rem);
 }
 
 .mk-nav__link {

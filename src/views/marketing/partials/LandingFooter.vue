@@ -74,32 +74,22 @@
             </div>
 
             <small class="text-muted mk-footer__apps-note">
-              {{ t('landing.footerAppMarketplace') }} · {{ t('landing.footerAppEats') }} · {{ t('landing.footerAppRides') }}
+              {{ t('landing.footerAppNote') }}
             </small>
           </div>
         </div>
 
         <div class="mk-footer__links">
           <div class="mk-footer__col">
-            <h5>{{ t('landing.footerShopOnWeb') }}</h5>
+            <h5>{{ t('landing.footerExplore') }}</h5>
             <router-link
-              v-for="vertical in shopVerticals"
-              :key="vertical.key"
-              :to="vertical.route"
+              v-for="item in primaryNavItems"
+              :key="item.key"
+              :to="item.route"
             >
-              {{ t(vertical.labelKey) }}
+              {{ t(item.labelKey) }}
             </router-link>
-          </div>
-          <div class="mk-footer__col">
-            <h5>{{ t('landing.exploreProgramsTitle') }}</h5>
-            <router-link
-              v-for="program in marketingPrograms"
-              :key="program.key"
-              :to="program.route"
-            >
-              {{ t(program.labelKey) }}
-            </router-link>
-            <a :href="bizWebUrl" target="_blank" rel="noopener noreferrer">{{ t('landing.navBusiness') }}</a>
+            <router-link :to="landingAnchors.download">{{ t('landing.headerGetApp') }}</router-link>
           </div>
           <div class="mk-footer__col">
             <h5>{{ t('landing.footerProduct') }}</h5>
@@ -114,9 +104,8 @@
           </div>
           <div v-if="!isAuthenticated" class="mk-footer__col">
             <h5>{{ t('landing.footerPartners') }}</h5>
-            <router-link :to="buyerRoutes.business">{{ t('landing.footerBecomeSeller') }}</router-link>
             <router-link :to="buyerRoutes.partnerRegister">{{ t('landing.footerPartnerApi') }}</router-link>
-            <a :href="bizWebUrl" target="_blank" rel="noopener noreferrer">{{ t('landing.navBusiness') }}</a>
+            <router-link :to="buyerRoutes.careers">{{ t('landing.footerCareers') }}</router-link>
           </div>
           <div class="mk-footer__col">
             <h5>{{ t('landing.footerCompany') }}</h5>
@@ -163,7 +152,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import { appLinks } from '@/config/app-links'
-import { buyerRoutes, landingAnchors, shopVerticals, marketingPrograms, bizWebUrl } from '@/config/landing-links'
+import { buyerRoutes, landingAnchors, primaryNavItems } from '@/config/landing-links'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import logoLight from '@/assets/images/logo-light.svg'
 

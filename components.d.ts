@@ -44,6 +44,7 @@ declare module 'vue' {
     BProgress: typeof import('bootstrap-vue-next')['BProgress']
     BRow: typeof import('bootstrap-vue-next')['BRow']
     BSpinner: typeof import('bootstrap-vue-next')['BSpinner']
+    BuyerBottomNav: typeof import('./src/components/buyer/BuyerBottomNav.vue')['default']
     CatalogCategoryPicker: typeof import('./src/components/kkoo/CatalogCategoryPicker.vue')['default']
     CatalogListPaginationBar: typeof import('./src/components/CatalogListPaginationBar.vue')['default']
     ChatConversations: typeof import('./src/components/ChatConversations.vue')['default']

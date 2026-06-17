@@ -21,7 +21,10 @@ export function useAuthDisplay() {
     if (!isAuthenticated.value) {
       return { name: 'buyer.marketplace' as const }
     }
-    return { name: 'account.home' as const }
+    if (auth.isSeller || auth.isAdminOrStaff) {
+      return { name: 'account.home' as const }
+    }
+    return { name: 'buyer.marketplace' as const }
   })
 
   return {

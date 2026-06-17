@@ -11,7 +11,9 @@ export const buyerRoutes = {
   checkout: { name: 'buyer.checkout' },
   favorites: { name: 'buyer.favorites' },
   compare: { name: 'buyer.compare' },
-  account: { name: 'account.home' },
+  account: { name: 'buyer.profile' },
+  orders: { name: 'buyer.orders' },
+  search: { name: 'buyer.search' },
   signIn: { name: 'auth.sign-in' },
   signUp: { name: 'auth.sign-up' },
   sellerRegister: { name: 'auth.seller-register' },
@@ -37,6 +39,52 @@ export const landingAnchors = {
   work: { name: 'pages.landing', hash: '#work' },
   businesses: { name: 'pages.landing', hash: '#businesses' },
 } as const
+
+/** Primary marketing nav — focused consumer links (no admin/biz or vertical dropdowns). */
+export const primaryNavItems = [
+  {
+    key: 'discover',
+    route: buyerRoutes.discover,
+    labelKey: 'landing.navDiscover',
+    icon: 'solar:calendar-bold',
+  },
+  {
+    key: 'shop',
+    route: buyerRoutes.marketplace,
+    labelKey: 'landing.navShop',
+    icon: 'solar:cart-large-2-bold',
+  },
+  {
+    key: 'eat',
+    route: buyerRoutes.eats,
+    labelKey: 'landing.navEats',
+    icon: 'solar:cup-hot-bold',
+  },
+  {
+    key: 'carrier',
+    route: buyerRoutes.courier,
+    labelKey: 'landing.navCarrier',
+    icon: 'solar:delivery-bold',
+  },
+  {
+    key: 'earn',
+    route: buyerRoutes.shareEarn,
+    labelKey: 'landing.navEarn',
+    icon: 'solar:gift-bold',
+  },
+  {
+    key: 'jobs',
+    route: buyerRoutes.careers,
+    labelKey: 'landing.navJobs',
+    icon: 'solar:case-round-bold',
+  },
+  {
+    key: 'community',
+    route: buyerRoutes.community,
+    labelKey: 'landing.navCommunity',
+    icon: 'solar:users-group-rounded-bold',
+  },
+] as const
 
 /** Seller / CRM web app (separate deploy). */
 export const bizWebUrl =

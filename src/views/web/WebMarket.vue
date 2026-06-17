@@ -336,7 +336,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import MarketingLayout from '@/views/marketing/MarketingLayout.vue'
 import { superAppApi } from '@/api/superApp'
@@ -346,6 +346,7 @@ import { useAuthStore } from '@/stores/auth'
 import { formatApiError } from '@/utils/formatApiError'
 
 const props = defineProps<{ embed?: boolean }>()
+const route = useRoute()
 
 type Store = {
   seller_id?: number
@@ -620,6 +621,8 @@ function loadFavorites() {
 }
 
 onMounted(() => {
+  const q = String(route.query.q ?? '').trim()
+  if (q) searchTerm.value = q
   loadStores()
   loadFavorites()
   loadCategories()

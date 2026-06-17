@@ -34,11 +34,21 @@ router.beforeEach((to, from, next) => {
 
 /** Buyer web: only routes with meta.authRequired need login; any signed-in user is allowed. */
 router.beforeEach(async (routeTo, _routeFrom, next) => {
+  const auth = useAuthStore();
+  await auth.initialize();
+
+  if (auth.isAuthenticated) {
+    if (routeTo.name === 'pages.landing') {
+      return next(auth.defaultRouteAfterAuth());
+    }
+    if (routeTo.name === 'auth.sign-in' || routeTo.name === 'auth.sign-up') {
+      return next(auth.defaultRouteAfterAuth());
+    }
+  }
+
   const authRequired = routeTo.matched.some((route) => route.meta.authRequired);
   if (!authRequired) return next();
 
-  const auth = useAuthStore();
-  await auth.initialize();
   if (!auth.isAuthenticated) {
     return next({ name: 'auth.sign-in', query: { redirectedFrom: routeTo.fullPath } });
   }
