@@ -1,5 +1,5 @@
-const APP_CACHE = 'kkoo-admin-shell-v2'
-const STATIC_CACHE = 'kkoo-admin-static-v2'
+const APP_CACHE = 'kkoo-buyer-shell-v3'
+const STATIC_CACHE = 'kkoo-buyer-static-v3'
 const OFFLINE_ASSETS = ['/', '/index.html', '/favicon.svg', '/manifest.json']
 
 self.addEventListener('install', (event) => {
