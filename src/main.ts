@@ -56,8 +56,12 @@ const scheduleOfflineBootstrap = () => {
 
 scheduleOfflineBootstrap()
 
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
+// Disabled until HTTPS is live on kkooapp.co.tz (service worker returns 503 when TLS fails).
+// Re-enable after: sudo certbot --nginx -d kkooapp.co.tz ...
+if (false && 'serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
-    void navigator.serviceWorker.register('/sw.js')
+    void navigator.serviceWorker.getRegistrations().then((regs) => {
+      for (const reg of regs) void reg.unregister()
+    })
   })
 }
