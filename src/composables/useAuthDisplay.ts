@@ -2,6 +2,8 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 
+import { BUYER_DASHBOARD_ROUTE } from '@/constants/buyerDashboard'
+
 export function useAuthDisplay() {
   const auth = useAuthStore()
   const { user, isAuthenticated } = storeToRefs(auth)
@@ -19,12 +21,12 @@ export function useAuthDisplay() {
 
   const dashboardRoute = computed(() => {
     if (!isAuthenticated.value) {
-      return { name: 'buyer.marketplace' as const }
+      return BUYER_DASHBOARD_ROUTE
     }
     if (auth.isSeller || auth.isAdminOrStaff) {
-      return { name: 'account.home' as const }
+      return { name: 'buyer.profile' as const }
     }
-    return { name: 'buyer.marketplace' as const }
+    return BUYER_DASHBOARD_ROUTE
   })
 
   return {

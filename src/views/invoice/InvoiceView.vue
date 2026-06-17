@@ -21,7 +21,7 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const token = computed(() => (route.params.token as string) || '')
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1'
+const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1'
 const iframeSrc = computed(() => `${baseURL.replace(/\/$/, '')}/invoice/view/${encodeURIComponent(token.value)}`)
 const error = ref('')
 

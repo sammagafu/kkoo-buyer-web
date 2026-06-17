@@ -66,7 +66,7 @@ export function openChatStream(
     onOpen?: () => void
   }
 ): ChatStreamController {
-  const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1'
+  const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1'
   const url = `${baseURL}/chat/conversations/${conversationId}/stream/`
   const controller = new AbortController()
   const decoder = new TextDecoder()

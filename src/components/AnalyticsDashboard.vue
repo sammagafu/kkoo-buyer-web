@@ -341,7 +341,7 @@ const revenueSeries = computed(() => {
     border-radius: 8px;
     font-size: 14px;
     cursor: pointer;
-    background: white;
+    background: var(--kkoo-panel-bg);
 
     &:hover {
       border-color: #1976d2;
@@ -357,7 +357,7 @@ const revenueSeries = computed(() => {
 
   .metric-card {
     padding: 20px;
-    background: white;
+    background: var(--kkoo-panel-bg);
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     border-left: 4px solid #999;
@@ -409,7 +409,7 @@ const revenueSeries = computed(() => {
   }
 
   .chart-container {
-    background: white;
+    background: var(--kkoo-panel-bg);
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -497,7 +497,7 @@ const revenueSeries = computed(() => {
   }
 
   .insight-card {
-    background: white;
+    background: var(--kkoo-panel-bg);
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -552,7 +552,7 @@ const revenueSeries = computed(() => {
   }
 
   .performance-card {
-    background: white;
+    background: var(--kkoo-panel-bg);
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -597,7 +597,7 @@ const revenueSeries = computed(() => {
 }
 
 .health-section {
-  background: white;
+  background: var(--kkoo-panel-bg);
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);

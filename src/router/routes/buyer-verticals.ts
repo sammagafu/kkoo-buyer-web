@@ -1,14 +1,18 @@
 import { setTitle } from './meta'
+import { BUYER_DASHBOARD_PATH } from '@/constants/buyerDashboard'
 
-const buyerShell = { buyerShell: true }
+const buyerShell = { buyerShell: true, buyerShoppingLayout: true }
+const authShell = { authRequired: true, ...buyerShell }
 
 /** Canonical buyer vertical paths on kkooapp.co.tz (one SPA). */
 export const buyerVerticalRoutes = [
-  { path: '/home', redirect: '/marketplace' },
+  { path: '/home', redirect: BUYER_DASHBOARD_PATH },
+  { path: '/dashboard', name: 'buyer.dashboard', redirect: BUYER_DASHBOARD_PATH },
+  { path: '/market', name: 'buyer.market', redirect: BUYER_DASHBOARD_PATH },
   {
-    path: '/marketplace',
+    path: BUYER_DASHBOARD_PATH,
     name: 'buyer.marketplace',
-    meta: { title: setTitle('Marketplace'), ...buyerShell },
+    meta: { title: setTitle('Home'), buyerDashboard: true, ...buyerShell },
     component: () => import('@/views/web/WebMarket.vue'),
   },
   {
@@ -30,10 +34,34 @@ export const buyerVerticalRoutes = [
     component: () => import('@/views/web/WebGroceries.vue'),
   },
   {
+    path: '/pharmacy',
+    name: 'buyer.pharmacy',
+    meta: { title: setTitle('Pharmacy'), ...buyerShell },
+    component: () => import('@/views/web/WebPharmacy.vue'),
+  },
+  {
+    path: '/pharmacy/reminders',
+    name: 'buyer.pharmacy.reminders',
+    meta: { title: setTitle('Medicine reminders'), ...authShell },
+    component: () => import('@/views/web/WebPharmacyReminders.vue'),
+  },
+  {
+    path: '/services',
+    name: 'buyer.services',
+    meta: { title: setTitle('Services'), ...buyerShell },
+    component: () => import('@/views/web/WebServices.vue'),
+  },
+  {
+    path: '/nearby',
+    name: 'buyer.nearby',
+    meta: { title: setTitle('Nearby'), ...buyerShell },
+    component: () => import('@/views/web/WebNearby.vue'),
+  },
+  {
     path: '/send',
     name: 'buyer.send',
     meta: { title: setTitle('Send — Buy for me'), ...buyerShell },
-    component: () => import('@/views/web/WebApp.vue'),
+    component: () => import('@/views/web/WebSend.vue'),
   },
   {
     path: '/ride',
@@ -42,10 +70,78 @@ export const buyerVerticalRoutes = [
     component: () => import('@/views/web/WebRide.vue'),
   },
   {
+    path: '/rides',
+    name: 'buyer.rides',
+    meta: { title: setTitle('My rides'), ...authShell },
+    component: () => import('@/views/web/WebRideHistory.vue'),
+  },
+  {
+    path: '/rides/:id',
+    name: 'buyer.ride.detail',
+    meta: { title: setTitle('Ride'), ...authShell },
+    component: () => import('@/views/web/WebRideDetail.vue'),
+    props: true,
+  },
+  {
     path: '/booking',
     name: 'buyer.booking',
     meta: { title: setTitle('Booking'), ...buyerShell },
     component: () => import('@/views/web/WebBooking.vue'),
+  },
+  {
+    path: '/reservations',
+    name: 'buyer.reservations',
+    meta: { title: setTitle('Reservations'), ...authShell },
+    component: () => import('@/views/web/WebReservations.vue'),
+  },
+  {
+    path: '/eats/store/:sellerId',
+    name: 'buyer.eats.store',
+    meta: { title: setTitle('Restaurant'), venueVertical: 'eats', ...buyerShell },
+    component: () => import('@/views/web/WebVenueDetail.vue'),
+    props: true,
+  },
+  {
+    path: '/grocery/store/:sellerId',
+    name: 'buyer.grocery.store',
+    meta: { title: setTitle('Grocery store'), venueVertical: 'grocery', ...buyerShell },
+    component: () => import('@/views/web/WebVenueDetail.vue'),
+    props: true,
+  },
+  {
+    path: '/pharmacy/store/:sellerId',
+    name: 'buyer.pharmacy.store',
+    meta: { title: setTitle('Pharmacy store'), venueVertical: 'pharmacy', ...buyerShell },
+    component: () => import('@/views/web/WebVenueDetail.vue'),
+    props: true,
+  },
+  {
+    path: '/booking/hotel/:sellerId',
+    name: 'buyer.booking.hotel',
+    meta: { title: setTitle('Hotel'), venueVertical: 'hotel', ...buyerShell },
+    component: () => import('@/views/web/WebVenueDetail.vue'),
+    props: true,
+  },
+  {
+    path: '/product/:id',
+    name: 'buyer.product',
+    meta: { title: setTitle('Product'), ...buyerShell },
+    component: () => import('@/views/web/WebProductDetail.vue'),
+    props: true,
+  },
+  {
+    path: '/product/s/:slug',
+    name: 'buyer.product.slug',
+    meta: { title: setTitle('Product'), ...buyerShell },
+    component: () => import('@/views/web/WebProductDetail.vue'),
+    props: true,
+  },
+  {
+    path: '/category/:slug',
+    name: 'buyer.category',
+    meta: { title: setTitle('Category'), ...buyerShell },
+    component: () => import('@/views/web/WebCategoryDetail.vue'),
+    props: true,
   },
   {
     path: '/checkout',
@@ -56,19 +152,112 @@ export const buyerVerticalRoutes = [
   {
     path: '/orders',
     name: 'buyer.orders',
-    meta: { title: setTitle('Orders'), authRequired: true, ...buyerShell },
+    meta: { title: setTitle('Orders'), ...authShell },
     component: () => import('@/views/web/WebOrders.vue'),
+  },
+  {
+    path: '/orders/:id',
+    name: 'buyer.order',
+    meta: { title: setTitle('Order'), ...authShell },
+    component: () => import('@/views/web/WebOrderDetail.vue'),
+    props: true,
+  },
+  {
+    path: '/rewards',
+    name: 'buyer.rewards',
+    meta: { title: setTitle('Rewards'), ...authShell },
+    component: () => import('@/views/web/WebRewards.vue'),
+  },
+  {
+    path: '/wallet',
+    name: 'buyer.wallet',
+    meta: { title: setTitle('Wallet'), ...authShell },
+    component: () => import('@/views/web/WebWallet.vue'),
+  },
+  {
+    path: '/gamification',
+    name: 'buyer.gamification',
+    meta: { title: setTitle('XP & achievements'), ...authShell },
+    component: () => import('@/views/web/WebGamification.vue'),
+  },
+  {
+    path: '/weekly-pass',
+    name: 'buyer.weekly-pass',
+    meta: { title: setTitle('Weekly pass'), ...authShell },
+    component: () => import('@/views/web/WebWeeklyPass.vue'),
+  },
+  {
+    path: '/flash-sales',
+    name: 'buyer.flash-sales',
+    meta: { title: setTitle('Flash sales'), ...buyerShell },
+    component: () => import('@/views/web/WebFlashSales.vue'),
+  },
+  {
+    path: '/flash-sales/:slug',
+    name: 'buyer.flash-sale',
+    meta: { title: setTitle('Flash sale'), ...buyerShell },
+    component: () => import('@/views/web/WebFlashSaleDetail.vue'),
+    props: true,
+  },
+  {
+    path: '/referral',
+    name: 'buyer.referral',
+    meta: { title: setTitle('Refer friends'), ...authShell },
+    component: () => import('@/views/web/WebReferral.vue'),
+  },
+  {
+    path: '/premium',
+    name: 'buyer.premium',
+    meta: { title: setTitle('Premium'), ...buyerShell },
+    component: () => import('@/views/web/WebPremium.vue'),
+  },
+  {
+    path: '/wholesale',
+    name: 'buyer.wholesale',
+    meta: { title: setTitle('Wholesale'), ...buyerShell },
+    component: () => import('@/views/web/WebWholesale.vue'),
+  },
+  {
+    path: '/returns',
+    name: 'buyer.returns',
+    meta: { title: setTitle('Returns'), ...authShell },
+    component: () => import('@/views/web/WebReturns.vue'),
+  },
+  {
+    path: '/disputes',
+    name: 'buyer.disputes',
+    meta: { title: setTitle('Disputes'), ...authShell },
+    component: () => import('@/views/web/WebDisputes.vue'),
+  },
+  {
+    path: '/messages',
+    name: 'buyer.messages',
+    meta: { title: setTitle('Messages'), ...authShell },
+    component: () => import('@/views/web/WebMessages.vue'),
+  },
+  {
+    path: '/messages/:id',
+    name: 'buyer.messages.thread',
+    meta: { title: setTitle('Chat'), ...authShell },
+    component: () => import('@/views/web/WebMessages.vue'),
+    props: true,
+  },
+  {
+    path: '/settings',
+    name: 'buyer.settings',
+    meta: { title: setTitle('Settings'), ...authShell },
+    component: () => import('@/views/web/WebSettings.vue'),
   },
   {
     path: '/profile',
     name: 'buyer.profile',
-    meta: { title: setTitle('Profile'), authRequired: true, ...buyerShell },
+    meta: { title: setTitle('Profile'), ...authShell },
     component: () => import('@/views/web/WebBuyerProfile.vue'),
   },
   {
     path: '/favorites',
     name: 'buyer.favorites',
-    meta: { title: setTitle('Favorites'), authRequired: true, ...buyerShell },
+    meta: { title: setTitle('Favorites'), ...authShell },
     component: () => import('@/views/web/WebFavorites.vue'),
   },
   {
@@ -78,10 +267,11 @@ export const buyerVerticalRoutes = [
     component: () => import('@/views/web/WebCompare.vue'),
   },
   // Legacy /web/* paths and route names → canonical buyer routes
-  { path: '/web', name: 'web.hub', redirect: '/marketplace' },
-  { path: '/web/market', name: 'web.market', redirect: '/marketplace' },
+  { path: '/web', name: 'web.hub', redirect: BUYER_DASHBOARD_PATH },
+  { path: '/web/market', name: 'web.market', redirect: BUYER_DASHBOARD_PATH },
   { path: '/web/eats', name: 'web.eats', redirect: '/eats' },
   { path: '/web/groceries', name: 'web.groceries', redirect: '/grocery' },
+  { path: '/web/send', name: 'web.send', redirect: '/send' },
   { path: '/web/ride', name: 'web.ride', redirect: '/ride' },
   { path: '/web/booking', name: 'web.booking', redirect: '/booking' },
   { path: '/web/checkout', name: 'web.checkout', redirect: '/checkout' },

@@ -12,6 +12,8 @@ import {
   writeAdminAuthSession,
 } from '@/utils/adminAuthSessionStorage'
 import { jwtExpiresAtMs, refreshAccessTokenSingleFlight, startProactiveTokenRefresh, stopProactiveTokenRefresh } from '@/utils/tokenRefresh'
+import { BUYER_DASHBOARD_ROUTE } from '@/constants/buyerDashboard'
+import { applyLocaleFromPreference } from '@/i18n'
 
 export const BUYER_ACCOUNT_ROLE = 'buyer' as const
 export type AccountRole = Role | typeof BUYER_ACCOUNT_ROLE
@@ -181,6 +183,7 @@ export const useAuthStore = defineStore('auth_store', () => {
     if (tokens?.refresh) refreshToken.value = tokens.refresh
     role.value = inferRole(u)
     activeAccountRole.value = pickActiveAccountRole(u, activeAccountRole.value)
+    applyLocaleFromPreference(u?.language_preference)
     if (accessToken.value && refreshToken.value) {
       saveStored(accessToken.value, refreshToken.value, u, activeAccountRole.value)
       startProactiveTokenRefresh()
@@ -275,9 +278,9 @@ export const useAuthStore = defineStore('auth_store', () => {
   function defaultRouteAfterAuth(): { name: string; query?: Record<string, string> } {
     // Buyer web only — admin/seller dashboards live on separate apps.
     if (isSeller.value || isAdminOrStaff.value) {
-      return { name: 'account.home' }
+      return { name: 'buyer.profile' }
     }
-    return { name: 'buyer.marketplace' }
+    return BUYER_DASHBOARD_ROUTE as { name: string }
   }
 
   function clearPendingBackupCodes() {
@@ -308,6 +311,7 @@ export const useAuthStore = defineStore('auth_store', () => {
       user.value = u
       role.value = inferRole(u)
       activeAccountRole.value = pickActiveAccountRole(u, storedActiveAccountRole)
+      applyLocaleFromPreference(u.language_preference)
       if (role.value == null) await inferRolesFromProfileEndpoints()
       if (!sessionAllowedForApp(user.value, activeAccountRole.value, activePanelRole.value)) {
         await clearSession()

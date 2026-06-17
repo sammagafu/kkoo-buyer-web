@@ -1,0 +1,39 @@
+.kkoo-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+  line-height: 1;
+  color: inherit;
+}
+
+.kkoo-icon--sm {
+  font-size: 1rem;
+}
+
+.kkoo-icon--md {
+  font-size: 1.2rem;
+}
+
+.kkoo-icon--lg {
+  font-size: 1.45rem;
+}
+
+.kkoo-icon--xl {
+  font-size: 1.75rem;
+}
+
+.kkoo-icon--primary {
+  color: var(--kkoo-primary);
+}
+
+.kkoo-icon--muted {
+  color: var(--buyer-muted, #6a4c86);
+}
+
+.kkoo-icon--accent {
+  color: var(--kkoo-accent);
+}
+
+.kkoo-icon--inverse {
+  color: #fff;
+}

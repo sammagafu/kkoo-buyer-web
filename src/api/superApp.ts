@@ -58,11 +58,17 @@ export interface RestaurantListItem {
 export interface HotelListItem {
   user_id?: number
   seller_id?: number
+  store_slug?: string
   business_name?: string
   contact_phone?: string
   business_address?: string
+  business_latitude?: number
+  business_longitude?: number
   opening_hours?: string
   menu_slug?: string
+  average_rating?: number
+  distance_meters?: number
+  open_now?: boolean
 }
 
 /** Hotel menu response (API returns hotel + categories; same structure as restaurant menu). */
@@ -185,5 +191,24 @@ export const superAppApi = {
   /** GET /super-app/grocery-stores/:seller_id/products/ — store + products URL. */
   getGroceryStoreProducts(sellerId: number | string) {
     return client.get(`/super-app/grocery-stores/${sellerId}/products/`)
+  },
+  checkTableAvailability(params: { seller_user_id: number; reserved_at: string; party_size: number }) {
+    return client.get<{ available?: boolean; reason?: string }>('/super-app/table-reservations/check/', { params })
+  },
+  createTableReservation(body: {
+    seller_user_id: number
+    reserved_at: string
+    party_size: number
+    notes?: string
+  }) {
+    return client.post<{ id?: number; status?: string }>('/super-app/table-reservations/', body)
+  },
+  /** GET /users/me/hotel-reservations/ */
+  listMyHotelReservations() {
+    return client.get<{ results: Record<string, unknown>[] }>('/users/me/hotel-reservations/')
+  },
+  /** GET /users/me/table-reservations/ */
+  listMyTableReservations() {
+    return client.get<{ results: Record<string, unknown>[] }>('/users/me/table-reservations/')
   },
 }

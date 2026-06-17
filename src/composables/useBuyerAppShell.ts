@@ -1,16 +1,26 @@
 import { computed, watchEffect } from 'vue'
 import { useRoute, type RouteLocationRaw } from 'vue-router'
+import { BUYER_DASHBOARD_ROUTE } from '@/constants/buyerDashboard'
 
 export type BuyerTab = 'home' | 'search' | 'cart' | 'orders' | 'profile'
 
 const HOME_ROUTES = new Set([
   'buyer.marketplace',
+  'buyer.dashboard',
+  'buyer.market',
   'buyer.eats',
   'buyer.grocery',
+  'buyer.pharmacy',
   'buyer.ride',
   'buyer.booking',
   'buyer.send',
   'buyer.compare',
+  'buyer.services',
+  'buyer.nearby',
+  'buyer.flash-sales',
+  'buyer.search',
+  'buyer.wholesale',
+  'buyer.premium',
 ])
 
 export function useBuyerAppShell() {
@@ -37,7 +47,7 @@ export function useBuyerAppShell() {
 }
 
 export const buyerTabRoutes: Record<BuyerTab, RouteLocationRaw> = {
-  home: { name: 'buyer.marketplace' },
+  home: BUYER_DASHBOARD_ROUTE,
   search: { name: 'buyer.search' },
   cart: { name: 'buyer.checkout' },
   orders: { name: 'buyer.orders' },

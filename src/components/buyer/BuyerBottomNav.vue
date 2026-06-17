@@ -70,10 +70,10 @@ function onTabClick(event: MouseEvent, item: (typeof items.value)[number]) {
   max-width: 32rem;
   margin: 0 auto;
   padding: 0.5rem 0.375rem;
-  background: var(--bs-body-bg);
-  border: 1px solid rgba(var(--bs-primary-rgb), 0.12);
+  background: var(--buyer-surface, var(--bs-body-bg));
+  border: 1px solid var(--buyer-border-strong, rgba(var(--bs-primary-rgb), 0.12));
   border-radius: 1.75rem;
-  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.5rem 1.5rem var(--buyer-shadow-color, rgba(0, 0, 0, 0.1));
 }
 
 .buyer-bottom-nav__item {

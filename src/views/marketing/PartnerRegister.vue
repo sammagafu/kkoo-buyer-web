@@ -147,11 +147,11 @@ onMounted(loadScopes)
 }
 .partner-reg-grid { display: grid; gap: 1.5rem; align-items: start; }
 @media (min-width: 992px) { .partner-reg-grid { grid-template-columns: minmax(0, 1fr) minmax(360px, 0.95fr); } }
-.partner-reg-eyebrow { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 800; font-size: 0.78rem; color: #5c308f; }
-.partner-reg-title { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; line-height: 1.05; }
-.partner-reg-title span { color: #5c308f; }
-.partner-reg-lead { color: rgba(35, 20, 46, 0.72); max-width: 40rem; }
-.partner-reg-bullets { margin: 1rem 0 0; padding-left: 1.1rem; color: rgba(35, 20, 46, 0.78); display: grid; gap: 0.35rem; }
-.partner-reg-card { border-radius: 1.25rem; padding: 1.25rem; background: #fff; box-shadow: 0 18px 40px rgba(35, 20, 46, 0.1); border: 1px solid rgba(92, 48, 143, 0.1); }
+.partner-reg-eyebrow { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 800; font-size: 0.78rem; color: var(--kkoo-primary); }
+.partner-reg-title { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; line-height: 1.05; color: var(--buyer-ink); }
+.partner-reg-title span { color: var(--kkoo-primary); }
+.partner-reg-lead { color: var(--buyer-muted); max-width: 40rem; }
+.partner-reg-bullets { margin: 1rem 0 0; padding-left: 1.1rem; color: var(--buyer-muted); display: grid; gap: 0.35rem; }
+.partner-reg-card { border-radius: 1.25rem; padding: 1.25rem; background: var(--buyer-surface); box-shadow: 0 18px 40px var(--buyer-shadow-color); border: 1px solid var(--buyer-border); color: var(--buyer-ink); }
 .partner-reg-success { padding: 0.5rem 0; }
 </style>

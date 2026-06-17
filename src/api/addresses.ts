@@ -4,6 +4,7 @@
 import client from './client'
 
 export type AddressPayload = {
+  id?: number
   street?: string
   district?: string
   region?: string

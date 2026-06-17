@@ -1,92 +1,88 @@
 <template>
-  <VerticalLayout>
-    <b-card title="Account profile">
-      <p class="text-muted">Update your name, photo, and contact details. These are used across your buyer account and any KKOO workspaces you can open.</p>
-      <b-alert v-if="successMessage" variant="success" dismissible show>{{ successMessage }}</b-alert>
-      <b-alert v-if="error" variant="danger" show>{{ error }}</b-alert>
-      <b-form v-if="loaded" @submit.prevent="save">
-        <div class="d-flex flex-column flex-sm-row align-items-center gap-3 mb-4">
-          <div class="position-relative flex-shrink-0">
-            <img
-              v-if="avatarPreview"
-              :src="avatarPreview"
-              alt=""
-              class="rounded-circle object-fit-cover border"
-              width="96"
-              height="96"
-            />
-            <div
-              v-else
-              class="profile-avatar-placeholder rounded-circle d-flex align-items-center justify-content-center"
-            >
-              {{ initials }}
-            </div>
-            <span
-              v-if="avatarUploading"
-              class="position-absolute top-50 start-50 translate-middle spinner-border spinner-border-sm text-primary"
-              role="status"
-            />
+  <div class="buyer-xp">
+    <header class="buyer-page-head">
+      <button type="button" class="buyer-page-head__back" @click="router.push({ name: 'buyer.settings' })">
+        <Icon icon="solar:arrow-left-linear" />
+      </button>
+      <h1 class="buyer-page-head__title">{{ t('buyerXp.settings.editProfile') }}</h1>
+      <p class="buyer-page-head__meta">{{ t('buyerXp.settings.editProfileSub') }}</p>
+    </header>
+
+    <section class="buyer-detail-card">
+      <p v-if="successMessage" class="buyer-xp-toast buyer-xp-toast--ok">{{ successMessage }}</p>
+      <p v-if="error" class="buyer-xp-toast buyer-xp-toast--err">{{ error }}</p>
+
+      <form v-if="loaded" @submit.prevent="save">
+        <div class="profile-avatar-row">
+          <div class="profile-avatar-wrap">
+            <img v-if="avatarPreview" :src="avatarPreview" alt="" class="profile-avatar-img" />
+            <div v-else class="profile-avatar-placeholder">{{ initials }}</div>
+            <span v-if="avatarUploading" class="profile-avatar-spinner" role="status" />
           </div>
-          <div class="text-center text-sm-start">
-            <b-button variant="outline-primary" size="sm" :disabled="avatarUploading" @click="triggerAvatarPick">
+          <div>
+            <button type="button" class="buyer-venue__chip" :disabled="avatarUploading" @click="triggerAvatarPick">
               {{ avatarPreview ? 'Change photo' : 'Upload photo' }}
-            </b-button>
+            </button>
             <input
               ref="avatarInput"
               type="file"
               accept="image/jpeg,image/png,image/gif,image/webp"
-              class="d-none"
+              class="visually-hidden"
               @change="onAvatarSelected"
             />
-            <p class="text-muted small mb-0 mt-2">JPEG, PNG, GIF or WebP. Max 5 MB.</p>
+            <p class="buyer-page-head__meta mt-2">JPEG, PNG, GIF or WebP. Max 5 MB.</p>
           </div>
         </div>
 
-        <b-row>
-          <b-col md="6">
-            <b-form-group label="First name" label-for="first_name">
-              <b-form-input id="first_name" v-model="form.first_name" placeholder="First name" />
-            </b-form-group>
-          </b-col>
-          <b-col md="6">
-            <b-form-group label="Last name" label-for="last_name">
-              <b-form-input id="last_name" v-model="form.last_name" placeholder="Last name" />
-            </b-form-group>
-          </b-col>
-          <b-col md="6">
-            <b-form-group label="Email" label-for="email">
-              <b-form-input id="email" v-model="form.email" type="email" placeholder="Email" />
-            </b-form-group>
-          </b-col>
-          <b-col md="6">
-            <b-form-group label="Phone number" label-for="phone_number">
-              <b-form-input id="phone_number" v-model="form.phone_number" type="tel" placeholder="+255..." readonly disabled class="bg-light" />
-              <p class="text-muted small mb-0 mt-1">Phone cannot be changed here. Contact support if needed.</p>
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-button type="submit" variant="primary" :disabled="saving">Save profile</b-button>
-        <div class="mt-4 pt-3 border-top">
-          <p class="text-muted small mb-2">Sign-in backup codes (if SMS OTP is unavailable)</p>
-          <router-link :to="{ name: 'account.backup-codes' }" class="btn btn-outline-secondary btn-sm">
+        <div class="buyer-ride-field mt-3">
+          <label for="first_name">First name</label>
+          <input id="first_name" v-model="form.first_name" type="text" placeholder="First name" />
+        </div>
+        <div class="buyer-ride-field mt-2">
+          <label for="last_name">Last name</label>
+          <input id="last_name" v-model="form.last_name" type="text" placeholder="Last name" />
+        </div>
+        <div class="buyer-ride-field mt-2">
+          <label for="email">Email</label>
+          <input id="email" v-model="form.email" type="email" placeholder="Email" />
+        </div>
+        <div class="buyer-ride-field mt-2">
+          <label for="phone_number">Phone number</label>
+          <input id="phone_number" v-model="form.phone_number" type="tel" placeholder="+255..." readonly disabled />
+          <p class="buyer-page-head__meta mt-1">Phone cannot be changed here. Contact support if needed.</p>
+        </div>
+
+        <div class="buyer-btn-row buyer-form-actions mt-3">
+          <button type="submit" class="buyer-venue__chip buyer-venue__chip--primary" :disabled="saving">
+            {{ saving ? 'Saving…' : 'Save profile' }}
+          </button>
+        </div>
+
+        <div class="mt-4 pt-3" style="border-top: 1px solid var(--buyer-border)">
+          <p class="buyer-page-head__meta mb-2">Sign-in backup codes (if SMS OTP is unavailable)</p>
+          <router-link :to="{ name: 'account.backup-codes' }" class="buyer-venue__chip">
             View backup codes
           </router-link>
         </div>
-      </b-form>
-      <p v-else-if="loading" class="text-muted">Loading…</p>
-    </b-card>
-  </VerticalLayout>
+      </form>
+      <p v-else-if="loading" class="shop-products__status">Loading…</p>
+    </section>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
-import VerticalLayout from '@/layouts/VerticalLayout.vue'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { Icon } from '@iconify/vue'
 import { useAuthStore } from '@/stores/auth'
 import { userApi } from '@/api'
 import { resolveAssetUrl } from '@/utils/assetUrl'
 import { formatApiError } from '@/utils/formatApiError'
 import { toastSuccess, toastError } from '@/utils/toast'
 
+const { t } = useI18n()
+const router = useRouter()
 const auth = useAuthStore()
 const loading = ref(false)
 const loaded = ref(false)
@@ -197,12 +193,62 @@ async function save() {
 </script>
 
 <style scoped>
+.profile-avatar-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (min-width: 576px) {
+  .profile-avatar-row {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.profile-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profile-avatar-img,
 .profile-avatar-placeholder {
-  width: 96px;
-  height: 96px;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.75rem;
   font-weight: 700;
-  background: var(--bs-primary-bg-subtle, #f0e8f5);
-  color: var(--bs-primary, #6b2d8a);
+  background: var(--buyer-chip-bg);
+  color: var(--kkoo-primary, #5b3a8c);
+}
+
+.profile-avatar-spinner {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--buyer-border);
+  border-top-color: var(--kkoo-primary);
+  border-radius: 50%;
+  animation: profile-spin 0.7s linear infinite;
+}
+
+@keyframes profile-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.buyer-ride-field input:disabled {
+  opacity: 0.7;
 }
 </style>

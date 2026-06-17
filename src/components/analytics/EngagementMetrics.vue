@@ -608,7 +608,7 @@ onMounted(() => {
 }
 
 .kpi-card {
-  background: white;
+  background: var(--kkoo-panel-bg);
   border-radius: 12px;
   padding: 1.5rem;
   display: flex;
@@ -664,7 +664,7 @@ onMounted(() => {
 }
 
 .chart-card {
-  background: white;
+  background: var(--kkoo-panel-bg);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -688,7 +688,7 @@ onMounted(() => {
 .platform-comparison-card,
 .actions-card,
 .recommendations-card {
-  background: white;
+  background: var(--kkoo-panel-bg);
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;

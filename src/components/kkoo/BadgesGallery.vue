@@ -78,8 +78,8 @@ const badges = ref<Badge[]>([
     gap: 1.5rem;
 
     .badge-item {
-      background: #fff;
-      border: 1px solid #e0e0e0;
+      background: var(--kkoo-panel-bg);
+      border: 1px solid var(--kkoo-panel-border);
       border-radius: 8px;
       padding: 1.5rem;
       display: flex;
@@ -112,12 +112,12 @@ const badges = ref<Badge[]>([
         h5 {
           margin: 0.5rem 0;
           font-weight: 600;
-          color: #333;
+          color: var(--kkoo-panel-ink);
         }
 
         p {
           margin: 0.5rem 0;
-          color: #666;
+          color: var(--kkoo-panel-sub);
           font-size: 0.9rem;
         }
       }

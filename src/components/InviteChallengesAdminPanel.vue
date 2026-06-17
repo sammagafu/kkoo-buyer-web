@@ -605,7 +605,7 @@ const exportAnalytics = () => {
 }
 
 .stat-card {
-  background: white;
+  background: var(--kkoo-panel-bg);
   padding: 16px;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
@@ -678,7 +678,7 @@ const exportAnalytics = () => {
 }
 
 .challenge-card {
-  background: white;
+  background: var(--kkoo-panel-bg);
   border-radius: 8px;
   border: 1px solid #e0e0e0;
   padding: 16px;
@@ -809,7 +809,7 @@ const exportAnalytics = () => {
 }
 
 .modal {
-  background: white;
+  background: var(--kkoo-panel-bg);
   border-radius: 8px;
   width: 90%;
   max-width: 600px;

@@ -496,7 +496,7 @@ onMounted(() => {
 }
 
 .segment-card {
-  background: white;
+  background: var(--kkoo-panel-bg);
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;

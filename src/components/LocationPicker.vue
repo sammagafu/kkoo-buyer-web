@@ -215,8 +215,8 @@ function resetForm() {
   align-items: center;
   padding: 0.65rem 0.8rem;
   border-radius: 999px;
-  border: 1px solid rgba(92, 48, 143, 0.16);
-  background: white;
+  border: 1px solid var(--buyer-border-strong);
+  background: var(--buyer-input-bg);
   box-shadow: 0 10px 26px rgba(35, 20, 46, 0.1);
 }
 .loc-search-icon {
@@ -261,10 +261,10 @@ function resetForm() {
 }
 .loc-map-card,
 .loc-form-card {
-  border: 1px solid rgba(92, 48, 143, 0.12);
+  border: 1px solid var(--buyer-border);
   border-radius: 1.1rem;
   padding: 1rem;
-  background: white;
+  background: var(--buyer-surface);
   box-shadow: 0 12px 28px rgba(35, 20, 46, 0.08);
 }
 .loc-map-placeholder {

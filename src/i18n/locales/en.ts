@@ -1,3 +1,5 @@
+import { buyerXpVerticals } from './buyerXpVerticals.en'
+
 export default {
   common: {
     save: 'Save',
@@ -53,7 +55,7 @@ export default {
     signInWithPhone: 'Sign in with phone',
     signInWithKkooAccount: 'Sign in to KKOO',
     continueWithKkooAccount: 'Continue shopping',
-    kkooAccountSubtitle: 'Same number as the KKOO app. Shop, eat, and checkout on web or mobile — we text you a code, no password.',
+    kkooAccountSubtitle: 'Sign in with your phone — we text you a code.',
     kkooAccountHint: 'Already on KKOO mobile? Use that phone number.',
     checkoutSignInPrompt: 'Sign in to place your order — same phone number as the KKOO app.',
     favoritesSignInPrompt: 'Sign in to view and manage your saved items.',
@@ -355,8 +357,7 @@ export default {
     heroEyebrow: 'KKOO Restaurants',
     heroTitle: 'Real menus.',
     heroTitleAccent: 'Real delivery flow.',
-    heroDesc:
-      'Browse restaurants with public storefronts, explore menu-ready businesses, and send customers into a proper ordering flow. Each restaurant can show up in KKOO Eats discovery, keep its own branded microsite, and still reach the live checkout.',
+    heroDesc: 'Browse menus, order delivery or pickup, and checkout in one flow.',
     heroImageAlt: 'Restaurant frontend placeholder',
     heroBadge: {
       label: 'Frontend enabled',
@@ -369,22 +370,16 @@ export default {
     },
     sections: {
       frontend: {
-        kicker: 'Restaurants frontend',
-        title: 'Public pages that actually help people order.',
-        copy:
-          'Restaurants now have a buyer-facing frontend layer on the website. Visitors can discover businesses, see store details, and jump into the live storefront experience built from the existing menu system. That means one seller can keep a separate microsite while also being visible inside the Eats-style discovery layer.',
+        kicker: 'Live storefronts',
+        title: 'Restaurants on KKOO',
       },
       surfaces: {
-        kicker: 'How sellers show up',
-        title: 'One restaurant, three customer touchpoints.',
-        copy:
-          'KKOO can present the same restaurant in a few coordinated ways: as a branded microsite, as a product and menu discovery surface inside an Eats-like app flow, and as the final checkout journey where delivery happens.',
+        kicker: 'Touchpoints',
+        title: 'One restaurant, three ways in',
       },
       walkthrough: {
-        kicker: 'Ordering walkthrough',
-        title: 'How restaurant ecommerce works on the frontend.',
-        copy:
-          'The restaurant frontend now supports a clearer public ordering journey, so users understand what happens before they tap through to complete the order.',
+        kicker: 'How it works',
+        title: 'Order in three steps',
       },
     },
     states: {
@@ -398,44 +393,39 @@ export default {
       tagRestaurant: 'Restaurant',
       prepTime: '{minutes} min prep',
       fallbackTitle: 'Restaurant storefront',
-      fallbackCopy: 'Public ordering frontend for delivery and pickup customers.',
+      fallbackCopy: 'Delivery and pickup',
       rating: 'Rating {rating}',
       viewMicrosite: 'View microsite',
     },
     surfaces: {
       1: {
         tag: 'Microsite',
-        title: 'Own branded restaurant page',
-        copy:
-          'Each restaurant can keep a separate KKOO microsite with its own link, business identity, menu filters, and public ordering presentation.',
+        title: 'Branded restaurant page',
+        copy: 'Your own link, menu, and identity.',
       },
       2: {
-        tag: 'Eats feed',
-        title: 'Products also appear in KKOO Eats discovery',
-        copy:
-          'The same menu can be surfaced inside the Eats-style frontend so buyers browse food the way they expect from an on-demand ordering app.',
+        tag: 'Eats',
+        title: 'Discovery feed',
+        copy: 'Show up where hungry buyers browse.',
       },
       3: {
         tag: 'Checkout',
-        title: 'Orders still finish in one ordering flow',
-        copy:
-          'When customers are ready, KKOO takes them from the microsite or discovery feed into cart, payment, and delivery tracking.',
+        title: 'One order flow',
+        copy: 'Cart, pay, and track delivery.',
       },
     },
     steps: {
       1: {
-        title: 'Discover the restaurant',
-        copy:
-          'Customers can browse the restaurant page, see contact details, and decide if the business matches what they want to order.',
+        title: 'Discover',
+        copy: 'Find the restaurant and menu.',
       },
       2: {
-        title: 'Open the live storefront',
-        copy:
-          'The frontend sends them into the active restaurant storefront, where the menu, categories, and products already exist.',
+        title: 'Order',
+        copy: 'Add items and choose delivery or pickup.',
       },
       3: {
-        title: 'Complete checkout in the KKOO flow',
-        copy: 'Once they are ready, they move into the main ordering flow for cart, payment, and delivery tracking.',
+        title: 'Checkout',
+        copy: 'Pay and track your order.',
       },
     },
   },
@@ -639,8 +629,7 @@ export default {
     heroEyebrow: "KKOO Business",
     heroTitle: 'Your business deserves a real storefront.',
     heroTitleAccent: 'More orders. Clear payouts. One phone.',
-    heroDesc:
-      'KKOO gives you a professional storefront, delivery network, analytics, and predictable payouts — built for East African merchants without enterprise complexity or cost.',
+    heroDesc: 'Storefront, delivery, and payouts — built for local merchants.',
     cta: {
       becomeMerchant: 'List your business',
       seeRequests: 'Join 200+ verified sellers',
@@ -669,9 +658,7 @@ export default {
     sections: {
       why: {
         kicker: "Why merchants choose KKOO",
-        title: 'More momentum, less operating drag.',
-        copy:
-          'Help merchants move faster from discovery to fulfilment to payout, while keeping every customer relationship inside the business — not scattered across side channels.',
+        title: 'More momentum, less drag.',
       },
       insight: {
         kicker: 'Built for the real day-to-day',
@@ -1082,6 +1069,11 @@ export default {
     sellerTestimonialsHeadline2: 'went professional.',
     sellerTestimonialsCallout: 'Your business is already running. KKOO gives it the infrastructure it deserves.',
     footerTagline: 'Shop with confidence. Sell with structure.',
+    footerTaglineShort: 'Shop, eat, stay, and move — one account.',
+    footerShop: 'Shop',
+    footerHelp: 'Help',
+    navHotels: 'Hotels',
+    navVouchers: 'Vouchers',
     footerGetApp: 'Get KKOO on your phone',
     storeBadgeGoogleKicker: 'Get it on',
     storeBadgeAppleKicker: 'Download on',
@@ -1791,8 +1783,7 @@ export default {
       eyebrow: "KKOO Driver",
       title1: 'Earn on every run.',
       title2: 'Keep your week in your control.',
-      lead:
-        "KKOO Driver is for couriers who want clearer earnings, flexible movement, and fewer surprises. Deliver food, groceries, and local orders from one rider flow built for the pace of real city work.",
+      lead: 'Deliver food, groceries, and local orders on your schedule.',
       ctaWeb: 'Request a ride/delivery on web',
       ctaRegister: 'Start earning today',
       imageAlt: 'Courier app placeholder visual',
@@ -1813,9 +1804,7 @@ export default {
     sections: {
       whyJoin: {
         kicker: 'Why riders join',
-        title: 'Earn on your schedule.',
-        copy:
-          'KKOO Driver respects your time, shows how you earn, and keeps active jobs in one app — food, groceries, and local deliveries.',
+        title: 'Why ride with KKOO',
       },
       earningsBoosters: {
         kicker: 'What improves a strong week',
@@ -1850,26 +1839,10 @@ export default {
       },
     },
     benefits: {
-      1: {
-        title: 'Work when it fits your week',
-        copy:
-          'Go online when you can. No rigid shifts — flexibility that matches real life.',
-      },
-      2: {
-        title: 'See how earnings build',
-        copy:
-          'Completed runs, busy periods, tips, and bonuses — understand the rhythm of your money.',
-      },
-      3: {
-        title: 'One app, one queue',
-        copy:
-          'Marketplace, food, groceries, rides — accept jobs and track them in one place.',
-      },
-      4: {
-        title: 'Respect and accountability',
-        copy:
-          'Clear verification, fair disputes, and support when something goes wrong — expectations on both sides.',
-      },
+      1: { title: 'Flexible hours', copy: 'Go online when you can.' },
+      2: { title: 'Clear earnings', copy: 'See runs, tips, and payouts.' },
+      3: { title: 'One app', copy: 'Food, groceries, and rides together.' },
+      4: { title: 'Fair support', copy: 'Verification and help when needed.' },
     },
     boosters: {
       1: {
@@ -1955,33 +1928,26 @@ export default {
       eyebrow: 'KKOO Hotels',
       title1: 'Stay listings',
       title2: 'with a real frontend.',
-      lead:
-        'Hotels and stays can now be surfaced on the website with public-facing pages. Showcase rooms, services, contact details, and direct customers into the live KKOO storefront flow. Each property can keep a separate branded microsite while still being discoverable inside the broader stay and commerce frontend.',
+      lead: 'Browse stays, rooms, and book on the web.',
       ctaBookWeb: 'Book on web',
       ctaCheckout: 'Go to checkout',
       imageAlt: 'Hotel frontend placeholder',
       badgeLabel: 'Hospitality frontend',
       badgeFallback: 'Live',
-      badgeSuffix: 'hotel storefronts ready for discovery',
+      badgeSuffix: 'properties',
     },
     sections: {
       directory: {
-        kicker: 'Hotels frontend',
-        title: 'A buyer-facing layer for stays and hospitality.',
-        copy:
-          'Hotels now have public-facing website pages too. Instead of hiding behind backoffice tools, hospitality businesses can be discovered on the frontend and opened into their live storefront. The goal is a more modern seller presence: one hotel, one microsite, plus wider discovery inside KKOO.',
+        kicker: 'Live listings',
+        title: 'Hotels on KKOO',
       },
       surfaces: {
-        kicker: 'How properties show up',
-        title: 'A hotel can sell through its own page and the wider KKOO network.',
-        copy:
-          'Hospitality sellers should not be trapped in a generic listing. KKOO can give them a Shopify-like microsite feel, a discovery lane inside stay and commerce browsing, and one connected booking flow.',
+        kicker: 'Touchpoints',
+        title: 'Your page, our discovery',
       },
       walkthrough: {
-        kicker: 'Booking walkthrough',
-        title: 'How hospitality ecommerce works on the frontend.',
-        copy:
-          'Hotels need more than an internal listing. The website now shows the booking journey more clearly, so users can move from discovery to a proper stay storefront experience.',
+        kicker: 'How it works',
+        title: 'Book in three steps',
       },
     },
     directory: {
@@ -1990,46 +1956,31 @@ export default {
       tagHotel: 'Hotel',
       tagOpenDetails: 'Open details',
       fallbackName: 'Hotel storefront',
-      fallbackAddress: 'Public hospitality frontend for rooms, services, and guest discovery.',
+      fallbackAddress: 'Rooms and guest services',
       viewMicrosite: 'View microsite',
       failedToLoad: 'Failed to load hotel storefronts',
     },
     surfaces: {
       1: {
         tag: 'Microsite',
-        title: 'Every hotel can keep a separate branded page',
-        copy:
-          'Each property can have its own microsite with rooms, services, location details, and a direct shareable link for guests.',
+        title: 'Branded stay page',
+        copy: 'Rooms, services, and a shareable link.',
       },
       2: {
         tag: 'Discovery',
-        title: 'Stay offers can surface in the wider frontend',
-        copy:
-          'Hotels can still be featured inside the broader KKOO discovery layer so customers can browse stays the way they browse other categories.',
+        title: 'Listed in KKOO',
+        copy: 'Guests find you while browsing stays.',
       },
       3: {
-        tag: 'Conversion',
-        title: 'Guests move from discovery into booking',
-        copy:
-          'Whether they start on the hotel microsite or a discovery page, the customer still lands in one connected booking and checkout journey.',
+        tag: 'Book',
+        title: 'Connected checkout',
+        copy: 'From browse to booking in one flow.',
       },
     },
     bookingSteps: {
-      1: {
-        title: 'Discover the property',
-        copy:
-          'Guests can browse hotel pages, see the location and contact information, and understand that the property has a real public frontend.',
-      },
-      2: {
-        title: 'Open the stay storefront',
-        copy:
-          'The website sends them into the live storefront experience where rooms, services, and hospitality offers can be presented cleanly.',
-      },
-      3: {
-        title: 'Move into the booking flow',
-        copy:
-          'From there, the user is guided into the broader checkout and booking flow instead of relying on manual back-and-forth.',
-      },
+      1: { title: 'Discover', copy: 'Find the property.' },
+      2: { title: 'Browse', copy: 'Open rooms and offers.' },
+      3: { title: 'Book', copy: 'Complete checkout on web.' },
     },
   },
   legal: {
@@ -2130,5 +2081,126 @@ export default {
       'We do not sell your personal information. Sharing with riders, sellers, payment providers, or service providers is limited to what is needed to provide the service, as described in the privacy policy.',
     privacyCta: 'Read the full privacy policy',
     contactLabel: 'Contact',
+  },
+  buyerXp: {
+    greetings: {
+      morning: 'Good morning',
+      afternoon: 'Good afternoon',
+      evening: 'Good evening',
+      guest: 'there',
+    },
+    nav: {
+      shop: 'Shop',
+      yourAccount: 'Your account',
+      signIn: 'Sign in',
+      yourAccountLabel: 'Your account',
+      home: 'Home',
+      eats: 'Eats',
+      groceries: 'Groceries',
+      pharmacy: 'Pharmacy',
+      send: 'Send me',
+      search: 'Search',
+      ride: 'Ride',
+      services: 'Services',
+      orders: 'Orders',
+      wallet: 'Wallet',
+      rewards: 'Rewards',
+      saved: 'Saved',
+      messages: 'Messages',
+      account: 'Account',
+      themeLight: 'Switch to light mode',
+      themeDark: 'Switch to dark mode',
+      language: 'Language',
+    },
+    marketplace: {
+      overline: 'KKOO · Dar es Salaam',
+      tagline: 'Shop, eat, move — one app for your city.',
+      searchPlaceholder: 'Search products, stores, restaurants…',
+      quickActions: 'Quick actions',
+      whatDoYouNeed: 'What do you need?',
+      explore: 'Explore',
+      browseCategories: 'Browse categories',
+      categoryFallback: 'Category',
+      recommendedTitle: 'Recommended for you',
+      recommendedSubtitle: 'Fresh picks from verified sellers',
+      shop: 'Shop',
+      groceries: 'Groceries',
+      searchProducts: 'Search products',
+      searchGroceryStores: 'Search grocery stores',
+      backToStores: 'Back to stores',
+      storeFallback: 'Store',
+      fulfillmentLabel: 'How do you want your groceries?',
+      fulfillmentPickupHint: 'Collect your order from the store.',
+      fulfillmentDeliveryHint: 'Add groceries to cart, then request a KKOO rider for delivery.',
+      pickup: 'Pick up',
+      deliver: 'Deliver',
+      riderDeliveryTitle: 'KKOO Riders delivery',
+      riderDeliveryCopy: 'Shop from {store}, then request a boda to your address.',
+      requestBoda: 'Request boda',
+      loadingStores: 'Loading stores…',
+      noStores: 'No stores found.',
+      requestBodaFooter: 'Request KKOO boda',
+      checkout: 'Checkout',
+      signInToAdd: 'Sign in to add items.',
+      unavailable: 'Unavailable.',
+      addedToCart: 'Added to cart.',
+      addedRequestBoda: 'Added. Request a KKOO boda when ready.',
+      couldNotAdd: 'Could not add.',
+      couldNotLoadProducts: 'Could not load products',
+      noProductsInStore: 'No products in this store.',
+    },
+    products: {
+      loading: 'Loading…',
+      notFound: 'No products found.',
+      productFallback: 'Product',
+      add: 'Add',
+    },
+    pillars: {
+      buy: { label: 'Buy', subtitle: 'Marketplace' },
+      eat: { label: 'Eat', subtitle: 'Restaurants' },
+      move: { label: 'Move', subtitle: 'Rides' },
+      pharmacy: { label: 'Pharmacy', subtitle: 'Health' },
+      send: { label: 'Send me', subtitle: 'Shop for you' },
+      more: { label: 'More', subtitle: 'Groceries' },
+    },
+    shortcuts: {
+      orders: 'Orders',
+      rewards: 'Rewards',
+      wishlist: 'Wishlist',
+      send: 'Send me',
+    },
+    cart: {
+      title: 'My cart',
+      drawerTitle: 'Cart',
+      items: '{count} items',
+      item: '{count} item',
+      emptyTitle: 'Cart is empty',
+      emptyHint: 'Add items from the shop.',
+      loadErrorTitle: 'Could not load cart',
+      tryAgain: 'Try again',
+      itemFallback: 'Item',
+      subtotal: 'Subtotal',
+      shipping: 'Shipping',
+      shippingAtCheckout: 'At checkout',
+      checkout: 'Checkout',
+      refresh: 'Refresh cart',
+      remove: 'Remove',
+    },
+    settings: {
+      title: 'Settings',
+      meta: 'Account, privacy, and preferences',
+      language: 'Language',
+      languageSaved: 'Language saved.',
+      couldNotSave: 'Could not save',
+      editProfile: 'Edit profile',
+      editProfileSub: 'Name, email, avatar',
+      notifications: 'Notifications',
+      notificationsSub: 'Alerts & updates',
+      backupCodes: 'Backup codes',
+      backupCodesSub: 'Account recovery',
+      disputes: 'Disputes',
+      disputesSub: 'Report an issue',
+    },
+    ...buyerXpVerticals,
   },
 }

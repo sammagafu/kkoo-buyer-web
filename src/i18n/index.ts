@@ -47,6 +47,13 @@ export function setLocale(code: LocaleCode): void {
   }
 }
 
+/** Apply saved or user profile language when supported. */
+export function applyLocaleFromPreference(code?: string | null): void {
+  if (code && (['en', 'sw', 'fr'] as const).includes(code as LocaleCode)) {
+    setLocale(code as LocaleCode)
+  }
+}
+
 const initialLocale = getSavedLocale()
 export const i18n = createI18n({
   legacy: false,

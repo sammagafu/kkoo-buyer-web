@@ -326,50 +326,54 @@ onMounted(async () => {
   letter-spacing: 0.12em;
   font-weight: 800;
   font-size: 0.78rem;
-  color: #5c308f;
+  color: var(--kkoo-primary);
 }
 .discover-title {
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 800;
   line-height: 1.05;
+  color: var(--buyer-ink);
 }
-.discover-title span { color: #5c308f; }
-.discover-lead { color: rgba(35, 20, 46, 0.72); max-width: 42rem; }
+.discover-title span { color: var(--kkoo-primary); }
+.discover-lead { color: var(--buyer-muted); max-width: 42rem; }
 .discover-hero-card {
   border-radius: 1.25rem;
   padding: 1.25rem;
-  background: rgba(255,255,255,0.92);
-  box-shadow: 0 18px 40px rgba(35, 20, 46, 0.12);
+  background: var(--buyer-surface);
+  border: 1px solid var(--buyer-border);
+  box-shadow: 0 18px 40px var(--buyer-shadow-color);
 }
 .discover-hero-icon { width: 2rem; height: 2rem; color: #f7a829; margin-bottom: 0.5rem; }
 .discover-toolbar { display: grid; gap: 1rem; margin-bottom: 1.25rem; }
 .discover-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .discover-filter {
-  border: 1px solid rgba(92, 48, 143, 0.18);
-  background: #fff;
+  border: 1px solid var(--buyer-border-strong);
+  background: var(--buyer-surface);
+  color: var(--buyer-ink);
   border-radius: 999px;
   padding: 0.45rem 0.9rem;
   font-size: 0.88rem;
   font-weight: 600;
 }
-.discover-filter--active { background: #5c308f; color: #fff; border-color: #5c308f; }
-.discover-note { font-size: 0.92rem; color: rgba(35, 20, 46, 0.65); }
+.discover-filter--active { background: var(--kkoo-primary); color: #fff; border-color: var(--kkoo-primary); }
+.discover-note { font-size: 0.92rem; color: var(--buyer-muted); }
 .discover-note--error { color: #b42318; }
 .discover-grid { display: grid; gap: 0.85rem; }
 @media (min-width: 768px) { .discover-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1200px) { .discover-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .discover-card {
-  border: 1px solid rgba(92, 48, 143, 0.12);
+  border: 1px solid var(--buyer-border);
   border-radius: 1rem;
   padding: 1rem;
-  background: #fff;
+  background: var(--buyer-surface);
+  color: var(--buyer-ink);
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .discover-card:hover, .discover-card--active {
   transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(35, 20, 46, 0.1);
-  border-color: rgba(92, 48, 143, 0.28);
+  box-shadow: 0 14px 30px var(--buyer-shadow-color);
+  border-color: var(--buyer-border-strong);
 }
 .discover-card-top { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
 .discover-card-tag {
@@ -377,17 +381,17 @@ onMounted(async () => {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #5c308f;
-  background: rgba(92, 48, 143, 0.08);
+  color: var(--kkoo-primary);
+  background: var(--buyer-chip-bg);
   border-radius: 999px;
   padding: 0.2rem 0.55rem;
 }
-.discover-card-tag--featured { color: #9a5b00; background: rgba(247, 168, 41, 0.16); }
+.discover-card-tag--featured { color: #f7a829; background: rgba(247, 168, 41, 0.16); }
 .discover-card h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.35rem; }
-.discover-card-copy { font-size: 0.92rem; color: rgba(35, 20, 46, 0.68); margin-bottom: 0.75rem; }
-.discover-card-meta { display: grid; gap: 0.25rem; font-size: 0.82rem; color: rgba(35, 20, 46, 0.62); }
+.discover-card-copy { font-size: 0.92rem; color: var(--buyer-muted); margin-bottom: 0.75rem; }
+.discover-card-meta { display: grid; gap: 0.25rem; font-size: 0.82rem; color: var(--buyer-muted); }
 .discover-card-meta span { display: inline-flex; align-items: center; gap: 0.35rem; }
-.discover-empty { text-align: center; color: rgba(35, 20, 46, 0.6); padding: 2rem 0; }
+.discover-empty { text-align: center; color: var(--buyer-muted); padding: 2rem 0; }
 .discover-detail-grid {
   display: grid;
   gap: 1.5rem;
@@ -399,21 +403,22 @@ onMounted(async () => {
   letter-spacing: 0.1em;
   font-size: 0.75rem;
   font-weight: 800;
-  color: #5c308f;
+  color: var(--kkoo-primary);
 }
-.discover-detail-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; margin-bottom: 0.75rem; }
-.discover-detail-copy { color: rgba(35, 20, 46, 0.72); }
-.discover-detail-facts { padding-left: 1rem; margin: 1rem 0 0; display: grid; gap: 0.35rem; }
-.discover-tickets-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.75rem; }
+.discover-detail-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; margin-bottom: 0.75rem; color: var(--buyer-ink); }
+.discover-detail-copy { color: var(--buyer-muted); }
+.discover-detail-facts { padding-left: 1rem; margin: 1rem 0 0; display: grid; gap: 0.35rem; color: var(--buyer-muted); }
+.discover-tickets-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.75rem; color: var(--buyer-ink); }
 .discover-ticket-card {
-  border: 1px solid rgba(92, 48, 143, 0.14);
+  border: 1px solid var(--buyer-border);
   border-radius: 1rem;
   padding: 0.9rem;
-  background: #fff;
+  background: var(--buyer-surface);
+  color: var(--buyer-ink);
   margin-bottom: 0.65rem;
   cursor: pointer;
 }
-.discover-ticket-card--active { border-color: #5c308f; box-shadow: 0 0 0 2px rgba(92, 48, 143, 0.12); }
+.discover-ticket-card--active { border-color: var(--kkoo-primary); box-shadow: 0 0 0 2px color-mix(in srgb, var(--kkoo-primary) 20%, transparent); }
 .discover-ticket-card--disabled { opacity: 0.55; cursor: not-allowed; }
 .discover-ticket-head { display: flex; justify-content: space-between; gap: 0.75rem; align-items: baseline; margin-bottom: 0.35rem; }
 .discover-ticket-head h4 { font-size: 1rem; font-weight: 800; margin: 0; }
@@ -423,21 +428,22 @@ onMounted(async () => {
 .discover-checkout {
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(92, 48, 143, 0.12);
+  border-top: 1px solid var(--buyer-border);
 }
-.discover-mine-title { font-size: 1.35rem; font-weight: 800; margin-bottom: 1rem; }
+.discover-mine-title { font-size: 1.35rem; font-weight: 800; margin-bottom: 1rem; color: var(--buyer-ink); }
 .discover-mine-grid { display: grid; gap: 0.75rem; }
 @media (min-width: 768px) { .discover-mine-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .discover-mine-card {
   border-radius: 1rem;
-  border: 1px dashed rgba(92, 48, 143, 0.24);
+  border: 1px dashed var(--buyer-border-strong);
   padding: 1rem;
-  background: rgba(255,255,255,0.9);
+  background: var(--buyer-surface);
+  color: var(--buyer-ink);
 }
 .discover-mine-code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-weight: 800;
-  color: #5c308f;
+  color: var(--kkoo-primary);
   margin-bottom: 0.35rem;
 }
 </style>

@@ -276,7 +276,7 @@ const refreshInsights = () => {
 
 <style scoped lang="scss">
 .insights-panel {
-  background: white;
+  background: var(--kkoo-panel-bg);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
@@ -388,7 +388,7 @@ const refreshInsights = () => {
     }
 
     &.warning {
-      background: #fff3e0;
+      background: var(--kkoo-accent-tint);
       border-left-color: #f57c00;
     }
 
@@ -486,7 +486,7 @@ const refreshInsights = () => {
         font-size: 11px;
         font-weight: 700;
         color: #f57c00;
-        background: #fff3e0;
+        background: var(--kkoo-accent-tint);
         padding: 4px 8px;
         border-radius: 4px;
       }
@@ -545,7 +545,7 @@ const refreshInsights = () => {
     }
 
     &.warning {
-      background: #fff3e0;
+      background: var(--kkoo-accent-tint);
       border-left-color: #f57c00;
     }
 

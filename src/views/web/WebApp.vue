@@ -1,6 +1,5 @@
 <template>
-  <MarketingLayout>
-    <section class="lp-section webapp-hero">
+      <section class="lp-section webapp-hero">
       <b-container class="px-3 px-sm-4 px-lg-4">
         <div class="webapp-hero-grid">
           <div>
@@ -89,13 +88,12 @@
         </div>
       </b-container>
     </section>
-  </MarketingLayout>
+
 </template>
 
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { RouterLink } from 'vue-router'
-import MarketingLayout from '@/views/marketing/MarketingLayout.vue'
 
 const cards = [
   {
@@ -157,7 +155,7 @@ const cards = [
   letter-spacing: 0.14em;
   font-weight: 800;
   font-size: 0.78rem;
-  color: #5c308f;
+  color: var(--kkoo-primary);
 }
 .webapp-title {
   font-size: clamp(2rem, 5vw, 3.4rem);
@@ -185,16 +183,14 @@ const cards = [
   width: min(420px, 90vw);
   border-radius: 1.75rem;
   padding: 1.4rem;
-  background:
-    radial-gradient(circle at 30% 20%, rgba(247, 168, 41, 0.16), transparent 40%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(240, 236, 250, 0.96));
-  border: 1px solid rgba(92, 48, 143, 0.15);
-  box-shadow: 0 24px 60px rgba(35, 20, 46, 0.18);
+  background: var(--buyer-gradient-hero);
+  border: 1px solid var(--buyer-border-strong);
+  box-shadow: 0 24px 60px var(--buyer-shadow-color);
 }
 .webapp-hero-card-head {
   font-weight: 800;
   font-size: 0.95rem;
-  color: #5c308f;
+  color: var(--kkoo-primary);
   margin-bottom: 0.6rem;
 }
 .webapp-hero-list {
@@ -212,7 +208,7 @@ const cards = [
   gap: 0.5rem;
 }
 .webapp-hero-list .iconify {
-  color: #5c308f;
+  color: var(--kkoo-primary);
 }
 .webapp-hero-foot {
   display: flex;
@@ -232,8 +228,8 @@ const cards = [
   gap: 0.35rem;
   padding: 0.3rem 0.7rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.82);
-  color: #5c308f;
+  background: var(--buyer-chip-bg);
+  color: var(--kkoo-primary);
   font-weight: 700;
   text-decoration: none;
   box-shadow: 0 8px 18px rgba(35, 20, 46, 0.08);
@@ -257,9 +253,9 @@ const cards = [
 .webapp-card {
   border-radius: 1.25rem;
   padding: 1.2rem;
-  border: 1px solid rgba(92, 48, 143, 0.14);
-  background: rgba(255, 255, 255, 0.88);
-  box-shadow: 0 14px 32px rgba(35, 20, 46, 0.08);
+  border: 1px solid var(--buyer-border-strong);
+  background: var(--buyer-surface);
+  box-shadow: 0 14px 32px var(--buyer-shadow-color);
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -271,8 +267,8 @@ const cards = [
   display: grid;
   place-items: center;
   background: linear-gradient(135deg, rgba(92, 48, 143, 0.14), rgba(247, 168, 41, 0.14));
-  color: #5c308f;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  color: var(--kkoo-primary);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--buyer-surface) 35%, transparent);
 }
 .webapp-card-title {
   font-size: 1.05rem;

@@ -2,7 +2,7 @@
  * Resolve API asset URLs (brand logos, category icons, product images, etc.).
  * Full URLs are returned as-is; relative paths get the media base URL prepended.
  */
-const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1').replace(
+const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1').replace(
   /\/api\/v1\/?$/,
   ''
 )

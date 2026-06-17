@@ -1,57 +1,122 @@
 <template>
-  <MarketingLayout>
-    <section class="lp-section web-profile-hero">
-      <b-container class="px-3 px-sm-4 px-lg-4">
+  <div class="buyer-xp">
+      <section class="buyer-home-hero">
         <div class="web-profile-head">
           <div class="web-profile-avatar">
             <img v-if="avatarUrl" :src="avatarUrl" alt="" class="rounded-circle object-fit-cover" width="72" height="72" />
             <span v-else class="web-profile-initials">{{ initials }}</span>
           </div>
           <div>
-            <h1 class="web-profile-name mb-1">{{ displayName }}</h1>
-            <p class="text-muted mb-0">{{ contactLine }}</p>
+            <p class="buyer-home-hero__overline">{{ t('buyerXp.hub.profileOverline') }}</p>
+            <h1 class="buyer-home-hero__name">{{ displayName }}</h1>
+            <p class="buyer-home-hero__tagline">{{ contactLine }}</p>
           </div>
         </div>
-      </b-container>
+      </section>
+
+    <section class="buyer-surface">
+      <BuyerSectionHeader :title="t('buyerXp.hub.accountSection')" />
+      <div class="buyer-hub-list">
+        <BuyerHubCard
+          v-for="tile in accountTiles"
+          :key="tile.id"
+          :title="tile.title"
+          :subtitle="tile.subtitle"
+          :icon="tile.icon"
+          :tone="tile.tone"
+          :to="{ name: tile.routeName }"
+        />
+      </div>
     </section>
 
-    <section class="lp-section pt-0">
-      <b-container class="px-3 px-sm-4 px-lg-4">
-        <div class="web-profile-links">
-          <RouterLink
-            v-for="link in links"
-            :key="link.label"
-            :to="link.to"
-            class="web-profile-link"
-          >
-            <Icon :icon="link.icon" class="web-profile-link-icon" />
-            <span>{{ link.label }}</span>
-            <Icon icon="solar:alt-arrow-right-linear" class="ms-auto opacity-50" />
-          </RouterLink>
-        </div>
-
-        <b-button v-if="hasWorkspaces" variant="outline-primary" class="mt-3" :to="{ name: 'account.home' }">
-          Switch workspace
-        </b-button>
-
-        <b-button variant="outline-danger" class="mt-3 ms-0 ms-sm-2" @click="signOut">Sign out</b-button>
-      </b-container>
+    <section class="buyer-surface">
+      <BuyerSectionHeader :title="t('buyerXp.hub.moreSection')" />
+      <div class="buyer-hub-list">
+        <BuyerHubCard :title="t('buyerXp.hub.favorites')" :subtitle="t('buyerXp.hub.favoritesSub')" icon="solar:heart-bold" :to="{ name: 'buyer.favorites' }" />
+        <BuyerHubCard :title="t('buyerXp.hub.editProfile')" :subtitle="t('buyerXp.hub.editProfileSub')" icon="solar:user-id-bold" :to="{ name: 'account.profile' }" />
+        <BuyerHubCard :title="t('buyerXp.hub.servicesHub')" :subtitle="t('buyerXp.hub.servicesHubSub')" icon="solar:widget-5-bold" :to="{ name: 'buyer.services' }" />
+      </div>
     </section>
-  </MarketingLayout>
+
+    <section v-if="hasWorkspaces" class="buyer-surface">
+      <BuyerSectionHeader :title="t('buyerXp.hub.switchWorkspace')" />
+      <div class="buyer-hub-list mb-3">
+        <button
+          v-for="roleOption in roleSwitchOptions"
+          :key="roleOption.role"
+          type="button"
+          class="buyer-venue__chip"
+          :class="{ 'buyer-venue__chip--primary': activeAccountRole === roleOption.role }"
+          @click="switchRole(roleOption.role)"
+        >
+          {{ roleOption.label }}
+        </button>
+      </div>
+      <div class="buyer-hub-list">
+        <article
+          v-for="workspace in workspaceCards"
+          :key="workspace.title"
+          class="buyer-detail-card"
+          :class="{ 'opacity-75': !workspace.available }"
+        >
+          <div class="buyer-detail-row">
+            <strong>{{ workspace.title }}</strong>
+            <span class="buyer-page-head__meta">{{ workspace.status }}</span>
+          </div>
+          <div class="buyer-btn-row mt-2">
+            <button
+              v-if="workspace.available && workspace.role"
+              type="button"
+              class="buyer-venue__chip buyer-venue__chip--primary"
+              @click="switchRole(workspace.role)"
+            >
+              Switch here
+            </button>
+            <a
+              v-else-if="workspace.href"
+              :href="workspace.href"
+              class="buyer-venue__chip"
+              target="_blank"
+              rel="noopener"
+            >
+              {{ workspace.available ? workspace.cta : workspace.fallbackCta ?? workspace.cta }}
+            </a>
+            <router-link
+              v-else-if="workspace.route"
+              :to="workspace.route"
+              class="buyer-venue__chip"
+            >
+              {{ workspace.available ? workspace.cta : workspace.fallbackCta ?? workspace.cta }}
+            </router-link>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div class="px-3 pb-4">
+      <button type="button" class="buyer-venue__chip" style="color:#c0392b" @click="signOut">{{ t('buyerXp.hub.signOut') }}</button>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
-import { Icon } from '@iconify/vue'
-import MarketingLayout from '@/views/marketing/MarketingLayout.vue'
+import { useI18n } from 'vue-i18n'
 import { BUYER_ACCOUNT_ROLE, useAuthStore } from '@/stores/auth'
 import { resolveAssetUrl } from '@/utils/assetUrl'
+import { useBuyerFeatureTiles } from '@/composables/useBuyerFeatureTiles'
+import { useAccountWorkspaces } from '@/composables/useAccountWorkspaces'
+import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
+import BuyerHubCard from '@/components/buyer/experience/BuyerHubCard.vue'
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const router = useRouter()
 const { user, availableAccountRoles } = storeToRefs(auth)
+const { accountTiles } = useBuyerFeatureTiles()
+const { activeAccountRole, roleSwitchOptions, workspaceCards, switchRole } = useAccountWorkspaces()
 
 const displayName = computed(() => {
   const u = user.value
@@ -60,13 +125,13 @@ const displayName = computed(() => {
     [u?.first_name, u?.last_name].filter(Boolean).join(' ') ||
     u?.username ||
     u?.phone_number ||
-    'KKOO member'
+    t('buyerXp.hub.profileGuest')
   )
 })
 
 const contactLine = computed(() => {
   const u = user.value
-  return [u?.phone_number, u?.email].filter(Boolean).join(' • ') || 'Signed in'
+  return [u?.phone_number, u?.email].filter(Boolean).join(' • ') || t('buyerXp.hub.profileSignedIn')
 })
 
 const avatarUrl = computed(() => {
@@ -85,15 +150,6 @@ const hasWorkspaces = computed(() =>
   availableAccountRoles.value.some((role) => role !== BUYER_ACCOUNT_ROLE),
 )
 
-const links = [
-  { label: 'My orders', icon: 'solar:bag-check-bold', to: { name: 'buyer.orders' } },
-  { label: 'Favorites', icon: 'solar:heart-bold', to: { name: 'buyer.favorites' } },
-  { label: 'Edit profile', icon: 'solar:user-id-bold', to: { name: 'account.profile' } },
-  { label: 'Notifications', icon: 'solar:bell-bold', to: { name: 'account.notifications' } },
-  { label: 'Marketplace', icon: 'solar:cart-large-2-bold', to: { name: 'buyer.marketplace' } },
-  { label: 'Eats', icon: 'solar:cup-hot-bold', to: { name: 'buyer.eats' } },
-]
-
 async function signOut() {
   await auth.logout()
   await router.push({ name: 'buyer.marketplace' })
@@ -105,13 +161,14 @@ async function signOut() {
   display: flex;
   align-items: center;
   gap: 1rem;
+  padding: 1rem 1.25rem 0;
 }
 
 .web-profile-avatar {
   width: 4.5rem;
   height: 4.5rem;
   border-radius: 50%;
-  background: rgba(var(--bs-primary-rgb), 0.1);
+  background: rgba(91, 58, 140, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,39 +178,6 @@ async function signOut() {
 .web-profile-initials {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--bs-primary);
-}
-
-.web-profile-name {
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.web-profile-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.web-profile-link {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
-  border: 1px solid rgba(var(--bs-body-color-rgb), 0.1);
-  border-radius: 0.875rem;
-  text-decoration: none;
-  color: inherit;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.web-profile-link:hover {
-  border-color: rgba(var(--bs-primary-rgb), 0.35);
-  box-shadow: 0 0.25rem 0.75rem rgba(var(--bs-body-color-rgb), 0.06);
-}
-
-.web-profile-link-icon {
-  font-size: 1.25rem;
-  color: var(--bs-primary);
+  color: var(--buyer-purple, #5b3a8c);
 }
 </style>

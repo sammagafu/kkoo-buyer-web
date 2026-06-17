@@ -1,6 +1,6 @@
 /**
  * KKOO API client for the seller & admin panel.
- * Base URL from import.meta.env.VITE_API_BASE_URL (e.g. http://localhost:8080/api/v1).
+ * Base URL from import.meta.env.VITE_API_BASE_URL (e.g. http://localhost:8000/api/v1).
  * Per API.md: Bearer token, refresh on 401, clear tokens when refresh fails.
  * (Buyers use the mobile app and customer website.)
  */
@@ -13,7 +13,7 @@ import { refreshAccessTokenSingleFlight } from '@/utils/tokenRefresh'
 import { resetPiniaAuthAfterRefreshFailure } from '@/utils/syncPiniaAuthFromStorage'
 
 function inferDefaultBaseURL(): string {
-  if (typeof window === 'undefined') return 'http://localhost:8080/api/v1'
+  if (typeof window === 'undefined') return 'http://localhost:8000/api/v1'
   const origin = window.location.origin.replace(/\/$/, '')
   // Same-origin /api/v1 — nginx (or host proxy) forwards to Fiber; avoids CORS on uploads.
   return `${origin}/api/v1`

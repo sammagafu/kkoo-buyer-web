@@ -14,44 +14,50 @@ export function getBuyerMenuItems(
     { key: 'buyer-menu', label: 'KKOO', isTitle: true },
     {
       key: 'account-home',
-      icon: 'solar:user-circle-broken',
+      icon: 'solar:user-circle-bold',
       label: 'My account',
-      route: { name: 'account.home' },
+      route: { name: 'buyer.profile' },
+    },
+    {
+      key: 'account-settings',
+      icon: 'solar:settings-bold',
+      label: 'Settings',
+      route: { name: 'buyer.settings' },
     },
     {
       key: 'account-profile',
-      icon: 'solar:user-id-broken',
+      icon: 'solar:user-id-bold',
       label: 'Profile',
       route: { name: 'account.profile' },
     },
     {
       key: 'account-notifications',
-      icon: 'solar:bell-broken',
+      icon: 'solar:bell-bold',
       label: 'Notifications',
       route: { name: 'account.notifications' },
     },
     { key: 'shop-menu', label: 'Shop', isTitle: true },
     {
       key: 'marketplace',
-      icon: 'solar:cart-large-2-broken',
+      icon: 'solar:cart-large-2-bold',
       label: 'Marketplace',
       route: buyerRoutes.marketplace,
     },
     {
       key: 'eats',
-      icon: 'solar:cup-hot-broken',
+      icon: 'solar:cup-hot-bold',
       label: 'Eats',
       route: buyerRoutes.eats,
     },
     {
       key: 'grocery',
-      icon: 'solar:bag-2-broken',
+      icon: 'solar:bag-2-bold',
       label: 'Groceries',
       route: buyerRoutes.grocery,
     },
     {
       key: 'discover',
-      icon: 'solar:calendar-broken',
+      icon: 'solar:calendar-bold',
       label: 'Discover',
       route: buyerRoutes.discover,
     },
@@ -66,7 +72,7 @@ export function getBuyerMenuItems(
       { key: 'workspaces', label: 'Workspaces', isTitle: true },
       {
         key: 'biz-seller',
-        icon: 'solar:shop-2-broken',
+        icon: 'solar:shop-2-bold',
         label: 'Seller dashboard',
         url: bizWebPath('/seller'),
         target: '_blank',
@@ -77,7 +83,7 @@ export function getBuyerMenuItems(
   if (role === ROLES.CRM_MEMBER) {
     items.push({
       key: 'biz-crm',
-      icon: 'solar:buildings-3-broken',
+      icon: 'solar:buildings-3-bold',
       label: 'Business CRM',
       url: bizWebPath('/seller/crm'),
       target: '_blank',
@@ -87,7 +93,7 @@ export function getBuyerMenuItems(
   if (isAdmin || isStaff) {
     items.push({
       key: 'admin-panel',
-      icon: 'solar:shield-user-broken',
+      icon: 'solar:shield-user-bold',
       label: 'Admin panel',
       url: adminWebPath('/dashboard'),
       target: '_blank',

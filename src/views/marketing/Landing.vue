@@ -104,6 +104,31 @@
       </div>
     </section>
 
+    <!-- Shop verticals — quick links right after hero -->
+    <section class="lp-shop-verticals-section lp-section py-4 py-lg-5">
+      <div class="container-lg">
+        <div class="lp-shop-verticals mt-5" role="list">
+          <router-link
+            v-for="vertical in shopVerticals"
+            :key="vertical.key"
+            :to="vertical.route"
+            class="lp-shop-vertical-card text-decoration-none"
+            :class="`lp-shop-vertical-card--${vertical.accent}`"
+            role="listitem"
+          >
+            <span class="lp-shop-vertical-card__icon" aria-hidden="true">
+              <Icon :icon="vertical.icon" />
+            </span>
+            <span class="lp-shop-vertical-card__copy">
+              <span class="lp-shop-vertical-card__title">{{ t(vertical.labelKey) }}</span>
+              <span class="lp-shop-vertical-card__desc">{{ t(vertical.descKey) }}</span>
+            </span>
+            <Icon icon="solar:arrow-right-up-linear" class="lp-shop-vertical-card__arrow" aria-hidden="true" />
+          </router-link>
+        </div>
+      </div>
+    </section>
+
     <!-- ===================== WHAT IS INSIDE KKOO ===================== -->
     <section id="solutions" class="lp-inside-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
       <div class="lp-inside-mesh" aria-hidden="true" />
@@ -144,67 +169,6 @@
               <p class="lp-inside-gate__context mb-0">{{ vertical.context }}</p>
             </div>
           </router-link>
-        </div>
-
-        <div class="lp-shop-verticals mt-5" role="list">
-          <router-link
-            v-for="vertical in shopVerticals"
-            :key="vertical.key"
-            :to="vertical.route"
-            class="lp-shop-vertical-card text-decoration-none"
-            :class="`lp-shop-vertical-card--${vertical.accent}`"
-            role="listitem"
-          >
-            <span class="lp-shop-vertical-card__icon" aria-hidden="true">
-              <Icon :icon="vertical.icon" />
-            </span>
-            <span class="lp-shop-vertical-card__copy">
-              <span class="lp-shop-vertical-card__title">{{ t(vertical.labelKey) }}</span>
-              <span class="lp-shop-vertical-card__desc">{{ t(vertical.descKey) }}</span>
-            </span>
-            <Icon icon="solar:arrow-right-up-linear" class="lp-shop-vertical-card__arrow" aria-hidden="true" />
-          </router-link>
-        </div>
-
-        <header class="lp-explore-head mt-5 pt-2">
-          <h3 class="lp-explore-head__title">{{ t('landing.exploreProgramsTitle') }}</h3>
-          <p class="lp-explore-head__sub mb-0">{{ t('landing.exploreProgramsSub') }}</p>
-        </header>
-
-        <div class="lp-shop-verticals" role="list">
-          <router-link
-            v-for="program in marketingPrograms"
-            :key="program.key"
-            :to="program.route"
-            class="lp-shop-vertical-card text-decoration-none"
-            :class="`lp-shop-vertical-card--${program.accent}`"
-            role="listitem"
-          >
-            <span class="lp-shop-vertical-card__icon" aria-hidden="true">
-              <Icon :icon="program.icon" />
-            </span>
-            <span class="lp-shop-vertical-card__copy">
-              <span class="lp-shop-vertical-card__title">{{ t(program.labelKey) }}</span>
-              <span class="lp-shop-vertical-card__desc">{{ t(program.descKey) }}</span>
-            </span>
-            <Icon icon="solar:arrow-right-up-linear" class="lp-shop-vertical-card__arrow" aria-hidden="true" />
-          </router-link>
-          <a
-            :href="bizWebUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="lp-shop-vertical-card lp-shop-vertical-card--biz text-decoration-none"
-            role="listitem"
-          >
-            <span class="lp-shop-vertical-card__icon" aria-hidden="true">
-              <Icon icon="solar:buildings-3-bold" />
-            </span>
-            <span class="lp-shop-vertical-card__copy">
-              <span class="lp-shop-vertical-card__title">{{ t('landing.navBusiness') }}</span>
-              <span class="lp-shop-vertical-card__desc">{{ t('landing.exploreBizPortalDesc') }}</span>
-            </span>
-            <Icon icon="solar:square-arrow-right-up-linear" class="lp-shop-vertical-card__arrow" aria-hidden="true" />
-          </a>
         </div>
       </div>
     </section>
@@ -1322,6 +1286,52 @@
       </div>
     </section>
 
+    <!-- Explore programs — before footer -->
+    <section class="lp-explore-programs-section lp-section py-4 py-lg-5">
+      <div class="container-lg">
+        <header class="lp-explore-head mb-4">
+          <h3 class="lp-explore-head__title">{{ t('landing.exploreProgramsTitle') }}</h3>
+          <p class="lp-explore-head__sub mb-0">{{ t('landing.exploreProgramsSub') }}</p>
+        </header>
+
+        <div class="lp-shop-verticals" role="list">
+          <router-link
+            v-for="program in marketingPrograms"
+            :key="program.key"
+            :to="program.route"
+            class="lp-shop-vertical-card text-decoration-none"
+            :class="`lp-shop-vertical-card--${program.accent}`"
+            role="listitem"
+          >
+            <span class="lp-shop-vertical-card__icon" aria-hidden="true">
+              <Icon :icon="program.icon" />
+            </span>
+            <span class="lp-shop-vertical-card__copy">
+              <span class="lp-shop-vertical-card__title">{{ t(program.labelKey) }}</span>
+              <span class="lp-shop-vertical-card__desc">{{ t(program.descKey) }}</span>
+            </span>
+            <Icon icon="solar:arrow-right-up-linear" class="lp-shop-vertical-card__arrow" aria-hidden="true" />
+          </router-link>
+          <a
+            :href="bizWebUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="lp-shop-vertical-card lp-shop-vertical-card--biz text-decoration-none"
+            role="listitem"
+          >
+            <span class="lp-shop-vertical-card__icon" aria-hidden="true">
+              <Icon icon="solar:buildings-3-bold" />
+            </span>
+            <span class="lp-shop-vertical-card__copy">
+              <span class="lp-shop-vertical-card__title">{{ t('landing.navBusiness') }}</span>
+              <span class="lp-shop-vertical-card__desc">{{ t('landing.exploreBizPortalDesc') }}</span>
+            </span>
+            <Icon icon="solar:square-arrow-right-up-linear" class="lp-shop-vertical-card__arrow" aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </section>
+
     <LandingFooter />
   </div>
 </template>
@@ -1337,6 +1347,7 @@ import LandingHeader from '@/views/marketing/partials/LandingHeader.vue'
 import LandingFooter from '@/views/marketing/partials/LandingFooter.vue'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { buyerRoutes, landingAnchors, shopVerticals, marketingPrograms, bizWebUrl } from '@/config/landing-links'
+import { kkooIcon, kkooIconFromLegacy, KKOO_ICON_CHECK } from '@/utils/kkooIcons'
 import { appLinks } from '@/config/app-links'
 import { landingApi, type LandingStatItem } from '@/api/landing'
 
@@ -1425,18 +1436,8 @@ const heroImage = heroImg
 const ctaImage = catImg
 // NOTE: "Radion-style showcase" section removed.
 
-function bi(iconName: string) {
-  return `bi:${iconName}`
-}
-
-function biFromClass(className: string) {
-  // Supports legacy strings like "bi bi-bag-fill"
-  const iconSlug = className
-    .split(/\s+/)
-    .find((t) => t.startsWith('bi-') && t !== 'bi')
-    ?.replace(/^bi-/, '')
-  return iconSlug ? `bi:${iconSlug}` : 'bi:question-circle'
-}
+const bi = kkooIcon
+const biFromClass = kkooIconFromLegacy
 
 type FeatureCard = { title: string; desc: string; icon: string; color: string }
 
@@ -1449,7 +1450,7 @@ function landingFeatureCards(
   return Array.from({ length: count }, (_, i) => ({
     title: t(`landing.${prefix}${i + 1}Title`),
     desc: t(`landing.${prefix}${i + 1}Desc`),
-    icon: icons[i] ?? 'bi bi-check-circle',
+    icon: icons[i] ?? KKOO_ICON_CHECK,
     color: colors[i] ?? 'rgba(88, 15, 168, 0.1)',
   }))
 }
@@ -2196,11 +2197,9 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
-
 /* ===== BRAND THEME VARS (KKOO tokens only) ===== */
 .lp-wrapper.mk-landing {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--kkoo-font-primary);
   --gr: 1.618;
   --primary: var(--kkoo-primary, var(--bs-kkoo-primary, #5c308f));
   --primary-dark: var(--kkoo-primary-dark, #3b1a5a);
@@ -2569,7 +2568,7 @@ html[data-bs-theme='dark'] .lp-wrapper.mk-landing .lp-section-heading--inverse .
 /* Kicker */
 .lp-hero-kicker {
   margin: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--kkoo-font-primary);
   font-size: clamp(0.65rem, 1.5vw, 0.75rem);
   font-weight: 700;
   letter-spacing: 0.28em;
@@ -2607,7 +2606,7 @@ html[data-bs-theme='dark'] .lp-wrapper.mk-landing .lp-section-heading--inverse .
 .lp-hero-display-text {
   display: inline-block;
   max-width: 100%;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--kkoo-font-primary);
   font-size: clamp(2.85rem, 13.5vw, 8.25rem);
   font-weight: 800;
   line-height: 0.92;
@@ -2634,7 +2633,7 @@ html[data-bs-theme='dark'] .lp-wrapper.mk-landing .lp-section-heading--inverse .
 }
 
 .lp-hero-display-sub {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--kkoo-font-primary);
   font-size: clamp(1.65rem, 5.5vw, 4.25rem);
   font-weight: 800;
   line-height: 1.05;
@@ -2684,7 +2683,7 @@ html[data-bs-theme='dark'] .lp-wrapper.mk-landing .lp-section-heading--inverse .
 
 /* Subtitle */
 .lp-hero-subtitle {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--kkoo-font-primary);
   font-size: clamp(0.98rem, 1.5vw + 0.75rem, 1.22rem);
   font-weight: 500;
   color: rgba(255, 255, 255, 0.76);
@@ -7081,7 +7080,7 @@ html[data-bs-theme='dark'] .lp-trust-card__body {
 .lp-testimonial-showcase__quote {
   display: block;
   margin-bottom: 0.65rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--kkoo-font-primary);
   font-size: clamp(2.75rem, 4.5vw, 3.75rem);
   line-height: 0.85;
   font-weight: 700;
@@ -7733,6 +7732,15 @@ html[data-bs-theme='dark'] .lp-wrapper.mk-landing :is(
 
 html[data-bs-theme='dark'] .lp-cta-section {
   background: transparent !important;
+}
+
+.lp-shop-verticals-section {
+  background: linear-gradient(180deg, rgba(250, 246, 240, 0.5) 0%, rgba(255, 255, 255, 0.92) 100%);
+}
+
+.lp-explore-programs-section {
+  border-top: 1px solid rgba(92, 48, 143, 0.08);
+  background: rgba(250, 246, 240, 0.45);
 }
 
 .lp-shop-verticals {

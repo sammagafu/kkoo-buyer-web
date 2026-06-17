@@ -10,88 +10,44 @@
         <RouterLink :to="{ name: 'pages.courier' }" class="context-nav-pill">{{ t('courier.context.driverApp') }}</RouterLink>
       </div>
     </div>
-    <section class="lp-section courier-hero">
-      <b-container class="px-3 px-sm-4 px-lg-4">
-        <div class="courier-hero-grid">
-          <div class="courier-copy">
-            <p class="courier-eyebrow">{{ t('courier.hero.eyebrow') }}</p>
-            <h1 class="courier-title">
-              {{ t('courier.hero.title1') }}
-              <span>{{ t('courier.hero.title2') }}</span>
-            </h1>
-            <p class="courier-lead">
-              {{ t('courier.hero.lead') }}
-            </p>
-            <div class="courier-actions">
-              <b-button
-                class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--lg border-0 p-0 text-white d-inline-flex align-items-center"
-                :to="{ name: 'buyer.ride' }"
-              >
-                <span class="lp-btn-pill__label">{{ t('courier.hero.ctaWeb') }}</span>
-                <span class="lp-btn-pill__well" aria-hidden="true">
-                  <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
-                </span>
-              </b-button>
-              <b-button
-                variant="link"
-                class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg border-0 p-0 d-inline-flex align-items-center"
-                :to="{ name: 'auth.sign-in' }"
-              >
-                <span class="lp-btn-pill__label">{{ t('courier.hero.ctaRegister') }}</span>
-                <span class="lp-btn-pill__well" aria-hidden="true">
-                  <Icon icon="solar:chat-round-dots-linear" class="lp-btn-pill__icon" />
-                </span>
-              </b-button>
-            </div>
-            <div class="courier-proof">
-              <span v-for="proof in proofPoints" :key="proof" class="courier-proof-chip">{{ proof }}</span>
-            </div>
-          </div>
+    <VerticalHero
+      :eyebrow="t('courier.hero.eyebrow')"
+      :title="t('courier.hero.title1')"
+      :title-accent="t('courier.hero.title2')"
+      :lead="t('courier.hero.lead')"
+      :image="courierPlaceholder"
+      :image-alt="t('courier.hero.imageAlt')"
+      :chips="proofPoints"
+    >
+      <template #actions>
+        <b-button
+          class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--lg border-0 p-0 text-white d-inline-flex align-items-center"
+          :to="{ name: 'buyer.ride' }"
+        >
+          <span class="lp-btn-pill__label">{{ t('courier.hero.ctaWeb') }}</span>
+          <span class="lp-btn-pill__well" aria-hidden="true">
+            <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
+          </span>
+        </b-button>
+        <b-button
+          variant="link"
+          class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg border-0 p-0 d-inline-flex align-items-center"
+          :to="{ name: 'auth.sign-in' }"
+        >
+          <span class="lp-btn-pill__label">{{ t('courier.hero.ctaRegister') }}</span>
+          <span class="lp-btn-pill__well" aria-hidden="true">
+            <Icon icon="solar:user-plus-bold" class="lp-btn-pill__icon" />
+          </span>
+        </b-button>
+      </template>
+    </VerticalHero>
 
-          <div class="courier-visual">
-            <article class="hero-visual-card">
-              <img :src="courierPlaceholder" :alt="t('courier.hero.imageAlt')" class="hero-visual-image" />
-              <div class="hero-visual-overlay">
-                <div class="overlay-strip">
-                  <span>{{ t('courier.hero.overlay.shiftRhythmLabel') }}</span>
-                  <strong>{{ t('courier.hero.overlay.shiftRhythmValue') }}</strong>
-                </div>
-                <div class="overlay-mini-grid">
-                  <div class="overlay-mini-card">
-                    <span>{{ t('courier.hero.overlay.runsLabel') }}</span>
-                    <strong>{{ t('courier.hero.overlay.runsValue') }}</strong>
-                  </div>
-                  <div class="overlay-mini-card">
-                    <span>{{ t('courier.hero.overlay.controlLabel') }}</span>
-                    <strong>{{ t('courier.hero.overlay.controlValue') }}</strong>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-      </b-container>
-    </section>
-
-    <section class="lp-section">
-      <b-container class="px-3 px-sm-4 px-lg-4">
-        <div class="section-heading">
-          <p class="section-kicker">{{ t('courier.sections.whyJoin.kicker') }}</p>
-          <h2 class="section-title">{{ t('courier.sections.whyJoin.title') }}</h2>
-          <p class="section-copy">{{ t('courier.sections.whyJoin.copy') }}</p>
-        </div>
-
-        <div class="benefit-grid">
-          <article v-for="benefit in benefits" :key="benefit.title" class="benefit-card">
-            <div class="benefit-icon">
-              <Icon :icon="benefit.icon" />
-            </div>
-            <h3>{{ benefit.title }}</h3>
-            <p>{{ benefit.copy }}</p>
-          </article>
-        </div>
-      </b-container>
-    </section>
+    <VerticalCardGrid
+      :kicker="t('courier.sections.whyJoin.kicker')"
+      :title="t('courier.sections.whyJoin.title')"
+      :cards="benefitCards"
+      :columns="2"
+    />
 
     <section class="lp-section earnings-surface">
       <b-container class="px-3 px-sm-4 px-lg-4">
@@ -200,6 +156,9 @@ import { Icon } from '@iconify/vue'
 import { RouterLink } from 'vue-router'
 
 import MarketingLayout from './MarketingLayout.vue'
+import VerticalHero from './components/VerticalHero.vue'
+import VerticalCardGrid from './components/VerticalCardGrid.vue'
+import type { VerticalCard } from './components/VerticalCardGrid.vue'
 import courierPlaceholder from '@/assets/images/landing/placeholders/courier-hero-placeholder.svg'
 
 const { t } = useI18n()
@@ -232,6 +191,15 @@ const benefits = computed(() => [
     copy: t('courier.benefits.4.copy'),
   },
 ])
+
+const benefitCards = computed<VerticalCard[]>(() =>
+  benefits.value.map((b, i) => ({
+    key: `benefit-${i}`,
+    title: b.title,
+    copy: b.copy,
+    icon: b.icon,
+  })),
+)
 
 const boosters = computed(() => [
   {

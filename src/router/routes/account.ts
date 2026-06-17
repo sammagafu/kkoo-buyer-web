@@ -1,21 +1,19 @@
 import { setTitle } from './meta'
 
+const accountShell = { authRequired: true, buyerShell: true, buyerShoppingLayout: true }
+
 export const accountRoutes = [
     {
         path: '/account',
         name: 'account.home',
-        meta: {
-            title: setTitle('My Account'),
-            authRequired: true
-        },
-        component: () => import('@/views/account/AccountHub.vue'),
+        redirect: (to) => ({ name: 'buyer.settings', query: to.query }),
     },
     {
         path: '/account/profile',
         name: 'account.profile',
         meta: {
             title: setTitle('Account Profile'),
-            authRequired: true
+            ...accountShell,
         },
         component: () => import('@/views/account/profile.vue'),
     },
@@ -24,7 +22,7 @@ export const accountRoutes = [
         name: 'account.notifications',
         meta: {
             title: setTitle('Notifications'),
-            authRequired: true
+            ...accountShell,
         },
         component: () => import('@/views/account/Notifications.vue'),
     },
@@ -33,7 +31,7 @@ export const accountRoutes = [
         name: 'account.backup-codes',
         meta: {
             title: setTitle('Backup codes'),
-            authRequired: true
+            ...accountShell,
         },
         component: () => import('@/views/account/BackupCodes.vue'),
     }

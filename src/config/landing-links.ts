@@ -1,8 +1,11 @@
 /**
  * Canonical routes and external app URLs for the buyer landing experience.
  */
+import { BUYER_DASHBOARD_ROUTE } from '@/constants/buyerDashboard'
+
 export const buyerRoutes = {
-  marketplace: { name: 'buyer.marketplace' },
+  marketplace: BUYER_DASHBOARD_ROUTE,
+  dashboard: BUYER_DASHBOARD_ROUTE,
   eats: { name: 'buyer.eats' },
   grocery: { name: 'buyer.grocery' },
   send: { name: 'buyer.send' },

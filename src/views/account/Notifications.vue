@@ -1,84 +1,90 @@
 <template>
-  <VerticalLayout>
-    <b-row>
-      <b-col>
-        <h4 class="mb-1">Notifications</h4>
-        <p class="text-muted small mb-3">In-app notifications from the platform.</p>
-      </b-col>
-      <b-col cols="12" class="d-flex justify-content-end gap-2 mb-3">
-        <b-button
-          v-if="unreadCount > 0"
-          variant="outline-primary"
-          size="sm"
-          :disabled="markingAll"
-          @click="markAllRead"
-        >
-          Mark all read
-        </b-button>
-      </b-col>
-    </b-row>
-    <b-card v-if="loading" class="text-center py-5">
-      <b-spinner small class="me-2" />
-      Loading…
-    </b-card>
-    <b-card v-else-if="error" class="border-warning">
-      <p class="mb-0 text-warning">{{ error }}</p>
-    </b-card>
-    <b-list-group v-else-if="items.length" flush>
-      <b-list-group-item
+  <div class="buyer-xp">
+    <header class="buyer-page-head">
+      <button type="button" class="buyer-page-head__back" @click="router.push({ name: 'buyer.settings' })">
+        <Icon icon="solar:arrow-left-linear" />
+      </button>
+      <h1 class="buyer-page-head__title">{{ t('buyerXp.settings.notifications') }}</h1>
+      <p class="buyer-page-head__meta">{{ t('buyerXp.settings.notificationsSub') }}</p>
+    </header>
+
+    <div v-if="unreadCount > 0" class="buyer-btn-row mb-3">
+      <button
+        type="button"
+        class="buyer-venue__chip buyer-venue__chip--primary"
+        :disabled="markingAll"
+        @click="markAllRead"
+      >
+        {{ markingAll ? 'Updating…' : 'Mark all read' }}
+      </button>
+    </div>
+
+    <p v-if="loading" class="shop-products__status">{{ t('buyerXp.common.loading') }}</p>
+    <p v-else-if="error" class="buyer-xp-toast buyer-xp-toast--err">{{ error }}</p>
+
+    <section v-else-if="items.length" class="buyer-hub-list">
+      <article
         v-for="n in items"
         :key="n.id"
-        :class="{ 'bg-light': !n.read_at }"
-        class="d-flex align-items-start gap-3 py-3"
+        class="buyer-detail-card buyer-notify-item"
+        :class="{ 'buyer-notify-item--unread': !n.read_at }"
         @click="openNotification(n)"
       >
-        <span class="rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center bg-soft-primary text-primary" style="width: 40px; height: 40px;">
-          <Icon icon="solar:bell-bing-broken" class="fs-20" />
-        </span>
-        <div class="flex-grow-1 min-w-0">
-          <div class="d-flex justify-content-between align-items-start gap-2">
-            <strong class="text-body">{{ n.title || 'Notification' }}</strong>
-            <small class="text-muted flex-shrink-0">{{ formatDate(n.created_at) }}</small>
-          </div>
-          <p v-if="n.message" class="mb-0 small text-muted">{{ n.message }}</p>
-          <div v-if="n.data && (n.data.order_id || n.data.order_number)" class="mt-2">
-            <a
-              v-if="n.data.order_id && isPanelUser && typeof orderLink(n) === 'string'"
-              :href="orderLink(n) as string"
-              class="btn btn-sm btn-soft-primary"
-              target="_blank"
-              rel="noopener"
-              @click.stop
-            >
-              View order
-            </a>
-            <router-link
-              v-else-if="n.data.order_id && isPanelUser"
-              :to="orderLink(n) as { name: string }"
-              class="btn btn-sm btn-soft-primary"
-              @click.stop
-            >
-              View order
-            </router-link>
+        <div class="buyer-notify-item__head">
+          <span class="buyer-notify-item__icon" aria-hidden="true">
+            <Icon icon="solar:bell-bing-broken" />
+          </span>
+          <div class="min-w-0 flex-grow-1">
+            <div class="buyer-detail-row">
+              <strong>{{ n.title || 'Notification' }}</strong>
+              <span class="buyer-page-head__meta">{{ formatDate(n.created_at) }}</span>
+            </div>
+            <p v-if="n.message" class="buyer-page-head__meta mb-0">{{ n.message }}</p>
+            <div v-if="n.data && (n.data.order_id || n.data.order_number)" class="mt-2">
+              <a
+                v-if="n.data.order_id && isPanelUser && orderLinkHref(n)"
+                :href="orderLinkHref(n)"
+                class="buyer-venue__chip"
+                target="_blank"
+                rel="noopener"
+                @click.stop
+              >
+                View order
+              </a>
+              <router-link
+                v-else-if="n.data.order_id && isPanelUser"
+                :to="orderLinkRoute(n)"
+                class="buyer-venue__chip"
+                @click.stop
+              >
+                View order
+              </router-link>
+            </div>
           </div>
         </div>
-      </b-list-group-item>
-    </b-list-group>
-    <b-card v-else class="text-center py-5 text-muted">
-      No notifications yet.
-    </b-card>
-  </VerticalLayout>
+      </article>
+    </section>
+
+    <BuyerEmptyState
+      v-else
+      icon="solar:bell-bold"
+      title="No notifications yet"
+      message="Alerts and updates from KKOO will appear here."
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
-import VerticalLayout from '@/layouts/VerticalLayout.vue'
 import { notificationsApi } from '@/api'
 import { useAuthStore } from '@/stores/auth'
 import { adminWebPath, bizWebPath } from '@/config/cross-app-links'
+import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 
+const { t } = useI18n()
 const router = useRouter()
 const auth = useAuthStore()
 const loading = ref(true)
@@ -100,7 +106,17 @@ function orderLink(n: { data?: Record<string, unknown> }) {
   const id = typeof rawId === 'string' || typeof rawId === 'number' ? rawId : undefined
   if (id !== undefined && auth.isSeller) return bizWebPath(`/seller/orders/${id}`)
   if (id !== undefined && auth.isAdminOrStaff) return adminWebPath(`/admin/orders/${id}`)
-  return { name: 'account.home' }
+  return { name: 'buyer.settings' }
+}
+
+function orderLinkHref(n: { data?: Record<string, unknown> }) {
+  const link = orderLink(n)
+  return typeof link === 'string' ? link : ''
+}
+
+function orderLinkRoute(n: { data?: Record<string, unknown> }) {
+  const link = orderLink(n)
+  return typeof link === 'string' ? { name: 'buyer.settings' } : link
 }
 
 async function openNotification(n: { id: number; read_at?: string | null }) {
@@ -109,7 +125,9 @@ async function openNotification(n: { id: number; read_at?: string | null }) {
       await notificationsApi.markRead(n.id)
       n.read_at = new Date().toISOString()
       unreadCount.value = Math.max(0, unreadCount.value - 1)
-    } catch (_) {}
+    } catch {
+      // ignore
+    }
   }
 }
 
@@ -117,16 +135,20 @@ async function markAllRead() {
   markingAll.value = true
   try {
     await notificationsApi.markAllRead()
-    items.value.forEach((n) => { n.read_at = n.read_at || new Date().toISOString() })
+    items.value.forEach((n) => {
+      n.read_at = n.read_at ?? new Date().toISOString()
+    })
     unreadCount.value = 0
-  } catch (_) {
-    error.value = 'Failed to mark all as read'
+  } catch {
+    error.value = 'Could not mark all as read'
   } finally {
     markingAll.value = false
   }
 }
 
 onMounted(async () => {
+  loading.value = true
+  error.value = ''
   try {
     const [listRes, countRes] = await Promise.all([
       notificationsApi.list({ unread_only: false }),
@@ -144,3 +166,32 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+.buyer-notify-item {
+  cursor: pointer;
+}
+
+.buyer-notify-item--unread {
+  border-color: rgba(var(--bs-primary-rgb), 0.35);
+}
+
+.buyer-notify-item__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.buyer-notify-item__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--buyer-chip-bg);
+  color: var(--kkoo-primary);
+  font-size: 1.15rem;
+}
+</style>

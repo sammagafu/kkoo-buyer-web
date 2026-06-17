@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia'
 import {useLocalStorage} from '@vueuse/core'
 import {toggleDocumentAttribute} from '@/helpers'
+import {applyDocumentTheme} from '@/helpers/theme'
 
 type LayoutType = {
     theme: 'light' | 'dark'
@@ -21,7 +22,7 @@ export const useLayoutStore = defineStore('layout_store', () => {
 
     const setTheme = (nTheme: LayoutType['theme']) => {
         layout.value.theme = nTheme
-        toggleDocumentAttribute('data-bs-theme', layout.value.theme)
+        applyDocumentTheme(nTheme)
     }
 
     const setTopBarColor = (nColor: LayoutType['topBarColor']) => {

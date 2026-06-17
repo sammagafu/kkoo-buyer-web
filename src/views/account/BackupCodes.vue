@@ -1,80 +1,83 @@
 <template>
-  <VerticalLayout>
-    <b-card title="Backup codes">
-      <p class="text-muted">
-        One-time codes you can use at sign-in if you cannot receive SMS OTP. Each code works once. Store them in a password
-        manager or print them—KKOO cannot show the same codes again from the server after you leave this page.
+  <div class="buyer-xp">
+    <header class="buyer-page-head">
+      <button type="button" class="buyer-page-head__back" @click="router.push({ name: 'buyer.settings' })">
+        <Icon icon="solar:arrow-left-linear" />
+      </button>
+      <h1 class="buyer-page-head__title">{{ t('buyerXp.settings.backupCodes') }}</h1>
+      <p class="buyer-page-head__meta">{{ t('buyerXp.settings.backupCodesSub') }}</p>
+    </header>
+
+    <section class="buyer-detail-card">
+      <p class="buyer-page-head__meta">
+        One-time codes you can use at sign-in if you cannot receive SMS OTP. Each code works once. Store them in a
+        password manager or print them—KKOO cannot show the same codes again from the server after you leave this page.
       </p>
 
-      <b-alert v-if="error" variant="danger" show class="mb-3">{{ error }}</b-alert>
-      <p v-if="statusNote && !allCodes.length" class="text-muted small mb-3">{{ statusNote }}</p>
+      <p v-if="error" class="buyer-xp-toast buyer-xp-toast--err mt-3">{{ error }}</p>
+      <p v-if="statusNote && !allCodes.length" class="buyer-page-head__meta mt-2">{{ statusNote }}</p>
 
-      <div v-if="loading" class="text-muted py-3">Loading…</div>
+      <p v-if="loading" class="shop-products__status mt-3">Loading…</p>
       <template v-else>
-        <b-row class="g-3 mb-4">
-          <b-col cols="12" sm="6">
-            <div class="border rounded p-3 h-100">
-              <div class="text-muted small">Unused codes</div>
-              <div class="fs-4 fw-semibold">{{ unusedCount }}</div>
-            </div>
-          </b-col>
-          <b-col cols="12" sm="6">
-            <div class="border rounded p-3 h-100">
-              <div class="text-muted small">Already used</div>
-              <div class="fs-4 fw-semibold">{{ consumedCount }}</div>
-            </div>
-          </b-col>
-        </b-row>
-
-        <div v-if="allCodes.length" class="mb-4">
-          <h6 class="mb-1">All your codes</h6>
-          <p class="text-muted small mb-3">
-            Saved on this browser. Copy or print them—regenerating replaces unused codes on the server.
-          </p>
-          <div class="backup-codes-grid mb-3">
-            <div
-              v-for="(code, index) in allCodes"
-              :key="`${index}-${code}`"
-              class="backup-code-tile border rounded d-flex align-items-center gap-2 px-3 py-2"
-            >
-              <span class="backup-code-index rounded-circle flex-shrink-0">{{ index + 1 }}</span>
-              <code class="backup-code-value flex-grow-1 mb-0">{{ code }}</code>
-            </div>
+        <div class="backup-stats mt-3">
+          <div class="buyer-stat-card">
+            <span class="buyer-page-head__meta">Unused codes</span>
+            <strong class="backup-stats__value">{{ unusedCount }}</strong>
           </div>
-          <div class="d-flex flex-wrap gap-2">
-            <b-button variant="outline-primary" size="sm" @click="copyCodes">Copy all</b-button>
+          <div class="buyer-stat-card">
+            <span class="buyer-page-head__meta">Already used</span>
+            <strong class="backup-stats__value">{{ consumedCount }}</strong>
           </div>
         </div>
 
-        <b-alert v-else-if="unusedCount > 0" show variant="warning" class="mb-4">
-          You have {{ unusedCount }} unused code(s) on the server, but this browser does not have them saved. Regenerate to
-          see all codes here (old unused codes will stop working).
-        </b-alert>
-
-        <div v-if="newCodesBanner" class="mb-3">
-          <p class="text-warning small mb-0">{{ newCodesBanner }}</p>
+        <div v-if="allCodes.length" class="mt-4">
+          <BuyerSectionHeader title="All your codes" subtitle="Saved on this browser. Copy or print them—regenerating replaces unused codes on the server." />
+          <div class="backup-codes-grid mt-2">
+            <div v-for="(code, index) in allCodes" :key="`${index}-${code}`" class="backup-code-tile">
+              <span class="backup-code-index">{{ index + 1 }}</span>
+              <code class="backup-code-value">{{ code }}</code>
+            </div>
+          </div>
+          <button type="button" class="buyer-venue__chip mt-3" @click="copyCodes">Copy all</button>
         </div>
 
-        <div class="d-flex flex-wrap gap-2 align-items-center">
-          <b-button variant="primary" :disabled="regenerating || !codesAvailable" @click="confirmRegenerate">
+        <p v-else-if="unusedCount > 0" class="buyer-xp-toast mt-3">
+          You have {{ unusedCount }} unused code(s) on the server, but this browser does not have them saved. Regenerate
+          to see all codes here (old unused codes will stop working).
+        </p>
+
+        <p v-if="newCodesBanner" class="buyer-xp-toast buyer-xp-toast--ok mt-3">{{ newCodesBanner }}</p>
+
+        <div class="buyer-btn-row buyer-form-actions mt-4">
+          <button
+            type="button"
+            class="buyer-venue__chip buyer-venue__chip--primary"
+            :disabled="regenerating || !codesAvailable"
+            @click="confirmRegenerate"
+          >
             {{ unusedCount > 0 || allCodes.length ? 'Regenerate backup codes' : 'Generate backup codes' }}
-          </b-button>
-          <span v-if="!codesAvailable" class="text-muted small">Backup codes are not available in this environment.</span>
+          </button>
+          <span v-if="!codesAvailable" class="buyer-page-head__meta">Backup codes are not available in this environment.</span>
         </div>
       </template>
-    </b-card>
-  </VerticalLayout>
+    </section>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import VerticalLayout from '@/layouts/VerticalLayout.vue'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { Icon } from '@iconify/vue'
 import { useAuthStore } from '@/stores/auth'
 import { userApi } from '@/api'
 import { formatApiError } from '@/utils/formatApiError'
 import { toastSuccess, toastError } from '@/utils/toast'
 import { loadStoredBackupCodes, saveStoredBackupCodes } from '@/utils/backupCodesStorage'
+import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 
+const { t } = useI18n()
+const router = useRouter()
 const auth = useAuthStore()
 
 const loading = ref(true)
@@ -171,10 +174,33 @@ onMounted(loadStatus)
 </script>
 
 <style scoped>
+.backup-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.backup-stats__value {
+  display: block;
+  font-size: 1.5rem;
+  margin-top: 0.25rem;
+  color: var(--buyer-ink);
+}
+
 .backup-codes-grid {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.backup-code-tile {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--buyer-border);
+  background: var(--buyer-chip-bg);
 }
 
 .backup-code-index {
@@ -183,14 +209,17 @@ onMounted(loadStatus)
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
   font-size: 0.75rem;
   font-weight: 700;
-  background: var(--bs-primary-bg-subtle, #f0e8f5);
-  color: var(--bs-primary, #6b2d8a);
+  background: rgba(var(--bs-primary-rgb), 0.12);
+  color: var(--kkoo-primary);
+  flex-shrink: 0;
 }
 
 .backup-code-value {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   letter-spacing: 0.08em;
+  color: var(--buyer-ink);
 }
 </style>

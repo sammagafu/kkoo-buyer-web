@@ -746,6 +746,11 @@ html[data-bs-theme='dark'] .lp-layout {
   opacity: 0.9;
 }
 
+html[data-bs-theme='dark'] .lp-layout :deep(section.lp-section:not(.lp-hero-section)) {
+  background: transparent;
+  color: var(--lp-body-ink, var(--bs-body-color));
+}
+
 html[data-bs-theme='dark'] .lp-header {
   background: color-mix(in srgb, var(--lp-landing-paper) 84%, transparent);
   border-bottom-color: rgba(255, 255, 255, 0.08);
@@ -1802,6 +1807,56 @@ html[data-bs-theme='dark'] .lp-footer-link:hover {
 
 .lp-footer-border {
   border-color: var(--bs-border-color) !important;
+}
+
+/* Forms + readable text on marketing pages (light + dark) */
+.lp-layout :deep(.form-control),
+.lp-layout :deep(.form-select),
+.lp-layout :deep(textarea.form-control) {
+  background-color: var(--lp-card-bg, var(--bs-body-bg));
+  border: 1px solid var(--lp-border-color, var(--bs-border-color));
+  color: var(--bs-body-color);
+}
+
+.lp-layout :deep(.form-control::placeholder),
+.lp-layout :deep(textarea.form-control::placeholder) {
+  color: var(--lp-text-faint, var(--bs-secondary-color));
+  opacity: 1;
+}
+
+.lp-layout :deep(.form-control:focus),
+.lp-layout :deep(.form-select:focus),
+.lp-layout :deep(textarea.form-control:focus) {
+  border-color: color-mix(in srgb, var(--bs-secondary) 55%, var(--lp-border-color));
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--bs-secondary) 18%, transparent);
+  background-color: var(--lp-card-bg, var(--bs-body-bg));
+  color: var(--bs-body-color);
+}
+
+.lp-layout :deep(.form-label),
+.lp-layout :deep(label) {
+  color: var(--lp-heading-ink, var(--bs-heading-color));
+}
+
+.lp-layout :deep(.text-muted) {
+  color: var(--lp-text-soft, var(--bs-secondary-color)) !important;
+}
+
+.lp-layout :deep(.section-copy),
+.lp-layout :deep(.directory-lead),
+.lp-layout :deep(.program-lead),
+.lp-layout :deep(.courier-lead) {
+  color: var(--lp-text-soft, var(--bs-secondary-color));
+}
+
+html[data-bs-theme='dark'] .lp-layout :deep(.directory-card-tag) {
+  color: var(--lp-cream);
+}
+
+html[data-bs-theme='dark'] .lp-layout :deep(.directory-hero-badge) {
+  background: color-mix(in srgb, var(--lp-card-bg) 94%, transparent);
+  border-color: var(--lp-border-color);
+  color: var(--bs-body-color);
 }
 
 </style>

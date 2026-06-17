@@ -147,22 +147,23 @@ const formatNumber = (num: number) => {
 
 <style scoped lang="scss">
 .leaderboard {
-  background: white;
+  background: var(--kkoo-panel-bg);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--buyer-shadow-color);
   overflow: hidden;
+  color: var(--kkoo-panel-ink);
 
   .leaderboard-header {
     padding: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--kkoo-panel-border);
 
     h3 {
       margin: 0;
       font-weight: 700;
-      color: #333;
+      color: var(--kkoo-panel-ink);
     }
 
     .filter-buttons {
@@ -181,10 +182,10 @@ const formatNumber = (num: number) => {
       grid-template-columns: 60px 1fr 120px 100px;
       gap: 1rem;
       padding: 1rem 1.5rem;
-      background: #f8f9fa;
-      border-bottom: 1px solid #e0e0e0;
+      background: var(--kkoo-panel-muted);
+      border-bottom: 1px solid var(--kkoo-panel-border);
       font-weight: 600;
-      color: #666;
+      color: var(--kkoo-panel-sub);
       font-size: 0.85rem;
     }
 
@@ -193,12 +194,12 @@ const formatNumber = (num: number) => {
       grid-template-columns: 60px 1fr 120px 100px;
       gap: 1rem;
       padding: 1.2rem 1.5rem;
-      border-bottom: 1px solid #e0e0e0;
+      border-bottom: 1px solid var(--kkoo-panel-border);
       align-items: center;
       transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: #f8f9fa;
+        background-color: var(--kkoo-panel-muted);
       }
 
       &.rank-first {

@@ -6,6 +6,8 @@ import router from './router'
 import { i18n } from './i18n'
 import { wow } from './directives/wow'
 import { initOfflineDB } from './utils/offlineStorage'
+import KkooIcon from '@/components/KkooIcon.vue'
+import { useLayoutStore } from '@/stores/layout'
 
 import {createBootstrap} from 'bootstrap-vue-next'
 
@@ -29,8 +31,12 @@ import '@/assets/scss/icons.scss'
 
 const app = createApp(App)
 
+app.component('KkooIcon', KkooIcon)
 app.directive('wow', wow)
-app.use(createPinia())
+const pinia = createPinia()
+app.use(pinia)
+// Apply saved theme before first paint so dark mode surfaces render correctly
+useLayoutStore(pinia).init()
 app.use(router)
 app.use(i18n)
 app.use(createBootstrap())

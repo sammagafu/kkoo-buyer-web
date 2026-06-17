@@ -13,7 +13,7 @@ function apiBaseURL(): string {
   if (typeof window !== 'undefined') {
     return `${window.location.origin.replace(/\/$/, '')}/api/v1`
   }
-  return 'http://localhost:8080/api/v1'
+  return 'http://localhost:8000/api/v1'
 }
 
 /** Decode JWT `exp` (seconds since epoch). Returns null if missing or invalid. */

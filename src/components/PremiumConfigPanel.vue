@@ -561,9 +561,9 @@ onMounted(refreshAll)
 .tier-card,
 .membership-card,
 .toggle-card {
-  border: 1px solid #edf2f7;
+  border: 1px solid var(--kkoo-panel-border);
   border-radius: 1rem;
-  background: #fff;
+  background: var(--kkoo-panel-bg);
 }
 
 .tier-card {
@@ -660,7 +660,7 @@ onMounted(refreshAll)
 }
 
 .membership-status--pending_review {
-  background: #fff7e8;
+  background: var(--kkoo-accent-tint);
   color: #9a6700;
 }
 

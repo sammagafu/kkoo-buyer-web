@@ -1,0 +1,172 @@
+// Shared KKOO shell: typography + semantic colors (buyer shop + marketing landing)
+
+.buyer-shopping-shell,
+.buyer-xp,
+.lp-wrapper.mk-landing {
+  font-family: var(--kkoo-font-primary);
+  color: var(--buyer-ink, var(--kkoo-primary-dark));
+}
+
+.buyer-shopping-shell {
+  --bs-body-bg: var(--buyer-canvas);
+  --bs-body-color: var(--buyer-ink);
+  --bs-secondary-color: var(--buyer-muted);
+  --bs-tertiary-bg: var(--buyer-input-bg);
+  --bs-border-color: var(--buyer-border);
+  --bs-emphasis-color: var(--buyer-ink);
+  --bs-heading-color: var(--buyer-ink);
+  --bs-card-bg: var(--buyer-card-bg, var(--buyer-surface));
+  --bs-card-border-color: var(--buyer-card-border, var(--buyer-border));
+  --bs-card-cap-bg: var(--buyer-input-bg);
+  background-color: var(--buyer-canvas);
+  color: var(--buyer-ink);
+}
+
+.buyer-shopping-shell__main {
+  background-color: var(--buyer-canvas);
+  color: var(--buyer-ink);
+}
+
+.buyer-shopping-shell__main .buyer-xp {
+  background-color: transparent;
+  color: inherit;
+}
+
+// Buyer shop — explicit light canvas (beige) vs dark canvas (landing paper)
+html.buyer-shell-active:not([data-bs-theme='dark']):not(.theme-dark) {
+  &,
+  body,
+  #app {
+    background-color: #f8f2ec;
+    color: #3b1a5a;
+  }
+
+  .buyer-shopping-shell {
+    --buyer-canvas: #f8f2ec;
+    --buyer-ink: #3b1a5a;
+    --buyer-muted: #6a4c86;
+    --buyer-surface: #ffffff;
+    --buyer-card-bg: #ffffff;
+    --buyer-input-bg: #f8f2ec;
+    --buyer-chip-bg: #f1e7de;
+    --buyer-border: rgba(92, 48, 143, 0.14);
+    --buyer-border-strong: rgba(92, 48, 143, 0.14);
+    --bs-body-bg: #f8f2ec;
+    --bs-body-color: #3b1a5a;
+    background-color: #f8f2ec;
+    color: #3b1a5a;
+  }
+
+  .buyer-shopping-shell__main {
+    background-color: #f8f2ec;
+    color: #3b1a5a;
+  }
+}
+
+// Dark buyer canvas — applies to all buyer vertical pages (not only when html has buyer-shell-active)
+html[data-bs-theme='dark'],
+html.theme-dark {
+  &.buyer-shell-active {
+    &,
+    body,
+    #app {
+      background-color: #100c14;
+      color: #ede9f5;
+    }
+  }
+
+  .buyer-shopping-shell {
+    --buyer-canvas: #100c14;
+    --buyer-ink: #ede9f5;
+    --buyer-muted: rgba(237, 233, 245, 0.68);
+    --buyer-surface: #1c1822;
+    --buyer-card-bg: linear-gradient(
+      180deg,
+      rgba(27, 20, 32, 0.98) 0%,
+      rgba(16, 12, 20, 0.96) 100%
+    );
+    --buyer-card-border: rgba(255, 255, 255, 0.08);
+    --buyer-input-bg: #252030;
+    --buyer-chip-bg: rgba(255, 255, 255, 0.06);
+    --buyer-border: rgba(92, 48, 143, 0.28);
+    --buyer-border-strong: rgba(255, 255, 255, 0.12);
+    --buyer-search-placeholder: rgba(237, 233, 245, 0.45);
+    --buyer-shadow-color: rgba(0, 0, 0, 0.35);
+    --buyer-gradient-hero: linear-gradient(
+      180deg,
+      rgba(27, 20, 32, 0.98) 0%,
+      rgba(16, 12, 20, 0.96) 100%
+    );
+    --buyer-gradient-flash: linear-gradient(
+      180deg,
+      rgba(27, 20, 32, 0.98) 0%,
+      rgba(16, 12, 20, 0.96) 100%
+    );
+    --bs-body-bg: #100c14;
+    --bs-body-color: #ede9f5;
+    --bs-secondary-color: rgba(237, 233, 245, 0.68);
+    background-color: #100c14;
+    color: #ede9f5;
+  }
+
+  .buyer-shopping-shell__main {
+    background-color: #100c14;
+    color: #ede9f5;
+  }
+}
+
+// Card surfaces — clear contrast from canvas in each mode
+html.buyer-shell-active:not([data-bs-theme='dark']):not(.theme-dark) {
+  .buyer-surface,
+  .buyer-detail-card,
+  .buyer-hub-card,
+  .buyer-shortcut,
+  .buyer-stat-card,
+  .buyer-venue,
+  .buyer-flash-card,
+  .buyer-search-bar,
+  .shop-product-card,
+  .buyer-page-head__back {
+    background-color: #ffffff;
+    border-color: rgba(92, 48, 143, 0.12);
+    color: #3b1a5a;
+  }
+}
+
+html.buyer-shell-active[data-bs-theme='dark'],
+html.buyer-shell-active.theme-dark,
+html[data-bs-theme='dark'] .buyer-shopping-shell,
+html.theme-dark .buyer-shopping-shell {
+  .buyer-surface,
+  .buyer-detail-card,
+  .buyer-hub-card,
+  .buyer-shortcut,
+  .buyer-stat-card,
+  .buyer-venue,
+  .buyer-flash-card,
+  .buyer-search-bar,
+  .buyer-search-suggest,
+  .buyer-search-chip,
+  .buyer-ride-hero,
+  .buyer-ride-card,
+  .buyer-ride-vehicle,
+  .buyer-ride-fare,
+  .shop-product-card,
+  .buyer-page-head__back,
+  .buyer-cart-overlay__panel,
+  .buyer-bottom-nav__bar {
+    background: linear-gradient(
+      180deg,
+      rgba(27, 20, 32, 0.98) 0%,
+      rgba(16, 12, 20, 0.96) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #ede9f5;
+    box-shadow: 0 18px 46px rgba(0, 0, 0, 0.32);
+  }
+
+  .buyer-side-nav {
+    background: color-mix(in srgb, #1c1822 94%, #5c308f 6%);
+    border-right-color: rgba(92, 48, 143, 0.28);
+  }
+}

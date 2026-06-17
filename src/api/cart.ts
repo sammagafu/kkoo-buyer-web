@@ -3,9 +3,31 @@
  */
 import client from './client'
 
+type CartApiResponse = {
+  items: Array<{
+    id: number
+    sku_id?: number
+    quantity: number
+    total_price?: number
+    sku?: {
+      id?: number
+      price_override?: number | null
+      product?: {
+        title?: string
+        base_price?: number
+        discount_price?: number | null
+        media?: Array<{ file?: string }>
+      }
+    }
+    unavailable?: boolean
+  }>
+  final_total?: number
+  original_total?: number
+}
+
 export const cartApi = {
   get() {
-    return client.get<{ items: Array<{ sku: unknown; product: unknown; quantity: number }> }>('/cart/')
+    return client.get<CartApiResponse>('/cart/')
   },
   add(sku_id: number, quantity = 1) {
     return client.post('/cart/add/', { sku_id, quantity })

@@ -604,7 +604,7 @@ onMounted(() => {
 }
 
 .revenue-card {
-  background: white;
+  background: var(--kkoo-panel-bg);
   border-radius: 12px;
   padding: 1.5rem;
   display: flex;
@@ -665,7 +665,7 @@ onMounted(() => {
 }
 
 .chart-card {
-  background: white;
+  background: var(--kkoo-panel-bg);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -689,7 +689,7 @@ onMounted(() => {
 .geography-card,
 .premium-comparison-card,
 .insights-card {
-  background: white;
+  background: var(--kkoo-panel-bg);
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;

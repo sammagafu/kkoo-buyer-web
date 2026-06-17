@@ -9,15 +9,11 @@
       <p v-if="loadError" class="auth-alert auth-alert--danger">{{ loadError }}</p>
 
       <template v-else-if="challenge">
-        <p class="text-muted small mb-3">
-          <strong>{{ challenge.client_name }}</strong> is requesting access to your KKOO Account.
-        </p>
         <ul class="oauth-scope-list mb-4">
           <li v-for="scope in challenge.scopes" :key="scope">{{ scopeLabel(scope) }}</li>
         </ul>
 
         <div v-if="!auth.isAuthenticated">
-          <p class="text-muted small mb-3">{{ t('auth.kkooAccountSubtitle') }}</p>
           <b-form class="auth-center-form" @submit.prevent="otpSent ? verify() : requestOtp()" novalidate>
             <AuthField :label="t('auth.phoneNumber')" icon="bi-telephone">
               <b-form-input v-model="phone" type="tel" :readonly="otpSent" class="auth-field__input" />

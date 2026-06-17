@@ -20,6 +20,8 @@ export const ridesApi = {
     pickup_lng: number
     dropoff_lat: number
     dropoff_lng: number
+    vehicle_type?: string
+    energy_type?: 'fuel' | 'gas' | 'ev'
   }) {
     return client.get('/logistics/passenger/quote/', { params })
   },
@@ -28,5 +30,17 @@ export const ridesApi = {
       '/logistics/passenger/rides/',
       payload,
     )
+  },
+  listRides(params?: { status?: string }) {
+    return client.get<{ results?: unknown[] } | unknown[]>('/logistics/passenger/rides/', { params })
+  },
+  getRide(id: number | string) {
+    return client.get(`/logistics/passenger/rides/${id}/`)
+  },
+  cancelRide(id: number | string, data?: { reason?: string }) {
+    return client.post(`/logistics/passenger/rides/${id}/cancel/`, data ?? {})
+  },
+  getRideTracking(id: number | string) {
+    return client.get(`/logistics/passenger/rides/${id}/tracking/`)
   },
 }

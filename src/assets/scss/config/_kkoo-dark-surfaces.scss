@@ -1,0 +1,577 @@
+// Theme-aware surfaces — buyer shop, checkout, compare, marketing subpages
+
+html[data-bs-theme='dark'],
+html.theme-dark {
+  color-scheme: dark;
+
+  .buyer-shopping-shell {
+    --buyer-canvas: #100c14;
+    --buyer-ink: #ede9f5;
+    --buyer-muted: rgba(237, 233, 245, 0.68);
+    --buyer-surface: #1c1822;
+    --buyer-card-bg: linear-gradient(
+      180deg,
+      rgba(27, 20, 32, 0.98) 0%,
+      rgba(16, 12, 20, 0.96) 100%
+    );
+    --buyer-card-border: rgba(255, 255, 255, 0.08);
+    --buyer-input-bg: #252030;
+    --buyer-chip-bg: rgba(255, 255, 255, 0.06);
+    --buyer-border: rgba(92, 48, 143, 0.28);
+    --buyer-border-strong: rgba(255, 255, 255, 0.12);
+    --buyer-search-placeholder: rgba(237, 233, 245, 0.45);
+    --buyer-shadow-color: rgba(0, 0, 0, 0.35);
+    --buyer-gradient-hero: linear-gradient(
+      180deg,
+      rgba(27, 20, 32, 0.98) 0%,
+      rgba(16, 12, 20, 0.96) 100%
+    );
+    --buyer-gradient-flash: linear-gradient(
+      180deg,
+      rgba(27, 20, 32, 0.98) 0%,
+      rgba(16, 12, 20, 0.96) 100%
+    );
+    --bs-body-bg: #100c14;
+    --bs-body-color: #ede9f5;
+    --bs-secondary-color: rgba(237, 233, 245, 0.68);
+  }
+
+  // Shell — keep canvas on shell + main (never transparent)
+  body,
+  #app {
+    background-color: var(--buyer-canvas, #100c14);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-shopping-shell,
+  .buyer-shopping-shell__main,
+  .buyer-shopping-shell__main .buyer-xp,
+  .buyer-shopping-shell__main .buyer-search-page,
+  .buyer-shopping-shell__main .buyer-ride,
+  .buyer-shopping-shell__main .shop-main {
+    background-color: var(--buyer-canvas, #100c14);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-xp,
+  .buyer-search-page,
+  .buyer-ride,
+  .shop-main,
+  .eats-main,
+  .booking-page,
+  .webcheckout-page,
+  .web-compare-page,
+  .send-main {
+    color: var(--buyer-ink);
+  }
+
+  .buyer-page-head__title,
+  .buyer-page-head__kicker,
+  .buyer-search-page__title,
+  .buyer-home-hero__name {
+    color: var(--buyer-ink);
+  }
+
+  html.buyer-shell-active,
+  html.buyer-shell-active body,
+  html.buyer-shell-active #app {
+    background-color: var(--buyer-canvas);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-side-nav {
+    border-right-color: var(--buyer-border);
+    background: color-mix(in srgb, var(--buyer-surface) 94%, var(--kkoo-primary) 6%);
+  }
+
+  .buyer-side-nav__theme,
+  .buyer-side-nav__promo-btn {
+    border-color: var(--buyer-border-strong);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-side-nav__promo-btn {
+    background: var(--buyer-surface);
+    color: var(--kkoo-primary);
+  }
+
+  // Surfaces & cards — landing/admin dark gradient
+  .buyer-surface,
+  .buyer-detail-card,
+  .buyer-hub-card,
+  .buyer-venue,
+  .buyer-empty,
+  .buyer-flash-card,
+  .buyer-stat-card,
+  .buyer-shortcut,
+  .buyer-search-suggest,
+  .buyer-search-chip,
+  .buyer-ride-hero,
+  .buyer-ride-card,
+  .buyer-ride-vehicle,
+  .buyer-ride-fare,
+  .send-main__auth,
+  .booking-hotel-card,
+  .booking-room-card,
+  .booking-rooms-panel,
+  .compare-result-card,
+  .compare-card,
+  .compare-result-empty,
+  .compare-shell,
+  .webcheckout-card,
+  .careers-card,
+  .careers-apply,
+  .careers-hero-card,
+  .discover-card,
+  .discover-band,
+  .discover-hero-card,
+  .discover-ticket-card,
+  .discover-mine-card,
+  .partner-reg-card,
+  .shop-product-card,
+  .store-product-card {
+    background: var(--buyer-card-bg, var(--buyer-surface));
+    border-color: var(--buyer-card-border, var(--buyer-border));
+    color: var(--buyer-ink);
+    box-shadow: var(--buyer-card-shadow, 0 10px 28px var(--buyer-shadow-color));
+  }
+
+  // Pillars & tiles — glass on dark canvas (landing style)
+  .buyer-pillar,
+  .buyer-pillar--primary,
+  .buyer-pillar--gold,
+  .buyer-pillar--teal,
+  .buyer-pillar--pink,
+  .buyer-pillar--lavender,
+  .buyer-pillar--mint {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .buyer-pillar__icon {
+    background: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .buyer-flash-card {
+    border-color: rgba(247, 168, 41, 0.28);
+  }
+
+  .buyer-empty {
+    background: color-mix(in srgb, var(--buyer-surface) 90%, transparent);
+    border-color: var(--buyer-border-strong);
+  }
+
+  // Search & inputs
+  .buyer-search-bar,
+  .compare-search {
+    background: var(--buyer-card-bg, var(--buyer-surface));
+    border-color: var(--buyer-card-border, var(--buyer-border-strong));
+    box-shadow: var(--buyer-card-shadow, 0 8px 24px var(--buyer-shadow-color));
+  }
+
+  .buyer-search-bar input,
+  .buyer-search-bar__placeholder,
+  .compare-search input {
+    color: var(--buyer-ink);
+  }
+
+  .buyer-ride-field input,
+  .buyer-ride-field textarea,
+  .buyer-ride-field select,
+  .buyer-orders-toolbar select,
+  .form-select,
+  .form-control {
+    background: var(--buyer-input-bg);
+    border-color: var(--buyer-border-strong);
+    color: var(--buyer-ink);
+  }
+
+  .form-control::placeholder {
+    color: var(--buyer-search-placeholder);
+  }
+
+  // Chips & filters
+  .buyer-filter-chip {
+    background: var(--buyer-surface);
+    border-color: var(--buyer-border-strong);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-filter-chip--active {
+    background: rgba(92, 48, 143, 0.35);
+    border-color: rgba(92, 48, 143, 0.5);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-category-pill {
+    background: var(--buyer-chip-bg);
+    border-color: var(--buyer-border-strong);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-venue__chip:not(.buyer-venue__chip--primary) {
+    background: var(--buyer-chip-bg);
+    border-color: var(--buyer-border-strong);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-venue__chip--primary {
+    background: rgba(92, 48, 143, 0.35);
+    border-color: rgba(92, 48, 143, 0.5);
+    color: #ede9f5;
+  }
+
+  .send-main__footer {
+    background: color-mix(in srgb, var(--buyer-canvas, #100c14) 94%, transparent);
+    border-top-color: var(--buyer-border);
+  }
+
+  .send-main__crumb {
+    color: var(--buyer-muted);
+  }
+
+  .pill,
+  .pill--ghost,
+  .compare-count {
+    background: var(--buyer-chip-bg);
+    color: var(--buyer-ink);
+  }
+
+  .fav-btn {
+    background: var(--buyer-surface);
+    border-color: var(--buyer-border-strong);
+    color: var(--kkoo-accent);
+  }
+
+  // Booking / map
+  .booking-page__modes {
+    background: rgba(92, 48, 143, 0.2);
+  }
+
+  .booking-page__mode {
+    color: var(--buyer-ink);
+  }
+
+  .booking-page__mode--active {
+    background: var(--buyer-surface);
+    box-shadow: 0 4px 12px var(--buyer-shadow-color);
+  }
+
+  .booking-page__filter,
+  .booking-page__count,
+  .booking-hotel-card__addr,
+  .booking-hotel-card__pill,
+  .booking-rooms-panel__overline {
+    color: var(--buyer-muted);
+  }
+
+  .booking-hotel-card__name,
+  .booking-rooms-panel__title,
+  .booking-room-card__title {
+    color: var(--buyer-ink);
+  }
+
+  .buyer-hotels-map__hint,
+  .buyer-hotels-map__empty {
+    color: var(--buyer-muted);
+  }
+
+  // Chat
+  .buyer-chat__composer input {
+    background: var(--buyer-input-bg);
+    border-color: var(--buyer-border-strong);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-chat__bubble {
+    background: var(--buyer-surface);
+    border-color: var(--buyer-border);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-chat__bubble--mine {
+    background: rgba(92, 48, 143, 0.35);
+  }
+
+  .buyer-chat__composer button {
+    background: var(--kkoo-primary);
+    color: #fff;
+  }
+
+  // Nav & overlays
+  .buyer-bottom-nav__bar {
+    background: var(--buyer-surface);
+    border-color: var(--buyer-border);
+    box-shadow: 0 0.5rem 1.5rem var(--buyer-shadow-color);
+  }
+
+  .buyer-cart-overlay__panel,
+  .buyer-notify-overlay__panel,
+  .buyer-cart-drawer,
+  .buyer-notify-drawer {
+    background: var(--buyer-surface);
+    color: var(--buyer-ink);
+    border-color: var(--buyer-border);
+  }
+
+  .buyer-float-action {
+    background: var(--buyer-surface);
+    border-color: var(--buyer-border-strong);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-float-action__badge {
+    border-color: var(--buyer-surface);
+  }
+
+  // Checkout & shop legacy
+  .webcheckout-section-kicker {
+    color: var(--kkoo-accent);
+  }
+
+  .webcheckout-section-title {
+    color: var(--buyer-ink);
+  }
+
+  .shop-section__title {
+    color: var(--buyer-ink);
+  }
+
+  .shop-product-card {
+    background: var(--buyer-surface);
+    border-color: var(--buyer-border);
+  }
+
+  .shop-product-card__media {
+    background: var(--buyer-input-bg);
+  }
+
+  .fulfillment-bar {
+    background: color-mix(in srgb, var(--buyer-surface) 92%, var(--kkoo-primary) 8%);
+    border-color: var(--buyer-border);
+  }
+
+  .fulfillment-bar__mode {
+    background: var(--buyer-surface);
+    border-color: var(--buyer-border-strong);
+    color: var(--buyer-ink);
+  }
+
+  .fulfillment-bar__mode--active {
+    background: rgba(92, 48, 143, 0.35);
+    border-color: rgba(92, 48, 143, 0.5);
+  }
+
+  // Compare hero
+  .web-compare-kicker,
+  .web-compare-title,
+  .section-kicker,
+  .section-title {
+    color: var(--buyer-ink);
+  }
+
+  .web-compare-copy {
+    color: var(--buyer-muted);
+  }
+
+  .shop-product-card {
+    background: var(--buyer-card-bg, var(--buyer-surface));
+    border-color: var(--buyer-card-border, var(--buyer-border));
+  }
+
+  .shop-product-card__media {
+    background: var(--buyer-input-bg);
+  }
+
+  .shop-top__search,
+  .store-product-card__price-tag {
+    background: var(--buyer-card-bg, var(--buyer-surface));
+    border-color: var(--buyer-card-border, var(--buyer-border-strong));
+    color: var(--buyer-ink);
+  }
+
+  .buyer-cart-overlay__panel,
+  .buyer-notify-overlay__panel {
+    background: var(--kkoo-dark-surface-raised, var(--buyer-surface));
+    border-color: var(--buyer-card-border, var(--buyer-border));
+    color: var(--buyer-ink);
+  }
+
+  .buyer-bottom-nav__bar {
+    background: var(--kkoo-dark-surface-raised, var(--buyer-surface));
+    border-color: var(--buyer-card-border, var(--buyer-border-strong));
+  }
+
+  .buyer-float-action:not(.buyer-float-action--cart) {
+    background: var(--kkoo-dark-surface-raised, var(--buyer-surface));
+    color: var(--buyer-ink);
+  }
+
+  .buyer-hotels-map {
+    --buyer-map-bg: linear-gradient(
+      135deg,
+      rgba(16, 12, 20, 0.98) 0%,
+      rgba(27, 20, 32, 0.96) 50%,
+      rgba(16, 12, 20, 0.98) 100%
+    );
+    border-color: var(--buyer-card-border, var(--buyer-border));
+  }
+
+  .buyer-hotels-map__pins {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent),
+      repeating-linear-gradient(0deg, rgba(92, 48, 143, 0.08) 0, rgba(92, 48, 143, 0.08) 1px, transparent 1px, transparent 24px),
+      repeating-linear-gradient(90deg, rgba(92, 48, 143, 0.08) 0, rgba(92, 48, 143, 0.08) 1px, transparent 1px, transparent 24px);
+  }
+
+  // Marketing subpages
+  .careers-filter {
+    background: var(--buyer-surface);
+    border-color: var(--buyer-border-strong);
+    color: var(--buyer-ink);
+  }
+
+  .careers-kicker,
+  .discover-kicker,
+  .partner-reg-kicker {
+    color: var(--kkoo-accent);
+  }
+
+  .careers-title,
+  .discover-title,
+  .partner-reg-title {
+    color: var(--buyer-ink);
+  }
+
+  // Profile
+  .web-profile-avatar {
+    background: rgba(92, 48, 143, 0.25);
+  }
+
+  .web-profile-initials {
+    color: var(--kkoo-accent);
+  }
+
+  // Bootstrap cards in buyer shell
+  .buyer-shopping-shell .card,
+  .buyer-xp .card,
+  .webcheckout-page .card,
+  .buyer-shopping-shell .b-card,
+  .buyer-shopping-shell [class*='card-header'] {
+    background: var(--buyer-card-bg, var(--buyer-surface)) !important;
+    border-color: var(--buyer-card-border, var(--buyer-border)) !important;
+    color: var(--buyer-ink) !important;
+    box-shadow: var(--buyer-card-shadow, 0 4px 20px rgba(0, 0, 0, 0.25));
+  }
+
+  .buyer-shopping-shell .card .card-header,
+  .buyer-shopping-shell .card .card-footer {
+    background: var(--kkoo-dark-surface-muted, var(--buyer-input-bg)) !important;
+    border-color: var(--buyer-card-border, var(--buyer-border)) !important;
+    color: var(--buyer-ink) !important;
+  }
+
+  .card .text-muted,
+  .buyer-page-head__meta,
+  .shop-products__status {
+    color: var(--buyer-muted) !important;
+  }
+
+  // Gamification / kkoo panels
+  .badge-item,
+  .leaderboard,
+  .leaderboard-row,
+  .metric-card,
+  .metric-panel,
+  .flag-card,
+  .program-card,
+  .insights-panel,
+  .analytics-dashboard .metric-card,
+  .analytics-dashboard .chart-container,
+  .analytics-dashboard .insight-card {
+    background: var(--buyer-card-bg, var(--kkoo-panel-bg)) !important;
+    border-color: var(--buyer-card-border, var(--kkoo-panel-border)) !important;
+    color: var(--kkoo-panel-ink);
+    box-shadow: var(--buyer-card-shadow, none);
+  }
+
+  .leaderboard-table .table-header,
+  .leaderboard-table .table-row:hover {
+    background: var(--kkoo-panel-muted);
+    border-color: var(--kkoo-panel-border);
+    color: var(--kkoo-panel-ink);
+  }
+
+  // Send / ride panels
+  .send-recent__card,
+  .buyer-ride-bar {
+    background: var(--buyer-surface);
+    border-color: var(--buyer-border);
+  }
+
+  // Web app download page
+  .webapp-hero-card,
+  .webapp-card,
+  .webapp-link {
+    background: var(--buyer-surface);
+    border-color: var(--buyer-border);
+    color: var(--buyer-ink);
+  }
+
+  .webapp-kicker,
+  .webapp-hero-card-head,
+  .webapp-hero-list .iconify,
+  .webapp-card-icon {
+    color: var(--kkoo-primary);
+  }
+
+  // Analytics & admin-style panels in buyer web
+  .analytics-dashboard,
+  .insights-panel,
+  .engagement-metrics,
+  .revenue-analytics,
+  .user-segmentation,
+  .invite-challenges-panel,
+  .premium-config-panel,
+  .location-picker__panel,
+  .location-picker__search {
+    background: var(--kkoo-panel-bg);
+    border-color: var(--kkoo-panel-border);
+    color: var(--kkoo-panel-ink);
+  }
+
+  .metric-card,
+  .chart-container,
+  .insight-card,
+  .performance-card,
+  .health-card,
+  .toggle-card {
+    background: var(--kkoo-panel-bg);
+    border-color: var(--kkoo-panel-border);
+    color: var(--kkoo-panel-ink);
+  }
+
+  // Marketing pages (careers, discover, partner)
+  .careers-hero-card,
+  .discover-hero-card,
+  .partner-reg-card,
+  .discover-card,
+  .discover-ticket-card,
+  .careers-card,
+  .careers-apply {
+    background: var(--buyer-surface);
+    border-color: var(--buyer-border);
+    color: var(--buyer-ink);
+  }
+
+  .careers-lead,
+  .discover-lead,
+  .partner-reg-lead,
+  .discover-card-copy,
+  .careers-card-meta,
+  .discover-card-meta,
+  .careers-note,
+  .discover-note {
+    color: var(--buyer-muted);
+  }
+}

@@ -236,6 +236,7 @@ function setLocale(code: LocaleCode) {
 import DropDown from "@/components/DropDown.vue";
 import { resolveAssetUrl } from '@/utils/assetUrl';
 import { buyerWebPath, adminWebPath, bizWebPath } from '@/config/cross-app-links'
+import logoLight from '@/assets/images/logo-light.svg';
 import logoDark from '@/assets/images/logo-dark.svg';
 
 const router = useRouter();

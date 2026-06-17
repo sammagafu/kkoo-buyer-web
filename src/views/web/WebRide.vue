@@ -1,127 +1,168 @@
 <template>
-  <MarketingLayout>
-    <div class="context-nav">
-      <div class="context-nav-left">
-        <RouterLink :to="{ name: 'web.ride' }" class="context-nav-link">Ride &amp; delivery</RouterLink>
-        <RouterLink :to="{ name: 'web.booking' }" class="context-nav-link">Hotels</RouterLink>
-        <RouterLink :to="{ name: 'web.eats' }" class="context-nav-link">Eats</RouterLink>
+  <div class="buyer-ride">
+    <header class="buyer-ride-hero">
+      <p class="buyer-ride-hero__kicker">{{ t('buyerXp.ride.overline') }}</p>
+      <h1 class="buyer-ride-hero__title">{{ t('buyerXp.ride.title') }}</h1>
+      <div class="buyer-ride-steps" aria-hidden="true">
+        <span class="buyer-ride-step buyer-ride-step--active">{{ t('buyerXp.ride.stepWhere') }}</span>
+        <span class="buyer-ride-step" :class="{ 'buyer-ride-step--active': form.pickup_address && form.dropoff_address }">
+          {{ t('buyerXp.ride.stepRide') }}
+        </span>
+        <span class="buyer-ride-step" :class="{ 'buyer-ride-step--active': rideMessage }">{{ t('buyerXp.ride.stepGo') }}</span>
       </div>
-      <div class="context-nav-right">
-        <RouterLink :to="{ name: 'web.checkout' }" class="context-nav-pill">Checkout</RouterLink>
-        <RouterLink :to="{ name: 'web.favorites' }" class="context-nav-pill">Favorites</RouterLink>
+    </header>
+
+    <div class="buyer-ride-card">
+      <div class="buyer-ride-route">
+        <div class="buyer-ride-field">
+          <label for="pickup">{{ t('buyerXp.ride.pickup') }}</label>
+          <input
+            id="pickup"
+            v-model="form.pickup_address"
+            type="text"
+            required
+            :placeholder="t('buyerXp.ride.pickupPlaceholder')"
+            autocomplete="street-address"
+          />
+        </div>
+        <button type="button" class="buyer-ride-swap" :aria-label="t('buyerXp.ride.swap')" @click="swapAddresses">
+          <Icon icon="solar:transfer-vertical-bold" />
+        </button>
+        <div class="buyer-ride-field">
+          <label for="dropoff">{{ t('buyerXp.ride.dropoff') }}</label>
+          <input
+            id="dropoff"
+            v-model="form.dropoff_address"
+            type="text"
+            required
+            :placeholder="t('buyerXp.ride.dropoffPlaceholder')"
+            autocomplete="street-address"
+          />
+        </div>
       </div>
     </div>
-    <section class="lp-section web-ride-hero">
-      <b-container class="px-3 px-sm-4 px-lg-4">
-        <div class="web-ride-grid">
-          <div>
-            <p class="web-ride-kicker">KKOO Ride · Web</p>
-            <h1 class="web-ride-title">Request a ride or delivery from the web.</h1>
-            <p class="web-ride-copy">
-              Enter pickup and dropoff details, choose vehicle type, and send the request. This uses the placeholder
-              ride endpoint and will wire to production once available.
-            </p>
-          </div>
-          <div class="web-ride-hero-card">
-            <p class="fw-semibold mb-1">Status</p>
-            <p class="small text-muted mb-0">{{ rideMessage || 'Fill the form to send a request.' }}</p>
-          </div>
-        </div>
-      </b-container>
-    </section>
 
-    <section class="lp-section">
-      <b-container class="px-3 px-sm-4 px-lg-4">
-        <b-card class="web-ride-card">
-          <header class="web-ride-head">
-            <div>
-              <p class="section-kicker">Ride request</p>
-              <h2 class="section-title">Send a web ride/delivery request</h2>
-            </div>
-          </header>
-          <b-form @submit.prevent="submit">
-            <b-row class="gy-3">
-              <b-col md="6">
-                <b-form-group label="Pickup address" label-for="pickup">
-                  <b-form-input id="pickup" v-model="form.pickup_address" required placeholder="e.g. Azikiwe St, Dar es Salaam" />
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group label="Dropoff address" label-for="dropoff">
-                  <b-form-input id="dropoff" v-model="form.dropoff_address" required placeholder="e.g. Mikocheni, Dar es Salaam" />
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group label="Vehicle type" label-for="vehicle">
-                  <b-form-select id="vehicle" v-model="form.vehicle_type" :options="vehicleOptions" />
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group label="Payment method" label-for="payment">
-                  <b-form-select id="payment" v-model="form.payment_method" :options="paymentOptions" />
-                </b-form-group>
-              </b-col>
-              <b-col cols="12">
-                <b-form-group label="Notes (optional)" label-for="notes">
-                  <b-form-textarea
-                    id="notes"
-                    v-model="form.rider_notes"
-                    rows="2"
-                    placeholder="Landmarks, building, delivery details"
-                  />
-                </b-form-group>
-              </b-col>
-            </b-row>
-            <div class="d-flex align-items-center gap-2 mt-3">
-              <b-button type="submit" variant="primary" size="lg" :disabled="submitting || !form.pickup_address || !form.dropoff_address">
-                {{ submitting ? 'Sending…' : 'Request ride' }}
-              </b-button>
-              <span v-if="rideMessage" class="text-success small">{{ rideMessage }}</span>
-              <span v-if="rideError" class="text-danger small">{{ rideError }}</span>
-            </div>
-          </b-form>
-        </b-card>
-      </b-container>
-    </section>
+    <div class="buyer-ride-card">
+      <p class="buyer-section-head__overline mb-2">{{ t('buyerXp.ride.vehicle') }}</p>
+      <div class="buyer-ride-vehicles" role="radiogroup" :aria-label="t('buyerXp.ride.vehicle')">
+        <button
+          v-for="v in vehicles"
+          :key="v.id"
+          type="button"
+          class="buyer-ride-vehicle"
+          :class="{ 'buyer-ride-vehicle--active': form.vehicle_type === v.id }"
+          @click="form.vehicle_type = v.id"
+        >
+          <Icon :icon="v.icon" class="buyer-ride-vehicle__icon" aria-hidden="true" />
+          {{ v.label }}
+        </button>
+      </div>
+    </div>
 
-    <section class="lp-section">
-      <b-container class="px-3 px-sm-4 px-lg-4">
-        <LocationPicker />
-      </b-container>
-    </section>
-  </MarketingLayout>
+    <div class="buyer-ride-card">
+      <div class="buyer-ride-field">
+        <label for="notes">{{ t('buyerXp.ride.notes') }}</label>
+        <textarea
+          id="notes"
+          v-model="form.rider_notes"
+          rows="2"
+          :placeholder="t('buyerXp.ride.notesPlaceholder')"
+        />
+      </div>
+      <div class="buyer-ride-field mt-2">
+        <label for="payment">{{ t('buyerXp.ride.payment') }}</label>
+        <select id="payment" v-model="form.payment_method">
+          <option value="cash">{{ t('buyerXp.ride.cash') }}</option>
+          <option value="card">{{ t('buyerXp.ride.card') }}</option>
+          <option value="wallet">{{ t('buyerXp.ride.wallet') }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div v-if="estimatedFare != null" class="buyer-ride-fare">
+      <span class="buyer-ride-fare__label">{{ t('buyerXp.ride.estimatedFare') }}</span>
+      <strong class="buyer-ride-fare__amount">{{ formatPrice(estimatedFare) }}</strong>
+    </div>
+
+    <p v-if="rideMessage" class="buyer-ride-msg buyer-ride-msg--ok">{{ rideMessage }}</p>
+    <p v-if="rideError" class="buyer-ride-msg buyer-ride-msg--err">{{ rideError }}</p>
+
+    <div class="buyer-ride-bar">
+      <button
+        type="button"
+        class="buyer-ride-bar__btn"
+        :disabled="submitting || !form.pickup_address || !form.dropoff_address"
+        @click="submit"
+      >
+        <Icon icon="solar:scooter-bold" aria-hidden="true" />
+        {{ submitting ? t('buyerXp.ride.requesting') : t('buyerXp.ride.requestRide') }}
+      </button>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
-import { RouterLink } from 'vue-router'
-import MarketingLayout from '@/views/marketing/MarketingLayout.vue'
 import { ridesApi, type RideRequestPayload } from '@/api/rides'
-import LocationPicker from '@/components/LocationPicker.vue'
+
+const route = useRoute()
+const { t } = useI18n()
 
 const form = reactive<RideRequestPayload>({
   pickup_address: '',
   dropoff_address: '',
   rider_notes: '',
-  vehicle_type: 'bike',
+  vehicle_type: 'boda',
   payment_method: 'cash',
 })
 
-const vehicleOptions = [
-  { value: 'bike', text: 'Bike' },
-  { value: 'car', text: 'Car' },
-  { value: 'van', text: 'Van' },
-]
-
-const paymentOptions = [
-  { value: 'cash', text: 'Cash' },
-  { value: 'card', text: 'Card' },
-]
+const vehicles = computed(() => [
+  { id: 'boda', label: t('buyerXp.ride.boda'), icon: 'solar:scooter-bold' },
+  { id: 'bajaj', label: t('buyerXp.ride.bajaj'), icon: 'solar:bus-bold' },
+  { id: 'car', label: t('buyerXp.ride.car'), icon: 'solar:car-bold' },
+])
 
 const submitting = ref(false)
 const rideMessage = ref('')
 const rideError = ref('')
+const estimatedFare = ref<number | null>(null)
+
+// Dar es Salaam fallback coords for quote when only addresses typed
+const FALLBACK_PICKUP = { lat: -6.8172, lng: 39.2833 }
+const FALLBACK_DROPOFF = { lat: -6.7924, lng: 39.2083 }
+
+function formatPrice(val: number) {
+  return new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(val)
+}
+
+function swapAddresses() {
+  const p = form.pickup_address
+  form.pickup_address = form.dropoff_address
+  form.dropoff_address = p
+}
+
+async function refreshQuote() {
+  if (!form.pickup_address || !form.dropoff_address) {
+    estimatedFare.value = null
+    return
+  }
+  try {
+    const { data } = await ridesApi.getQuote({
+      pickup_lat: FALLBACK_PICKUP.lat,
+      pickup_lng: FALLBACK_PICKUP.lng,
+      dropoff_lat: FALLBACK_DROPOFF.lat,
+      dropoff_lng: FALLBACK_DROPOFF.lng,
+      vehicle_type: form.vehicle_type,
+    })
+    const fee = (data as { total_fee?: number })?.total_fee
+    if (typeof fee === 'number') estimatedFare.value = fee
+  } catch {
+    estimatedFare.value = null
+  }
+}
 
 async function submit() {
   rideMessage.value = ''
@@ -129,72 +170,31 @@ async function submit() {
   submitting.value = true
   try {
     const { data } = await ridesApi.requestRide(form)
-    rideMessage.value = data?.message ?? 'Ride requested. A driver will be assigned if available.'
-  } catch (e: any) {
-    rideError.value = e?.response?.data?.detail ?? 'Could not send ride request.'
+    rideMessage.value = data?.message ?? 'Ride requested. A driver will be assigned shortly.'
+  } catch (e: unknown) {
+    const err = e as { response?: { data?: { detail?: string; error?: string } } }
+    rideError.value = err.response?.data?.detail ?? err.response?.data?.error ?? 'Could not send ride request.'
   } finally {
     submitting.value = false
   }
 }
-</script>
 
-<style scoped>
-.web-ride-hero {
-  background:
-    radial-gradient(circle at 22% 18%, rgba(92, 48, 143, 0.12), transparent 32%),
-    radial-gradient(circle at 82% 12%, rgba(247, 168, 41, 0.14), transparent 28%);
-}
-.web-ride-grid {
-  display: grid;
-  gap: 1.6rem;
-  align-items: center;
-}
-@media (min-width: 992px) {
-  .web-ride-grid {
-    grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.8fr);
+watch(
+  () => [form.pickup_address, form.dropoff_address, form.vehicle_type] as const,
+  () => void refreshQuote(),
+)
+
+onMounted(() => {
+  const pickup = String(route.query.pickup ?? '').trim()
+  const dropoff = String(route.query.dropoff ?? '').trim()
+  const notes = String(route.query.notes ?? route.query.rider_notes ?? '').trim()
+  const vehicle = String(route.query.vehicle_type ?? route.query.vehicle ?? '').trim()
+  if (pickup) form.pickup_address = pickup
+  if (dropoff) form.dropoff_address = dropoff
+  if (notes) form.rider_notes = notes
+  if (vehicle === 'boda' || vehicle === 'bajaj' || vehicle === 'car' || vehicle === 'bike') {
+    form.vehicle_type = vehicle === 'bike' ? 'boda' : vehicle
   }
-}
-.web-ride-kicker {
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-weight: 800;
-  font-size: 0.78rem;
-  color: #5c308f;
-}
-.web-ride-title {
-  font-size: clamp(1.9rem, 4.2vw, 3.1rem);
-  line-height: 1.05;
-  margin: 0.6rem 0 0.7rem;
-  max-width: 22ch;
-}
-.web-ride-copy {
-  max-width: 62ch;
-  color: var(--bs-secondary-color);
-  line-height: 1.7;
-}
-.web-ride-hero-card {
-  border: 1px solid rgba(92, 48, 143, 0.12);
-  background: rgba(255, 255, 255, 0.9);
-  padding: 1rem;
-  border-radius: 1.25rem;
-  box-shadow: 0 16px 36px rgba(35, 20, 46, 0.12);
-}
-.web-ride-card {
-  border-radius: 1.25rem;
-  border: 1px solid rgba(92, 48, 143, 0.14);
-  box-shadow: 0 14px 36px rgba(35, 20, 46, 0.1);
-}
-.app-btn {
-  border-radius: 999px;
-}
-.app-btn.ghost {
-  border-color: rgba(92, 48, 143, 0.18);
-}
-.web-ride-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-</style>
+  void refreshQuote()
+})
+</script>
