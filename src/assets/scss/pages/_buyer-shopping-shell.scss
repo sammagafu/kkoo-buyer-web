@@ -3,9 +3,34 @@
 .buyer-shopping-shell {
   display: grid;
   grid-template-columns: 15.5rem minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
   min-height: 100vh;
   background-color: var(--buyer-canvas, var(--bs-body-bg));
   color: var(--buyer-ink, var(--bs-body-color));
+}
+
+.buyer-shopping-topbar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--buyer-border, rgba(var(--bs-primary-rgb), 0.1));
+  background: color-mix(in srgb, var(--buyer-surface, var(--bs-body-bg)) 96%, var(--kkoo-primary) 4%);
+}
+
+.buyer-shopping-topbar__mark {
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
+}
+
+.buyer-shopping-topbar__title {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #0284c7;
 }
 
 .buyer-shopping-shell__main {
@@ -36,7 +61,9 @@
 
 .buyer-side-nav__brand img {
   height: 1.75rem;
+  width: 1.75rem;
   display: block;
+  object-fit: contain;
 }
 
 .buyer-side-nav__user {

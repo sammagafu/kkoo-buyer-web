@@ -52,6 +52,18 @@ export interface RestaurantListItem {
   average_rating?: number
   total_orders?: number
   menu_slug?: string
+  cover_image?: string
+  logo_url?: string
+}
+
+/** Grocery store list item (super-app grocery-stores). */
+export interface GroceryStoreListItem {
+  user_id?: number
+  seller_id?: number
+  business_name?: string
+  business_address?: string
+  cover_image?: string
+  logo_url?: string
 }
 
 /** Hotel list item (same shape as restaurant; sellers with seller_type=hotel). */

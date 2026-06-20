@@ -43,14 +43,8 @@ export const landingAnchors = {
   businesses: { name: 'pages.landing', hash: '#businesses' },
 } as const
 
-/** Primary marketing nav — focused consumer links (no admin/biz or vertical dropdowns). */
+/** Header nav — five focused links (Get app lives in header actions). */
 export const primaryNavItems = [
-  {
-    key: 'discover',
-    route: buyerRoutes.discover,
-    labelKey: 'landing.navDiscover',
-    icon: 'solar:calendar-bold',
-  },
   {
     key: 'shop',
     route: buyerRoutes.marketplace,
@@ -62,6 +56,28 @@ export const primaryNavItems = [
     route: buyerRoutes.eats,
     labelKey: 'landing.navEats',
     icon: 'solar:cup-hot-bold',
+  },
+  {
+    key: 'ride',
+    route: buyerRoutes.ride,
+    labelKey: 'landing.navRide',
+    icon: 'solar:scooter-bold',
+  },
+  {
+    key: 'business',
+    route: buyerRoutes.business,
+    labelKey: 'landing.navBusiness',
+    icon: 'solar:shop-2-bold',
+  },
+] as const
+
+/** Demoted to footer / mobile drawer — still reachable, not in the header bar. */
+export const secondaryNavItems = [
+  {
+    key: 'discover',
+    route: buyerRoutes.discover,
+    labelKey: 'landing.navDiscover',
+    icon: 'solar:calendar-bold',
   },
   {
     key: 'carrier',

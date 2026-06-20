@@ -22,11 +22,35 @@ export const logisticsPublicApi = {
   deliveryQuote(params: { delivery_area_id?: number; base_fee?: number }) {
     return client.get<{ base_fee?: number; surge_multiplier?: number; total_fee?: number; demand?: number; available_riders?: number }>('/logistics/delivery-quote/', { params })
   },
-  searchPlaces(q: string) {
-    return client.get<Array<{ formatted: string; latitude?: number; longitude?: number; place_id?: string; address?: string }>>(
+  searchPlaces(q: string, params?: { lat?: number; lng?: number; limit?: number }) {
+    return client.get<Array<{ formatted: string; latitude?: number; longitude?: number; id?: number; source?: string }>>(
       '/logistics/places/search/',
-      { params: { q } }
+      { params: { q, ...params } },
     )
+  },
+}
+
+export const mapPlacesApi = {
+  contribute(data: {
+    name: string
+    latitude: number
+    longitude: number
+    formatted_address?: string
+    source?: string
+  }) {
+    return client.post('/logistics/map-places/', data)
+  },
+  listAliases(placeId: number) {
+    return client.get(`/logistics/map-places/${placeId}/aliases/`)
+  },
+  proposeAlias(placeId: number, data: { name: string; lat?: number; lng?: number }) {
+    return client.post(`/logistics/map-places/${placeId}/aliases/`, data)
+  },
+  voteAlias(placeId: number, aliasId: number, data?: { lat?: number; lng?: number }) {
+    return client.post(`/logistics/map-places/${placeId}/aliases/${aliasId}/vote/`, data ?? {})
+  },
+  select(placeId: number) {
+    return client.post(`/logistics/map-places/${placeId}/select/`)
   },
 }
 

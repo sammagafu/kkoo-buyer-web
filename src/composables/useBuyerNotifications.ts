@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { notificationsApi } from '@/api/notifications'
+import { campaignCtaRoute } from '@/composables/useBuyerCampaigns'
 
 export type BuyerNotification = {
   id: number
@@ -26,7 +27,13 @@ function formatRelativeDate(iso?: string) {
 }
 
 export function notificationLink(n: BuyerNotification) {
-  const rawId = n.data?.order_id
+  const data = n.data ?? {}
+  const ctaRoute = data.cta_route
+  if (typeof ctaRoute === 'string' && ctaRoute.trim()) {
+    const mapped = campaignCtaRoute({ cta_route: ctaRoute } as import('@/api/campaigns').BuyerCampaign)
+    if (mapped) return mapped
+  }
+  const rawId = data.order_id
   const id = typeof rawId === 'string' || typeof rawId === 'number' ? rawId : undefined
   if (id !== undefined) return { name: 'buyer.orders' as const, query: { order: String(id) } }
   return { name: 'account.notifications' as const }

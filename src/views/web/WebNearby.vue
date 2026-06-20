@@ -46,6 +46,7 @@
             :name="venueName(r)"
             :address="venueAddress(r)"
             :meta="venueMeta(r)"
+            :image-url="venueImageUrl(r)"
             kind="restaurant"
             icon="solar:chef-hat-bold"
             :detail-to="venueLink('eats', r)"
@@ -62,6 +63,7 @@
             :name="venueName(g)"
             :address="venueAddress(g)"
             :meta="venueMeta(g)"
+            :image-url="venueImageUrl(g)"
             kind="grocery"
             icon="solar:cart-large-2-bold"
             :detail-to="venueLink('grocery', g)"
@@ -78,6 +80,7 @@
             :name="venueName(h)"
             :address="venueAddress(h)"
             :meta="venueMeta(h)"
+            :image-url="venueImageUrl(h)"
             kind="store"
             icon="solar:bed-bold"
             :detail-to="venueLink('hotel', h)"
@@ -108,6 +111,7 @@ import { Icon } from '@iconify/vue'
 import { discoveryApi } from '@/api/discovery'
 import { formatApiError } from '@/utils/formatApiError'
 import { formatBuyerDistance } from '@/utils/buyerFormat'
+import { venueImageUrl } from '@/utils/assetUrl'
 import { venueDetailLink, type VenueVertical } from '@/utils/buyerDetailLinks'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerVenueCard from '@/components/buyer/experience/BuyerVenueCard.vue'

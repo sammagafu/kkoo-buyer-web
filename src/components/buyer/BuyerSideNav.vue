@@ -1,7 +1,7 @@
 <template>
   <aside class="buyer-side-nav" aria-label="Shop navigation">
     <router-link :to="BUYER_DASHBOARD_ROUTE" class="buyer-side-nav__brand">
-      <img :src="logoSrc" alt="KKOO" />
+      <img :src="logoSrc" alt="" />
     </router-link>
 
     <router-link
@@ -78,8 +78,8 @@ import { useBuyerGreeting } from '@/composables/useBuyerGreeting'
 import { resolveAssetUrl } from '@/utils/assetUrl'
 import { BUYER_DASHBOARD_ROUTE } from '@/constants/buyerDashboard'
 import { supportedLocales, setLocale, type LocaleCode } from '@/i18n'
-import logoLight from '@/assets/images/logo-light.svg'
-import logoDark from '@/assets/images/logo-dark.svg'
+import logoLight from '@/assets/images/logo-mark-light.svg'
+import logoDark from '@/assets/images/logo-mark-dark.svg'
 
 type NavItemBase = { name: string; labelKey: string; icon: string; to: RouteLocationRaw; match?: string[] }
 type NavItem = NavItemBase & { label: string }

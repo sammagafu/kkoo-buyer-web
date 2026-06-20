@@ -68,7 +68,7 @@ export { premiumAdminApi, premiumUserApi } from './premium'
 export { ridesApi, type RideRequestPayload } from './rides'
 export { documentTypesAdminApi, documentRequirementsAdminApi, documentRequirementsPublicApi } from './documents'
 export { weeklyPassApi } from './weeklyPass'
-export { campaignsAdminApi, type AppCampaignPayload } from './campaigns'
+export { campaignsAdminApi, campaignsUserApi, type AppCampaignPayload, type BuyerCampaign } from './campaigns'
 export {
   listActiveFlashSales,
   getFlashSale,

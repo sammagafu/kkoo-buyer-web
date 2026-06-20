@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { allRoutes } from './routes/index';
 import { useAuthStore } from '@/stores/auth'
+import { initNavigationAnalytics } from '@/services/navigationAnalytics'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,9 +39,6 @@ router.beforeEach(async (routeTo, _routeFrom, next) => {
   await auth.initialize();
 
   if (auth.isAuthenticated) {
-    if (routeTo.name === 'pages.landing') {
-      return next(auth.defaultRouteAfterAuth());
-    }
     if (routeTo.name === 'auth.sign-in' || routeTo.name === 'auth.sign-up') {
       return next(auth.defaultRouteAfterAuth());
     }
@@ -54,5 +52,7 @@ router.beforeEach(async (routeTo, _routeFrom, next) => {
   }
   next();
 });
+
+initNavigationAnalytics(router);
 
 export default router;

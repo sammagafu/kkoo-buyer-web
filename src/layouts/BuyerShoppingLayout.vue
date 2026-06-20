@@ -1,5 +1,12 @@
 <template>
   <div class="buyer-shopping-shell">
+    <header class="buyer-shopping-topbar">
+      <router-link :to="BUYER_DASHBOARD_ROUTE" class="buyer-shopping-topbar__brand d-flex align-items-center gap-2 text-decoration-none">
+        <img :src="topbarMarkSrc" alt="" class="buyer-shopping-topbar__mark" />
+        <span class="buyer-shopping-topbar__title">KKOO</span>
+      </router-link>
+      <PortalBadge portal="buyer" />
+    </header>
     <BuyerSideNav class="buyer-shopping-shell__nav" />
     <main class="buyer-shopping-shell__main">
       <RouterView />
@@ -45,6 +52,7 @@
 
     <BuyerCartDrawer v-model="drawerOpen" />
     <BuyerNotificationsDrawer v-model="notifyOpen" />
+    <BuyerCampaignModal :campaign="modalCampaign" @dismiss="dismissModal" />
   </div>
 </template>
 
@@ -53,15 +61,25 @@ import { computed, onMounted, provide, ref, watch } from 'vue'
 import { RouterView } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import BuyerSideNav from '@/components/buyer/BuyerSideNav.vue'
+import PortalBadge from '@/components/PortalBadge.vue'
+import { BUYER_DASHBOARD_ROUTE } from '@/constants/buyerDashboard'
+import { useLayoutStore } from '@/stores/layout'
+import logoMarkLight from '@/assets/images/logo-mark-light.svg'
+import logoMarkDark from '@/assets/images/logo-mark-dark.svg'
 import BuyerCartDrawer from '@/components/buyer/BuyerCartDrawer.vue'
 import BuyerNotificationsDrawer from '@/components/buyer/BuyerNotificationsDrawer.vue'
+import BuyerCampaignModal from '@/components/buyer/BuyerCampaignModal.vue'
 import { useWebCart } from '@/composables/useWebCart'
 import { useBuyerNotifications } from '@/composables/useBuyerNotifications'
+import { useBuyerCampaigns } from '@/composables/useBuyerCampaigns'
 import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
+const layoutStore = useLayoutStore()
+const topbarMarkSrc = computed(() => (layoutStore.layout.theme === 'dark' ? logoMarkDark : logoMarkLight))
 const { loadCart, itemCount } = useWebCart()
 const { loadUnreadCount, unreadCount: notificationUnreadCount } = useBuyerNotifications()
+const { modalCampaign, loadAdvertCampaign, dismissModal } = useBuyerCampaigns()
 
 const drawerOpen = ref(false)
 const notifyOpen = ref(false)
@@ -98,13 +116,21 @@ provide('refreshBuyerNotifications', loadUnreadCount)
 watch(
   () => auth.isAuthenticated,
   (ok) => {
-    if (ok) void loadUnreadCount()
-    else notificationUnreadCount.value = 0
+    if (ok) {
+      void loadUnreadCount()
+      void loadAdvertCampaign()
+    } else {
+      notificationUnreadCount.value = 0
+      modalCampaign.value = null
+    }
   },
 )
 
 onMounted(() => {
   void loadCart()
-  if (auth.isAuthenticated) void loadUnreadCount()
+  if (auth.isAuthenticated) {
+    void loadUnreadCount()
+    void loadAdvertCampaign()
+  }
 })
 </script>

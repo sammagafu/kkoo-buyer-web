@@ -27,12 +27,21 @@ export const notificationsApi = {
   },
   /** Notification preferences (subscriptions). API: GET/POST /notifications/preferences/, DELETE .../:id/ */
   getPreferences() {
-    return client.get<{ results?: { id: number; type: string; category_id?: number; search_phrase?: string }[] }>('/notifications/preferences/')
+    return client.get<{ results?: { id: number; type: string; category_id?: number; search_phrase?: string; is_active?: boolean }[] }>('/notifications/preferences/')
   },
   createPreference(data: { type: string; category_id?: number; search_phrase?: string }) {
     return client.post('/notifications/preferences/', data)
   },
   deletePreference(id: number | string) {
     return client.delete(`/notifications/preferences/${id}/`)
+  },
+  getSettings() {
+    return client.get<{ results?: { notification_type: string; enabled: boolean; mandatory?: boolean }[] }>('/notifications/settings/')
+  },
+  upsertSettings(settings: { notification_type: string; enabled: boolean }[]) {
+    return client.put('/notifications/settings/', { settings })
+  },
+  patchSetting(type: string, enabled: boolean) {
+    return client.patch(`/notifications/settings/${encodeURIComponent(type)}/`, { enabled })
   },
 }

@@ -19,15 +19,7 @@ export function useAuthDisplay() {
     )
   })
 
-  const dashboardRoute = computed(() => {
-    if (!isAuthenticated.value) {
-      return BUYER_DASHBOARD_ROUTE
-    }
-    if (auth.isSeller || auth.isAdminOrStaff) {
-      return { name: 'buyer.profile' as const }
-    }
-    return BUYER_DASHBOARD_ROUTE
-  })
+  const dashboardRoute = computed(() => BUYER_DASHBOARD_ROUTE)
 
   return {
     isAuthenticated,

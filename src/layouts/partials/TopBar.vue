@@ -13,21 +13,21 @@
           <router-link
             to="/"
             class="topbar-brand-logo d-flex align-items-center flex-shrink-0 text-decoration-none"
-            aria-label="Home"
+            aria-label="KKOO home"
             title="Home"
           >
             <img
               class="topbar-brand-logo-img"
               :src="topbarLogoSrc"
-              alt="KKOO"
-              width="120"
+              alt=""
+              width="32"
               height="32"
               decoding="async"
             />
+            <span class="topbar-brand-title">KKOO</span>
           </router-link>
 
-          <!-- Context label (Admin dashboard / Seller dashboard) -->
-          <span v-if="panelContextLabel" class="topbar-context-label d-none d-md-inline text-muted small ms-1" aria-label="Current panel">{{ panelContextLabel }}</span>
+          <PortalBadge portal="buyer" />
 
           <!-- App Search-->
           <form class="app-search d-none d-md-block me-auto" @submit.prevent="onSearchSubmit">
@@ -234,10 +234,11 @@ function setLocale(code: LocaleCode) {
 }
 
 import DropDown from "@/components/DropDown.vue";
+import PortalBadge from '@/components/PortalBadge.vue';
 import { resolveAssetUrl } from '@/utils/assetUrl';
 import { buyerWebPath, adminWebPath, bizWebPath } from '@/config/cross-app-links'
-import logoLight from '@/assets/images/logo-light.svg';
-import logoDark from '@/assets/images/logo-dark.svg';
+import logoLight from '@/assets/images/logo-mark-light.svg';
+import logoDark from '@/assets/images/logo-mark-dark.svg';
 
 const router = useRouter();
 const searchQuery = ref('');
@@ -318,12 +319,6 @@ function loadNotifications() {
     notificationUnreadCount.value = (countRes.data?.unread_count ?? 0) as number;
   }).finally(() => { notificationLoading.value = false; });
 }
-
-const panelContextLabel = computed(() => {
-  if (auth.role === ROLES.ADMIN || auth.role === ROLES.STAFF) return 'Admin panel';
-  if (auth.role === ROLES.SELLER) return 'Seller dashboard';
-  return '';
-});
 
 const topbarAvatarUrl = computed(() => {
   const u = auth.user as { avatar_url?: string; avatar?: string } | null;
@@ -437,10 +432,8 @@ html[data-bs-theme="dark"] .topbar-profile-progress-bar-wrap :deep(.progress-bar
 <style>
 .topbar-brand-logo-img {
   height: 32px;
-  width: auto;
-  max-width: 140px;
+  width: 32px;
   object-fit: contain;
-  object-position: left center;
   display: block;
 }
 </style>

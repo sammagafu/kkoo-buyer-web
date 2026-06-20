@@ -32,6 +32,9 @@
           <router-link v-for="item in primaryNavItems" :key="item.key" :to="item.route">
             {{ t(item.labelKey) }}
           </router-link>
+          <router-link v-for="item in secondaryNavItems" :key="item.key" :to="item.route">
+            {{ t(item.labelKey) }}
+          </router-link>
         </div>
 
         <div class="hp-footer__col">
@@ -87,7 +90,7 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { appLinks } from '@/config/app-links'
-import { buyerRoutes, primaryNavItems } from '@/config/landing-links'
+import { buyerRoutes, primaryNavItems, secondaryNavItems } from '@/config/landing-links'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { useLayoutStore } from '@/stores/layout'
 import logoLight from '@/assets/images/logo-light.svg'

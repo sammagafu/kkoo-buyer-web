@@ -21,23 +21,14 @@
           <div class="row lp-hero-row g-4 g-lg-5 justify-content-center align-items-center">
             <div class="col-12 text-center px-1 px-sm-2">
               <div class="lp-hero-copy lp-hero-copy--masthead">
-                <p class="lp-hero-kicker">{{ t('landing.heroEyebrow') }}</p>
-
                 <h1 class="lp-hero-headline lp-hero-headline--display">
                   <span class="lp-hero-line lp-hero-line-1 lp-hero-display-line">
                     <span class="lp-hero-display-text">{{ t('landing.heroHeadline1') }}</span>
                   </span>
-                  <span class="lp-hero-line lp-hero-line-3 lp-text-gold lp-hero-display-sub">{{
-                    t('landing.heroHeadline2')
-                  }}</span>
                 </h1>
 
-                <div class="lp-hero-rule" aria-hidden="true" />
-
-                <!-- Subtitle -->
                 <p class="lp-hero-subtitle mx-auto" data-wow="fade-up">{{ t('landing.heroSubtitle') }}</p>
 
-                <!-- Trust badges -->
                 <div class="lp-hero-trust-strip">
                   <div class="lp-hero-trust-row">
                     <span class="lp-hero-trust-item">
@@ -49,14 +40,9 @@
                     <span class="lp-hero-trust-item">
                       <Icon :icon="bi('patch-check-fill')" /> {{ t('landing.heroTrust3') }}
                     </span>
-                    <span class="lp-hero-trust-item">
-                      <Icon :icon="bi('cash-coin')" /> {{ t('landing.heroTrust4') }}
-                    </span>
                   </div>
-                  <p class="lp-hero-trust-line small text-secondary mb-0 mt-2 mx-auto">{{ t('landing.heroTrustLine') }}</p>
                 </div>
 
-                <!-- CTA Buttons -->
                 <div class="lp-hero-actions d-flex flex-wrap justify-content-center" data-wow="fade-up">
                   <router-link
                     :to="landingAnchors.download"
@@ -65,7 +51,7 @@
                   >
                     <span class="lp-btn-pill__label d-inline-flex align-items-center gap-2">
                       <Icon :icon="bi('download')" class="lp-hero-btn-icon" />
-                      <span>{{ t('landing.ctaGetStarted') }}</span>
+                      <span>{{ t('landing.headerGetApp') }}</span>
                     </span>
                     <span class="lp-btn-pill__well" aria-hidden="true">
                       <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
@@ -83,17 +69,15 @@
                       <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
                     </span>
                   </router-link>
-                  <KkooAccountButton variant="accent" size="lg" class="lp-hero-btn" />
                 </div>
               </div>
             </div>
 
             <div class="col-12 lp-hero-scroll-col">
               <router-link
-                :to="landingAnchors.solutions"
+                :to="buyerRoutes.marketplace"
                 class="lp-hero-scroll-indicator text-decoration-none"
-                aria-label="Scroll down"
-                @click="onLandingSectionClick('solutions', $event)"
+                aria-label="Scroll to shop"
               >
                 <Icon :icon="bi('chevron-double-down')" class="lp-hero-scroll-icon" />
                 <div class="lp-hero-scroll-line" aria-hidden="true"></div>
@@ -107,7 +91,7 @@
     <!-- Shop verticals — quick links right after hero -->
     <section class="lp-shop-verticals-section lp-section py-4 py-lg-5">
       <div class="container-lg">
-        <div class="lp-shop-verticals mt-5" role="list">
+        <div class="lp-shop-verticals mt-3" role="list">
           <router-link
             v-for="vertical in shopVerticals"
             :key="vertical.key"
@@ -130,7 +114,8 @@
     </section>
 
     <!-- ===================== WHAT IS INSIDE KKOO ===================== -->
-    <section id="solutions" class="lp-inside-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
+    <!-- What's inside — hidden on slim landing (shop verticals cover this) -->
+    <section v-if="false" id="solutions" class="lp-inside-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
       <div class="lp-inside-mesh" aria-hidden="true" />
 
       <div class="container-lg position-relative">
@@ -316,8 +301,8 @@
       </div>
     </section>
 
-    <!-- ===================== APP + WEB TOGETHER ===================== -->
-    <section class="lp-services-section py-5 py-lg-6 position-relative">
+    <!-- Buyer protection cards — trust lives in hero strip -->
+    <section v-if="false" class="lp-services-section py-5 py-lg-6 position-relative">
       <div class="container-lg">
         <div class="row mb-5 lp-protection-row">
           <div class="col-lg-5 mb-4 mb-lg-0">
@@ -352,7 +337,7 @@
               </router-link>
             </div>
           </div>
-          <div class="col-lg-7">
+          <div v-if="false" class="col-lg-7">
             <div class="row g-3">
               <div v-for="(feature, i) in buyerProtectionFeatures" :key="i" class="col-12 col-lg-6">
                 <div class="card border-0 shadow-sm h-100 transition-all lp-card" style="border-radius: 0.75rem;">
@@ -760,8 +745,8 @@
       </div>
     </section>
 
-    <!-- ===================== WHY KKOO ===================== -->
-    <section id="why" class="lp-section lp-trust-section py-5 py-lg-6">
+    <!-- Why KKOO — trust covered in hero strip -->
+    <section v-if="false" id="why" class="lp-section lp-trust-section py-5 py-lg-6">
       <div class="container-lg">
         <div class="row mb-5 text-center">
           <div class="col-lg-8 mx-auto">
@@ -1179,9 +1164,6 @@
             <p class="lp-cta-micro mb-4">{{ t('landing.finalMicrocopy') }}</p>
 
             <div class="lp-cta-actions">
-              <div class="lp-cta-account mb-3 mb-lg-0">
-                <KkooAccountButton variant="accent" size="lg" />
-              </div>
               <router-link
                 :to="landingAnchors.download"
                 class="lp-cta-action lp-cta-action--primary text-decoration-none"
@@ -1201,46 +1183,6 @@
                   <Icon :icon="bi('bag-heart')" />
                 </span>
                 <span class="lp-cta-action__text">{{ t('landing.ctaShopOnWeb') }}</span>
-                <Icon :icon="bi('arrow-right')" class="lp-cta-action__arrow" />
-              </router-link>
-              <router-link
-                :to="buyerRoutes.business"
-                class="lp-cta-action text-decoration-none"
-              >
-                <span class="lp-cta-action__icon" aria-hidden="true">
-                  <Icon :icon="bi('window-stack')" />
-                </span>
-                <span class="lp-cta-action__text">{{ t('landing.finalCtaSell') }}</span>
-                <Icon :icon="bi('arrow-right')" class="lp-cta-action__arrow" />
-              </router-link>
-              <router-link
-                :to="buyerRoutes.ride"
-                class="lp-cta-action text-decoration-none"
-              >
-                <span class="lp-cta-action__icon" aria-hidden="true">
-                  <Icon :icon="bi('scooter')" />
-                </span>
-                <span class="lp-cta-action__text">{{ t('landing.finalCtaRide') }}</span>
-                <Icon :icon="bi('arrow-right')" class="lp-cta-action__arrow" />
-              </router-link>
-              <router-link
-                :to="buyerRoutes.personal"
-                class="lp-cta-action text-decoration-none"
-              >
-                <span class="lp-cta-action__icon" aria-hidden="true">
-                  <Icon :icon="bi('person-heart')" />
-                </span>
-                <span class="lp-cta-action__text">{{ t('landing.navPersonal') }}</span>
-                <Icon :icon="bi('arrow-right')" class="lp-cta-action__arrow" />
-              </router-link>
-              <router-link
-                :to="buyerRoutes.community"
-                class="lp-cta-action text-decoration-none"
-              >
-                <span class="lp-cta-action__icon" aria-hidden="true">
-                  <Icon :icon="bi('people')" />
-                </span>
-                <span class="lp-cta-action__text">{{ t('landing.navCommunity') }}</span>
                 <Icon :icon="bi('arrow-right')" class="lp-cta-action__arrow" />
               </router-link>
             </div>
@@ -1286,8 +1228,8 @@
       </div>
     </section>
 
-    <!-- Explore programs — before footer -->
-    <section class="lp-explore-programs-section lp-section py-4 py-lg-5">
+    <!-- Explore programs — links live in footer -->
+    <section v-if="false" class="lp-explore-programs-section lp-section py-4 py-lg-5">
       <div class="container-lg">
         <header class="lp-explore-head mb-4">
           <h3 class="lp-explore-head__title">{{ t('landing.exploreProgramsTitle') }}</h3>
@@ -1342,7 +1284,6 @@ import { useRoute } from 'vue-router'
 import { useIntersectionObserver } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
-import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
 import LandingHeader from '@/views/marketing/partials/LandingHeader.vue'
 import LandingFooter from '@/views/marketing/partials/LandingFooter.vue'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'

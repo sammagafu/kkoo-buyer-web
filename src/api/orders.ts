@@ -34,6 +34,15 @@ export const ordersUserApi = {
   cancel(id: number) {
     return client.post(`/orders/${id}/cancel/`)
   },
+  /** Per-seller portions within a multi-seller order (buyer view). */
+  listSubOrders(orderRef: string | number) {
+    return client.get<{
+      order_number?: string
+      order_status?: string
+      sub_orders?: unknown[]
+      count?: number
+    }>(`/orders/${orderRef}/sub-orders/`)
+  },
   /** Order invoice: create, customize, send (for business owner/seller). Same endpoints as admin; backend may allow seller for their orders. */
   getInvoice(orderId: number) {
     return client.get<OrderInvoiceResponse>(`/orders/${orderId}/invoice/`)

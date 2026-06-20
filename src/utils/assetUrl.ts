@@ -69,6 +69,17 @@ export function productImageUrls(product: Record<string, unknown>): string[] {
   return out
 }
 
+/** Storefront hero image from venue listing (cover, logo, or generic image fields). */
+export function venueImageUrl(venue: object): string | null {
+  const row = venue as Record<string, unknown>
+  for (const key of ['cover_image', 'logo_url', 'image_url', 'photo_url'] as const) {
+    const raw = row[key]
+    const resolved = resolveAssetUrl(typeof raw === 'string' ? raw : '')
+    if (resolved) return resolved
+  }
+  return null
+}
+
 /** Get brand logo URL (logo or logo_url from API). */
 export function brandLogoUrl(brand: Record<string, unknown>): string | null {
   const url = (brand.logo as string) || (brand.logo_url as string)

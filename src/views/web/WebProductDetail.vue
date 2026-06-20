@@ -78,7 +78,7 @@ import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
-import { catalogPublicApi } from '@/api/catalog'
+import { catalogPublicApi, catalogSellerApi } from '@/api/catalog'
 import { reviewsApi } from '@/api/reviews'
 import { cartApi } from '@/api/cart'
 import { useAuthStore } from '@/stores/auth'
@@ -144,6 +144,9 @@ async function load() {
     }
     product.value = data
     selectedSkuId.value = data.skus?.[0]?.id ?? null
+    if (auth.isAuthenticated && data.id) {
+      void catalogSellerApi.recordView(Number(data.id)).catch(() => undefined)
+    }
     await Promise.all([loadReviews(data.id), loadRelated(data)])
   } catch (e) {
     error.value = formatApiError(e, t('buyerXp.product.notFound'))

@@ -315,92 +315,131 @@ button.buyer-search-bar {
 }
 
 .buyer-venue-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  display: grid;
+  gap: 0.85rem 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.buyer-venue-list > .shop-products__status {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 768px) {
+  .buyer-venue-list {
+    gap: 1.1rem 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .buyer-venue {
-  border-radius: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 1rem;
   background: var(--buyer-card-bg, var(--buyer-surface));
   border: 1px solid var(--buyer-card-border, var(--buyer-border));
   overflow: hidden;
   box-shadow: 0 8px 22px rgba(59, 26, 90, 0.05);
 }
 
-.buyer-venue__main {
+.buyer-venue__tap {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  width: 100%;
-  padding: 0.85rem 1rem;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
   border: none;
   background: transparent;
+  padding: 0;
   text-align: left;
+  text-decoration: none;
+  color: inherit;
   cursor: pointer;
 }
 
-.buyer-venue__avatar {
-  flex-shrink: 0;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 0.85rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
+.buyer-venue__hero {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
 }
 
-.buyer-venue__avatar--restaurant {
-  background: rgba(247, 168, 41, 0.18);
+.buyer-venue__hero--restaurant {
+  background: linear-gradient(145deg, rgba(247, 168, 41, 0.28), rgba(247, 168, 41, 0.08));
+}
+
+.buyer-venue__hero--grocery {
+  background: linear-gradient(145deg, rgba(20, 184, 166, 0.24), rgba(20, 184, 166, 0.08));
+}
+
+.buyer-venue__hero--store {
+  background: linear-gradient(145deg, rgba(92, 48, 143, 0.22), rgba(92, 48, 143, 0.06));
+}
+
+.buyer-venue__cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.buyer-venue__cover--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.buyer-venue__cover-icon {
+  font-size: 2rem;
+  opacity: 0.72;
+}
+
+.buyer-venue__hero--restaurant .buyer-venue__cover-icon {
   color: #c47d00;
 }
 
-.buyer-venue__avatar--grocery {
-  background: rgba(20, 184, 166, 0.16);
+.buyer-venue__hero--grocery .buyer-venue__cover-icon {
   color: #0d9488;
 }
 
-.buyer-venue__avatar--store {
-  background: rgba(92, 48, 143, 0.14);
+.buyer-venue__hero--store .buyer-venue__cover-icon {
   color: var(--kkoo-primary);
 }
 
-.buyer-venue__copy {
-  flex: 1;
-  min-width: 0;
+.buyer-venue__body {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  gap: 0.1rem;
+  gap: 0.15rem;
+  min-width: 0;
+  padding: 0.7rem 0.75rem 0.55rem;
 }
 
 .buyer-venue__name {
-  font-size: 0.95rem;
+  font-size: 0.82rem;
   font-weight: 800;
+  line-height: 1.25;
   color: var(--buyer-ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .buyer-venue__addr,
 .buyer-venue__meta {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
+  line-height: 1.3;
   color: var(--buyer-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.buyer-venue__chev {
-  flex-shrink: 0;
-  font-size: 1.1rem;
-  color: var(--buyer-search-placeholder);
-}
-
 .buyer-venue__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  padding: 0 1rem 0.85rem;
-  justify-content: center;
+  gap: 0.35rem;
+  padding: 0 0.65rem 0.7rem;
+  margin-top: auto;
 }
 
 .buyer-btn-row {

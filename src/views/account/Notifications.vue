@@ -8,6 +8,28 @@
       <p class="buyer-page-head__meta">{{ t('buyerXp.settings.notificationsSub') }}</p>
     </header>
 
+    <section class="buyer-detail-card mb-3">
+      <BuyerSectionHeader :title="t('buyerXp.settings.notificationPrefs')" />
+      <p class="buyer-page-head__meta mb-3">{{ t('buyerXp.settings.notificationPrefsHint') }}</p>
+      <label class="buyer-notify-pref">
+        <span>
+          <strong>{{ t('buyerXp.settings.saleEndingReminders') }}</strong>
+          <span class="buyer-page-head__meta d-block">{{ t('buyerXp.settings.saleEndingRemindersSub') }}</span>
+        </span>
+        <input v-model="saleEndingEnabled" type="checkbox" :disabled="prefsSaving" @change="saveSaleEndingPref" />
+      </label>
+      <label class="buyer-notify-pref mt-2">
+        <span>
+          <strong>{{ t('buyerXp.settings.promotionsOffers') }}</strong>
+          <span class="buyer-page-head__meta d-block">{{ t('buyerXp.settings.promotionsOffersSub') }}</span>
+        </span>
+        <input v-model="promotionsEnabled" type="checkbox" :disabled="prefsSaving" @change="savePromotionsPref" />
+      </label>
+      <p v-if="prefsError" class="buyer-xp-toast buyer-xp-toast--err mt-2">{{ prefsError }}</p>
+    </section>
+
+    <h2 class="buyer-section-label mb-2">Inbox</h2>
+
     <div v-if="unreadCount > 0" class="buyer-btn-row mb-3">
       <button
         type="button"
@@ -83,6 +105,7 @@ import { notificationsApi } from '@/api'
 import { useAuthStore } from '@/stores/auth'
 import { adminWebPath, bizWebPath } from '@/config/cross-app-links'
 import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
+import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -92,6 +115,11 @@ const error = ref('')
 const items = ref<{ id: number; title?: string; message?: string; created_at?: string; read_at?: string | null; data?: Record<string, unknown> }[]>([])
 const unreadCount = ref(0)
 const markingAll = ref(false)
+const saleEndingEnabled = ref(true)
+const promotionsEnabled = ref(true)
+const prefsSaving = ref(false)
+const prefsError = ref('')
+const promotionSubId = ref<number | null>(null)
 
 const isPanelUser = computed(() => auth.isAdminOrStaff || auth.isSeller)
 
@@ -119,7 +147,69 @@ function orderLinkRoute(n: { data?: Record<string, unknown> }) {
   return typeof link === 'string' ? { name: 'buyer.settings' } : link
 }
 
-async function openNotification(n: { id: number; read_at?: string | null }) {
+async function loadPreferences() {
+  prefsError.value = ''
+  try {
+    const [settingsRes, prefsRes] = await Promise.all([
+      notificationsApi.getSettings(),
+      notificationsApi.getPreferences(),
+    ])
+    const settings = settingsRes.data?.results ?? []
+    const saleSetting = settings.find((s) => s.notification_type === 'sale_ending')
+    saleEndingEnabled.value = saleSetting ? saleSetting.enabled : true
+    const subs = prefsRes.data?.results ?? []
+    const promo = subs.find((s) => s.type === 'promotion' && s.is_active !== false)
+    promotionsEnabled.value = Boolean(promo)
+    promotionSubId.value = promo?.id ?? null
+  } catch {
+    saleEndingEnabled.value = true
+    promotionsEnabled.value = true
+  }
+}
+
+async function saveSaleEndingPref() {
+  prefsSaving.value = true
+  prefsError.value = ''
+  try {
+    await notificationsApi.patchSetting('sale_ending', saleEndingEnabled.value)
+    if (saleEndingEnabled.value) {
+      await notificationsApi.createPreference({ type: 'sale_ending' }).catch(() => undefined)
+    } else {
+      const { data } = await notificationsApi.getPreferences()
+      const sub = (data?.results ?? []).find((s) => s.type === 'sale_ending')
+      if (sub?.id) await notificationsApi.deletePreference(sub.id)
+    }
+  } catch (e: unknown) {
+    const err = e as { response?: { data?: { error?: string } }; message?: string }
+    prefsError.value = err.response?.data?.error ?? err.message ?? 'Could not save preference'
+    saleEndingEnabled.value = !saleEndingEnabled.value
+  } finally {
+    prefsSaving.value = false
+  }
+}
+
+async function savePromotionsPref() {
+  prefsSaving.value = true
+  prefsError.value = ''
+  const prev = !promotionsEnabled.value
+  try {
+    if (promotionsEnabled.value) {
+      const { data } = await notificationsApi.createPreference({ type: 'promotion' })
+      promotionSubId.value = (data as { id?: number })?.id ?? promotionSubId.value
+    } else if (promotionSubId.value) {
+      await notificationsApi.deletePreference(promotionSubId.value)
+      promotionSubId.value = null
+    }
+  } catch (e: unknown) {
+    const err = e as { response?: { data?: { error?: string } }; message?: string }
+    prefsError.value = err.response?.data?.error ?? err.message ?? 'Could not save preference'
+    promotionsEnabled.value = prev
+  } finally {
+    prefsSaving.value = false
+  }
+}
+
+async function openNotification(n: { id: number; read_at?: string | null; data?: Record<string, unknown> }) {
   if (!n.read_at) {
     try {
       await notificationsApi.markRead(n.id)
@@ -128,6 +218,16 @@ async function openNotification(n: { id: number; read_at?: string | null }) {
     } catch {
       // ignore
     }
+  }
+  const data = n.data ?? {}
+  const flashSlug = data.flash_sale_slug ?? data.slug
+  if (flashSlug) {
+    void router.push({ name: 'buyer.flash-sale', params: { slug: String(flashSlug) } })
+    return
+  }
+  const productId = data.product_id
+  if (productId) {
+    void router.push({ name: 'buyer.product', params: { id: String(productId) } })
   }
 }
 
@@ -150,6 +250,7 @@ onMounted(async () => {
   loading.value = true
   error.value = ''
   try {
+    await loadPreferences()
     const [listRes, countRes] = await Promise.all([
       notificationsApi.list({ unread_only: false }),
       notificationsApi.getUnreadCount().catch(() => ({ data: { unread_count: 0 } })),
@@ -193,5 +294,27 @@ onMounted(async () => {
   background: var(--buyer-chip-bg);
   color: var(--kkoo-primary);
   font-size: 1.15rem;
+}
+
+.buyer-notify-pref {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.buyer-notify-pref input {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+}
+
+.buyer-section-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--buyer-muted);
 }
 </style>

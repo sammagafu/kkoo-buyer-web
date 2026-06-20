@@ -60,6 +60,17 @@ function onTabClick(event: MouseEvent, item: (typeof items.value)[number]) {
   z-index: 1040;
   pointer-events: none;
   padding: 0 1.25rem calc(0.375rem + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.buyer-bottom-nav__portal-badge {
+  pointer-events: auto;
+  font-size: 0.55rem;
+  padding: 0.12rem 0.45rem;
+  opacity: 0.92;
 }
 
 .buyer-bottom-nav__bar {

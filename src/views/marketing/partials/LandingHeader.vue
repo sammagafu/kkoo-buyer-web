@@ -14,9 +14,13 @@
           <Icon :icon="mobileNavOpen ? 'solar:close-circle-bold' : 'solar:hamburger-menu-bold'" />
         </button>
 
-        <router-link to="/" class="mk-header__brand mk-link" @click="closeMobileNav">
-          <img :src="headerLogo" alt="KKOO" class="mk-header__logo" />
-        </router-link>
+        <div class="mk-header__brand-group">
+          <router-link to="/" class="mk-header__brand mk-link" @click="closeMobileNav">
+            <img :src="headerLogo" alt="" class="mk-header__logo" />
+            <span class="mk-header__title">KKOO</span>
+          </router-link>
+          <PortalBadge portal="buyer" class="mk-header__portal-badge" />
+        </div>
 
         <div class="mk-header__actions mk-header__actions--compact">
           <button
@@ -45,9 +49,13 @@
 
       <!-- Desktop -->
       <div class="mk-header__row d-none d-lg-flex">
-        <router-link to="/" class="mk-header__brand mk-link">
-          <img :src="headerLogo" alt="KKOO" class="mk-header__logo mk-header__logo--lg" />
-        </router-link>
+        <div class="mk-header__brand-group">
+          <router-link to="/" class="mk-header__brand mk-link">
+            <img :src="headerLogo" alt="" class="mk-header__logo mk-header__logo--lg" />
+            <span class="mk-header__title">KKOO</span>
+          </router-link>
+          <PortalBadge portal="buyer" class="mk-header__portal-badge" />
+        </div>
 
         <nav class="mk-nav" aria-label="Primary">
           <router-link
@@ -133,7 +141,11 @@
     >
       <template #header>
         <div class="mk-mobile-offcanvas__head">
-          <img :src="headerLogo" alt="KKOO" class="mk-mobile-offcanvas__logo" />
+          <div class="mk-mobile-offcanvas__brand">
+            <img :src="headerLogo" alt="" class="mk-mobile-offcanvas__logo" />
+            <span class="mk-header__title">KKOO</span>
+            <PortalBadge portal="buyer" class="mk-header__portal-badge" />
+          </div>
           <b-button
             variant="link"
             class="mk-icon-btn mk-icon-btn--ghost p-0"
@@ -215,8 +227,10 @@ import { supportedLocales, setLocale } from '@/i18n'
 import { useLayoutStore } from '@/stores/layout'
 import { useKkooAccountAuth } from '@/composables/useKkooAccountAuth'
 import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
-import { buyerRoutes, landingAnchors, primaryNavItems } from '@/config/landing-links'
-import logoLight from '@/assets/images/logo-light.svg'
+import PortalBadge from '@/components/PortalBadge.vue'
+import { buyerRoutes, landingAnchors, primaryNavItems, secondaryNavItems } from '@/config/landing-links'
+import logoMarkLight from '@/assets/images/logo-mark-light.svg'
+import logoMarkDark from '@/assets/images/logo-mark-dark.svg'
 
 const { t, locale } = useI18n()
 const layoutStore = useLayoutStore()
@@ -227,7 +241,7 @@ const mobileNavPanelId = 'mk-landing-mobile-nav'
 const mobileNavOpen = ref(false)
 
 const isDark = computed(() => layout.value.theme === 'dark')
-const headerLogo = computed(() => logoLight)
+const headerLogo = computed(() => (isDark.value ? logoMarkDark : logoMarkLight))
 
 function toggleTheme() {
   layoutStore.setTheme(isDark.value ? 'light' : 'dark')
@@ -268,6 +282,12 @@ const mobileNavItems = computed((): MobileNavItem[] => [
     icon: item.icon,
     kind: 'route' as const,
   })),
+  ...secondaryNavItems.map((item) => ({
+    label: item.labelKey,
+    to: item.route,
+    icon: item.icon,
+    kind: 'route-secondary' as const,
+  })),
   { label: 'landing.headerGetApp', to: landingAnchors.download, icon: 'solar:smartphone-2-bold', kind: 'route' },
 ])
 </script>
@@ -287,29 +307,55 @@ const mobileNavItems = computed((): MobileNavItem[] => [
   gap: clamp(0.65rem, 1.2vw, 1.25rem);
 }
 
-.mk-header__brand {
+.mk-header__brand-group {
   flex: 1;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.mk-header__row.d-lg-flex .mk-header__brand-group {
+  flex: 0 0 auto;
+  justify-content: flex-start;
+}
+
+.mk-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   justify-content: center;
   min-width: 0;
   text-decoration: none;
 }
 
 .mk-header__row.d-lg-flex .mk-header__brand {
-  flex: 0 0 auto;
   justify-content: flex-start;
 }
 
+.mk-header__portal-badge {
+  flex-shrink: 0;
+}
+
 .mk-header__logo {
-  height: 36px;
-  width: auto;
-  max-width: min(140px, 42vw);
+  height: 32px;
+  width: 32px;
   object-fit: contain;
+  flex-shrink: 0;
+}
+
+.mk-header__title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #0284c7;
+  line-height: 1;
 }
 
 .mk-header__logo--lg {
-  height: 44px;
-  max-width: 180px;
+  height: 36px;
+  width: 36px;
 }
 
 .mk-header__actions {
@@ -450,11 +496,18 @@ html[data-bs-theme='dark'] .mk-nav__link--dropdown {
   gap: 0.75rem;
 }
 
+.mk-mobile-offcanvas__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
 .mk-mobile-offcanvas__logo {
-  height: 38px;
-  width: auto;
-  max-width: 130px;
+  height: 32px;
+  width: 32px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 .mk-mobile-drawer {

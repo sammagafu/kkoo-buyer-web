@@ -12,6 +12,12 @@
         <BuyerSearchBar readonly :placeholder="t('buyerXp.marketplace.searchPlaceholder')" @tap="goSearch" />
       </header>
 
+      <BuyerCampaignCarousel
+        v-if="carouselCampaigns.length"
+        :campaigns="carouselCampaigns"
+        @dismiss="dismissCarousel"
+      />
+
       <section class="buyer-surface" :aria-label="t('buyerXp.marketplace.quickActions')">
         <BuyerSectionHeader :title="t('buyerXp.marketplace.whatDoYouNeed')" :overline="t('buyerXp.marketplace.explore')" />
         <BuyerPillarStrip />
@@ -114,6 +120,7 @@
           :key="storeKey(store)"
           :name="store.business_name || t('buyerXp.marketplace.storeFallback')"
           :address="store.business_address"
+          :image-url="venueImageUrl(store)"
           kind="grocery"
           icon="solar:cart-large-2-bold"
           :send-to="sendLinkForStore(store)"
@@ -168,9 +175,12 @@ import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import BuyerVenueCard from '@/components/buyer/experience/BuyerVenueCard.vue'
 import BuyerProductGridSection from '@/components/buyer/experience/BuyerProductGridSection.vue'
+import BuyerCampaignCarousel from '@/components/buyer/BuyerCampaignCarousel.vue'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { useBuyerGreeting } from '@/composables/useBuyerGreeting'
+import { useBuyerCampaigns } from '@/composables/useBuyerCampaigns'
 import { useI18n } from 'vue-i18n'
+import { venueImageUrl } from '@/utils/assetUrl'
 
 const props = defineProps<{ compact?: boolean; fulfillment?: boolean }>()
 const route = useRoute()
@@ -178,6 +188,7 @@ const router = useRouter()
 const { t } = useI18n()
 const { greeting } = useBuyerGreeting()
 const { displayName, isAuthenticated } = useAuthDisplay()
+const { carouselCampaigns, loadCarouselCampaigns, dismissCarousel } = useBuyerCampaigns()
 const refreshBuyerCart = inject<() => Promise<void>>('refreshBuyerCart', async () => {})
 const openBuyerCart = inject<() => void>('openBuyerCart', () => {})
 
@@ -186,6 +197,8 @@ type Store = {
   user_id?: number
   business_name?: string
   business_address?: string
+  cover_image?: string
+  logo_url?: string
 }
 type Product = {
   id?: number
@@ -484,6 +497,7 @@ onMounted(() => {
   if (isHomeMode.value) {
     void loadCategories()
     void loadAllProducts()
+    if (isAuthenticated.value) void loadCarouselCampaigns()
   } else {
     void loadStores()
   }

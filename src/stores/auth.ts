@@ -115,10 +115,21 @@ function inferAvailableAccountRoles(user: User | null): AccountRole[] {
   return Array.from(roles)
 }
 
-function pickActiveAccountRole(user: User | null, preferred: AccountRole | null): AccountRole | null {
+function pickActiveAccountRole(
+  user: User | null,
+  preferred: AccountRole | null,
+  options?: { preferBuyer?: boolean },
+): AccountRole | null {
   const availableRoles = inferAvailableAccountRoles(user)
   if (!availableRoles.length) return null
-  if (preferred && availableRoles.includes(preferred)) return preferred
+  if (preferred && availableRoles.includes(preferred)) {
+    if (!options?.preferBuyer || preferred === BUYER_ACCOUNT_ROLE) {
+      return preferred
+    }
+  }
+  if (options?.preferBuyer && availableRoles.includes(BUYER_ACCOUNT_ROLE)) {
+    return BUYER_ACCOUNT_ROLE
+  }
   const inferredPanelRole = inferRole(user)
   if (inferredPanelRole && availableRoles.includes(inferredPanelRole)) return inferredPanelRole
   return availableRoles.includes(BUYER_ACCOUNT_ROLE) ? BUYER_ACCOUNT_ROLE : availableRoles[0]
@@ -162,7 +173,9 @@ export const useAuthStore = defineStore('auth_store', () => {
   const refreshToken = ref<string | null>(stored.refresh)
   const user = ref<User | null>(stored.user)
   const role = ref<Role | null>(inferRole(stored.user))
-  const activeAccountRole = ref<AccountRole | null>(pickActiveAccountRole(stored.user, stored.activeAccountRole))
+  const activeAccountRole = ref<AccountRole | null>(
+    pickActiveAccountRole(stored.user, stored.activeAccountRole, { preferBuyer: true }),
+  )
   const availableAccountRoles = computed(() => inferAvailableAccountRoles(user.value))
   const activePanelRole = computed<Role | null>(() =>
     activeAccountRole.value && activeAccountRole.value !== BUYER_ACCOUNT_ROLE ? activeAccountRole.value : null
@@ -182,7 +195,7 @@ export const useAuthStore = defineStore('auth_store', () => {
     if (tokens?.access) accessToken.value = tokens.access
     if (tokens?.refresh) refreshToken.value = tokens.refresh
     role.value = inferRole(u)
-    activeAccountRole.value = pickActiveAccountRole(u, activeAccountRole.value)
+    activeAccountRole.value = pickActiveAccountRole(u, activeAccountRole.value, { preferBuyer: true })
     applyLocaleFromPreference(u?.language_preference)
     if (accessToken.value && refreshToken.value) {
       saveStored(accessToken.value, refreshToken.value, u, activeAccountRole.value)
@@ -245,6 +258,9 @@ export const useAuthStore = defineStore('auth_store', () => {
     const me = res.data as User
     setUser(me, { access, refresh })
     if (role.value == null) await inferRolesFromProfileEndpoints()
+    if (inferAvailableAccountRoles(user.value).includes(BUYER_ACCOUNT_ROLE)) {
+      setActiveAccountRole(BUYER_ACCOUNT_ROLE)
+    }
     const allowed =
       sessionAllowedForApp(user.value, activeAccountRole.value, activePanelRole.value) ||
       (options?.allowBuyer === true &&
@@ -276,10 +292,6 @@ export const useAuthStore = defineStore('auth_store', () => {
   }
 
   function defaultRouteAfterAuth(): { name: string; query?: Record<string, string> } {
-    // Buyer web only — admin/seller dashboards live on separate apps.
-    if (isSeller.value || isAdminOrStaff.value) {
-      return { name: 'buyer.profile' }
-    }
     return BUYER_DASHBOARD_ROUTE as { name: string }
   }
 
@@ -310,7 +322,7 @@ export const useAuthStore = defineStore('auth_store', () => {
     if (u) {
       user.value = u
       role.value = inferRole(u)
-      activeAccountRole.value = pickActiveAccountRole(u, storedActiveAccountRole)
+      activeAccountRole.value = pickActiveAccountRole(u, storedActiveAccountRole, { preferBuyer: true })
       applyLocaleFromPreference(u.language_preference)
       if (role.value == null) await inferRolesFromProfileEndpoints()
       if (!sessionAllowedForApp(user.value, activeAccountRole.value, activePanelRole.value)) {
@@ -407,14 +419,14 @@ export const useAuthStore = defineStore('auth_store', () => {
   const isSuperuser = computed(
     () => user.value?.is_superuser === true || user.value?.isSuperuser === true,
   )
-  const isAdminOrStaff = computed(
-    () =>
+  const isAdminOrStaff = computed(() => {
+    if (activeAccountRole.value === BUYER_ACCOUNT_ROLE) return false
+    return (
       activePanelRole.value === ROLES.ADMIN ||
       activePanelRole.value === ROLES.STAFF ||
-      isSuperuser.value ||
-      user.value?.is_staff === true ||
-      user.value?.isStaff === true
-  )
+      isSuperuser.value
+    )
+  })
   /** True when role is seller and user is verified (seller can use full navigation). */
   const isSellerVerified = computed(() => activePanelRole.value === ROLES.SELLER && user.value?.is_verified === true)
 

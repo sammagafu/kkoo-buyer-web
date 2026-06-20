@@ -3,79 +3,46 @@
     <header class="buyer-ride-hero">
       <p class="buyer-ride-hero__kicker">{{ t('buyerXp.ride.overline') }}</p>
       <h1 class="buyer-ride-hero__title">{{ t('buyerXp.ride.title') }}</h1>
-      <div class="buyer-ride-steps" aria-hidden="true">
-        <span class="buyer-ride-step buyer-ride-step--active">{{ t('buyerXp.ride.stepWhere') }}</span>
-        <span class="buyer-ride-step" :class="{ 'buyer-ride-step--active': form.pickup_address && form.dropoff_address }">
-          {{ t('buyerXp.ride.stepRide') }}
-        </span>
-        <span class="buyer-ride-step" :class="{ 'buyer-ride-step--active': rideMessage }">{{ t('buyerXp.ride.stepGo') }}</span>
-      </div>
     </header>
 
     <div class="buyer-ride-card">
-      <div class="buyer-ride-route">
-        <div class="buyer-ride-field">
-          <label for="pickup">{{ t('buyerXp.ride.pickup') }}</label>
-          <input
-            id="pickup"
-            v-model="form.pickup_address"
-            type="text"
-            required
-            :placeholder="t('buyerXp.ride.pickupPlaceholder')"
-            autocomplete="street-address"
-          />
-        </div>
-        <button type="button" class="buyer-ride-swap" :aria-label="t('buyerXp.ride.swap')" @click="swapAddresses">
-          <Icon icon="solar:transfer-vertical-bold" />
-        </button>
-        <div class="buyer-ride-field">
-          <label for="dropoff">{{ t('buyerXp.ride.dropoff') }}</label>
-          <input
-            id="dropoff"
-            v-model="form.dropoff_address"
-            type="text"
-            required
-            :placeholder="t('buyerXp.ride.dropoffPlaceholder')"
-            autocomplete="street-address"
-          />
-        </div>
-      </div>
+      <RidePlaceField
+        :id="'pickup'"
+        v-model:label="pickup.label"
+        v-model:lat="pickup.lat"
+        v-model:lng="pickup.lng"
+        v-model:map-place-id="pickup.mapPlaceId"
+        :title="t('buyerXp.ride.pickup')"
+        :placeholder="t('buyerXp.ride.pickupPlaceholder')"
+      />
+      <button type="button" class="buyer-ride-swap" :aria-label="t('buyerXp.ride.swap')" @click="swapRoute">
+        <Icon icon="solar:transfer-vertical-bold" />
+      </button>
+      <RidePlaceField
+        :id="'dropoff'"
+        v-model:label="dropoff.label"
+        v-model:lat="dropoff.lat"
+        v-model:lng="dropoff.lng"
+        v-model:map-place-id="dropoff.mapPlaceId"
+        :title="t('buyerXp.ride.dropoff')"
+        :placeholder="t('buyerXp.ride.dropoffPlaceholder')"
+      />
     </div>
 
     <div class="buyer-ride-card">
       <p class="buyer-section-head__overline mb-2">{{ t('buyerXp.ride.vehicle') }}</p>
-      <div class="buyer-ride-vehicles" role="radiogroup" :aria-label="t('buyerXp.ride.vehicle')">
+      <div class="buyer-ride-vehicles" role="radiogroup">
         <button
           v-for="v in vehicles"
           :key="v.id"
           type="button"
           class="buyer-ride-vehicle"
-          :class="{ 'buyer-ride-vehicle--active': form.vehicle_type === v.id }"
-          @click="form.vehicle_type = v.id"
+          :class="{ 'buyer-ride-vehicle--active': vehicleType === v.id }"
+          @click="vehicleType = v.id"
         >
           <Icon :icon="v.icon" class="buyer-ride-vehicle__icon" aria-hidden="true" />
           {{ v.label }}
         </button>
-      </div>
-    </div>
-
-    <div class="buyer-ride-card">
-      <div class="buyer-ride-field">
-        <label for="notes">{{ t('buyerXp.ride.notes') }}</label>
-        <textarea
-          id="notes"
-          v-model="form.rider_notes"
-          rows="2"
-          :placeholder="t('buyerXp.ride.notesPlaceholder')"
-        />
-      </div>
-      <div class="buyer-ride-field mt-2">
-        <label for="payment">{{ t('buyerXp.ride.payment') }}</label>
-        <select id="payment" v-model="form.payment_method">
-          <option value="cash">{{ t('buyerXp.ride.cash') }}</option>
-          <option value="card">{{ t('buyerXp.ride.card') }}</option>
-          <option value="wallet">{{ t('buyerXp.ride.wallet') }}</option>
-        </select>
       </div>
     </div>
 
@@ -84,14 +51,13 @@
       <strong class="buyer-ride-fare__amount">{{ formatPrice(estimatedFare) }}</strong>
     </div>
 
-    <p v-if="rideMessage" class="buyer-ride-msg buyer-ride-msg--ok">{{ rideMessage }}</p>
     <p v-if="rideError" class="buyer-ride-msg buyer-ride-msg--err">{{ rideError }}</p>
 
     <div class="buyer-ride-bar">
       <button
         type="button"
         class="buyer-ride-bar__btn"
-        :disabled="submitting || !form.pickup_address || !form.dropoff_address"
+        :disabled="submitting || !canBook"
         @click="submit"
       >
         <Icon icon="solar:scooter-bold" aria-hidden="true" />
@@ -103,21 +69,25 @@
 
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
-import { ridesApi, type RideRequestPayload } from '@/api/rides'
+import { ridesApi } from '@/api/rides'
+import RidePlaceField from '@/components/buyer/RidePlaceField.vue'
 
 const route = useRoute()
+const router = useRouter()
 const { t } = useI18n()
 
-const form = reactive<RideRequestPayload>({
-  pickup_address: '',
-  dropoff_address: '',
-  rider_notes: '',
-  vehicle_type: 'boda',
-  payment_method: 'cash',
-})
+type PlacePin = { label: string; lat: number | null; lng: number | null; mapPlaceId: number | null }
+
+const pickup = reactive<PlacePin>({ label: '', lat: null, lng: null, mapPlaceId: null })
+const dropoff = reactive<PlacePin>({ label: '', lat: null, lng: null, mapPlaceId: null })
+const vehicleType = ref('boda')
+const notes = ref('')
+const submitting = ref(false)
+const rideError = ref('')
+const estimatedFare = ref<number | null>(null)
 
 const vehicles = computed(() => [
   { id: 'boda', label: t('buyerXp.ride.boda'), icon: 'solar:scooter-bold' },
@@ -125,52 +95,76 @@ const vehicles = computed(() => [
   { id: 'car', label: t('buyerXp.ride.car'), icon: 'solar:car-bold' },
 ])
 
-const submitting = ref(false)
-const rideMessage = ref('')
-const rideError = ref('')
-const estimatedFare = ref<number | null>(null)
-
-// Dar es Salaam fallback coords for quote when only addresses typed
-const FALLBACK_PICKUP = { lat: -6.8172, lng: 39.2833 }
-const FALLBACK_DROPOFF = { lat: -6.7924, lng: 39.2083 }
+const canBook = computed(
+  () =>
+    pickup.label.trim() &&
+    dropoff.label.trim() &&
+    pickup.lat != null &&
+    pickup.lng != null &&
+    dropoff.lat != null &&
+    dropoff.lng != null &&
+    estimatedFare.value != null &&
+    estimatedFare.value > 0,
+)
 
 function formatPrice(val: number) {
   return new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(val)
 }
 
-function swapAddresses() {
-  const p = form.pickup_address
-  form.pickup_address = form.dropoff_address
-  form.dropoff_address = p
+function swapRoute() {
+  const p = { ...pickup }
+  pickup.label = dropoff.label
+  pickup.lat = dropoff.lat
+  pickup.lng = dropoff.lng
+  pickup.mapPlaceId = dropoff.mapPlaceId
+  dropoff.label = p.label
+  dropoff.lat = p.lat
+  dropoff.lng = p.lng
+  dropoff.mapPlaceId = p.mapPlaceId
 }
 
 async function refreshQuote() {
-  if (!form.pickup_address || !form.dropoff_address) {
+  if (pickup.lat == null || pickup.lng == null || dropoff.lat == null || dropoff.lng == null) {
     estimatedFare.value = null
     return
   }
   try {
     const { data } = await ridesApi.getQuote({
-      pickup_lat: FALLBACK_PICKUP.lat,
-      pickup_lng: FALLBACK_PICKUP.lng,
-      dropoff_lat: FALLBACK_DROPOFF.lat,
-      dropoff_lng: FALLBACK_DROPOFF.lng,
-      vehicle_type: form.vehicle_type,
+      pickup_lat: pickup.lat,
+      pickup_lng: pickup.lng,
+      dropoff_lat: dropoff.lat,
+      dropoff_lng: dropoff.lng,
+      vehicle_type: vehicleType.value,
     })
     const fee = (data as { total_fee?: number })?.total_fee
-    if (typeof fee === 'number') estimatedFare.value = fee
+    estimatedFare.value = typeof fee === 'number' ? fee : null
   } catch {
     estimatedFare.value = null
   }
 }
 
 async function submit() {
-  rideMessage.value = ''
   rideError.value = ''
+  if (!canBook.value || estimatedFare.value == null) return
   submitting.value = true
   try {
-    const { data } = await ridesApi.requestRide(form)
-    rideMessage.value = data?.message ?? 'Ride requested. A driver will be assigned shortly.'
+    const { data } = await ridesApi.requestRide({
+      pickup_address: pickup.label.trim(),
+      dropoff_address: dropoff.label.trim(),
+      pickup_lat: pickup.lat!,
+      pickup_lng: pickup.lng!,
+      dropoff_lat: dropoff.lat!,
+      dropoff_lng: dropoff.lng!,
+      pickup_map_place_id: pickup.mapPlaceId ?? undefined,
+      dropoff_map_place_id: dropoff.mapPlaceId ?? undefined,
+      fare: estimatedFare.value,
+      vehicle_type: vehicleType.value,
+      rider_notes: notes.value.trim() || undefined,
+    })
+    const id = (data as { id?: number })?.id
+    if (id) {
+      await router.push({ name: 'buyer.ride.detail', params: { id: String(id) } })
+    }
   } catch (e: unknown) {
     const err = e as { response?: { data?: { detail?: string; error?: string } } }
     rideError.value = err.response?.data?.detail ?? err.response?.data?.error ?? 'Could not send ride request.'
@@ -180,21 +174,14 @@ async function submit() {
 }
 
 watch(
-  () => [form.pickup_address, form.dropoff_address, form.vehicle_type] as const,
+  () => [pickup.lat, pickup.lng, dropoff.lat, dropoff.lng, vehicleType.value] as const,
   () => void refreshQuote(),
 )
 
 onMounted(() => {
-  const pickup = String(route.query.pickup ?? '').trim()
-  const dropoff = String(route.query.dropoff ?? '').trim()
-  const notes = String(route.query.notes ?? route.query.rider_notes ?? '').trim()
-  const vehicle = String(route.query.vehicle_type ?? route.query.vehicle ?? '').trim()
-  if (pickup) form.pickup_address = pickup
-  if (dropoff) form.dropoff_address = dropoff
-  if (notes) form.rider_notes = notes
-  if (vehicle === 'boda' || vehicle === 'bajaj' || vehicle === 'car' || vehicle === 'bike') {
-    form.vehicle_type = vehicle === 'bike' ? 'boda' : vehicle
-  }
-  void refreshQuote()
+  const p = String(route.query.pickup ?? '').trim()
+  const d = String(route.query.dropoff ?? '').trim()
+  if (p) pickup.label = p
+  if (d) dropoff.label = d
 })
 </script>

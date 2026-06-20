@@ -3,18 +3,27 @@
     <component
       :is="detailTo ? RouterLink : 'button'"
       v-bind="detailTo ? { to: detailTo } : { type: 'button' }"
-      class="buyer-venue__main"
+      class="buyer-venue__tap"
       @click="onMainClick"
     >
-      <span class="buyer-venue__avatar" :class="`buyer-venue__avatar--${kind}`" aria-hidden="true">
-        <Icon :icon="icon" />
-      </span>
-      <span class="buyer-venue__copy">
+      <div class="buyer-venue__hero" :class="`buyer-venue__hero--${kind}`">
+        <img
+          v-if="imageUrl && !imageError"
+          :src="imageUrl"
+          :alt="name"
+          class="buyer-venue__cover"
+          loading="lazy"
+          @error="imageError = true"
+        />
+        <div v-else class="buyer-venue__cover buyer-venue__cover--placeholder" aria-hidden="true">
+          <Icon :icon="icon" class="buyer-venue__cover-icon" />
+        </div>
+      </div>
+      <div class="buyer-venue__body">
         <strong class="buyer-venue__name">{{ name }}</strong>
         <span v-if="address" class="buyer-venue__addr">{{ address }}</span>
         <span v-if="meta" class="buyer-venue__meta">{{ meta }}</span>
-      </span>
-      <Icon icon="solar:alt-arrow-right-linear" class="buyer-venue__chev" aria-hidden="true" />
+      </div>
     </component>
     <div class="buyer-venue__actions">
       <component
@@ -32,6 +41,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { RouterLink, type RouteLocationRaw } from 'vue-router'
 import { Icon } from '@iconify/vue'
 
@@ -41,6 +51,7 @@ withDefaults(
     address?: string
     meta?: string
     icon?: string
+    imageUrl?: string | null
     kind?: 'restaurant' | 'grocery' | 'store'
     sendTo?: RouteLocationRaw
     rideTo?: RouteLocationRaw
@@ -53,6 +64,7 @@ withDefaults(
 )
 
 const emit = defineEmits<{ view: [] }>()
+const imageError = ref(false)
 
 function onMainClick() {
   emit('view')

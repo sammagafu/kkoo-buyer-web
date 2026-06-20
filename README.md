@@ -2,6 +2,8 @@
 
 Vue 3 + Vite buyer experience: landing, marketplace, eats, groceries, send (buy-for-me), ride.
 
+Rides use the same backend as the Flutter buyer app: place search, fare quote, create ride, live tracking on `/rides/:id`. Service cities load from `GET /logistics/markets/` — see [PHASE2_AND_MARKETS.md](../kkoo-buyers-app/docs/PHASE2_AND_MARKETS.md).
+
 | Environment | URL |
 |-------------|-----|
 | Staging / production | `https://kkooapp.co.tz` and `https://www.kkooapp.co.tz` |

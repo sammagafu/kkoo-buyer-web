@@ -53,6 +53,7 @@
         :name="restaurant.business_name || t('buyerXp.common.restaurantFallback')"
         :address="restaurant.business_address"
         :meta="restaurantMeta(restaurant)"
+        :image-url="venueImageUrl(restaurant)"
         kind="restaurant"
         icon="solar:chef-hat-bold"
         :send-to="sendLink(restaurant)"
@@ -119,7 +120,7 @@ import BuyerTableBookingPanel from '@/components/buyer/BuyerTableBookingPanel.vu
 import BuyerStoreProductCard from '@/components/buyer/BuyerStoreProductCard.vue'
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import BuyerVenueCard from '@/components/buyer/experience/BuyerVenueCard.vue'
-import { resolveAssetUrl } from '@/utils/assetUrl'
+import { resolveAssetUrl, venueImageUrl } from '@/utils/assetUrl'
 import { venueDetailLink } from '@/utils/buyerDetailLinks'
 
 const { t } = useI18n()

@@ -4,7 +4,7 @@
       <div>
         <p class="loc-kicker">Location service</p>
         <h3 class="loc-title">Search, pin, and save a place for your orders.</h3>
-        <p class="loc-copy">Powered by Google Places. Search an address or landmark, pin it on the map, and save it for rides or deliveries.</p>
+        <p class="loc-copy">Search via Kkoo community maps and geocoding. Pin a place, name it, and contribute for others.</p>
       </div>
       <span v-if="!mapsApiKey" class="loc-warning">Add VITE_GOOGLE_MAPS_API_KEY to enable maps.</span>
     </header>
@@ -95,6 +95,7 @@
 import { ref, computed } from 'vue'
 import { GoogleMap, Marker } from 'vue3-google-map'
 import { Icon } from '@iconify/vue'
+import { mapPlacesApi } from '@/api/logistics'
 
 type Prediction = any
 
@@ -146,21 +147,33 @@ function selectPrediction(pred: Prediction) {
   })
 }
 
-function savePlace() {
+async function savePlace() {
   clearMessages()
   if (!canSave.value) {
     saveError.value = 'Add a place name first.'
     return
   }
-  savedPlaces.value.unshift({
-    id: crypto.randomUUID(),
-    name: saveForm.value.name,
-    note: saveForm.value.note,
-    lat: center.value.lat,
-    lng: center.value.lng,
-  })
-  saveMessage.value = 'Saved locally. We will sync this when backend endpoints are ready.'
-  saveForm.value = { name: '', note: '' }
+  try {
+    await mapPlacesApi.contribute({
+      name: saveForm.value.name,
+      latitude: center.value.lat,
+      longitude: center.value.lng,
+      formatted_address: selectedLabel.value || saveForm.value.name,
+      source: 'map_pin',
+    })
+    savedPlaces.value.unshift({
+      id: crypto.randomUUID(),
+      name: saveForm.value.name,
+      note: saveForm.value.note,
+      lat: center.value.lat,
+      lng: center.value.lng,
+    })
+    saveMessage.value = 'Submitted to Kkoo Maps. It will appear after review.'
+    saveForm.value = { name: '', note: '' }
+  } catch (e: unknown) {
+    const err = e as { response?: { data?: { error?: string } } }
+    saveError.value = err.response?.data?.error ?? 'Could not save place. Sign in and try again.'
+  }
 }
 
 function resetForm() {

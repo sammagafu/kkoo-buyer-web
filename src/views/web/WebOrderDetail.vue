@@ -9,6 +9,7 @@
           <h1 class="buyer-page-head__title">{{ t('buyerXp.common.orderNumber', { number: order?.order_number || id }) }}</h1>
           <p v-if="order?.status" class="buyer-page-head__meta">
             <span class="buyer-status-pill" :class="statusClass">{{ order.status }}</span>
+            <span v-if="order.payment_status" class="buyer-page-head__meta ms-2">{{ order.payment_status }}</span>
           </p>
         </div>
       </div>
@@ -22,7 +23,33 @@
         <BuyerSectionHeader :title="t('buyerXp.orders.summary')" />
         <div class="buyer-detail-row"><span>{{ t('buyerXp.common.placed') }}</span><span>{{ formatDate(order.created_at) }}</span></div>
         <div class="buyer-detail-row"><span>{{ t('buyerXp.common.total') }}</span><strong>{{ formatMoney(order.final_total ?? order.total_amount) }}</strong></div>
+        <div v-if="order.delivery_fee != null" class="buyer-detail-row"><span>{{ t('buyerXp.orders.deliveryFee') }}</span><span>{{ formatMoney(order.delivery_fee) }}</span></div>
+        <div v-if="order.discount_amount" class="buyer-detail-row"><span>{{ t('buyerXp.orders.discount') }}</span><span>-{{ formatMoney(order.discount_amount) }}</span></div>
         <div v-if="order.payment_method" class="buyer-detail-row"><span>{{ t('buyerXp.common.payment') }}</span><span>{{ order.payment_method }}</span></div>
+        <div v-if="order.fulfillment_type" class="buyer-detail-row"><span>{{ t('buyerXp.orders.fulfillment') }}</span><span>{{ order.fulfillment_type }}</span></div>
+        <div v-if="order.delivery_location_text" class="buyer-detail-row buyer-detail-row--stack">
+          <span>{{ t('buyerXp.orders.deliveryAddress') }}</span>
+          <span>{{ order.delivery_location_text }}</span>
+        </div>
+        <div v-if="order.delivery_zone" class="buyer-detail-row"><span>{{ t('buyerXp.orders.zone') }}</span><span>{{ order.delivery_zone }}</span></div>
+      </section>
+
+      <section v-if="subOrders.length" class="buyer-detail-card">
+        <BuyerSectionHeader :title="t('buyerXp.orders.storeProgress')" />
+        <article v-for="(so, i) in subOrders" :key="i" class="buyer-detail-card buyer-detail-card--nested mb-2">
+          <div class="buyer-detail-row">
+            <strong>{{ subOrderLabel(so) }}</strong>
+            <span class="buyer-status-pill buyer-status-pill--warn">{{ so.status || 'pending' }}</span>
+          </div>
+          <div v-if="so.seller_notes" class="buyer-detail-row buyer-detail-row--stack">
+            <span>{{ t('buyerXp.orders.storeNote') }}</span>
+            <span>{{ so.seller_notes }}</span>
+          </div>
+          <div v-if="so.estimated_ready_at" class="buyer-detail-row">
+            <span>{{ t('buyerXp.orders.estimatedReady') }}</span>
+            <span>{{ formatDate(so.estimated_ready_at) }}</span>
+          </div>
+        </article>
       </section>
 
       <section v-if="tracking" class="buyer-detail-card">
@@ -37,7 +64,7 @@
         <BuyerSectionHeader :title="t('buyerXp.orders.items')" />
         <div v-for="(item, i) in items" :key="i" class="buyer-detail-row">
           <span>{{ itemLabel(item) }}</span>
-          <span>{{ formatMoney(item.line_total ?? item.price) }}</span>
+          <span>{{ formatMoney(item.total_price ?? item.line_total ?? item.unit_price) }}</span>
         </div>
       </section>
 
@@ -89,7 +116,10 @@ const router = useRouter()
 const { t } = useI18n()
 
 type OrderRow = Record<string, unknown>
+type SubOrderRow = Record<string, unknown>
+
 const order = ref<OrderRow | null>(null)
+const subOrders = ref<SubOrderRow[]>([])
 const tracking = ref<Record<string, unknown> | null>(null)
 const loading = ref(false)
 const error = ref('')
@@ -135,6 +165,12 @@ function itemLabel(item: Record<string, unknown>) {
   return `${qty}× ${name}`
 }
 
+function subOrderLabel(so: SubOrderRow) {
+  const channel = so.channel ? String(so.channel) : 'Store'
+  const sid = so.seller_id != null ? `#${so.seller_id}` : ''
+  return `${channel}${sid ? ` ${sid}` : ''}`
+}
+
 async function load() {
   loading.value = true
   error.value = ''
@@ -142,6 +178,13 @@ async function load() {
   try {
     const { data } = await ordersUserApi.get(orderId)
     order.value = data as OrderRow
+    try {
+      const subRes = await ordersUserApi.listSubOrders(orderId)
+      const list = subRes.data?.sub_orders
+      subOrders.value = Array.isArray(list) ? (list as SubOrderRow[]) : []
+    } catch {
+      subOrders.value = []
+    }
     try {
       const tr = await logisticsBuyerApi.getTracking(orderId)
       tracking.value = (tr.data ?? {}) as Record<string, unknown>
@@ -170,3 +213,16 @@ async function cancelOrder() {
 
 onMounted(load)
 </script>
+
+<style scoped>
+.buyer-detail-row--stack {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.buyer-detail-card--nested {
+  padding: 12px;
+  background: var(--buyer-surface-muted, rgba(0, 0, 0, 0.03));
+  border-radius: 12px;
+}
+</style>
