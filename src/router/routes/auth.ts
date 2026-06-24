@@ -1,5 +1,15 @@
 import type { RouteLocationGeneric } from 'vue-router'
 import { setTitle } from './meta'
+import { bizSellerRegisterUrl } from '@/config/landing-links'
+
+function redirectSellerRegisterToBiz(to: RouteLocationGeneric) {
+  if (typeof window !== 'undefined') {
+    const q = new URLSearchParams(to.query as Record<string, string>).toString()
+    window.location.replace(q ? `${bizSellerRegisterUrl}?${q}` : bizSellerRegisterUrl)
+    return { name: 'auth.sign-in' }
+  }
+  return { name: 'auth.sign-up', query: { ...to.query, as: 'seller' } }
+}
 
 export const authRoutes = [
     {
@@ -28,7 +38,7 @@ export const authRoutes = [
             description:
                 "Register for KKOO Business. List products, manage orders, request delivery, and get paid in one place.",
         },
-        redirect: (to: RouteLocationGeneric) => ({ name: 'auth.sign-up', query: { ...to.query, as: 'seller' } }),
+        redirect: (to: RouteLocationGeneric) => redirectSellerRegisterToBiz(to),
     },
     {
         path: '/auth/oauth/callback',

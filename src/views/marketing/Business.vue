@@ -10,13 +10,14 @@
               <span>{{ t('business.heroTitleAccent') }}</span>
             </h1>
             <p class="business-lead">{{ t('business.heroDesc') }}</p>
+            <p class="business-social-proof">{{ t('businessPage.hero.socialProof') }}</p>
 
             <div class="business-actions">
               <b-button
                 class="lp-btn-pill lp-btn-pill--accent lp-btn-pill--lg border-0 p-0 text-white d-inline-flex align-items-center"
-                :to="{ name: 'pages.merchant' }"
+                :href="bizSellerRegisterUrl"
               >
-                <span class="lp-btn-pill__label">{{ t('businessPage.hero.ctaExploreMerchantTools') }}</span>
+                <span class="lp-btn-pill__label">{{ t('businessPage.hero.ctaRegister') }}</span>
                 <span class="lp-btn-pill__well" aria-hidden="true">
                   <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
                 </span>
@@ -24,11 +25,21 @@
               <b-button
                 variant="link"
                 class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg border-0 p-0 d-inline-flex align-items-center"
-                :to="{ name: 'pages.community' }"
+                :to="buyerRoutes.merchant"
               >
-                <span class="lp-btn-pill__label">{{ t('businessPage.hero.ctaSeeBusinessRequests') }}</span>
+                <span class="lp-btn-pill__label">{{ t('landing.exploreMerchant') }}</span>
                 <span class="lp-btn-pill__well" aria-hidden="true">
-                  <Icon icon="solar:chat-round-dots-linear" class="lp-btn-pill__icon" />
+                  <Icon icon="solar:bag-5-linear" class="lp-btn-pill__icon" />
+                </span>
+              </b-button>
+              <b-button
+                variant="link"
+                class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg border-0 p-0 d-inline-flex align-items-center"
+                :href="bizSellerDashboardUrl"
+              >
+                <span class="lp-btn-pill__label">{{ t('businessPage.hero.ctaExploreMerchantTools') }}</span>
+                <span class="lp-btn-pill__well" aria-hidden="true">
+                  <Icon icon="solar:widget-5-linear" class="lp-btn-pill__icon" />
                 </span>
               </b-button>
               <b-button
@@ -42,6 +53,13 @@
                 </span>
               </b-button>
             </div>
+
+            <p class="business-sign-in">
+              {{ t('businessPage.hero.alreadyRegistered') }}
+              <a :href="bizSignInUrl">{{ t('businessPage.hero.signIn') }}</a>
+              ·
+              <a :href="bizSellerAccountUrl">{{ t('landing.footerSellerAccount') }}</a>
+            </p>
 
             <div class="business-proof">
               <span v-for="point in proofPoints" :key="point" class="business-proof-chip">{{ point }}</span>
@@ -71,6 +89,26 @@
               </div>
             </article>
           </div>
+        </div>
+      </b-container>
+    </section>
+
+    <section class="lp-section business-type-surface">
+      <b-container class="px-3 px-sm-4 px-lg-4">
+        <div class="section-heading">
+          <p class="section-kicker">{{ t('businessPage.businessTypes.kicker') }}</p>
+          <h2 class="section-title">{{ t('businessPage.businessTypes.title') }}</h2>
+          <p class="section-copy">{{ t('businessPage.businessTypes.copy') }}</p>
+        </div>
+
+        <div class="business-type-grid">
+          <article v-for="item in businessTypes" :key="item.title" class="business-type-card">
+            <span class="business-type-icon">
+              <Icon :icon="item.icon" />
+            </span>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.copy }}</p>
+          </article>
         </div>
       </b-container>
     </section>
@@ -144,6 +182,26 @@
       </b-container>
     </section>
 
+    <section class="lp-section merchant-portal-surface">
+      <b-container class="px-3 px-sm-4 px-lg-4">
+        <div class="section-heading">
+          <p class="section-kicker">{{ t('businessPage.merchantPortal.kicker') }}</p>
+          <h2 class="section-title">{{ t('businessPage.merchantPortal.title') }}</h2>
+          <p class="section-copy">{{ t('businessPage.merchantPortal.copy') }}</p>
+        </div>
+
+        <div class="merchant-portal-grid">
+          <article v-for="item in merchantPortalFeatures" :key="item.title" class="merchant-portal-card">
+            <span class="merchant-portal-icon">
+              <Icon :icon="item.icon" />
+            </span>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.copy }}</p>
+          </article>
+        </div>
+      </b-container>
+    </section>
+
     <section class="lp-section">
       <b-container class="px-3 px-sm-4 px-lg-4">
         <div class="section-heading">
@@ -183,6 +241,34 @@
       </b-container>
     </section>
 
+    <section class="lp-section business-testimonial-surface">
+      <b-container class="px-3 px-sm-4 px-lg-4">
+        <blockquote class="business-testimonial">
+          <p>“{{ t('businessPage.testimonial.quote') }}”</p>
+          <footer>
+            <strong>{{ t('businessPage.testimonial.name') }}</strong>
+            <span>{{ t('businessPage.testimonial.role') }}</span>
+          </footer>
+        </blockquote>
+      </b-container>
+    </section>
+
+    <section class="lp-section">
+      <b-container class="px-3 px-sm-4 px-lg-4">
+        <div class="section-heading">
+          <p class="section-kicker">{{ t('businessPage.faqs.kicker') }}</p>
+          <h2 class="section-title">{{ t('businessPage.faqs.title') }}</h2>
+        </div>
+
+        <div class="faq-list">
+          <details v-for="faq in faqs" :key="faq.question" class="faq-item">
+            <summary>{{ faq.question }}</summary>
+            <p>{{ faq.answer }}</p>
+          </details>
+        </div>
+      </b-container>
+    </section>
+
     <section class="lp-section business-cta">
       <b-container class="px-3 px-sm-4 px-lg-4">
         <div class="cta-shell">
@@ -195,7 +281,7 @@
           <div class="cta-actions">
             <b-button
               class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--lg border-0 p-0 text-white d-inline-flex align-items-center"
-              :to="{ name: 'pages.merchant' }"
+              :href="bizSellerRegisterUrl"
             >
               <span class="lp-btn-pill__label">{{ t('businessPage.sections.cta.goToMerchantSetup') }}</span>
               <span class="lp-btn-pill__well" aria-hidden="true">
@@ -225,6 +311,7 @@ import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 
 import { useSubdomainNavigation } from '@/composables/useSubdomainNavigation'
+import { bizSellerAccountUrl, bizSellerDashboardUrl, bizSellerRegisterUrl, bizSignInUrl, buyerRoutes } from '@/config/landing-links'
 import foodImage from '@/assets/images/landing/services/food.jpg'
 import groceriesImage from '@/assets/images/landing/services/groceries.jpg'
 import shopImage from '@/assets/images/landing/services/shop.jpg'
@@ -238,6 +325,24 @@ const proofPoints = computed(() => [
   t('businessPage.proof.2'),
   t('businessPage.proof.3'),
   t('businessPage.proof.4'),
+])
+
+const businessTypes = computed(() => [
+  {
+    icon: 'solar:chef-hat-heart-linear',
+    title: t('businessPage.businessTypes.restaurant.title'),
+    copy: t('businessPage.businessTypes.restaurant.copy'),
+  },
+  {
+    icon: 'solar:cart-large-minimalistic-linear',
+    title: t('businessPage.businessTypes.store.title'),
+    copy: t('businessPage.businessTypes.store.copy'),
+  },
+  {
+    icon: 'solar:bag-heart-linear',
+    title: t('businessPage.businessTypes.retail.title'),
+    copy: t('businessPage.businessTypes.retail.copy'),
+  },
 ])
 
 const boardHighlights = computed(() => [
@@ -340,6 +445,37 @@ const operatingFlow = computed(() => [
   },
 ])
 
+const merchantPortalFeatures = computed(() => [
+  {
+    icon: 'solar:chart-square-linear',
+    title: t('businessPage.merchantPortal.1.title'),
+    copy: t('businessPage.merchantPortal.1.copy'),
+  },
+  {
+    icon: 'solar:eye-linear',
+    title: t('businessPage.merchantPortal.2.title'),
+    copy: t('businessPage.merchantPortal.2.copy'),
+  },
+  {
+    icon: 'solar:graph-up-linear',
+    title: t('businessPage.merchantPortal.3.title'),
+    copy: t('businessPage.merchantPortal.3.copy'),
+  },
+  {
+    icon: 'solar:ticket-sale-linear',
+    title: t('businessPage.merchantPortal.4.title'),
+    copy: t('businessPage.merchantPortal.4.copy'),
+  },
+])
+
+const faqs = computed(() => [
+  { question: t('businessPage.faqs.1.q'), answer: t('businessPage.faqs.1.a') },
+  { question: t('businessPage.faqs.2.q'), answer: t('businessPage.faqs.2.a') },
+  { question: t('businessPage.faqs.3.q'), answer: t('businessPage.faqs.3.a') },
+  { question: t('businessPage.faqs.4.q'), answer: t('businessPage.faqs.4.a') },
+  { question: t('businessPage.faqs.5.q'), answer: t('businessPage.faqs.5.a') },
+])
+
 const gamificationFeatures = computed(() => [
   {
     icon: 'solar:star-circle-linear',
@@ -402,7 +538,9 @@ const productCoverage = computed(() => [
 .use-case-grid,
 .workflow-grid,
 .gamification-grid,
-.feature-map-grid {
+.feature-map-grid,
+.business-type-grid,
+.merchant-portal-grid {
   display: grid;
   gap: 1.4rem;
 }
@@ -458,6 +596,29 @@ const productCoverage = computed(() => [
   text-wrap: pretty;
 }
 
+.business-social-proof {
+  margin: 1rem 0 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--bs-emphasis-color);
+}
+
+.business-sign-in {
+  margin: 1rem 0 0;
+  font-size: 0.95rem;
+  color: var(--bs-secondary-color);
+}
+
+.business-sign-in a {
+  color: var(--bs-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.business-sign-in a:hover {
+  text-decoration: underline;
+}
+
 .business-actions,
 .business-proof,
 .cta-actions {
@@ -502,6 +663,8 @@ const productCoverage = computed(() => [
 .workflow-card,
 .gamification-card,
 .feature-map-card,
+.business-type-card,
+.merchant-portal-card,
 .cta-shell {
   border-radius: 1.7rem;
   border: 1px solid rgba(var(--bs-primary-rgb), 0.1);
@@ -613,10 +776,118 @@ const productCoverage = computed(() => [
 
 .business-surface,
 .workflow-surface,
-.feature-map-surface {
+.feature-map-surface,
+.business-type-surface,
+.merchant-portal-surface,
+.business-testimonial-surface {
   background:
     radial-gradient(circle at top left, rgba(var(--bs-primary-rgb), 0.06), transparent 24%),
     linear-gradient(180deg, rgba(var(--bs-primary-rgb), 0.03), rgba(var(--bs-primary-rgb), 0.01));
+}
+
+.business-type-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.business-type-card,
+.merchant-portal-card {
+  padding: 1.35rem;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.business-type-icon,
+.merchant-portal-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+  background: rgba(var(--bs-secondary-rgb), 0.14);
+  color: var(--bs-secondary);
+  font-size: 1.35rem;
+}
+
+.business-type-card h3,
+.merchant-portal-card h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  color: var(--bs-headings-color);
+}
+
+.business-type-card p,
+.merchant-portal-card p {
+  margin: 0;
+  color: var(--bs-secondary-color);
+  line-height: 1.68;
+}
+
+.merchant-portal-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.business-testimonial {
+  margin: 0;
+  padding: clamp(1.35rem, 2vw, 2rem);
+  border-radius: 1.7rem;
+  border: 1px solid rgba(var(--bs-primary-rgb), 0.1);
+  background:
+    radial-gradient(circle at top right, rgba(var(--bs-secondary-rgb), 0.12), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.82));
+  box-shadow: 0 24px 56px rgba(35, 20, 46, 0.08);
+}
+
+.business-testimonial p {
+  margin: 0;
+  font-size: clamp(1.1rem, 0.5vw + 1rem, 1.35rem);
+  line-height: 1.6;
+  color: var(--bs-headings-color);
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.business-testimonial footer {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 1rem;
+  color: var(--bs-secondary-color);
+}
+
+.business-testimonial footer strong {
+  color: var(--bs-emphasis-color);
+}
+
+.faq-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.faq-item {
+  border-radius: 1.2rem;
+  border: 1px solid rgba(var(--bs-primary-rgb), 0.1);
+  background: rgba(255, 255, 255, 0.82);
+  padding: 0.2rem 1rem;
+}
+
+.faq-item summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--bs-headings-color);
+  padding: 0.85rem 0;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item p {
+  margin: 0 0 1rem;
+  color: var(--bs-secondary-color);
+  line-height: 1.68;
 }
 
 .section-heading {
@@ -807,7 +1078,9 @@ const productCoverage = computed(() => [
   .use-case-grid,
   .workflow-grid,
   .gamification-grid,
-  .feature-map-grid {
+  .feature-map-grid,
+  .business-type-grid,
+  .merchant-portal-grid {
     grid-template-columns: 1fr;
   }
 

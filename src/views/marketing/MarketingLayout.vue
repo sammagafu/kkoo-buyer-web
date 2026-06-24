@@ -310,7 +310,7 @@ import { BUYER_ACCOUNT_ROLE, useAuthStore, type AccountRole } from '@/stores/aut
 import LandingHeader from '@/views/marketing/partials/LandingHeader.vue'
 import LandingFooter from '@/views/marketing/partials/LandingFooter.vue'
 import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
-import { buyerRoutes, landingAnchors, primaryNavItems, bizWebUrl } from '@/config/landing-links'
+import { buyerRoutes, landingAnchors, primaryNavItems, bizSellerAccountUrl, bizSellerDashboardUrl, bizCrmUrl, bizSellerRegisterUrl, adminDashboardUrl } from '@/config/landing-links'
 import logoLight from '@/assets/images/logo-light.svg'
 import logoDark from '@/assets/images/logo-dark.svg'
 
@@ -366,7 +366,7 @@ function routeForAccountRole(role: AccountRole) {
       return buyerRoutes.business
     case ROLES.ADMIN:
     case ROLES.STAFF:
-      return buyerRoutes.landing
+      return undefined
   }
 }
 
@@ -408,10 +408,17 @@ const appLauncherItems = computed(() => {
     { label: 'Merchants', icon: 'solar:bag-5-bold', to: { name: 'pages.merchant' } },
   ]
 
+  if (availableAccountRoles.value.includes(ROLES.ADMIN) || availableAccountRoles.value.includes(ROLES.STAFF)) {
+    items.push({ label: 'Admin panel', icon: 'solar:shield-user-bold', href: adminDashboardUrl })
+  }
+
   if (availableAccountRoles.value.includes(ROLES.SELLER)) {
-    items.push({ label: 'Seller portal', icon: 'solar:shop-2-bold', href: bizWebUrl })
+    items.push({ label: 'Seller account', icon: 'solar:user-circle-bold', href: bizSellerAccountUrl })
+    items.push({ label: 'Seller portal', icon: 'solar:shop-2-bold', href: bizSellerDashboardUrl })
+  } else if (availableAccountRoles.value.includes(ROLES.CRM_MEMBER)) {
+    items.push({ label: 'Business CRM', icon: 'solar:buildings-3-bold', href: bizCrmUrl })
   } else {
-    items.push({ label: 'Create business', icon: 'solar:add-circle-bold', to: buyerRoutes.sellerRegister })
+    items.push({ label: 'Create business', icon: 'solar:add-circle-bold', href: bizSellerRegisterUrl })
   }
 
   return items
@@ -423,8 +430,16 @@ const accountButtonLabel = computed(() => (isAuthenticated.value ? 'My account' 
 async function switchLauncherRole(role: AccountRole) {
   auth.setActiveAccountRole(role)
   mobileMenuOpen.value = false
-  if (role === ROLES.SELLER || role === ROLES.CRM_MEMBER) {
-    window.location.href = bizWebUrl
+  if (role === ROLES.SELLER) {
+    window.location.href = bizSellerAccountUrl
+    return
+  }
+  if (role === ROLES.CRM_MEMBER) {
+    window.location.href = bizCrmUrl
+    return
+  }
+  if (role === ROLES.ADMIN || role === ROLES.STAFF) {
+    window.location.href = adminDashboardUrl
     return
   }
   await router.push(routeForAccountRole(role))

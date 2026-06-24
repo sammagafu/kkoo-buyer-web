@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import { ROLES } from '@/acl'
 import { BUYER_ACCOUNT_ROLE, useAuthStore, type AccountRole } from '@/stores/auth'
 import { adminWebPath, bizWebPath } from '@/config/cross-app-links'
+import { bizSellerAccountUrl, bizSellerRegisterUrl } from '@/config/landing-links'
 
 type WorkspaceCard = {
   title: string
@@ -28,7 +29,7 @@ const roleMeta: Record<AccountRole, { label: string; icon: string }> = {
 
 const roleDefaultRoutes: Record<AccountRole, { name?: string; href?: string }> = {
   [BUYER_ACCOUNT_ROLE]: { name: 'buyer.marketplace' },
-  [ROLES.SELLER]: { href: bizWebPath('/seller') },
+  [ROLES.SELLER]: { href: bizSellerAccountUrl },
   [ROLES.ADMIN]: { href: adminWebPath('/dashboard') },
   [ROLES.STAFF]: { href: adminWebPath('/dashboard') },
   [ROLES.CRM_MEMBER]: { href: bizWebPath('/seller/crm') },
@@ -59,14 +60,13 @@ export function useAccountWorkspaces() {
       cta: 'Open buyer',
     },
     {
-      title: 'Seller workspace',
+      title: 'Seller account',
       icon: 'solar:shop-2-bold',
       available: roleAvailability.value.has(ROLES.SELLER),
       status: roleAvailability.value.has(ROLES.SELLER) ? 'Available' : 'Register required',
       role: roleAvailability.value.has(ROLES.SELLER) ? ROLES.SELLER : null,
-      route: roleAvailability.value.has(ROLES.SELLER) ? undefined : { name: 'auth.seller-register' },
-      href: roleAvailability.value.has(ROLES.SELLER) ? bizWebPath('/seller') : undefined,
-      cta: 'Open seller',
+      href: roleAvailability.value.has(ROLES.SELLER) ? bizSellerAccountUrl : bizSellerRegisterUrl,
+      cta: roleAvailability.value.has(ROLES.SELLER) ? 'Open seller account' : 'Register business',
       fallbackCta: 'Register business',
     },
     {

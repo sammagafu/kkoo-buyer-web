@@ -9,6 +9,7 @@ import {
   clearAdminAuthSession,
   readAdminAuthTokens,
 } from '@/utils/adminAuthSessionStorage'
+import { isPublicAppPath } from '@/constants/publicRoutes'
 import { resolveApiBaseUrl } from '@/utils/apiBaseUrl'
 import { refreshAccessTokenSingleFlight } from '@/utils/tokenRefresh'
 import { resetPiniaAuthAfterRefreshFailure } from '@/utils/syncPiniaAuthFromStorage'
@@ -27,8 +28,10 @@ const client: AxiosInstance = axios.create({
 })
 
 client.interceptors.request.use((config) => {
+  const url = String(config.url ?? '')
+  const isPublicEndpoint = url.includes('/public/')
   const { access } = readAdminAuthTokens()
-  if (access) config.headers.Authorization = `Bearer ${access}`
+  if (access && !isPublicEndpoint) config.headers.Authorization = `Bearer ${access}`
   if (config.data instanceof FormData) delete config.headers['Content-Type']
   return config
 })
@@ -90,7 +93,11 @@ client.interceptors.response.use(
       }
       clearStoredAuth()
       const basePath = (import.meta.env.BASE_URL || '/').replace(/\/$/, '')
-      if (!window.location.pathname.startsWith(basePath + '/auth/')) {
+      const appPath = window.location.pathname.startsWith(basePath)
+        ? window.location.pathname.slice(basePath.length) || '/'
+        : window.location.pathname
+      const onAuthPage = appPath.startsWith('/auth/')
+      if (!onAuthPage && !isPublicAppPath(appPath)) {
         window.location.href = (window.location.origin || '') + basePath + '/auth/sign-in'
       }
     }

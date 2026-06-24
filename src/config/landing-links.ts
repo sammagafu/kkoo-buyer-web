@@ -2,6 +2,7 @@
  * Canonical routes and external app URLs for the buyer landing experience.
  */
 import { BUYER_DASHBOARD_ROUTE } from '@/constants/buyerDashboard'
+import { adminWebPath, bizWebPath } from '@/config/cross-app-links'
 
 export const buyerRoutes = {
   marketplace: BUYER_DASHBOARD_ROUTE,
@@ -69,6 +70,12 @@ export const primaryNavItems = [
     labelKey: 'landing.navBusiness',
     icon: 'solar:shop-2-bold',
   },
+  {
+    key: 'merchant',
+    route: buyerRoutes.merchant,
+    labelKey: 'landing.exploreMerchant',
+    icon: 'solar:bag-5-bold',
+  },
 ] as const
 
 /** Demoted to footer / mobile drawer — still reachable, not in the header bar. */
@@ -105,9 +112,50 @@ export const secondaryNavItems = [
   },
 ] as const
 
-/** Seller / CRM web app (separate deploy). */
-export const bizWebUrl =
-  (import.meta.env.VITE_BIZ_WEB_ORIGIN as string | undefined) || 'https://biz.kkooapp.co.tz'
+/** Seller dashboard on biz web (biz `/` alone redirects to sign-in). */
+export const bizSellerDashboardUrl = bizWebPath('/seller')
+
+/** CRM workspace on biz web. */
+export const bizCrmUrl = bizWebPath('/seller/crm')
+
+/** Seller registration on biz web — business lives at biz.kkooapp.co.tz. */
+export const bizSellerRegisterUrl = bizWebPath('/join')
+
+/** Seller sign-in on biz web. */
+export const bizSignInUrl = bizWebPath('/auth/sign-in')
+
+/** Seller account hub on biz web — profile, roles, workspaces. */
+export const bizSellerAccountUrl = bizWebPath('/account')
+
+/** Admin dashboard on admin web — admin.kkooapp.co.tz. */
+export const adminDashboardUrl = adminWebPath('/dashboard')
+
+/** Footer / help links for sellers — marketing pages on buyer + tools on biz. */
+export const sellerNavItems = {
+  business: {
+    labelKey: 'landing.navBusiness',
+    route: buyerRoutes.business,
+  },
+  merchant: {
+    labelKey: 'landing.exploreMerchant',
+    route: buyerRoutes.merchant,
+  },
+  register: {
+    labelKey: 'landing.footerBecomeSeller',
+    href: bizSellerRegisterUrl,
+  },
+  account: {
+    labelKey: 'landing.footerSellerAccount',
+    href: bizSellerAccountUrl,
+  },
+  portal: {
+    labelKey: 'landing.footerNavBusinessTools',
+    href: bizSellerDashboardUrl,
+  },
+} as const
+
+/** @deprecated Use bizSellerDashboardUrl — kept for older imports. */
+export const bizWebUrl = bizSellerDashboardUrl
 
 export const shopVerticals = [
   {

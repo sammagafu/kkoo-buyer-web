@@ -327,12 +327,40 @@ export default {
     approvedStatus: 'Approuvé',
   },
   shareEarn: {
+    heroTitle: 'Partagez. Recommandez.',
+    heroAccent: 'Gagnez.',
+    heroDesc:
+      'Partagez un produit ou votre lien personnel depuis l’app acheteurs KKOO. Quand quelqu’un rejoint ou commande via vous, KKOO suit l’activité—vous voyez vos gains dans l’app et êtes payé selon notre calendrier publié.',
+    heroCtaPrimary: 'Obtenir mon lien',
+    heroCtaSecondary: 'Comment ça marche',
+    earningsLabel: 'FAÇONS DE GAGNER',
+    earningsTitle: 'Activité réelle. Récompenses réelles.',
     earningsCopy:
       'KKOO récompense une distribution utile, pas des clics vides. Gagnez quand des personnes s’inscrivent, commandent et continuent d’utiliser la plateforme.',
+    howLabel: 'COMMENT ÇA MARCHE',
+    howTitle: 'Quatre étapes pour commencer',
     howCopy:
       'Commencez avec un seul compte, un seul code et un seul ensemble de liens. L’application gère le suivi dès que l’activité réelle commence.',
+    how1Title: 'Téléchargez l’app acheteurs',
+    how1Desc: 'Inscrivez-vous, vérifiez votre compte et ouvrez Partager et gagner depuis votre profil.',
+    how2Title: 'Copiez votre lien ou partage produit',
+    how2Desc: 'Partagez sur WhatsApp, Stories ou votre bio—un tap depuis l’app.',
+    how3Title: 'Vos amis rejoignent et commandent',
+    how3Desc: 'Inscriptions et achats restent liés à vous. Pas de tableurs ni de preuves à courir après.',
+    how4Title: 'Encaissez localement',
+    how4Desc:
+      'Suivez les commissions et retirez via M-Pesa, Airtel Money, Tigo Pesa ou virement bancaire aux dates publiées.',
+    earn1Title: 'Récompenses de parrainage',
+    earn1Desc: 'Gagnez quand vos amis s’inscrivent et passent des commandes éligibles via votre lien.',
+    earn2Title: 'Partages produit',
+    earn2Desc: 'Partagez des articles du marketplace—gagnez quand ces produits se vendent.',
+    earn3Title: 'Points de fidélité',
+    earn3Desc: 'Continuez à gagner des points sur vos achats et utilisez-les au paiement.',
     breakdownCopy:
       'Le modèle est simple : les parrainages peuvent rapporter, les partages de produits peuvent rapporter, et vos propres achats peuvent continuer à créer de la valeur.',
+    ctaTitle: 'Prêt à partager ?',
+    ctaDesc:
+      'Téléchargez l’app acheteurs KKOO, récupérez votre lien et commencez à gagner quand votre réseau achète sur KKOO.',
     stats: {
       referralEarningsThisMonth: 'Revenus de parrainage ce mois-ci',
       pointsReadyToRedeem: 'Points prêts à être utilisés',
@@ -447,18 +475,22 @@ export default {
   businessPage: {
     hero: {
       eyebrow: 'KKOO Business',
-      ctaExploreMerchantTools: 'Explorer les outils marchands',
-      ctaSeeBusinessRequests: 'Voir les demandes business',
+      ctaRegister: 'Inscrire votre activité',
+      ctaExploreMerchantTools: 'Ouvrir le tableau marchand',
+      ctaSeeBusinessRequests: 'Parler aux partenariats',
       ctaSeeMarketplaceDemand: 'Voir la demande marketplace en direct',
+      socialProof: 'Plébiscité par restaurants, boutiques et équipes en croissance en Tanzanie',
+      alreadyRegistered: 'Déjà inscrit ?',
+      signIn: 'Se connecter aux outils marchands',
       imageAlt: 'Opérations vitrine KKOO Business',
       overlayKicker: 'Conçu pour les opérateurs réels',
-      overlayTitle: 'Vendre, exécuter, fidéliser et comprendre l’activité depuis un seul endroit.',
+      overlayTitle: 'Touchez les clients locaux. Exécutez. Soyez payé clairement.',
     },
     proof: {
-      1: 'Catalogues, menus et prix au même endroit',
-      2: 'Commandes, retrait et livraison dans un seul workflow',
-      3: 'Récompenses, parrainages, bons et points intégrés',
-      4: 'CRM, stock et visibilité des paiements pour les équipes',
+      1: 'Touchez les clients locaux sur KKOO Eats, Groceries et Marketplace',
+      2: 'Vendez vite — inscrivez, listez, mettez en ligne',
+      3: 'Frais transparents et paiements planifiés',
+      4: 'Tableau marchand, CRM et outils de croissance inclus',
     },
     board: {
       1: {
@@ -489,10 +521,10 @@ export default {
           'Que vous vendiez des produits, livriez de la nourriture ou gériez une activité en croissance, la même plateforme relie demande, livraison et croissance.',
       },
       operatingFlow: {
-        kicker: 'De la mise en place aux commandes récurrentes',
-        title: 'Un rythme plus clair, des heures d’ouverture aux achats répétés.',
+        kicker: 'Démarrez rapidement',
+        title: 'Mettez-vous en ligne sur KKOO en quelques étapes',
         copy:
-          'Configurez une fois, traitez avec confiance, gardez la livraison visible et transformez les clients satisfaits en clients récurrents grâce à des incitations intégrées.',
+          'Inscrivez votre activité, ajoutez votre menu ou catalogue, et recevez des commandes après validation — notre équipe peut aider à la mise en place.',
       },
       growth: {
         kicker: 'Une rétention qui mérite sa place',
@@ -505,12 +537,12 @@ export default {
         title: 'Tout ce que le côté business de KKOO connecte.',
       },
       cta: {
-        kicker: 'Prêt à opérer sur une seule voie ?',
-        title: 'Réunissez vitrine, exécution, fidélité et paiements.',
+        kicker: 'Rejoignez une plateforme faite pour la croissance',
+        title: 'Touchez plus de clients locaux',
         copy:
-          'Si votre équipe jongle entre tableurs, livraisons et promos séparées, KKOO Business réunit vitrine, exécution et paiements au même endroit.',
-        goToMerchantSetup: 'Aller au paramétrage marchand',
-        seeRewards: 'Voir récompenses et parrainages',
+          'Atteignez de nouveaux acheteurs, simplifiez l’exécution et développez les ventes récurrentes avec KKOO Business — inscrivez-vous et ouvrez votre vitrine.',
+        goToMerchantSetup: 'S’inscrire sur KKOO',
+        seeRewards: 'Découvrir Partager et gagner',
       },
     },
     capabilities: {
@@ -575,25 +607,89 @@ export default {
     },
     operatingFlow: {
       1: {
-        title: 'Configurer une fois avec les bons détails',
-        copy:
-          'Organisez produits, menus, prix et infos publiques avant que la demande n’arrive.',
+        title: 'Inscrire votre activité',
+        copy: 'Ajoutez les détails business, contacts et profil de paiement pour que les clients sachent qui ils commandent.',
       },
       2: {
-        title: 'Gérer les commandes dans un workflow partagé',
-        copy:
-          'Accepter, préparer, livrer et clôturer dans une seule voie au lieu de canaux dispersés.',
+        title: 'Configurer menu ou catalogue',
+        copy: 'Créez la liste de ce que vous vendez — produits, plats ou services. Ajoutez ligne par ligne ou importez en masse ; notre équipe peut aider.',
       },
       3: {
-        title: 'Suivre argent et mouvement client clairement',
-        copy:
-          'Voir ce qui a été commandé, livré et payé pour décider sur des signaux visibles plutôt que sur des suppositions.',
+        title: 'Commencer à recevoir des commandes',
+        copy: 'Après validation, votre vitrine est en ligne sur KKOO. Retrait, livraison ou les deux selon votre croissance.',
       },
       4: {
-        title: 'Utiliser des incitations pour augmenter la répétition',
-        copy:
-          'Points, parrainages, bons et promos donnent une raison de revenir ou de partager.',
+        title: 'Suivre les ventes et la répétition',
+        copy: 'Utilisez le tableau marchand pour commandes, paiements, promos et CRM — puis fidélisez avec points, bons et parrainages.',
       },
+    },
+    businessTypes: {
+      kicker: 'Qu’est-ce qui vous décrit le mieux ?',
+      title: 'KKOO pour restaurants, boutiques et plus',
+      copy: 'Cuisine, épicerie ou boutique spécialisée — KKOO vous aide à toucher les clients proches qui veulent livraison et retrait.',
+      restaurant: {
+        title: 'Restaurant',
+        copy: 'Menus, pics de commandes et livraison — pensé pour cuisines et service rapide.',
+      },
+      store: {
+        title: 'Épicerie et essentiels',
+        copy: 'Aidez les clients locaux à se réapprovisionner plus vite avec une vitrine digitale et de l’exécution.',
+      },
+      retail: {
+        title: 'Retail et spécialité',
+        copy: 'Fleuristes, électronique, cadeaux et boutiques sélectionnées — vendez en ligne sans perdre votre identité locale.',
+      },
+    },
+    merchantPortal: {
+      kicker: 'Portail marchand',
+      title: 'Votre tableau pour insights et croissance',
+      copy: 'Visibilité ventes et performance, opérations quotidiennes dans un seul espace marchand — web ou mobile.',
+      1: {
+        title: 'Suivre vos dernières ventes',
+        copy: 'Surveillez commandes et panier moyen pour ajuster prix et disponibilité en confiance.',
+      },
+      2: {
+        title: 'Voir ce qui convertit',
+        copy: 'Comprenez combien de visiteurs qui voient votre menu ou catalogue passent commande.',
+      },
+      3: {
+        title: 'Explorer les tendances de revenu',
+        copy: 'Repérez les articles forts et les périodes calmes pour stock, équipes et promos.',
+      },
+      4: {
+        title: 'Lancer des promos intelligentes',
+        copy: 'Bons, moments flash et offres parrainage pour ramener vos meilleurs clients.',
+      },
+    },
+    faqs: {
+      kicker: 'Questions fréquentes',
+      title: 'Ce que les marchands demandent avant de rejoindre',
+      1: {
+        q: 'Qu’est-ce que KKOO Business ?',
+        a: 'KKOO Business est le côté marchand de KKOO — une plateforme qui connecte restaurants, boutiques et détaillants aux clients qui commandent nourriture, courses et produits en livraison ou retrait.',
+      },
+      2: {
+        q: 'Comment démarrer ?',
+        a: 'Complétez l’inscription, ajoutez business et catalogue, configurez les paiements. Après une courte validation, votre vitrine peut être en ligne.',
+      },
+      3: {
+        q: 'De quoi ai-je besoin pour vendre sur KKOO ?',
+        a: 'Une activité enregistrée conforme localement, un compte bancaire ou mobile money valide pour les paiements, et des locaux adaptés pour préparer et remettre les commandes.',
+      },
+      4: {
+        q: 'Quels types d’activités peuvent rejoindre ?',
+        a: 'Restaurants, épiceries, pharmacies, fleuristes, électronique, mode et autres commerces locaux — pas seulement la nourriture.',
+      },
+      5: {
+        q: 'Comment KKOO aide à augmenter le chiffre d’affaires ?',
+        a: 'KKOO expose votre activité aux acheteurs déjà sur l’app, prend en charge livraison et retrait, et propose promos, parrainages, points et CRM pour la répétition.',
+      },
+    },
+    testimonial: {
+      quote:
+        'Grâce à KKOO, nous avons touché plus de clients locaux sans jongler entre outils séparés pour commandes, livraison et paiements.',
+      name: 'Partenaire marchand',
+      role: 'Restaurant et retail sur KKOO',
     },
     growthCards: {
       1: { tag: 'Points', title: 'Des points qui reviennent en achats', copy: 'Les clients gagnent des points et les réutilisent au paiement pour un vrai loop de rétention.' },
@@ -725,6 +821,15 @@ export default {
     exploreVouchersDesc: 'Envoyer et utiliser des crédits KKOO',
     exploreShareEarn: 'Partager et gagner',
     exploreShareEarnDesc: 'Parrainage, liens et récompenses',
+    shareEarnCard1Title: 'Votre lien, votre audience',
+    shareEarnCard1Desc:
+      'Chaque clic et chaque commande vous est attribué—pas perdu dans le tableau de bord de quelqu’un d’autre.',
+    shareEarnCard2Title: 'Des gains visibles',
+    shareEarnCard2Desc:
+      'Les commissions se mettent à jour quand les gens rejoignent et achètent. Vous savez toujours ce qui vous est dû.',
+    shareEarnCard3Title: 'Payé à la manière locale',
+    shareEarnCard3Desc:
+      'M-Pesa, Airtel Money, Tigo Pesa ou virement bancaire—aux dates de paiement que nous publions.',
     exploreCommunityDesc: 'Retours, idées et actualités',
     exploreApp: 'App et confidentialité',
     exploreAppDesc: 'Ce que font les apps et comment les données sont utilisées',
@@ -964,6 +1069,7 @@ export default {
     footerOurWork: 'Notre travail',
     footerPartners: 'Partenaires',
     footerBecomeSeller: 'Ouvrir votre boutique KKOO',
+    footerSellerAccount: 'Compte vendeur',
     footerDriversNote: "Chauffeurs : utilisez l’app Kkoo Ride. Acheteurs : utilisez Kkoo Store / Eats / Go.",
     footerCompany: 'Entreprise',
     footerAbout: 'À propos',
@@ -1071,10 +1177,11 @@ export default {
     cta: 'Télécharger KKOO — c\'est gratuit',
   },
   business: {
-    heroTitle: 'Pour votre entreprise.',
-    heroTitleAccent: 'Vendez, gérez, développez.',
-    heroDesc: 'Listez vos produits, gérez commandes, récompenses et logistique depuis KKOO pour les équipes (ce site). Devenez vendeur et touchez plus de clients avec KKOO.',
-    cta: 'Vendre maintenant',
+    heroTitle: 'Développez votre activité',
+    heroTitleAccent: 'avec KKOO.',
+    heroDesc:
+      'Associez-vous à KKOO pour toucher les clients locaux qui achètent déjà nourriture, courses et essentiels. Listez votre activité, recevez des commandes et soyez payé sur un calendrier clair — frais transparents et outils pensés pour la Tanzanie.',
+    cta: 'Inscrire votre activité',
   },
   community: {
     eyebrow: 'COMMUNAUTÉ',

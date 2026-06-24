@@ -271,8 +271,8 @@
             </h2>
             <p class="fs-5 mb-4 lp-purple-paragraph">{{ t('landing.ifYouSellBody') }}</p>
             <div class="d-flex flex-wrap gap-2">
-              <router-link
-                :to="buyerRoutes.business"
+              <a
+                :href="bizSellerRegisterUrl"
                 class="lp-btn-pill lp-btn-pill--accent lp-btn-pill--lg lp-section-cta text-decoration-none d-inline-flex align-items-center"
               >
                 <span class="lp-btn-pill__label d-inline-flex align-items-center gap-2">
@@ -281,15 +281,35 @@
                 <span class="lp-btn-pill__well" aria-hidden="true">
                   <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
                 </span>
-              </router-link>
-              <a
-                :href="bizWebUrl"
-                target="_blank"
-                rel="noopener noreferrer"
+              </a>
+              <router-link
+                :to="buyerRoutes.business"
                 class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg lp-section-cta text-decoration-none d-inline-flex align-items-center"
               >
                 <span class="lp-btn-pill__label d-inline-flex align-items-center gap-2">
                   <span>{{ t('landing.navBusiness') }}</span>
+                </span>
+                <span class="lp-btn-pill__well" aria-hidden="true">
+                  <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
+                </span>
+              </router-link>
+              <router-link
+                :to="buyerRoutes.merchant"
+                class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg lp-section-cta text-decoration-none d-inline-flex align-items-center"
+              >
+                <span class="lp-btn-pill__label d-inline-flex align-items-center gap-2">
+                  <span>{{ t('landing.exploreMerchant') }}</span>
+                </span>
+                <span class="lp-btn-pill__well" aria-hidden="true">
+                  <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
+                </span>
+              </router-link>
+              <a
+                :href="bizSellerDashboardUrl"
+                class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg lp-section-cta text-decoration-none d-inline-flex align-items-center"
+              >
+                <span class="lp-btn-pill__label d-inline-flex align-items-center gap-2">
+                  <span>{{ t('landing.footerNavBusinessTools') }}</span>
                 </span>
                 <span class="lp-btn-pill__well" aria-hidden="true">
                   <Icon icon="solar:square-arrow-right-up-linear" class="lp-btn-pill__icon" />
@@ -628,15 +648,26 @@
                 </div>
               </div>
               <div class="lp-onboard-launch__actions">
-                <router-link
-                  :to="isAuthenticated ? dashboardRoute : buyerRoutes.sellerRegister"
+                <a
+                  v-if="portalHref"
+                  :href="portalHref"
                   class="lp-btn-pill lp-btn-pill--accent lp-btn-pill--lg text-decoration-none d-inline-flex align-items-center"
                 >
-                  <span class="lp-btn-pill__label">{{ isAuthenticated ? t('landing.headerGoToDashboard') : t('landing.onboarding6Cta') }}</span>
+                  <span class="lp-btn-pill__label">{{ t('landing.headerGoToDashboard') }}</span>
                   <span class="lp-btn-pill__well" aria-hidden="true">
                     <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
                   </span>
-                </router-link>
+                </a>
+                <a
+                  v-else
+                  :href="sellerRegisterHref"
+                  class="lp-btn-pill lp-btn-pill--accent lp-btn-pill--lg text-decoration-none d-inline-flex align-items-center"
+                >
+                  <span class="lp-btn-pill__label">{{ t('landing.onboarding6Cta') }}</span>
+                  <span class="lp-btn-pill__well" aria-hidden="true">
+                    <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
+                  </span>
+                </a>
                 <router-link
                   :to="landingAnchors.download"
                   class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--lg text-decoration-none d-inline-flex align-items-center"
@@ -1092,25 +1123,23 @@
               <footer class="lp-download-card__foot">
                 <p class="lp-download-card__foot-note mb-0">{{ t('landing.downloadSellersNote') }}</p>
                 <a
-                  v-if="isAuthenticated"
-                  :href="bizWebUrl"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  v-if="portalHref"
+                  :href="portalHref"
                   class="lp-download-card__foot-link"
                 >
                   <Icon :icon="bi('speedometer2')" />
                   <span>{{ t('landing.downloadSellersCta') }}</span>
                   <Icon :icon="bi('arrow-right')" class="lp-download-card__foot-arrow" aria-hidden="true" />
                 </a>
-                <router-link
+                <a
                   v-else
-                  :to="buyerRoutes.sellerRegister"
+                  :href="bizSellerRegisterUrl"
                   class="lp-download-card__foot-link"
                 >
                   <Icon :icon="bi('globe2')" />
                   <span>{{ t('landing.downloadSellersCta') }}</span>
                   <Icon :icon="bi('arrow-right')" class="lp-download-card__foot-arrow" aria-hidden="true" />
-                </router-link>
+                </a>
               </footer>
             </article>
             </Transition>
@@ -1255,7 +1284,7 @@
             <Icon icon="solar:arrow-right-up-linear" class="lp-shop-vertical-card__arrow" aria-hidden="true" />
           </router-link>
           <a
-            :href="bizWebUrl"
+            :href="bizSellerDashboardUrl"
             target="_blank"
             rel="noopener noreferrer"
             class="lp-shop-vertical-card lp-shop-vertical-card--biz text-decoration-none"
@@ -1287,7 +1316,8 @@ import { Icon } from '@iconify/vue'
 import LandingHeader from '@/views/marketing/partials/LandingHeader.vue'
 import LandingFooter from '@/views/marketing/partials/LandingFooter.vue'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
-import { buyerRoutes, landingAnchors, shopVerticals, marketingPrograms, bizWebUrl } from '@/config/landing-links'
+import { buyerRoutes, landingAnchors, shopVerticals, marketingPrograms, bizSellerDashboardUrl, bizCrmUrl, bizSellerRegisterUrl } from '@/config/landing-links'
+import { useSellerPortalLinks } from '@/composables/useSellerPortalLinks'
 import { kkooIcon, kkooIconFromLegacy, KKOO_ICON_CHECK } from '@/utils/kkooIcons'
 import { appLinks } from '@/config/app-links'
 import { landingApi, type LandingStatItem } from '@/api/landing'
@@ -1301,6 +1331,7 @@ import foodImg from '@/assets/landing/services/food.jpg'
 const { t } = useI18n()
 const route = useRoute()
 const { isAuthenticated, dashboardRoute } = useAuthDisplay()
+const { portalHref, sellerRegisterHref } = useSellerPortalLinks()
 
 function scrollToSection(id: string, behavior: ScrollBehavior = 'smooth') {
   const root = document.querySelector('.mk-landing')

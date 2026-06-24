@@ -13,7 +13,7 @@
             <div class="program-actions">
               <b-button
                 class="lp-btn-pill lp-btn-pill--accent lp-btn-pill--lg border-0 p-0 text-white d-inline-flex align-items-center"
-                :to="{ name: 'auth.seller-register' }"
+                :href="bizSellerRegisterUrl"
               >
                 <span class="lp-btn-pill__label">{{ t('merchant.cta.becomeMerchant') }}</span>
                 <span class="lp-btn-pill__well" aria-hidden="true">
@@ -23,11 +23,21 @@
               <b-button
                 variant="link"
                 class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg border-0 p-0 d-inline-flex align-items-center"
-                :to="{ name: 'pages.community' }"
+                :to="buyerRoutes.business"
               >
-                <span class="lp-btn-pill__label">{{ t('merchant.cta.seeRequests') }}</span>
+                <span class="lp-btn-pill__label">{{ t('landing.navBusiness') }}</span>
                 <span class="lp-btn-pill__well" aria-hidden="true">
-                  <Icon icon="solar:chat-round-dots-linear" class="lp-btn-pill__icon" />
+                  <Icon icon="solar:buildings-3-linear" class="lp-btn-pill__icon" />
+                </span>
+              </b-button>
+              <b-button
+                variant="link"
+                class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg border-0 p-0 d-inline-flex align-items-center"
+                :href="bizSellerDashboardUrl"
+              >
+                <span class="lp-btn-pill__label">{{ t('landing.footerNavBusinessTools') }}</span>
+                <span class="lp-btn-pill__well" aria-hidden="true">
+                  <Icon icon="solar:widget-5-linear" class="lp-btn-pill__icon" />
                 </span>
               </b-button>
               <b-button
@@ -181,7 +191,7 @@
             <div class="program-actions program-actions--cta">
               <b-button
                 class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--sm border-0 p-0 text-white d-inline-flex align-items-center"
-                :to="{ name: 'auth.seller-register' }"
+                :href="bizSellerRegisterUrl"
                 :aria-label="t('merchant.cta.ariaStartSetup')"
               >
                 <span class="lp-btn-pill__label">{{ t('merchant.cta.startSetup') }}</span>
@@ -213,7 +223,7 @@ import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 
 import MarketingLayout from './MarketingLayout.vue'
-import { buyerRoutes } from '@/config/landing-links'
+import { buyerRoutes, bizSellerRegisterUrl, bizSellerDashboardUrl } from '@/config/landing-links'
 import foodImage from '@/assets/images/landing/services/food.jpg'
 import groceriesImage from '@/assets/images/landing/services/groceries.jpg'
 import shopImage from '@/assets/images/landing/services/shop.jpg'

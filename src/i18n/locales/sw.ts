@@ -327,10 +327,40 @@ export default {
     approvedStatus: 'Imeidhinishwa',
   },
   shareEarn: {
-    earningsCopy: 'KKOO hulipa usambazaji wenye maana, si mibofyo ya bure. Pata unapoleta watu, wanaagiza, na wanaendelea kutumia.',
-    howCopy: 'Anza na akaunti moja, msimbo mmoja, na seti moja ya viungo. Programu hufuatilia shughuli halisi zikianza.',
+    heroTitle: 'Shiriki. Pendekeza.',
+    heroAccent: 'Pata.',
+    heroDesc:
+      'Shiriki bidhaa au kiungo chako kutoka programu ya wanunuzi ya KKOO. Mtu anapojiunga au kuagiza kupitia wewe, KKOO hufuatilia—unaona mapato kwenye programu na unalipwa kwa ratiba yetu iliyochapishwa.',
+    heroCtaPrimary: 'Pata kiungo chako',
+    heroCtaSecondary: 'Jinsi inavyofanya kazi',
+    earningsLabel: 'NJIA ZA KUPATA',
+    earningsTitle: 'Shughuli halisi. Zawadi halisi.',
+    earningsCopy:
+      'KKOO hulipa usambazaji wenye maana, si mibofyo ya bure. Pata unapoleta watu, wanaagiza, na wanaendelea kutumia.',
+    howLabel: 'JINSI INAVYOFANYA KAZI',
+    howTitle: 'Hatua nne za kuanza kupata',
+    howCopy:
+      'Anza na akaunti moja, msimbo mmoja, na seti moja ya viungo. Programu hufuatilia shughuli halisi zikianza.',
+    how1Title: 'Pakua programu ya wanunuzi',
+    how1Desc: 'Jisajili, thibitisha akaunti, na fungua Shiriki na upate kwenye wasifu wako.',
+    how2Title: 'Nakili kiungo au kushiriki bidhaa',
+    how2Desc: 'Shiriki WhatsApp, Stories, au bio yako—gusa moja kutoka programu.',
+    how3Title: 'Marafiki wanajiunga na kuagiza',
+    how3Desc: 'Usajili na manunuzi hubaki kukuhusisha. Hakuna jedwali wala kufuatilia ushahidi.',
+    how4Title: 'Toa pesa ndani ya nchi',
+    how4Desc:
+      'Angalia kamisheni zikisasishwa na toa kupitia M-Pesa, Airtel Money, Tigo Pesa, au benki kwa tarehe zilizochapishwa.',
+    earn1Title: 'Zawadi za rufaa',
+    earn1Desc: 'Pata marafiki wanapojisajili na kukamilisha maagizo yanayostahili kupitia kiungo chako.',
+    earn2Title: 'Kushiriki bidhaa',
+    earn2Desc: 'Shiriki bidhaa maalum kutoka sokoni—pata bidhaa hizo zinapouzwa.',
+    earn3Title: 'Pointi za uaminifu',
+    earn3Desc: 'Endelea kupata pointi unaponunua na ukomboe wakati wa malipo.',
     breakdownCopy:
       'Mfumo ni rahisi: rufaa zinaweza kuleta mapato, kushiriki bidhaa kunaweza kuleta mapato, na matumizi yako yanaweza kuendelea kuunda thamani.',
+    ctaTitle: 'Uko tayari kushiriki?',
+    ctaDesc:
+      'Pakua programu ya wanunuzi ya KKOO, chukua kiungo chako, na anza kupata watu wako wanaponunua KKOO.',
     stats: {
       referralEarningsThisMonth: 'Mapato ya rufaa mwezi huu',
       pointsReadyToRedeem: 'Pointi tayari kwa kukombolewa',
@@ -443,18 +473,22 @@ export default {
   businessPage: {
     hero: {
       eyebrow: 'KKOO Business',
-      ctaExploreMerchantTools: 'Chunguza zana za muuzaji',
-      ctaSeeBusinessRequests: 'Angalia maombi ya biashara',
+      ctaRegister: 'Sajili biashara yako',
+      ctaExploreMerchantTools: 'Fungua dashibodi ya muuzaji',
+      ctaSeeBusinessRequests: 'Ongea na ushirikiano',
       ctaSeeMarketplaceDemand: 'Angalia mahitaji ya soko moja kwa moja',
+      socialProof: 'Inaaminika na migahawa, maduka, na timu zinazokua Tanzania',
+      alreadyRegistered: 'Tayari umesajili?',
+      signIn: 'Ingia kwenye zana za muuzaji',
       imageAlt: 'Uendeshaji wa storefront ya KKOO Business',
       overlayKicker: 'Imejengwa kwa waendeshaji halisi',
-      overlayTitle: 'Uza, timiza, rudisha wateja, na elewa biashara kutoka sehemu moja.',
+      overlayTitle: 'Fikia wateja wa karibu. Timiza maagizo. Lipwa kwa uwazi.',
     },
     proof: {
-      1: 'Katalogi, menyu, na bei sehemu moja',
-      2: 'Maagizo, pickup, na delivery kwenye mtiririko mmoja',
-      3: 'Zawadi, rufaa, vocha, na pointi zimejengwa ndani',
-      4: 'CRM, stock, na uonekanaji wa malipo kwa timu',
+      1: 'Fikia wateja wa karibu kwenye KKOO Eats, Groceries, na Marketplace',
+      2: 'Anza kuuza haraka—sajili, orodhesha, fungua duka',
+      3: 'Ada wazi na malipo kwa ratiba iliyowekwa',
+      4: 'Dashibodi ya muuzaji, CRM, na zana za ukuaji zimejumuishwa',
     },
     board: {
       1: {
@@ -484,10 +518,10 @@ export default {
           'Iwe unauza bidhaa, unasafirisha chakula haraka, au unasimamia operesheni inayokua, jukwaa moja linaweza kuunganisha mahitaji, delivery, na ukuaji wa kurudia.',
       },
       operatingFlow: {
-        kicker: 'Kuanzia setup hadi maagizo ya kurudia',
-        title: 'Mdundo ulio wazi kutoka masaa ya kazi hadi ununuzi wa kurudia.',
+        kicker: 'Anza kuuza haraka',
+        title: 'Fungua duka kwenye KKOO kwa hatua chache',
         copy:
-          'Sanidi mara moja, shughulikia kwa ujasiri, weka delivery ionekane, na geuza wateja walioridhika kuwa wateja wa kurudia kwa motisha zilizojengwa ndani.',
+          'Sajili biashara yako, ongeza menyu au katalogi, na anza kupokea maagizo baada ya ukaguzi—timu yetu inaweza kusaidia setup.',
       },
       growth: {
         kicker: 'Retention yenye thamani',
@@ -500,12 +534,12 @@ export default {
         title: 'Kila kitu upande wa biashara wa KKOO umejengwa kuunganisha.',
       },
       cta: {
-        kicker: 'Uko tayari kuendesha kwenye mstari mmoja?',
-        title: 'Unganisha storefront, fulfilment, uaminifu, na malipo.',
+        kicker: 'Jiunge na jukwaa lililojengwa kwa ukuaji',
+        title: 'Fikia wateja zaidi wa karibu',
         copy:
-          'Kama timu yako inashughulikia spreadsheet, simu za delivery, na zana tofauti za promosheni, KKOO Business inaunganisha duka, utoaji, uaminifu na malipo katika njia moja.',
-        goToMerchantSetup: 'Nenda kwenye setup ya muuzaji',
-        seeRewards: 'Angalia zawadi na rufaa',
+          'Fikia wanunuzi wapya, rahisisha fulfilment, na uongeze mauzo ya kurudia na KKOO Business—sajili leo na fungua duka lako.',
+        goToMerchantSetup: 'Sajili kwenye KKOO',
+        seeRewards: 'Gundua Shiriki na pata',
       },
     },
     capabilities: {
@@ -570,24 +604,89 @@ export default {
     },
     operatingFlow: {
       1: {
-        title: 'Sanidi mara moja kwa taarifa sahihi za biashara',
-        copy:
-          'Panga bidhaa, menyu, bei, na taarifa za umma ili operesheni iwe tayari kabla mahitaji hayajaanza.',
+        title: 'Sajili biashara yako',
+        copy: 'Ongeza maelezo ya biashara, mawasiliano, na wasifu wa malipo ili wateja wajue unachouza.',
       },
       2: {
-        title: 'Endesha maagizo kwenye workflow moja ya timu',
-        copy:
-          'Tumia mstari mmoja kukubali, kuandaa, kusafirisha, na kufunga mzunguko badala ya kusambaza kazi kwenye njia tofauti.',
+        title: 'Sanidi menyu au katalogi',
+        copy: 'Unda orodha ya unachouza—bidhaa, vyakula, au huduma. Ongeza moja moja au pakia wingi; timu yetu inaweza kusaidia.',
       },
       3: {
-        title: 'Fuatilia pesa na harakati za wateja kwa uwazi',
-        copy: 'Ona kilichoagizwa, kilichotoka, na kilicholipwa ili maamuzi ya biashara yafuate ishara zinazoonekana.',
+        title: 'Anza kupokea maagizo',
+        copy: 'Baada ya ukaguzi, duka lako linafunguliwa kwenye KKOO. Kubali pickup, delivery, au zote unapokua.',
       },
       4: {
-        title: 'Tumia motisha kuongeza biashara ya kurudia',
-        copy:
-          'Weka ukuaji ndani ya jukwaa kwa pointi, rufaa, vocha, na promosheni zinazowapa wateja sababu ya kurudi au kushiriki.',
+        title: 'Fuatilia mauzo na ukuaji wa kurudia',
+        copy: 'Tumia dashibodi ya muuzaji kwa maagizo, malipo, promosheni, na CRM—kisha rudisha wateja kwa pointi, vocha, na rufaa.',
       },
+    },
+    businessTypes: {
+      kicker: 'Ni ipi inakuelezea vyema?',
+      title: 'KKOO kwa migahawa, maduka, na zaidi',
+      copy: 'Iwe unafanya jikoni, duka la vyakula, au duka maalum, KKOO inakusaidia kufikia wateja wa karibu.',
+      restaurant: {
+        title: 'Mgahawa',
+        copy: 'Menyu, msongamano wa maagizo, na delivery—kwa jikoni na huduma za haraka.',
+      },
+      store: {
+        title: 'Vyakula na mahitaji',
+        copy: 'Wasaidie wateja wa karibu kununua haraka kwa duka la kidijitali na msaada wa fulfilment.',
+      },
+      retail: {
+        title: 'Rejareja na maalum',
+        copy: 'Maua, vifaa vya umeme, zawadi, na maduka yaliyochaguliwa—uza mtandaoni bila kupoteza utambulisho wako.',
+      },
+    },
+    merchantPortal: {
+      kicker: 'Portal ya muuzaji',
+      title: 'Dashibodi yako kwa maarifa na ukuaji',
+      copy: 'Pata uonekanaji wa mauzo na uendeshe shughuli za kila siku kwenye nafasi moja ya muuzaji—web au simu.',
+      1: {
+        title: 'Fuatilia mauzo ya hivi karibuni',
+        copy: 'Fuatilia maagizo na wastani wa thamani ya agizo ili urekebishe bei na upatikanaji kwa ujasiri.',
+      },
+      2: {
+        title: 'Ona kinachobadilisha',
+        copy: 'Elewa ni wateja wangapi wanaotazama menyu au katalogi wanaendelea kuagiza.',
+      },
+      3: {
+        title: 'Chunguza mienendo ya mapato',
+        copy: 'Gundua bidhaa zenye utendaji mzuri na vipindi tulivu ili kupanga stock, wafanyakazi, na promosheni.',
+      },
+      4: {
+        title: 'Endesha promosheni mahiri',
+        copy: 'Zindua vocha, matukio ya haraka, na ofa zinazofaa rufaa ili kurudisha wateja wenye thamani.',
+      },
+    },
+    faqs: {
+      kicker: 'Maswali yanayoulizwa mara kwa mara',
+      title: 'Wauzaji huuliza nini kabla ya kujiunga',
+      1: {
+        q: 'KKOO Business ni nini?',
+        a: 'KKOO Business ni upande wa muuzaji wa KKOO—jukwaa linalounganisha migahawa, maduka, na wauzaji na wateja wanaoamua chakula, vyakula, na bidhaa kwa delivery au pickup.',
+      },
+      2: {
+        q: 'Ninaanzaje?',
+        a: 'Kamilisha usajili, ongeza maelezo ya biashara na katalogi, na sanidi malipo. Baada ya ukaguzi mfupi, duka lako linaweza kufunguliwa na kupokea maagizo.',
+      },
+      3: {
+        q: 'Ninahitaji nini ili kuuza kwenye KKOO?',
+        a: 'Unahitaji biashara iliyosajiliwa inayotimiza mahitaji ya ndani, akaunti halali ya benki au mobile money kwa malipo, na maeneo yanayofaa kuandaa na kukabidhi maagizo.',
+      },
+      4: {
+        q: 'Ni biashara zipi zinaweza kujiunga?',
+        a: 'Migahawa, maduka ya vyakula, maduka ya dawa, maua, vifaa vya umeme, maduka ya mitindo, na wauzaji wengine wa karibu—si chakula tu.',
+      },
+      5: {
+        q: 'KKOO inasaidiaje kuongeza mapato?',
+        a: 'KKOO inaweka biashara yako mbele ya wanunuzi tayari kwenye programu, inasaidia delivery na pickup, na inatoa promosheni, rufaa, pointi, na CRM ili kuongeza maagizo ya kurudia.',
+      },
+    },
+    testimonial: {
+      quote:
+        'Kwa KKOO, tulifika wateja zaidi wa karibu bila kuchanganya zana tofauti za maagizo, delivery, na malipo.',
+      name: 'Mshirika wa muuzaji',
+      role: 'Mgahawa na rejareja kwenye KKOO',
     },
     growthCards: {
       1: {
@@ -749,6 +848,15 @@ export default {
     exploreVouchersDesc: 'Tuma na tumia salio la KKOO',
     exploreShareEarn: 'Shiriki na upate',
     exploreShareEarnDesc: 'Rufaa, viungo na zawadi za uaminifu',
+    shareEarnCard1Title: 'Kiungo chako, hadhira yako',
+    shareEarnCard1Desc:
+      'Kila bofyo na agizo linakuhesabia—halipotei kwenye dashibodi ya mtu mwingine.',
+    shareEarnCard2Title: 'Mapato unayaona',
+    shareEarnCard2Desc:
+      'Kamisheni zinasasishwa watu wanapojiunga na kununua. Daima ujue unachostahili.',
+    shareEarnCard3Title: 'Malipo kwa njia ya ndani',
+    shareEarnCard3Desc:
+      'M-Pesa, Airtel Money, Tigo Pesa, au benki—kwa tarehe za malipo tunazochapisha.',
     exploreCommunityDesc: 'Maoni, mawazo na habari za jumuiya',
     exploreApp: 'Programu na faragha',
     exploreAppDesc: 'Programu zinafanya nini na data inatumiwaje',
@@ -1003,6 +1111,7 @@ export default {
     footerOurWork: 'Kazi Zetu',
     footerPartners: 'Washirika',
     footerBecomeSeller: 'Fungua duka lako la KKOO',
+    footerSellerAccount: 'Akaunti ya muuzaji',
     footerDriversNote: "Madereva: tumia programu ya Kkoo Ride. Wanunuzi: tumia Kkoo Store / Eats / Go.",
     footerCompany: 'Kampuni',
     footerAbout: 'Kuhusu',
@@ -1111,10 +1220,11 @@ export default {
     cta: 'Pakua KKOO — ni bure',
   },
   business: {
-    heroTitle: 'Uza kwenye jukwaa moja.',
-    heroTitleAccent: 'Mtandao mmoja wa wasafirishaji. Pokea malipo.',
-    heroDesc: 'Orodhesha bidhaa, simamia maagizo, omba usafirishaji, pokea malipo—iwe unafanya duka, mgahawa au duka la vitu vya duka. CRM ikiwa unaitaji: wateja, ankara, deni, stock, wasambazaji. Iliyojengwa kwa jinsi unavyofanya biashara.',
-    cta: 'Anza kuuza sasa',
+    heroTitle: 'Kukuza biashara yako',
+    heroTitleAccent: 'na KKOO.',
+    heroDesc:
+      'Shirikiana na KKOO kufikia wateja wa karibu wanaonunua chakula, vyakula, na mahitaji ya kila siku. Orodhesha biashara yako, anza kupokea maagizo, na lipwa kwa ratiba wazi—kwa ada wazi na zana zilizojengwa kwa Tanzania.',
+    cta: 'Sajili biashara yako',
   },
   community: {
     eyebrow: 'JUMUIYA',

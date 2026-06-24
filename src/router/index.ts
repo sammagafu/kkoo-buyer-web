@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { allRoutes } from './routes/index';
 import { useAuthStore } from '@/stores/auth'
 import { initNavigationAnalytics } from '@/services/navigationAnalytics'
+import { isPublicMarketingRouteName } from '@/constants/publicRoutes'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,10 +34,16 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
-/** Buyer web: only routes with meta.authRequired need login; any signed-in user is allowed. */
+/** Buyer web: only routes with meta.authRequired need login; marketing pages stay public. */
 router.beforeEach(async (routeTo, _routeFrom, next) => {
+  const isPublicMarketing = isPublicMarketingRouteName(routeTo.name);
+
   const auth = useAuthStore();
   await auth.initialize();
+
+  if (isPublicMarketing) {
+    return next();
+  }
 
   if (auth.isAuthenticated) {
     if (routeTo.name === 'auth.sign-in' || routeTo.name === 'auth.sign-up') {

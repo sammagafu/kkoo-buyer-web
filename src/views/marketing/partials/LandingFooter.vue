@@ -46,6 +46,15 @@
         </div>
 
         <div class="hp-footer__col">
+          <h6 class="hp-footer__heading">{{ t('landing.footerNavForSellers') }}</h6>
+          <router-link :to="sellerNavItems.business.route">{{ t(sellerNavItems.business.labelKey) }}</router-link>
+          <router-link :to="sellerNavItems.merchant.route">{{ t(sellerNavItems.merchant.labelKey) }}</router-link>
+          <a :href="sellerNavItems.register.href">{{ t(sellerNavItems.register.labelKey) }}</a>
+          <a :href="sellerNavItems.account.href">{{ t(sellerNavItems.account.labelKey) }}</a>
+          <a :href="sellerNavItems.portal.href">{{ t(sellerNavItems.portal.labelKey) }}</a>
+        </div>
+
+        <div class="hp-footer__col">
           <h6 class="hp-footer__heading">{{ t('landing.footerCompany') }}</h6>
           <router-link :to="{ name: 'pages.app-homepage' }">{{ t('appHomepage.footerLink') }}</router-link>
           <router-link :to="buyerRoutes.careers">{{ t('landing.footerCareers') }}</router-link>
@@ -90,7 +99,7 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { appLinks } from '@/config/app-links'
-import { buyerRoutes, primaryNavItems, secondaryNavItems } from '@/config/landing-links'
+import { buyerRoutes, primaryNavItems, secondaryNavItems, sellerNavItems } from '@/config/landing-links'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { useLayoutStore } from '@/stores/layout'
 import logoLight from '@/assets/images/logo-light.svg'
