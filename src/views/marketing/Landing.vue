@@ -57,16 +57,26 @@
                       <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
                     </span>
                   </router-link>
+                  <a
+                    href="#services"
+                    class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg lp-hero-btn lp-btn-hero-outline text-decoration-none d-inline-flex align-items-center"
+                    @click.prevent="onLandingSectionClick('services', $event)"
+                  >
+                    <span class="lp-btn-pill__label d-inline-flex align-items-center gap-2">
+                      <Icon icon="solar:widget-5-bold" class="lp-hero-btn-icon" />
+                      <span>{{ t('landing.heroExploreServices') }}</span>
+                    </span>
+                    <span class="lp-btn-pill__well" aria-hidden="true">
+                      <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
+                    </span>
+                  </a>
                   <router-link
                     :to="isAuthenticated ? dashboardRoute : buyerRoutes.marketplace"
-                    class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg lp-hero-btn lp-btn-hero-outline text-decoration-none d-inline-flex align-items-center"
+                    class="lp-btn-pill lp-btn-pill--ghost lp-btn-pill--lg lp-hero-btn text-decoration-none d-inline-flex align-items-center"
                   >
                     <span class="lp-btn-pill__label d-inline-flex align-items-center gap-2">
                       <Icon :icon="isAuthenticated ? bi('speedometer2') : bi('bag-heart')" class="lp-hero-btn-icon" />
                       <span>{{ isAuthenticated ? t('landing.headerGoToDashboard') : t('landing.ctaShopOnWeb') }}</span>
-                    </span>
-                    <span class="lp-btn-pill__well" aria-hidden="true">
-                      <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
                     </span>
                   </router-link>
                 </div>
@@ -74,22 +84,25 @@
             </div>
 
             <div class="col-12 lp-hero-scroll-col">
-              <router-link
-                :to="buyerRoutes.marketplace"
+              <a
+                href="#services"
                 class="lp-hero-scroll-indicator text-decoration-none"
-                aria-label="Scroll to shop"
+                :aria-label="t('landing.heroExploreServices')"
+                @click.prevent="onLandingSectionClick('services', $event)"
               >
                 <Icon :icon="bi('chevron-double-down')" class="lp-hero-scroll-icon" />
                 <div class="lp-hero-scroll-line" aria-hidden="true"></div>
-              </router-link>
+              </a>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Shop verticals — quick links right after hero -->
-    <section class="lp-shop-verticals-section lp-section py-4 py-lg-5">
+    <LandingSuperAppFlow />
+
+    <!-- Legacy shop verticals — replaced by super-app flow -->
+    <section v-if="false" class="lp-shop-verticals-section lp-section py-4 py-lg-5">
       <div class="container-lg">
         <div class="lp-shop-verticals mt-3" role="list">
           <router-link
@@ -158,8 +171,8 @@
       </div>
     </section>
 
-    <!-- ===================== BUYERS APP ===================== -->
-    <section id="buyers-app" class="lp-buyers-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
+    <!-- ===================== BUYERS APP (legacy — see super-app flow) ===================== -->
+    <section v-if="false" id="buyers-app" class="lp-buyers-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
       <div class="lp-buyers-glow lp-buyers-glow--purple" aria-hidden="true" />
       <div class="lp-buyers-glow lp-buyers-glow--gold" aria-hidden="true" />
 
@@ -230,8 +243,8 @@
       </div>
     </section>
 
-    <!-- ===================== SELLER PLATFORM ===================== -->
-    <section id="seller-platform" class="lp-sellers-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
+    <!-- ===================== SELLER PLATFORM (legacy) ===================== -->
+    <section v-if="false" id="seller-platform" class="lp-sellers-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
       <div class="lp-sellers-glow" aria-hidden="true" />
 
       <div class="container-lg position-relative">
@@ -377,8 +390,8 @@
       </div>
     </section>
 
-    <!-- ===================== FOR BUSINESSES ===================== -->
-    <section id="businesses" class="lp-sme-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
+    <!-- ===================== FOR BUSINESSES (legacy) ===================== -->
+    <section v-if="false" id="businesses" class="lp-sme-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
       <div class="container-lg position-relative">
         <header class="lp-sme-hero-band">
           <div class="lp-sme-hero-band__content">
@@ -417,8 +430,8 @@
       </div>
     </section>
 
-    <!-- ===================== WHAT YOU GET ===================== -->
-    <section id="what-you-get" class="lp-ecosystem-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
+    <!-- ===================== WHAT YOU GET (legacy) ===================== -->
+    <section v-if="false" id="what-you-get" class="lp-ecosystem-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
       <div class="lp-ecosystem-ambient lp-ecosystem-ambient--purple" aria-hidden="true" />
       <div class="lp-ecosystem-ambient lp-ecosystem-ambient--gold" aria-hidden="true" />
 
@@ -467,8 +480,8 @@
       </div>
     </section>
 
-    <!-- ===================== REWARDS ===================== -->
-    <section id="rewards" class="lp-rewards-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
+    <!-- ===================== REWARDS (legacy) ===================== -->
+    <section v-if="false" id="rewards" class="lp-rewards-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
       <div class="lp-rewards-ambient lp-rewards-ambient--purple" aria-hidden="true" />
       <div class="lp-rewards-ambient lp-rewards-ambient--gold" aria-hidden="true" />
 
@@ -570,8 +583,8 @@
       </div>
     </section>
 
-    <!-- ===================== ONBOARDING ===================== -->
-    <section id="work" class="lp-onboard-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
+    <!-- ===================== ONBOARDING (legacy) ===================== -->
+    <section v-if="false" id="work" class="lp-onboard-section lp-section py-5 py-lg-6 position-relative overflow-hidden">
       <div class="lp-onboard-ambient lp-onboard-ambient--purple" aria-hidden="true" />
       <div class="lp-onboard-ambient lp-onboard-ambient--gold" aria-hidden="true" />
 
@@ -716,8 +729,8 @@
       </div>
     </section>
 
-    <!-- ===================== EARN AS AN INFLUENCER ===================== -->
-    <section id="share-earn" class="lp-influencer-section lp-section py-5 py-lg-6 position-relative">
+    <!-- ===================== EARN AS AN INFLUENCER (legacy) ===================== -->
+    <section v-if="false" id="share-earn" class="lp-influencer-section lp-section py-5 py-lg-6 position-relative">
       <div class="container-lg">
         <div class="row mb-4 mb-lg-5">
           <div class="col-lg-8">
@@ -1315,6 +1328,7 @@ import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import LandingHeader from '@/views/marketing/partials/LandingHeader.vue'
 import LandingFooter from '@/views/marketing/partials/LandingFooter.vue'
+import LandingSuperAppFlow from '@/views/marketing/partials/LandingSuperAppFlow.vue'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { buyerRoutes, landingAnchors, shopVerticals, marketingPrograms, bizSellerDashboardUrl, bizCrmUrl, bizSellerRegisterUrl } from '@/config/landing-links'
 import { useSellerPortalLinks } from '@/composables/useSellerPortalLinks'
