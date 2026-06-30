@@ -79,6 +79,8 @@
           :description="prod.description"
           :price-label="formatPrice(prod.price ?? prod.base_price)"
           :image-url="productImage(prod)"
+          :product-id="prod.id"
+          :product-slug="prod.slug"
           :disabled="!prod.skus?.length"
           :adding="addingId === prod.id"
           @add="addProduct(prod)"
@@ -104,8 +106,8 @@ import { useI18n } from 'vue-i18n'
 import { RouterLink, useRouter } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { catalogPublicApi, catalogSearchApi } from '@/api/catalog'
-import { cartApi } from '@/api/cart'
 import { useAuthStore } from '@/stores/auth'
+import { useAddToCart } from '@/composables/useAddToCart'
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerStoreProductCard from '@/components/buyer/BuyerStoreProductCard.vue'
@@ -114,6 +116,7 @@ import { productDetailLink } from '@/utils/buyerDetailLinks'
 
 type Product = {
   id?: number
+  slug?: string
   title?: string
   description?: string
   price?: number
@@ -128,6 +131,7 @@ type SuggestItem = { label: string; type: string }
 const { t } = useI18n()
 const auth = useAuthStore()
 const router = useRouter()
+const { addProduct: addProductToCart } = useAddToCart()
 const query = ref('')
 const results = ref<Product[]>([])
 const suggestions = ref<SuggestItem[]>([])
@@ -243,12 +247,10 @@ function openProduct(prod: Product) {
 }
 
 async function addProduct(prod: Product) {
-  if (!auth.isAuthenticated || !prod.id) return
-  const skuId = prod.skus?.[0]?.id
-  if (!skuId) return
+  if (!prod.id) return
   addingId.value = prod.id
   try {
-    await cartApi.add(Number(skuId), 1)
+    await addProductToCart(prod)
   } finally {
     addingId.value = null
   }

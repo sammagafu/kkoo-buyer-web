@@ -46,6 +46,22 @@
           <Icon icon="solar:close-circle-linear" />
         </button>
       </div>
+
+      <BuyerFulfillmentBar
+        v-model="fulfillmentMode"
+        :label="t('buyerXp.pharmacy.fulfillmentLabel')"
+        :hint="fulfillmentHint"
+        :modes="fulfillmentModes"
+      />
+
+      <div v-if="isLocalPickup" class="buyer-pharmacy-local-banner">
+        <Icon icon="solar:shop-bold" aria-hidden="true" />
+        <div>
+          <strong>{{ t('buyerXp.pharmacy.localCartTitle') }}</strong>
+          <p>{{ t('buyerXp.pharmacy.localCartBody') }}</p>
+        </div>
+      </div>
+
       <BuyerSearchBar v-model="search" :placeholder="t('buyerXp.pharmacy.searchPlaceholder')" />
       <BuyerProductGridSection
         class="mt-3"
@@ -54,8 +70,16 @@
         :error="error"
         :adding="adding"
         :add-error="addError"
-        @add="addProduct"
+        @add="(p) => addProduct(p)"
       />
+
+      <p v-if="addMessage" class="buyer-xp-toast buyer-xp-toast--ok mt-2">{{ addMessage }}</p>
+
+      <div v-if="itemCount > 0" class="buyer-pharmacy-checkout-row">
+        <RouterLink :to="checkoutLink" class="buyer-venue__chip buyer-venue__chip--primary buyer-venue__chip--lg">
+          {{ isLocalPickup ? t('buyerXp.pharmacy.checkoutPickup') : t('buyerXp.pharmacy.checkoutDelivery') }}
+        </RouterLink>
+      </div>
     </section>
 
     <div v-if="showUpload" class="buyer-detail-card mt-3">
@@ -71,14 +95,19 @@
 </template>
 
 <script setup lang="ts">
-import { inject, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import { catalogPublicApi } from '@/api/catalog'
 import { pharmacyApi } from '@/api/pharmacy'
-import { cartApi } from '@/api/cart'
 import { useAuthStore } from '@/stores/auth'
 import { formatApiError } from '@/utils/formatApiError'
+import { buildCheckoutLink } from '@/utils/fulfillmentLinks'
+import { useWebCart } from '@/composables/useWebCart'
+import { useInShopFulfillment } from '@/composables/useInShopFulfillment'
+import { useAddToCart } from '@/composables/useAddToCart'
+import BuyerFulfillmentBar, { type FulfillmentModeOption } from '@/components/buyer/BuyerFulfillmentBar.vue'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerHubCard from '@/components/buyer/experience/BuyerHubCard.vue'
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
@@ -87,16 +116,26 @@ import BuyerProductGridSection, { type GridProduct } from '@/components/buyer/ex
 const PHARMACY_SLUG = 'pharmacy'
 const { t } = useI18n()
 const auth = useAuthStore()
-const refreshBuyerCart = inject<() => Promise<void>>('refreshBuyerCart', async () => {})
-const openBuyerCart = inject<() => void>('openBuyerCart', () => {})
+const { itemCount } = useWebCart()
+const { fulfillmentMode, isLocalPickup } = useInShopFulfillment()
+const { adding, addError, addMessage, addProduct } = useAddToCart()
+
+const fulfillmentModes: FulfillmentModeOption[] = [
+  { id: 'pickup', label: 'Pick up in store', icon: 'solar:shop-bold' },
+  { id: 'delivery', label: 'Deliver to me', icon: 'solar:delivery-bold' },
+]
+
+const fulfillmentHint = computed(() =>
+  isLocalPickup.value ? t('buyerXp.pharmacy.localCartHint') : t('buyerXp.pharmacy.onlineCartHint'),
+)
+
+const checkoutLink = computed(() => buildCheckoutLink(fulfillmentMode.value))
 
 const viewMode = ref<'hub' | 'store'>('hub')
 const products = ref<GridProduct[]>([])
 const search = ref('')
 const loading = ref(false)
 const error = ref('')
-const adding = ref(false)
-const addError = ref('')
 const showUpload = ref(false)
 const rxFile = ref<File | null>(null)
 const rxNotes = ref('')
@@ -118,25 +157,6 @@ async function loadProducts() {
     error.value = formatApiError(e, t('buyerXp.pharmacy.couldNotLoadMedicines'))
   } finally {
     loading.value = false
-  }
-}
-
-async function addProduct(prod: GridProduct) {
-  if (!auth.isAuthenticated) {
-    addError.value = t('buyerXp.common.signInToAdd')
-    return
-  }
-  const skuId = prod.skus?.[0]?.id
-  if (!skuId) return
-  adding.value = true
-  try {
-    await cartApi.add(Number(skuId), 1)
-    await refreshBuyerCart()
-    openBuyerCart()
-  } catch (e) {
-    addError.value = formatApiError(e, t('buyerXp.common.couldNotAdd'))
-  } finally {
-    adding.value = false
   }
 }
 

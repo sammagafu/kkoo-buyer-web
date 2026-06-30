@@ -76,6 +76,8 @@
           :price-label="formatPrice(item.price ?? item.base_price ?? item.discount_price)"
           :image-url="menuItemImage(item)"
           :category-label="item.skus?.length ? t('buyerXp.common.ready') : undefined"
+          :product-id="item.id"
+          :product-slug="item.slug"
           :disabled="!item.skus?.length"
           :adding="adding"
           @add="addToCart(item)"
@@ -101,19 +103,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { Icon } from '@iconify/vue'
-import { useAuthStore } from '@/stores/auth'
 import {
   superAppApi,
   type RestaurantListItem,
   type RestaurantMenuItem,
   type RestaurantMenuResponse,
 } from '@/api/superApp'
-import { cartApi } from '@/api/cart'
-import { formatApiError } from '@/utils/formatApiError'
+import { useAddToCart } from '@/composables/useAddToCart'
 import { buildCheckoutLink, buildRideLink } from '@/utils/fulfillmentLinks'
 import BuyerFulfillmentBar, { type FulfillmentModeId } from '@/components/buyer/BuyerFulfillmentBar.vue'
 import BuyerTableBookingPanel from '@/components/buyer/BuyerTableBookingPanel.vue'
@@ -126,9 +126,7 @@ import { venueDetailLink } from '@/utils/buyerDetailLinks'
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
-const auth = useAuthStore()
-const refreshBuyerCart = inject<() => Promise<void>>('refreshBuyerCart', async () => {})
-const openBuyerCart = inject<() => void>('openBuyerCart', () => {})
+const { adding, addError, addMessage, addProduct: addProductToCart } = useAddToCart()
 
 const restaurants = ref<RestaurantListItem[]>([])
 const menuItems = ref<RestaurantMenuItem[]>([])
@@ -136,11 +134,8 @@ const activeRestaurantId = ref<number | string | null>(null)
 const viewMode = ref<'directory' | 'menu'>('directory')
 const loadingRestaurants = ref(false)
 const loadingMenu = ref(false)
-const adding = ref(false)
 const restaurantError = ref('')
 const menuError = ref('')
-const addMessage = ref('')
-const addError = ref('')
 const searchTerm = ref('')
 const fulfillmentMode = ref<FulfillmentModeId>('pickup')
 const hasCartItems = ref(false)
@@ -299,35 +294,26 @@ function menuItemImage(item: RestaurantMenuItem) {
 }
 
 async function addToCart(item: RestaurantMenuItem) {
-  addMessage.value = ''
-  addError.value = ''
-  if (!auth.isAuthenticated) {
-    addError.value = t('buyerXp.common.signInToAdd')
-    return
-  }
   const skuId = item.skus?.[0]?.id
-  if (!skuId) {
+  if (!skuId && !item.id) {
     addError.value = t('buyerXp.common.unavailable')
     return
   }
-  adding.value = true
-  try {
-    await cartApi.add(Number(skuId), 1)
-    hasCartItems.value = true
-    if (fulfillmentMode.value === 'delivery') {
-      addMessage.value = t('buyerXp.eats.addedDelivery')
-    } else if (fulfillmentMode.value === 'dine_in') {
-      addMessage.value = t('buyerXp.eats.addedDineIn')
-    } else {
-      addMessage.value = t('buyerXp.eats.addedPickup')
-    }
-    await refreshBuyerCart()
-    openBuyerCart()
-  } catch (e: unknown) {
-    const err = e as { response?: { data?: { detail?: string } } }
-    addError.value = err.response?.data?.detail ?? t('buyerXp.common.couldNotAdd')
-  } finally {
-    adding.value = false
+  const ok = await addProductToCart({
+    id: item.id,
+    title: item.title,
+    base_price: item.base_price ?? item.price,
+    skus: item.skus,
+    primary_media_url: item.cover_image,
+  })
+  if (!ok) return
+  hasCartItems.value = true
+  if (fulfillmentMode.value === 'delivery') {
+    addMessage.value = t('buyerXp.eats.addedDelivery')
+  } else if (fulfillmentMode.value === 'dine_in') {
+    addMessage.value = t('buyerXp.eats.addedDineIn')
+  } else {
+    addMessage.value = t('buyerXp.eats.addedPickup')
   }
 }
 

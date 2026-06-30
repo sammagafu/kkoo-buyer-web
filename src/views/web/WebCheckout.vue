@@ -68,8 +68,58 @@
         />
       </b-form-group>
 
+      <b-alert v-if="needsRx" variant="info" show class="mb-3">
+        <p class="mb-2 fw-semibold">{{ t('buyerXp.checkout.rxRequired') }}</p>
+        <p class="mb-0 small">{{ t('buyerXp.checkout.rxHint') }}</p>
+      </b-alert>
+
+      <b-form-group v-if="needsRx" :label="t('buyerXp.checkout.uploadRx')" class="mb-3">
+        <div class="buyer-btn-row">
+          <label class="buyer-venue__chip mb-0" :class="{ 'opacity-50': uploadingRx || !isAuthenticated }">
+            <Icon icon="solar:camera-add-bold" class="me-1" />
+            {{ uploadingRx ? t('buyerXp.checkout.uploadingRx') : t('buyerXp.checkout.uploadRx') }}
+            <input
+              type="file"
+              accept="image/*,.pdf"
+              class="d-none"
+              :disabled="uploadingRx || !isAuthenticated"
+              @change="onRxFile"
+            />
+          </label>
+        </div>
+        <p v-if="prescriptionIds.length" class="small text-success mb-0 mt-2">
+          {{ t('buyerXp.checkout.rxAttached', { count: prescriptionIds.length }) }}
+        </p>
+      </b-form-group>
+
+      <b-form-group :label="t('buyerXp.checkout.giftVoucher')" label-for="gift-voucher" class="mb-3">
+        <b-form-input
+          id="gift-voucher"
+          v-model="giftVoucherCode"
+          type="text"
+          :placeholder="t('buyerXp.checkout.giftVoucherPlaceholder')"
+          :disabled="!isAuthenticated"
+        />
+      </b-form-group>
+
+      <b-form-checkbox
+        v-if="loyaltyPointsAvailable"
+        v-model="useLoyaltyPoints"
+        class="mb-3"
+        :disabled="!isAuthenticated"
+      >
+        {{ t('buyerXp.checkout.useLoyaltyPoints', { points: loyaltyBalance }) }}
+      </b-form-checkbox>
+
       <b-form-group :label="t('buyerXp.checkout.payment')" label-for="payment" class="mb-3">
-        <b-form-select id="payment" v-model="paymentMethod" :options="paymentOptions" :disabled="!isAuthenticated" />
+        <p v-if="paymentMethodsLoading" class="text-muted small mb-2">{{ t('buyerXp.checkout.loadingPayments') }}</p>
+        <b-form-select
+          v-else
+          id="payment"
+          v-model="paymentMethod"
+          :options="paymentSelectOptions"
+          :disabled="!isAuthenticated || paymentSelectOptions.length === 0"
+        />
       </b-form-group>
 
       <p class="small text-muted mb-3">{{ t('buyerXp.checkout.cartSummary', { count: itemCount, total: formattedTotal }) }}</p>
@@ -96,7 +146,9 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
-import { addressesApi, ordersUserApi, cartApi } from '@/api'
+import { addressesApi, ordersUserApi, cartApi, paymentsApi } from '@/api'
+import { pharmacyApi } from '@/api/pharmacy'
+import type { PaymentMethodRow } from '@/api/payments'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 import { useWebCart } from '@/composables/useWebCart'
@@ -108,19 +160,31 @@ type FulfillmentType = 'delivery' | 'pickup' | 'dine_in' | ''
 const auth = useAuthStore()
 const route = useRoute()
 const { t } = useI18n()
-const { itemCount, formattedTotal, loadCart } = useWebCart()
+const { itemCount, formattedTotal, loadCart, cartItems } = useWebCart()
 
 const loadingAddresses = ref(false)
 const placingOrder = ref(false)
+const uploadingRx = ref(false)
+const paymentMethodsLoading = ref(false)
 const orderMessage = ref('')
 const orderError = ref('')
 const addresses = ref<AddressPayload[]>([])
 const selectedAddressId = ref<number | null>(null)
 const deliveryLocationText = ref('')
 const partySize = ref(2)
-const paymentMethod = ref('card_on_delivery')
+const paymentMethod = ref('cash')
+const paymentMethods = ref<PaymentMethodRow[]>([])
+const prescriptionIds = ref<number[]>([])
+const giftVoucherCode = ref('')
+const useLoyaltyPoints = ref(false)
 
 const isAuthenticated = computed(() => auth.isAuthenticated)
+
+const needsRx = computed(() => cartItems.value.some((i) => i.requiresPrescription))
+
+const loyaltyBalance = computed(() => auth.user?.loyalty_points_balance ?? 0)
+
+const loyaltyPointsAvailable = computed(() => isAuthenticated.value && loyaltyBalance.value >= 100)
 
 const fulfillmentType = computed<FulfillmentType>(() => {
   const raw = String(route.query.fulfillment || '').toLowerCase()
@@ -157,21 +221,30 @@ const addressSelectOptions = computed(() => [
   ...addressOptions.value,
 ])
 
+const paymentSelectOptions = computed(() =>
+  paymentMethods.value
+    .filter((m) => m.is_enabled !== false)
+    .map((m) => ({
+      value: m.code,
+      text: m.label || m.code,
+    })),
+)
+
+const selectedPaymentMethod = computed(() =>
+  paymentMethods.value.find((m) => m.code === paymentMethod.value),
+)
+
 const canPlaceOrder = computed(() => {
   if (!isAuthenticated.value || placingOrder.value || itemCount.value === 0) return false
+  if (needsRx.value && prescriptionIds.value.length === 0) return false
   if (needsDeliveryLocation.value) {
     return Boolean(selectedAddressId.value || deliveryLocationText.value.trim())
   }
   if (fulfillmentType.value === 'dine_in') {
     return partySize.value >= 1 && partySize.value <= 200
   }
-  return true
+  return paymentSelectOptions.value.length > 0
 })
-
-const paymentOptions = computed(() => [
-  { value: 'card_on_delivery', text: t('buyerXp.checkout.cardOnDelivery') },
-  { value: 'cash_on_delivery', text: t('buyerXp.checkout.cashOnDelivery') },
-])
 
 async function loadAddresses() {
   loadingAddresses.value = true
@@ -188,12 +261,61 @@ async function loadAddresses() {
   }
 }
 
+async function loadPaymentMethods() {
+  if (!isAuthenticated.value) return
+  paymentMethodsLoading.value = true
+  try {
+    const { data } = await paymentsApi.listMethods({ country_code: 'TZ' })
+    const rows = (data?.results ?? []).filter((m) => m.is_enabled !== false)
+    paymentMethods.value = rows.length
+      ? rows
+      : [
+          { code: 'pay_on_delivery', label: t('buyerXp.checkout.payOnDelivery'), kind: 'offline', is_enabled: true },
+          { code: 'cash', label: t('buyerXp.checkout.cashOnDelivery'), kind: 'offline', is_enabled: true },
+        ]
+    const preferred =
+      paymentMethods.value.find((m) => m.kind === 'offline' && m.code === 'cash') ??
+      paymentMethods.value.find((m) => m.kind === 'offline') ??
+      paymentMethods.value[0]
+    if (preferred?.code) paymentMethod.value = preferred.code
+  } catch {
+    paymentMethods.value = [
+      { code: 'pay_on_delivery', label: t('buyerXp.checkout.payOnDelivery'), kind: 'offline', is_enabled: true },
+      { code: 'cash', label: t('buyerXp.checkout.cashOnDelivery'), kind: 'offline', is_enabled: true },
+    ]
+    paymentMethod.value = 'cash'
+  } finally {
+    paymentMethodsLoading.value = false
+  }
+}
+
+async function onRxFile(ev: Event) {
+  const input = ev.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+  uploadingRx.value = true
+  orderError.value = ''
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+    const { data } = await pharmacyApi.uploadPrescription(formData)
+    if (data?.id) prescriptionIds.value = [...prescriptionIds.value, data.id]
+  } catch (e: unknown) {
+    orderError.value = formatApiError(e, 'Could not upload prescription.')
+  } finally {
+    uploadingRx.value = false
+    input.value = ''
+  }
+}
+
 async function placeOrder() {
   orderError.value = ''
   orderMessage.value = ''
 
   if (!canPlaceOrder.value) {
-    if (needsDeliveryLocation.value) {
+    if (needsRx.value && prescriptionIds.value.length === 0) {
+      orderError.value = 'Upload a valid prescription for Rx medicines.'
+    } else if (needsDeliveryLocation.value) {
       orderError.value = 'Add a saved address or type a delivery location.'
     } else if (fulfillmentType.value === 'dine_in') {
       orderError.value = 'Enter a valid party size (1–200).'
@@ -223,8 +345,43 @@ async function placeOrder() {
       payload.party_size = partySize.value
     }
 
-    await ordersUserApi.create(payload)
+    if (giftVoucherCode.value.trim()) {
+      payload.gift_voucher_code = giftVoucherCode.value.trim()
+    }
+    if (useLoyaltyPoints.value && loyaltyBalance.value > 0) {
+      payload.use_loyalty_points = loyaltyBalance.value
+    }
+    if (prescriptionIds.value.length) {
+      payload.prescription_ids = [...prescriptionIds.value]
+    }
+
+    const { data: order } = await ordersUserApi.create(payload)
+
+    const method = selectedPaymentMethod.value
+    if (method?.kind === 'online' && method.is_enabled !== false) {
+      const orderRef =
+        (order as { id?: number })?.id ??
+        (order as { order_number?: string })?.order_number
+      if (orderRef != null) {
+        try {
+          const { data: pay } = await paymentsApi.initiateSelcom(orderRef)
+          if (pay?.payment_gateway_url) {
+            window.location.href = pay.payment_gateway_url
+            return
+          }
+        } catch {
+          orderMessage.value = t('buyerXp.checkout.orderPlaced') + ' Online payment could not start — pay on delivery if offered.'
+          await cartApi.clear()
+          await loadCart()
+          return
+        }
+      }
+    }
+
     orderMessage.value = t('buyerXp.checkout.orderPlaced')
+    prescriptionIds.value = []
+    giftVoucherCode.value = ''
+    useLoyaltyPoints.value = false
     await cartApi.clear()
     await loadCart()
     deliveryLocationText.value = ''
@@ -242,6 +399,7 @@ watch(selectedAddressId, (id) => {
 onMounted(() => {
   void loadCart()
   void loadAddresses()
+  void loadPaymentMethods()
 })
 </script>
 

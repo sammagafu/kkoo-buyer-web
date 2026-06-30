@@ -51,11 +51,12 @@
 import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { wishlistApi, cartApi } from '@/api'
+import { wishlistApi } from '@/api'
 import { formatBuyerMoney } from '@/utils/buyerFormat'
 import { productDetailBySlug, productDetailLink } from '@/utils/buyerDetailLinks'
 import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 import { BUYER_DASHBOARD_ROUTE } from '@/constants/buyerDashboard'
+import { useAddToCart } from '@/composables/useAddToCart'
 
 type FavItem = {
   id?: number
@@ -69,11 +70,11 @@ type FavItem = {
 }
 
 const { t } = useI18n()
+const { adding, addMessage, addError, addProduct: addProductToCart } = useAddToCart()
 const favorites = ref<FavItem[]>([])
 const loading = ref(false)
 const message = ref('')
 const error = ref('')
-const adding = ref(false)
 const removing = ref(false)
 
 function productLink(item: FavItem) {
@@ -100,19 +101,16 @@ async function loadFavorites() {
 
 async function addToCart(item: FavItem) {
   if (!item.product_id && !item.id) return
-  adding.value = true
   message.value = ''
   error.value = ''
-  try {
-    const skuId = item.skus?.[0]?.id ?? item.product_id ?? item.id
-    await cartApi.add(Number(skuId), 1)
-    message.value = t('buyerXp.common.addedToCartShort')
-  } catch (e: unknown) {
-    const err = e as { response?: { data?: { detail?: string } } }
-    error.value = err?.response?.data?.detail ?? t('buyerXp.common.couldNotAdd')
-  } finally {
-    adding.value = false
-  }
+  const ok = await addProductToCart({
+    id: item.product_id ?? item.id,
+    title: item.title,
+    base_price: item.price ?? item.base_price,
+    skus: item.skus,
+  })
+  if (ok) message.value = addMessage.value
+  else error.value = addError.value
 }
 
 async function remove(item: FavItem) {

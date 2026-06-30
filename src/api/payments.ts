@@ -3,7 +3,24 @@
  */
 import client from './client'
 
+export type PaymentMethodRow = {
+  code: string
+  label: string
+  description?: string
+  kind?: 'offline' | 'online' | 'mixed' | string
+  provider?: string
+  initiate_path?: string
+  is_enabled?: boolean
+}
+
 export const paymentsApi = {
+  listMethods(params?: { delivery_area_id?: number; country_code?: string }) {
+    return client.get<{
+      results?: PaymentMethodRow[]
+      country_code?: string
+      delivery_area_id?: number
+    }>('/payments/methods/', { params })
+  },
   initiateSelcom(
     orderRef: string | number,
     redirect_url?: string,

@@ -23,38 +23,34 @@
         :add-error="addError"
         @add="addProduct"
       />
+      <p v-if="addMessage" class="buyer-xp-toast buyer-xp-toast--ok mt-2">{{ addMessage }}</p>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import { inject, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import { getFlashSale } from '@/api/flashSales'
 import { catalogPublicApi } from '@/api/catalog'
-import { cartApi } from '@/api/cart'
 import type { FlashSale } from '@/types/flashSales'
-import { useAuthStore } from '@/stores/auth'
 import { formatApiError } from '@/utils/formatApiError'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerProductGridSection, { type GridProduct } from '@/components/buyer/experience/BuyerProductGridSection.vue'
+import { useAddToCart } from '@/composables/useAddToCart'
 
 const props = defineProps<{ slug: string }>()
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
-const auth = useAuthStore()
-const refreshBuyerCart = inject<() => Promise<void>>('refreshBuyerCart', async () => {})
-const openBuyerCart = inject<() => void>('openBuyerCart', () => {})
+const { adding, addError, addMessage, addProduct: addProductToCart } = useAddToCart()
 
 const sale = ref<FlashSale | null>(null)
 const products = ref<GridProduct[]>([])
 const loading = ref(false)
 const error = ref('')
-const adding = ref(false)
-const addError = ref('')
 
 function formatDate(v: string) {
   return new Date(v).toLocaleString()
@@ -91,22 +87,7 @@ async function load() {
 }
 
 async function addProduct(prod: GridProduct) {
-  if (!auth.isAuthenticated) {
-    addError.value = t('buyerXp.common.signInToAdd')
-    return
-  }
-  const skuId = prod.skus?.[0]?.id
-  if (!skuId) return
-  adding.value = true
-  try {
-    await cartApi.add(Number(skuId), 1)
-    await refreshBuyerCart()
-    openBuyerCart()
-  } catch (e) {
-    addError.value = formatApiError(e, t('buyerXp.common.couldNotAdd'))
-  } finally {
-    adding.value = false
-  }
+  await addProductToCart(prod)
 }
 
 onMounted(load)

@@ -60,8 +60,14 @@ export const buyerVerticalRoutes = [
   {
     path: '/send',
     name: 'buyer.send',
-    meta: { title: setTitle('Send — Buy for me'), ...buyerShell },
+    meta: { title: setTitle('Send — Shop for me'), ...buyerShell },
     component: () => import('@/views/web/WebSend.vue'),
+  },
+  {
+    path: '/parcel',
+    name: 'buyer.parcel',
+    meta: { title: setTitle('Parcel'), ...buyerShell },
+    component: () => import('@/views/web/WebParcel.vue'),
   },
   {
     path: '/ride',
@@ -72,7 +78,7 @@ export const buyerVerticalRoutes = [
   {
     path: '/rides',
     name: 'buyer.rides',
-    meta: { title: setTitle('My rides'), ...authShell },
+    meta: { title: setTitle('My trips'), ...authShell },
     component: () => import('@/views/web/WebRideHistory.vue'),
   },
   {
@@ -206,6 +212,12 @@ export const buyerVerticalRoutes = [
     component: () => import('@/views/web/WebReferral.vue'),
   },
   {
+    path: '/share-earnings',
+    name: 'buyer.share-earn',
+    meta: { title: setTitle('Share & earn'), ...authShell },
+    component: () => import('@/views/web/WebShareEarnDashboard.vue'),
+  },
+  {
     path: '/premium',
     name: 'buyer.premium',
     meta: { title: setTitle('Premium'), ...buyerShell },
@@ -266,12 +278,20 @@ export const buyerVerticalRoutes = [
     meta: { title: setTitle('Compare'), ...buyerShell },
     component: () => import('@/views/web/WebCompare.vue'),
   },
+  {
+    path: '/whatsapp/preview/:token',
+    name: 'buyer.whatsapp.preview',
+    meta: { title: setTitle('Submission preview'), ...buyerShell },
+    component: () => import('@/views/web/WebWhatsAppPreview.vue'),
+    props: true,
+  },
   // Legacy /web/* paths and route names → canonical buyer routes
   { path: '/web', name: 'web.hub', redirect: BUYER_DASHBOARD_PATH },
   { path: '/web/market', name: 'web.market', redirect: BUYER_DASHBOARD_PATH },
   { path: '/web/eats', name: 'web.eats', redirect: '/eats' },
   { path: '/web/groceries', name: 'web.groceries', redirect: '/grocery' },
   { path: '/web/send', name: 'web.send', redirect: '/send' },
+  { path: '/web/parcel', name: 'web.parcel', redirect: '/parcel' },
   { path: '/web/ride', name: 'web.ride', redirect: '/ride' },
   { path: '/web/booking', name: 'web.booking', redirect: '/booking' },
   { path: '/web/checkout', name: 'web.checkout', redirect: '/checkout' },

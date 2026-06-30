@@ -29,8 +29,14 @@ export const cartApi = {
   get() {
     return client.get<CartApiResponse>('/cart/')
   },
-  add(sku_id: number, quantity = 1) {
-    return client.post('/cart/add/', { sku_id, quantity })
+  add(
+    skuOrPayload: number | { sku_id?: number; product_id?: number; quantity?: number },
+    quantity = 1,
+  ) {
+    if (typeof skuOrPayload === 'number') {
+      return client.post('/cart/add/', { sku_id: skuOrPayload, quantity })
+    }
+    return client.post('/cart/add/', { quantity: 1, ...skuOrPayload })
   },
   updateItem(itemId: number | string, quantity: number) {
     return client.patch(`/cart/items/${itemId}/update/`, { quantity })

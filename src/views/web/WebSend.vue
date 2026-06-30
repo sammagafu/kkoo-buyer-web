@@ -5,15 +5,14 @@
       <h1 class="shop-top__title">{{ t('buyerXp.send.title') }}</h1>
     </header>
 
-    <div v-if="!auth.isAuthenticated" class="send-main__auth">
+    <div v-if="!auth.isAuthenticated" class="send-main__auth send-main__auth--inline">
       <p>{{ t('buyerXp.send.signInPrompt') }}</p>
       <RouterLink :to="{ name: 'auth.sign-in', query: { redirectedFrom: '/send' } }" class="send-main__auth-btn">
         {{ t('buyerXp.common.signIn') }}
       </RouterLink>
     </div>
 
-    <template v-else>
-      <div v-if="storeBanner" class="send-intro send-intro--store">
+    <div v-if="storeBanner" class="send-intro send-intro--store">
         <Icon icon="solar:shop-bold" aria-hidden="true" />
         <div>
           <p class="send-intro__kicker">{{ t('buyerXp.send.shoppingFrom') }}</p>
@@ -30,35 +29,84 @@
         </div>
       </div>
 
-      <BuyForMeVerticalStrip v-model="categoryId" />
+      <section class="send-category-bar" aria-label="Shopping category">
+        <div class="send-vertical-strip">
+          <label
+            v-for="cat in BUY_FOR_ME_CATEGORIES"
+            :key="cat.id"
+            class="send-vertical-strip__chip"
+            :class="{ 'send-vertical-strip__chip--active': categoryId === cat.id }"
+          >
+            <input
+              v-model="categoryId"
+              type="radio"
+              name="send-category"
+              class="send-vertical-strip__radio"
+              :value="cat.id"
+            />
+            <span class="send-vertical-strip__chip-content">
+              <Icon :icon="cat.icon" aria-hidden="true" />
+              <span>{{ cat.label }}</span>
+            </span>
+          </label>
+        </div>
+        <p class="send-category-bar__hint">{{ activeCategory.shoppingArea }}</p>
+      </section>
+
+      <section class="send-items-panel" id="send-items" :aria-label="t('buyerXp.send.yourItems')">
+        <header class="send-items-panel__head">
+          <div class="send-items-panel__intro">
+            <h2 class="send-items-panel__title">{{ t('buyerXp.send.yourItems') }}</h2>
+            <p class="send-items-panel__meta">
+              {{ t('buyerXp.send.itemsMeta', { count: items.length, area: activeCategory.shoppingArea }) }}
+            </p>
+          </div>
+          <span class="send-items-panel__count" aria-hidden="true">{{ items.length }}</span>
+        </header>
+
+        <button
+          v-if="showBrowseHero"
+          type="button"
+          class="send-items-panel__browse"
+          @click="openPicker(0)"
+        >
+          <span class="send-items-panel__browse-icon" aria-hidden="true">
+            <Icon :icon="activeCategory.icon" />
+          </span>
+          <span class="send-items-panel__browse-copy">
+            <strong>{{ browseStoresLabel }}</strong>
+            <span>{{ t('buyerXp.send.browseStoresHint') }}</span>
+          </span>
+          <Icon icon="solar:arrow-right-linear" class="send-items-panel__browse-arrow" aria-hidden="true" />
+        </button>
+
+        <div class="send-items-panel__list">
+          <BuyForMeItemEditor
+            v-for="(item, index) in items"
+            :key="item.key"
+            :index="index"
+            :item="item"
+            :can-remove="items.length > 1"
+            :emphasize-pick="!item.selection && !item.name.trim()"
+            @remove="removeItem(index)"
+            @pick="openPicker(index)"
+            @quantity="(q) => setQuantity(index, q)"
+            @update-name="(v) => updateItemName(index, v)"
+            @update-price="(v) => updateItemPrice(index, v)"
+          />
+        </div>
+
+        <button type="button" class="send-items-panel__add" @click="addItemAndFocus">
+          <Icon icon="solar:add-circle-bold" aria-hidden="true" />
+          {{ t('buyerXp.send.addAnotherItem') }}
+        </button>
+      </section>
 
       <BuyForMeDeliverySection
         v-model:delivery-address="deliveryAddress"
         v-model:phone="phone"
         v-model:notes="notes"
         @coords="onCoords"
-      />
-
-      <div class="send-items-head">
-        <h2 class="send-items-head__title">{{ t('buyerXp.send.yourItems') }}</h2>
-        <button type="button" class="send-items-head__add" @click="addItem">
-          <Icon icon="solar:add-circle-linear" aria-hidden="true" />
-          {{ t('buyerXp.send.addItem') }}
-        </button>
-      </div>
-      <p class="send-items-head__hint">{{ t('buyerXp.send.itemsHint') }}</p>
-
-      <BuyForMeItemEditor
-        v-for="(item, index) in items"
-        :key="item.key"
-        :index="index"
-        :item="item"
-        :can-remove="items.length > 1"
-        @remove="removeItem(index)"
-        @pick="openPicker(index)"
-        @quantity="(q) => setQuantity(index, q)"
-        @update-name="(v) => updateItemName(index, v)"
-        @update-price="(v) => updateItemPrice(index, v)"
       />
 
       <BuyForMeTotalStrip
@@ -100,10 +148,10 @@
           {{ submitting ? t('buyerXp.send.sending') : t('buyerXp.send.sendRequest') }}
         </button>
       </footer>
-    </template>
 
     <BuyForMeProductPicker
       v-model="pickerOpen"
+      :category-id="categoryId"
       :delivery-lat="queryLat"
       :delivery-lng="queryLng"
       :preferred-seller-id="preferredSellerId"
@@ -126,22 +174,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import { useAuthStore } from '@/stores/auth'
 import { buyForMeApi, type BuyForMeRequest } from '@/api/buyForMe'
 import { logisticsPublicApi } from '@/api/logistics'
 import { formatApiError } from '@/utils/formatApiError'
-import { buyForMeCategoryById, type BuyForMeCategoryId } from '@/constants/buyForMeCategories'
+import { buyForMeCategoryById, BUY_FOR_ME_CATEGORIES, type BuyForMeCategoryId } from '@/constants/buyForMeCategories'
 import {
   lineUnitTotal,
   newItemDraft,
   type BuyForMeItemDraft,
   type BuyForMeProductSelection,
 } from '@/types/buyForMe'
-import BuyForMeVerticalStrip from '@/components/buyer/send/BuyForMeVerticalStrip.vue'
 import BuyForMeDeliverySection from '@/components/buyer/send/BuyForMeDeliverySection.vue'
 import BuyForMeItemEditor from '@/components/buyer/send/BuyForMeItemEditor.vue'
 import BuyForMeTotalStrip from '@/components/buyer/send/BuyForMeTotalStrip.vue'
@@ -151,13 +198,21 @@ import { useBuyForMePricingConfig } from '@/composables/useBuyForMePricingConfig
 const FALLBACK_LAT = -6.8172
 const FALLBACK_LNG = 39.2833
 
+function categoryFromQuery(raw: unknown): BuyForMeCategoryId | null {
+  const cat = String(raw ?? '').trim()
+  if (cat === 'food' || cat === 'grocery' || cat === 'pharmacy' || cat === 'store') return cat
+  return null
+}
+
 const route = useRoute()
+const router = useRouter()
 const auth = useAuthStore()
 const { t } = useI18n()
 const { load: loadBuyForMePricing } = useBuyForMePricingConfig()
 
-const categoryId = ref<BuyForMeCategoryId>('grocery')
-const items = ref<BuyForMeItemDraft[]>([newItemDraft('grocery')])
+const initialCategory = categoryFromQuery(route.query.category) ?? 'grocery'
+const categoryId = ref<BuyForMeCategoryId>(initialCategory)
+const items = ref<BuyForMeItemDraft[]>([newItemDraft(initialCategory)])
 const deliveryAddress = ref('')
 const phone = ref('')
 const notes = ref('')
@@ -174,6 +229,27 @@ const approvingId = ref<number | null>(null)
 
 const storeBanner = ref('')
 const preferredSellerId = ref<number | null>(null)
+
+const activeCategory = computed(() => buyForMeCategoryById(categoryId.value))
+
+const showBrowseHero = computed(() =>
+  items.value.some((item) => !item.selection && !item.name.trim()),
+)
+
+const browseStoresLabel = computed(() => {
+  switch (categoryId.value) {
+    case 'food':
+      return t('buyerXp.send.browseFood')
+    case 'grocery':
+      return t('buyerXp.send.browseGrocery')
+    case 'pharmacy':
+      return t('buyerXp.send.browsePharmacy')
+    case 'store':
+      return t('buyerXp.send.browseStore')
+    default:
+      return t('buyerXp.send.browseStores')
+  }
+})
 
 const queryLat = computed(() => deliveryLat.value ?? FALLBACK_LAT)
 const queryLng = computed(() => deliveryLng.value ?? FALLBACK_LNG)
@@ -212,7 +288,22 @@ function onCategoryChange(id: BuyForMeCategoryId) {
   for (const item of items.value) item.categoryId = id
 }
 
-watch(categoryId, onCategoryChange)
+watch(categoryId, (id) => {
+  onCategoryChange(id)
+  if (String(route.query.category ?? '') !== id) {
+    void router.replace({ query: { ...route.query, category: id } })
+  }
+}, { immediate: true })
+
+watch(
+  () => route.query.category,
+  (raw) => {
+    const cat = categoryFromQuery(raw)
+    if (cat && categoryId.value !== cat) {
+      categoryId.value = cat
+    }
+  },
+)
 
 function onCoords(lat: number | null, lng: number | null) {
   deliveryLat.value = lat
@@ -231,6 +322,16 @@ async function refreshDeliveryFee() {
 
 function addItem() {
   items.value.push(newItemDraft(categoryId.value))
+}
+
+function addItemAndFocus() {
+  addItem()
+  nextTick(() => {
+    const cards = document.querySelectorAll('.send-item-editor')
+    const last = cards[cards.length - 1] as HTMLElement | undefined
+    last?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    last?.querySelector<HTMLElement>('.send-item-editor__pick')?.focus()
+  })
 }
 
 function removeItem(index: number) {
@@ -319,6 +420,10 @@ function buildPayload() {
 
 async function submit() {
   error.value = ''
+  if (!auth.isAuthenticated) {
+    await router.push({ name: 'auth.sign-in', query: { redirectedFrom: route.fullPath } })
+    return
+  }
   const payload = buildPayload()
   if (!payload.items.length) {
     error.value = t('buyerXp.send.addProductFirst')

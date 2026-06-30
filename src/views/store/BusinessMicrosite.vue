@@ -546,8 +546,7 @@ import { computed, ref, watch, onMounted } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { getStorePublic, type StorePromocode, type StorePublicPayload, type StorePublicProduct } from '@/api/store'
-import { cartApi } from '@/api/cart'
-import { useAuthStore } from '@/stores/auth'
+import { useAddToCart } from '@/composables/useAddToCart'
 import { resolveAssetUrl } from '@/utils/assetUrl'
 import { appLinks } from '@/config/app-links'
 
@@ -563,7 +562,7 @@ interface MenuItem extends StorePublicProduct {
 }
 
 const route = useRoute()
-const auth = useAuthStore()
+const { adding, addMessage, addError, addProduct: addProductToCart } = useAddToCart()
 const slugOrId = computed(() => (route.params.slugOrId as string) || '')
 const loading = ref(true)
 const error = ref('')
@@ -581,8 +580,6 @@ const gridCols = ref<(typeof gridColOptions)[number]>(4)
 const cardImageErrors = ref<Record<string, boolean>>({})
 const selectedProduct = ref<MenuItem | null>(null)
 const detailImageError = ref(false)
-const addMessage = ref('')
-const addError = ref('')
 const copyMessage = ref('')
 
 const MICROSITE_THEME_KEY = 'kkoo_microsite_theme'
@@ -816,23 +813,19 @@ function openProductDetail(item: MenuItem): void {
 }
 
 async function addToCart(item: MenuItem) {
-  addMessage.value = ''
-  addError.value = ''
-  const skuId = item.skus?.[0]?.id ?? item.id
-  if (!skuId) {
-    addError.value = 'No SKU available for this item.'
+  const productId = Number(item.id)
+  if (!productId) {
+    addError.value = 'No product available for this item.'
     return
   }
-  if (!auth.isAuthenticated) {
-    addError.value = 'Sign in to add items to your web cart.'
-    return
-  }
-  try {
-    await cartApi.add(Number(skuId), 1)
-    addMessage.value = 'Added to cart. Open web checkout to finish.'
-  } catch (e: any) {
-    addError.value = e?.response?.data?.detail ?? 'Could not add to cart.'
-  }
+  await addProductToCart({
+    id: productId,
+    title: item.title,
+    base_price: item.base_price ?? item.price,
+    discount_price: item.discount_price,
+    primary_media_url: item.primary_media_url ?? item.image_url,
+    skus: item.skus,
+  })
 }
 
 const primaryColor = computed(() => {

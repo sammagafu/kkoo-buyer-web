@@ -6,6 +6,16 @@
           <Icon icon="solar:arrow-left-linear" />
         </button>
         <h1 class="buyer-page-head__title">{{ product?.title || t('buyerXp.common.productFallback') }}</h1>
+        <button
+          v-if="product?.id || product?.slug"
+          type="button"
+          class="buyer-page-head__action"
+          :disabled="sharing"
+          @click="shareProduct"
+        >
+          <Icon icon="solar:share-bold" aria-hidden="true" />
+          <span>{{ sharing ? '…' : t('buyerXp.shareEarn.shareShort') }}</span>
+        </button>
       </div>
     </header>
 
@@ -23,9 +33,34 @@
         </div>
         <p v-if="product.store_name" class="buyer-page-head__meta mb-2">{{ product.store_name }}</p>
         <p v-if="product.description" class="buyer-page-head__meta mb-3">{{ product.description }}</p>
-        <div class="buyer-detail-row">
+        <div class="buyer-detail-row buyer-detail-row--actions">
           <strong style="font-size: 1.35rem">{{ formatPrice(price) }}</strong>
-          <span v-if="product.average_rating" class="buyer-venue__chip">★ {{ product.average_rating }}</span>
+          <div class="buyer-detail-actions">
+            <button
+              v-if="product.id"
+              type="button"
+              class="buyer-detail-actions__btn"
+              :class="{ 'buyer-detail-actions__btn--active': favorited }"
+              :disabled="togglingFavorite"
+              :aria-label="favorited ? t('buyerXp.product.removeFavorite') : t('buyerXp.product.saveFavorite')"
+              :title="favorited ? t('buyerXp.product.removeFavorite') : t('buyerXp.product.saveFavorite')"
+              @click="toggleFavorite"
+            >
+              <Icon :icon="favorited ? 'solar:heart-bold' : 'solar:heart-linear'" aria-hidden="true" />
+            </button>
+            <button
+              v-if="product.id || product.slug"
+              type="button"
+              class="buyer-detail-actions__btn"
+              :disabled="sharing"
+              :aria-label="t('buyerXp.product.share')"
+              :title="t('buyerXp.product.share')"
+              @click="shareProduct"
+            >
+              <Icon icon="solar:share-bold" aria-hidden="true" />
+            </button>
+            <span v-if="product.average_rating" class="buyer-venue__chip">★ {{ product.average_rating }}</span>
+          </div>
         </div>
 
         <div v-if="skuOptions.length > 1" class="buyer-ride-field mt-3">
@@ -52,6 +87,7 @@
           {{ adding ? t('buyerXp.product.adding') : t('buyerXp.product.addToCart') }}
         </button>
         <p v-if="addError" class="buyer-xp-toast buyer-xp-toast--err mt-2">{{ addError }}</p>
+        <p v-if="addMessage" class="buyer-xp-toast buyer-xp-toast--ok mt-2">{{ addMessage }}</p>
       </article>
 
       <section v-if="reviews.length" class="buyer-surface">
@@ -74,26 +110,28 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import { catalogPublicApi, catalogSellerApi } from '@/api/catalog'
 import { reviewsApi } from '@/api/reviews'
-import { cartApi } from '@/api/cart'
 import { useAuthStore } from '@/stores/auth'
-import { formatApiError } from '@/utils/formatApiError'
 import { resolveAssetUrl } from '@/utils/assetUrl'
+import { formatApiError } from '@/utils/formatApiError'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerProductGridSection, { type GridProduct } from '@/components/buyer/experience/BuyerProductGridSection.vue'
+import { useProductShareEarn } from '@/composables/useProductShareEarn'
+import { useProductFavorite } from '@/composables/useProductFavorite'
+import { useAddToCart } from '@/composables/useAddToCart'
 
 const props = defineProps<{ id?: string; slug?: string }>()
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
 const auth = useAuthStore()
-const refreshBuyerCart = inject<() => Promise<void>>('refreshBuyerCart', async () => {})
-const openBuyerCart = inject<() => void>('openBuyerCart', () => {})
+const { adding, addError, addMessage, addProduct: addProductToCart } = useAddToCart()
+const { requestShare } = useProductShareEarn()
 
 type Product = GridProduct & {
   average_rating?: number
@@ -108,10 +146,12 @@ const reviews = ref<ReviewRow[]>([])
 const related = ref<GridProduct[]>([])
 const loading = ref(false)
 const error = ref('')
-const adding = ref(false)
-const addError = ref('')
 const quantity = ref(1)
 const selectedSkuId = ref<number | null>(null)
+const sharing = ref(false)
+
+const productId = computed(() => product.value?.id ?? null)
+const { favorited, toggling: togglingFavorite, toggleFavorite } = useProductFavorite(productId)
 
 const price = computed(() => {
   const p = product.value as { discount_price?: number; price?: number; base_price?: number } | null
@@ -179,30 +219,34 @@ async function loadRelated(p: Product) {
   }
 }
 
-async function addToCart() {
-  if (!auth.isAuthenticated) {
-    await router.push({ name: 'auth.sign-in', query: { redirectedFrom: route.fullPath } })
-    return
-  }
-  if (!selectedSkuId.value) return
-  adding.value = true
-  addError.value = ''
+async function shareProduct() {
+  const p = product.value
+  if (!p?.id && !p?.slug) return
+  sharing.value = true
   try {
-    await cartApi.add(Number(selectedSkuId.value), Math.max(1, quantity.value || 1))
-    await refreshBuyerCart()
-    openBuyerCart()
-  } catch (e) {
-    addError.value = formatApiError(e, t('buyerXp.common.couldNotAdd'))
+    await requestShare({
+      productId: p.id,
+      productSlug: p.slug,
+      title: p.title,
+      priceLabel: formatPrice(price.value),
+      imageUrl: imageUrl.value,
+    })
   } finally {
-    adding.value = false
+    sharing.value = false
   }
 }
 
+async function addToCart() {
+  const p = product.value
+  if (!p || !selectedSkuId.value) return
+  await addProductToCart(
+    { ...p, skus: [{ id: selectedSkuId.value }] },
+    Math.max(1, quantity.value || 1),
+  )
+}
+
 async function addRelated(prod: GridProduct) {
-  if (!auth.isAuthenticated || !prod.skus?.[0]?.id) return
-  await cartApi.add(Number(prod.skus[0].id), 1)
-  await refreshBuyerCart()
-  openBuyerCart()
+  await addProductToCart(prod)
 }
 
 watch(() => [route.params.id, route.params.slug], () => void load())
@@ -211,6 +255,44 @@ onMounted(load)
 </script>
 
 <style scoped>
+.buyer-detail-row--actions {
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.buyer-detail-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-left: auto;
+}
+
+.buyer-detail-actions__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  padding: 0;
+  border: 1px solid var(--buyer-border-strong);
+  border-radius: 999px;
+  background: var(--buyer-card-bg, var(--buyer-surface));
+  color: var(--kkoo-primary);
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(59, 26, 90, 0.08);
+}
+
+.buyer-detail-actions__btn--active {
+  border-color: rgba(220, 53, 69, 0.3);
+  color: #dc3545;
+}
+
+.buyer-detail-actions__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .buyer-ride-field select,
 .buyer-ride-field input {
   width: 100%;

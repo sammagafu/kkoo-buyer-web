@@ -45,8 +45,10 @@
       v-else-if="products.length"
       :products="products"
       :show-store-label="true"
+      :add-error="addError"
       @add="onAdd"
     />
+    <p v-if="addMessage" class="buyer-xp-toast buyer-xp-toast--ok mt-2">{{ addMessage }}</p>
 
     <BuyerEmptyState
       v-else-if="!loading && !error"
@@ -62,23 +64,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import { wholesalePublicApi, wholesaleUserApi } from '@/api/wholesale'
-import { cartApi } from '@/api/cart'
 import { useAuthStore } from '@/stores/auth'
 import { formatApiError } from '@/utils/formatApiError'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerProductGridSection, { type GridProduct } from '@/components/buyer/experience/BuyerProductGridSection.vue'
 import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 import { BUYER_DASHBOARD_ROUTE } from '@/constants/buyerDashboard'
+import { useAddToCart } from '@/composables/useAddToCart'
 
 const { t } = useI18n()
 const auth = useAuthStore()
-const refreshBuyerCart = inject<() => Promise<void>>('refreshBuyerCart', async () => {})
-const openBuyerCart = inject<() => void>('openBuyerCart', () => {})
+const { addError, addMessage, addProduct: addProductToCart } = useAddToCart()
 
 const me = ref<Record<string, unknown> | null>(null)
 const products = ref<GridProduct[]>([])
@@ -139,19 +140,8 @@ async function apply() {
 }
 
 async function onAdd(prod: GridProduct) {
-  if (!auth.isAuthenticated) {
-    error.value = t('buyerXp.common.signInToAdd')
-    return
-  }
-  const skuId = prod.skus?.[0]?.id
-  if (!skuId) return
-  try {
-    await cartApi.add(Number(skuId), 1)
-    await refreshBuyerCart()
-    openBuyerCart()
-  } catch (e) {
-    error.value = formatApiError(e, t('buyerXp.common.couldNotAdd'))
-  }
+  error.value = ''
+  await addProductToCart(prod)
 }
 
 onMounted(load)

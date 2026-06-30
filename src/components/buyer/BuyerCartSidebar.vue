@@ -20,7 +20,14 @@
       <p class="mb-1 fw-semibold">{{ t('buyerXp.cart.emptyTitle') }}</p>
       <p class="small text-muted mb-0">{{ t('buyerXp.cart.emptyHint') }}</p>
     </div>
-    <ul v-else class="buyer-cart-sidebar__list">
+    <div v-if="isGuestCart && cartItems.length" class="buyer-cart-sidebar__guest-banner">
+      <Icon icon="solar:cloud-storage-bold" aria-hidden="true" />
+      <div>
+        <strong>{{ t('buyerXp.cart.guestBannerTitle') }}</strong>
+        <p>{{ t('buyerXp.cart.guestBannerBody') }}</p>
+      </div>
+    </div>
+    <ul v-if="cartItems.length" class="buyer-cart-sidebar__list">
       <li v-for="item in cartItems" :key="itemKey(item)" class="buyer-cart-sidebar__item">
         <div class="buyer-cart-sidebar__thumb" aria-hidden="true">
           <Icon icon="solar:box-bold-duotone" />
@@ -53,11 +60,11 @@
       </div>
       <div class="buyer-btn-row">
         <router-link
-          :to="{ name: 'buyer.checkout' }"
+          :to="checkoutTo"
           class="buyer-cart-sidebar__checkout buyer-venue__chip buyer-venue__chip--primary buyer-venue__chip--lg text-decoration-none"
           @click="emit('checkout')"
         >
-          {{ t('buyerXp.cart.checkout') }}
+          {{ isGuestCart ? t('buyerXp.cart.checkoutSignIn') : t('buyerXp.cart.checkout') }}
         </router-link>
       </div>
     </div>
@@ -68,7 +75,10 @@
 import { computed, onMounted } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import { useWebCart } from '@/composables/useWebCart'
+import { buildCheckoutLink } from '@/utils/fulfillmentLinks'
+import { useInShopFulfillment } from '@/composables/useInShopFulfillment'
 
 withDefaults(
   defineProps<{
@@ -81,6 +91,8 @@ withDefaults(
 
 const emit = defineEmits<{ checkout: [] }>()
 const { t } = useI18n()
+const route = useRoute()
+const { fulfillmentMode } = useInShopFulfillment()
 
 const {
   cartItems,
@@ -88,12 +100,20 @@ const {
   error,
   itemCount,
   formattedTotal,
+  isGuestCart,
   loadCart,
   updateQuantity,
   removeItem,
   itemKey,
   formatPrice,
 } = useWebCart()
+
+const checkoutTo = computed(() => {
+  if (isGuestCart.value) {
+    return { name: 'auth.sign-in' as const, query: { redirectedFrom: route.fullPath } }
+  }
+  return buildCheckoutLink(fulfillmentMode.value)
+})
 
 const cartCountLabel = computed(() =>
   itemCount.value === 1

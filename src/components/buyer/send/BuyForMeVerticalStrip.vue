@@ -1,18 +1,24 @@
 <template>
-  <div class="send-vertical-strip" role="tablist" aria-label="Shopping category">
-    <button
+  <div class="send-vertical-strip" role="group" aria-label="Shopping category">
+    <label
       v-for="cat in BUY_FOR_ME_CATEGORIES"
       :key="cat.id"
-      type="button"
       class="send-vertical-strip__chip"
       :class="{ 'send-vertical-strip__chip--active': modelValue === cat.id }"
-      role="tab"
-      :aria-selected="modelValue === cat.id"
-      @click="$emit('update:modelValue', cat.id)"
     >
-      <Icon :icon="cat.icon" aria-hidden="true" />
-      <span>{{ cat.label }}</span>
-    </button>
+      <input
+        type="radio"
+        name="send-category"
+        class="send-vertical-strip__radio"
+        :value="cat.id"
+        :checked="modelValue === cat.id"
+        @change="emit('update:modelValue', cat.id)"
+      />
+      <span class="send-vertical-strip__chip-content">
+        <Icon :icon="cat.icon" aria-hidden="true" />
+        <span>{{ cat.label }}</span>
+      </span>
+    </label>
   </div>
 </template>
 
@@ -20,6 +26,11 @@
 import { Icon } from '@iconify/vue'
 import { BUY_FOR_ME_CATEGORIES, type BuyForMeCategoryId } from '@/constants/buyForMeCategories'
 
-defineProps<{ modelValue: BuyForMeCategoryId }>()
-defineEmits<{ 'update:modelValue': [value: BuyForMeCategoryId] }>()
+defineProps<{
+  modelValue: BuyForMeCategoryId
+}>()
+
+const emit = defineEmits<{
+  'update:modelValue': [value: BuyForMeCategoryId]
+}>()
 </script>

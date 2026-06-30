@@ -1,31 +1,57 @@
 <template>
-  <div class="buyer-xp buyer-xp--wide">
-    <!-- Home marketplace -->
+  <div class="buyer-xp buyer-xp--wide" :class="{ 'buyer-xp--mhome': isHomeMode }">
+    <!-- Home marketplace — mobile-first entry -->
     <template v-if="isHomeMode">
-      <header class="buyer-home-hero">
+      <BuyerMobileHomeHeader
+        :area-label="areaLabel"
+        :unread-count="notificationUnreadCount"
+        @notifications="openNotificationsPanel"
+        @location="promptLocation"
+      />
+
+      <div class="buyer-mhome-greeting">
+        <p class="buyer-mhome-greeting__line">
+          {{ localizedGreeting }}, {{ displayNameResolved }}
+          <span aria-hidden="true">👋</span>
+        </p>
+        <p class="buyer-mhome-greeting__prompt">{{ t('buyerXp.home.whatDoYouWant') }}</p>
+      </div>
+
+      <BuyerActionTileGrid />
+      <BuyerTrackOrderBar />
+
+      <BuyerHomeDiscovery :stores="stores" />
+
+      <header class="d-none d-lg-block buyer-home-hero">
         <p class="buyer-home-hero__overline">{{ t('buyerXp.marketplace.overline') }}</p>
         <div>
-          <p class="buyer-home-hero__greeting">{{ greeting }}</p>
+          <p class="buyer-home-hero__greeting">{{ localizedGreeting }}</p>
           <h1 class="buyer-home-hero__name">{{ displayNameResolved }}</h1>
           <p class="buyer-home-hero__tagline">{{ t('buyerXp.marketplace.tagline') }}</p>
         </div>
         <BuyerSearchBar readonly :placeholder="t('buyerXp.marketplace.searchPlaceholder')" @tap="goSearch" />
       </header>
 
-      <BuyerCampaignCarousel
-        v-if="carouselCampaigns.length"
-        :campaigns="carouselCampaigns"
-        @dismiss="dismissCarousel"
-      />
-
-      <section class="buyer-surface" :aria-label="t('buyerXp.marketplace.quickActions')">
-        <BuyerSectionHeader :title="t('buyerXp.marketplace.whatDoYouNeed')" :overline="t('buyerXp.marketplace.explore')" />
-        <BuyerPillarStrip />
+      <section
+        v-if="popularTodayProducts.length"
+        class="buyer-surface buyer-popular-today"
+        :aria-label="t('buyerXp.home.popularToday')"
+      >
+        <BuyerSectionHeader
+          :title="t('buyerXp.home.popularToday')"
+          :action-label="t('buyerXp.common.seeAll')"
+          :action-to="{ name: 'buyer.search' }"
+        />
+        <BuyerProductGridSection
+          :products="popularTodayProducts"
+          :loading="loadingAllProducts"
+          :adding="adding"
+          layout="popular-row"
+          @add="addProduct"
+        />
       </section>
 
-      <BuyerHomeShortcuts />
-
-      <section v-if="categories.length" class="buyer-surface" :aria-label="t('buyerXp.marketplace.browseCategories')">
+      <section v-if="categories.length" class="buyer-surface buyer-surface--compact d-lg-none" :aria-label="t('buyerXp.marketplace.browseCategories')">
         <BuyerSectionHeader :title="t('buyerXp.marketplace.browseCategories')" />
         <div class="buyer-category-pills" role="tablist">
           <button
@@ -49,21 +75,24 @@
         </div>
       </section>
 
-      <section class="buyer-surface" aria-label="Products">
+      <section
+        v-if="recommendedProducts.length"
+        class="buyer-surface buyer-home-products"
+        aria-label="Products"
+      >
         <BuyerSectionHeader
           :title="t('buyerXp.marketplace.recommendedTitle')"
           :subtitle="t('buyerXp.marketplace.recommendedSubtitle')"
-          :action-label="t('common.search')"
+          :action-label="t('buyerXp.nav.search')"
           :action-to="{ name: 'buyer.search' }"
         />
         <BuyerProductGridSection
-          :products="displayProducts"
+          :products="recommendedProducts"
           :loading="loadingProducts || loadingAllProducts"
           :error="productError"
           :message="addMessage"
           :add-error="addError"
           :adding="adding"
-          :show-store-label="!compact"
           @add="addProduct"
         />
       </section>
@@ -163,34 +192,36 @@ import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { superAppApi } from '@/api/superApp'
 import { catalogPublicApi } from '@/api/catalog'
-import { cartApi } from '@/api/cart'
-import { useAuthStore } from '@/stores/auth'
-import { formatApiError } from '@/utils/formatApiError'
+import { useAddToCart } from '@/composables/useAddToCart'
 import { buildCheckoutLink, buildRideLink } from '@/utils/fulfillmentLinks'
 import { categoryDetailLink, venueDetailLink } from '@/utils/buyerDetailLinks'
 import BuyerFulfillmentBar, { type FulfillmentModeId } from '@/components/buyer/BuyerFulfillmentBar.vue'
-import BuyerPillarStrip from '@/components/buyer/experience/BuyerPillarStrip.vue'
-import BuyerHomeShortcuts from '@/components/buyer/experience/BuyerHomeShortcuts.vue'
+import BuyerMobileHomeHeader from '@/components/buyer/experience/BuyerMobileHomeHeader.vue'
+import BuyerActionTileGrid from '@/components/buyer/experience/BuyerActionTileGrid.vue'
+import BuyerTrackOrderBar from '@/components/buyer/experience/BuyerTrackOrderBar.vue'
+import BuyerHomeDiscovery from '@/components/buyer/experience/BuyerHomeDiscovery.vue'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
-import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import BuyerVenueCard from '@/components/buyer/experience/BuyerVenueCard.vue'
 import BuyerProductGridSection from '@/components/buyer/experience/BuyerProductGridSection.vue'
-import BuyerCampaignCarousel from '@/components/buyer/BuyerCampaignCarousel.vue'
+import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { useBuyerGreeting } from '@/composables/useBuyerGreeting'
-import { useBuyerCampaigns } from '@/composables/useBuyerCampaigns'
+import { useBuyerLocation } from '@/composables/useBuyerLocation'
+import { useBuyerNotifications } from '@/composables/useBuyerNotifications'
 import { useI18n } from 'vue-i18n'
 import { venueImageUrl } from '@/utils/assetUrl'
 
 const props = defineProps<{ compact?: boolean; fulfillment?: boolean }>()
 const route = useRoute()
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { greeting } = useBuyerGreeting()
+const { areaLabel, setAreaLabel } = useBuyerLocation()
+const { unreadCount: notificationUnreadCount } = useBuyerNotifications()
+const openNotifications = inject<() => void>('openBuyerNotifications', () => {})
 const { displayName, isAuthenticated } = useAuthDisplay()
-const { carouselCampaigns, loadCarouselCampaigns, dismissCarousel } = useBuyerCampaigns()
-const refreshBuyerCart = inject<() => Promise<void>>('refreshBuyerCart', async () => {})
 const openBuyerCart = inject<() => void>('openBuyerCart', () => {})
+const { adding, addError, addMessage, addProduct: addProductToCart } = useAddToCart()
 
 type Store = {
   seller_id?: number
@@ -214,7 +245,6 @@ type Product = {
 }
 type Category = { id?: number; name?: string; title?: string; slug?: string }
 
-const auth = useAuthStore()
 const stores = ref<Store[]>([])
 const products = ref<Product[]>([])
 const allProducts = ref<Product[]>([])
@@ -225,10 +255,7 @@ const viewMode = ref<'directory' | 'menu'>('directory')
 const loadingStores = ref(false)
 const loadingProducts = ref(false)
 const loadingAllProducts = ref(false)
-const adding = ref(false)
 const productError = ref('')
-const addMessage = ref('')
-const addError = ref('')
 const searchTerm = ref('')
 const fulfillmentMode = ref<FulfillmentModeId>('pickup')
 const hasCartItems = ref(false)
@@ -241,6 +268,20 @@ const displayNameResolved = computed(() => {
   if (!name || name.toLowerCase() === 'guest') return t('buyerXp.greetings.guest')
   return name.split(/\s+/)[0] || name
 })
+
+const localizedGreeting = computed(() => {
+  if (locale.value === 'sw') return t('buyerXp.greetings.habari')
+  return greeting.value
+})
+
+function promptLocation() {
+  const next = window.prompt(t('buyerXp.home.locationPrompt'), areaLabel.value)
+  if (next != null) setAreaLabel(next)
+}
+
+function openNotificationsPanel() {
+  openNotifications()
+}
 
 const groceryFulfillmentModes = computed(() => [
   { id: 'pickup' as const, label: t('buyerXp.marketplace.pickup'), icon: 'solar:bag-3-bold' },
@@ -284,6 +325,14 @@ const displayProducts = computed(() => {
   }
   const list = filteredProducts.value.length ? filteredProducts.value : filteredAllProducts.value
   return list.slice(0, 24)
+})
+
+const popularTodayProducts = computed(() => displayProducts.value.slice(0, 5))
+
+const recommendedProducts = computed(() => {
+  const all = displayProducts.value
+  if (all.length <= 5) return []
+  return all.slice(5)
 })
 
 function filterProducts(list: Product[]) {
@@ -351,6 +400,15 @@ function backToDirectory() {
   viewMode.value = 'directory'
   activeStoreId.value = null
   products.value = []
+}
+
+async function loadHomeStores() {
+  try {
+    const { data } = await superAppApi.getGroceryStores({ limit: 12 })
+    stores.value = (data?.results as Store[]) ?? []
+  } catch {
+    stores.value = []
+  }
 }
 
 async function loadStores() {
@@ -449,31 +507,17 @@ async function loadCategories() {
 
 async function addProduct(prod: Product) {
   addMessage.value = ''
-  addError.value = ''
-  if (!auth.isAuthenticated) {
-    addError.value = t('buyerXp.marketplace.signInToAdd')
-    return
-  }
   const skuId = prod.skus?.[0]?.id
-  if (!skuId) {
+  if (!skuId && !prod.id) {
     addError.value = t('buyerXp.marketplace.unavailable')
     return
   }
-  adding.value = true
-  try {
-    await cartApi.add(Number(skuId), 1)
+  const ok = await addProductToCart(prod)
+  if (ok) {
     hasCartItems.value = true
-    addMessage.value =
-      props.fulfillment && fulfillmentMode.value === 'delivery'
-        ? t('buyerXp.marketplace.addedRequestBoda')
-        : t('buyerXp.marketplace.addedToCart')
-    await refreshBuyerCart()
-    openBuyerCart()
-  } catch (e: unknown) {
-    const err = e as { response?: { data?: { detail?: string } } }
-    addError.value = err.response?.data?.detail ?? t('buyerXp.marketplace.couldNotAdd')
-  } finally {
-    adding.value = false
+    if (props.fulfillment && fulfillmentMode.value === 'delivery') {
+      addMessage.value = t('buyerXp.marketplace.addedRequestBoda')
+    }
   }
 }
 
@@ -497,7 +541,7 @@ onMounted(() => {
   if (isHomeMode.value) {
     void loadCategories()
     void loadAllProducts()
-    if (isAuthenticated.value) void loadCarouselCampaigns()
+    void loadHomeStores()
   } else {
     void loadStores()
   }

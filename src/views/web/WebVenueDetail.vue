@@ -75,9 +75,8 @@ import {
   type HotelMenuResponse,
 } from '@/api/superApp'
 import { catalogPublicApi } from '@/api/catalog'
-import { cartApi } from '@/api/cart'
-import { useAuthStore } from '@/stores/auth'
 import { formatApiError } from '@/utils/formatApiError'
+import { useAddToCart } from '@/composables/useAddToCart'
 import { buildCheckoutLink, buildRideLink } from '@/utils/fulfillmentLinks'
 import type { VenueVertical } from '@/utils/buyerDetailLinks'
 import BuyerFulfillmentBar, { type FulfillmentModeId } from '@/components/buyer/BuyerFulfillmentBar.vue'
@@ -89,9 +88,7 @@ const props = defineProps<{ sellerId: string }>()
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
-const auth = useAuthStore()
-const refreshBuyerCart = inject<() => Promise<void>>('refreshBuyerCart', async () => {})
-const openBuyerCart = inject<() => void>('openBuyerCart', () => {})
+const { adding, addError, addMessage, addProduct: addProductToCart } = useAddToCart()
 
 const vertical = computed(() => String(route.meta.venueVertical ?? 'eats') as VenueVertical)
 
@@ -102,9 +99,6 @@ const venueMeta = ref('')
 const sellerUserId = ref<number | null>(null)
 const loading = ref(false)
 const error = ref('')
-const adding = ref(false)
-const addMessage = ref('')
-const addError = ref('')
 const search = ref('')
 const fulfillmentMode = ref<FulfillmentModeId>('pickup')
 const hasCartItems = ref(false)
@@ -288,28 +282,10 @@ async function loadVenue() {
 }
 
 async function addProduct(prod: GridProduct) {
-  addMessage.value = ''
-  addError.value = ''
-  if (!auth.isAuthenticated) {
-    addError.value = t('buyerXp.common.signInToAdd')
-    return
-  }
-  const skuId = prod.skus?.[0]?.id
-  if (!skuId) {
-    addError.value = t('buyerXp.common.unavailable')
-    return
-  }
-  adding.value = true
-  try {
-    await cartApi.add(Number(skuId), 1)
+  const ok = await addProductToCart(prod)
+  if (ok) {
     hasCartItems.value = true
     addMessage.value = t('buyerXp.common.addedToCart')
-    await refreshBuyerCart()
-    openBuyerCart()
-  } catch (e) {
-    addError.value = formatApiError(e, t('buyerXp.common.couldNotAdd'))
-  } finally {
-    adding.value = false
   }
 }
 

@@ -14,7 +14,12 @@
       </button>
     </header>
 
-    <button type="button" class="send-item-editor__pick" @click="$emit('pick')">
+    <button
+      type="button"
+      class="send-item-editor__pick"
+      :class="{ 'send-item-editor__pick--emphasize': emphasizePick }"
+      @click="$emit('pick')"
+    >
       <Icon icon="solar:shop-bold" aria-hidden="true" />
       {{ item.selection ? 'Change product' : 'Pick product from stores' }}
     </button>
@@ -75,6 +80,7 @@ defineProps<{
   index: number
   item: BuyForMeItemDraft
   canRemove: boolean
+  emphasizePick?: boolean
 }>()
 
 const emit = defineEmits<{

@@ -12,6 +12,10 @@ export type MedicineReminder = {
   is_active?: boolean
   notes?: string
   product_id?: number | null
+  prescriber_name?: string
+  assignment_source?: 'self' | 'doctor' | 'pharmacist' | string
+  assigned_by_user_id?: number | null
+  prescription_id?: number | null
 }
 
 export type PharmacyPrescription = {
@@ -53,6 +57,20 @@ export const pharmacyApi = {
   },
   markReminderTaken(id: number) {
     return client.post<MedicineReminder>(`/pharmacy/reminders/${id}/taken/`)
+  },
+  /** Pharmacist/seller: assign dose schedule to a patient (from prescription). */
+  assignReminder(data: {
+    patient_phone?: string
+    patient_user_id?: number
+    prescriber_name?: string
+    prescription_id?: number
+    medicine_name: string
+    dosage?: string
+    frequency?: string
+    reminder_times?: string[]
+    notes?: string
+  }) {
+    return client.post<MedicineReminder>('/pharmacy/reminders/assign/', data)
   },
   uploadPrescription(formData: FormData) {
     return client.post<PharmacyPrescription>('/pharmacy/prescriptions/upload/', formData)

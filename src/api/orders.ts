@@ -15,6 +15,8 @@ export const ordersUserApi = {
     use_loyalty_points?: boolean
     share_code?: string
     gift_voucher_code?: string
+    /** Pharmacy Rx checkout — IDs from POST /pharmacy/prescriptions/upload/ */
+    prescription_ids?: number[]
     /** Idempotent order create (header Idempotency-Key also supported). */
     idempotency_key?: string
     /** express | normal (default normal) */
