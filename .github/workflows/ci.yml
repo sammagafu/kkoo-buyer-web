@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run type-check
@@ -34,7 +34,8 @@ jobs:
             cd "${{ secrets.DO_APP_DIR }}"
             git pull
             npm ci
-            npm run build
+            npm run type-check
+            npm run build-only
             rsync -av --delete dist/ "${{ secrets.DO_WEB_DIR }}/"
             sudo nginx -t
             sudo systemctl reload nginx
