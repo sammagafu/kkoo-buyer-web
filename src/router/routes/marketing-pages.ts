@@ -158,6 +158,16 @@ export const pagesRoutes = [
         component: () => import('@/views/marketing/PrivacyPolicy.vue'),
     },
     {
+        path: '/data-deletion',
+        name: 'pages.data-deletion',
+        meta: {
+            title: setLandingTitle('Data Deletion'),
+            description:
+                'How to request deletion of your KKOO account and personal data. Instructions for app users and Meta/Facebook-connected accounts.',
+        },
+        component: () => import('@/views/marketing/DataDeletion.vue'),
+    },
+    {
         path: '/cookie-policy',
         name: 'pages.cookies',
         meta: {

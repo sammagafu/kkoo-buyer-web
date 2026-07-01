@@ -10,13 +10,23 @@ describe('publicRoutes', () => {
     expect(isPublicAppPath('/seller')).toBe(true)
     expect(isPublicAppPath('/join')).toBe(true)
     expect(isPublicAppPath('/privacy-policy')).toBe(true)
+    expect(isPublicAppPath('/data-deletion')).toBe(true)
     expect(isPublicMarketingRouteName('pages.landing')).toBe(true)
     expect(isPublicMarketingRouteName('pages.discover')).toBe(true)
   })
 
-  it('does not treat buyer shopping paths as public', () => {
-    expect(isPublicAppPath('/marketplace')).toBe(false)
-    expect(isPublicAppPath('/checkout')).toBe(false)
+  it('treats buyer browse paths as public for guest access', () => {
+    expect(isPublicAppPath('/marketplace')).toBe(true)
+    expect(isPublicAppPath('/search')).toBe(true)
+    expect(isPublicAppPath('/eats')).toBe(true)
+    expect(isPublicAppPath('/checkout')).toBe(true)
+    expect(isPublicAppPath('/product/42')).toBe(true)
     expect(isPublicMarketingRouteName('buyer.marketplace')).toBe(false)
+  })
+
+  it('still requires sign-in for account-only buyer paths', () => {
+    expect(isPublicAppPath('/orders')).toBe(false)
+    expect(isPublicAppPath('/profile')).toBe(false)
+    expect(isPublicAppPath('/wallet')).toBe(false)
   })
 })

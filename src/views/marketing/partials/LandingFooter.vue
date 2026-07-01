@@ -74,6 +74,7 @@
           <router-link :to="buyerRoutes.community">{{ t('landing.navCommunity') }}</router-link>
           <router-link :to="{ name: 'pages.terms' }">{{ t('landing.footerTermsOfUse') }}</router-link>
           <router-link :to="{ name: 'pages.privacy' }">{{ t('landing.footerPrivacyPolicy') }}</router-link>
+          <router-link :to="{ name: 'pages.data-deletion' }">{{ t('landing.footerDataDeletion') }}</router-link>
           <router-link :to="{ name: 'pages.refunds' }">{{ t('landing.footerRefundPolicy') }}</router-link>
         </div>
       </div>
@@ -85,6 +86,8 @@
           <router-link :to="{ name: 'pages.terms' }">{{ t('landing.footerTermsOfUse') }}</router-link>
           <span aria-hidden="true">·</span>
           <router-link :to="{ name: 'pages.cookies' }">{{ t('landing.footerCookiePolicy') }}</router-link>
+          <span aria-hidden="true">·</span>
+          <router-link :to="{ name: 'pages.data-deletion' }">{{ t('landing.footerDataDeletion') }}</router-link>
         </div>
         <small class="hp-footer__copy">
           {{ t('landing.footerCopyright', { year: new Date().getFullYear() }) }}
