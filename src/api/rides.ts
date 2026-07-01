@@ -7,6 +7,7 @@ export type RideRequestPayload = {
   rider_notes?: string
   notes?: string
   vehicle_type?: string
+  trip_type?: 'passenger' | 'parcel'
   payment_method?: string
   pickup_lat?: number
   pickup_lng?: number
@@ -39,6 +40,7 @@ export const ridesApi = {
       pickup_map_place_id: payload.pickup_map_place_id,
       dropoff_map_place_id: payload.dropoff_map_place_id,
       vehicle_type: payload.vehicle_type,
+      trip_type: payload.trip_type ?? 'passenger',
       notes: payload.notes ?? payload.rider_notes,
       fare: payload.fare,
     }
@@ -47,7 +49,7 @@ export const ridesApi = {
       body,
     )
   },
-  listRides(params?: { status?: string }) {
+  listRides(params?: { status?: string; trip_type?: 'passenger' | 'parcel' }) {
     return client.get<{ results?: unknown[] } | unknown[]>('/logistics/passenger/rides/', { params })
   },
   getRide(id: number | string) {

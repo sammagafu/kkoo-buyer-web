@@ -548,14 +548,14 @@
               </span>
               <span class="lp-rewards-hero-tier__halo" aria-hidden="true">
                 <Icon
-                  :icon="biFromClass(featuredXpLevel.icon)"
-                  :class="`lp-xp-icon lp-xp-icon--${featuredXpLevel.tone ?? 'gold'}`"
+                  :icon="biFromClass(featuredXpLevel!.icon)"
+                  :class="`lp-xp-icon lp-xp-icon--${featuredXpLevel!.tone ?? 'gold'}`"
                 />
               </span>
               <div class="lp-rewards-hero-tier__copy">
                 <p class="lp-rewards-hero-tier__tag mb-1">Peak tier</p>
-                <h3 class="lp-rewards-hero-tier__name">{{ featuredXpLevel.name }}</h3>
-                <p class="lp-rewards-hero-tier__xp mb-0">{{ featuredXpLevel.xp }}</p>
+                <h3 class="lp-rewards-hero-tier__name">{{ featuredXpLevel!.name }}</h3>
+                <p class="lp-rewards-hero-tier__xp mb-0">{{ featuredXpLevel!.xp }}</p>
               </div>
             </article>
 
@@ -663,7 +663,7 @@
               <div class="lp-onboard-launch__actions">
                 <a
                   v-if="portalHref"
-                  :href="portalHref"
+                  :href="portalHref ?? undefined"
                   class="lp-btn-pill lp-btn-pill--accent lp-btn-pill--lg text-decoration-none d-inline-flex align-items-center"
                 >
                   <span class="lp-btn-pill__label">{{ t('landing.headerGoToDashboard') }}</span>
@@ -1137,7 +1137,7 @@
                 <p class="lp-download-card__foot-note mb-0">{{ t('landing.downloadSellersNote') }}</p>
                 <a
                   v-if="portalHref"
-                  :href="portalHref"
+                  :href="portalHref ?? undefined"
                   class="lp-download-card__foot-link"
                 >
                   <Icon :icon="bi('speedometer2')" />

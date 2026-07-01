@@ -442,7 +442,8 @@ async function switchLauncherRole(role: AccountRole) {
     window.location.href = adminDashboardUrl
     return
   }
-  await router.push(routeForAccountRole(role))
+  const target = routeForAccountRole(role)
+  if (target) await router.push(target)
 }
 </script>
 

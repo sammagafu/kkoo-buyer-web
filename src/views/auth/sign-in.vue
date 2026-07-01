@@ -63,8 +63,14 @@
       </b-form>
 
       <template #alt>
+        <router-link :to="buyerRoutes.marketplace" class="auth-alt-btn">{{ t('auth.browseWithoutSignIn') }}</router-link>
         <router-link :to="{ name: 'auth.sign-up' }" class="auth-alt-btn">{{ t('auth.signUp') }}</router-link>
-        <router-link :to="{ name: 'auth.sign-up', query: { as: 'seller' } }" class="auth-alt-btn">{{ t('auth.registerAsSeller') }}</router-link>
+        <a
+          :href="bizSellerRegisterUrl"
+          class="auth-alt-btn"
+          target="_blank"
+          rel="noopener noreferrer"
+        >{{ t('auth.registerAsSeller') }}</a>
       </template>
     </AuthCard>
 
@@ -102,6 +108,7 @@ import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { authApi } from '@/api'
 import { resolvePostAuthRedirect } from '@/utils/authRedirect'
+import { buyerRoutes, bizSellerRegisterUrl } from '@/config/landing-links'
 import { toastError, toastSuccess } from '@/utils/toast'
 
 const phone = ref('')
@@ -162,11 +169,11 @@ async function handleRequestOtp() {
   }
   loading.value = true
   try {
-    const res = await authApi.requestOtp(phone.value.trim())
+    const { data } = await authApi.requestOtp(phone.value.trim())
     otpSent.value = true
-    if (res.debug_otp) {
-      otpCode.value = res.debug_otp
-      successMessage.value = `Test OTP: ${res.debug_otp}`
+    if (data.debug_otp) {
+      otpCode.value = data.debug_otp
+      successMessage.value = `Test OTP: ${data.debug_otp}`
     } else {
       successMessage.value = t('auth.otpSent')
     }

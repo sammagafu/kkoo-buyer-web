@@ -349,7 +349,7 @@ async function placeOrder() {
       payload.gift_voucher_code = giftVoucherCode.value.trim()
     }
     if (useLoyaltyPoints.value && loyaltyBalance.value > 0) {
-      payload.use_loyalty_points = loyaltyBalance.value
+      payload.use_loyalty_points = true
     }
     if (prescriptionIds.value.length) {
       payload.prescription_ids = [...prescriptionIds.value]

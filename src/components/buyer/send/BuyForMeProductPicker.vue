@@ -229,7 +229,7 @@ function resolveSellerIds(rows: Array<Record<string, unknown>>, preferred?: numb
 
 async function loadRestaurantProducts() {
   const { data } = await superAppApi.getRestaurants({ limit: 40 })
-  const sellerIds = resolveSellerIds((data?.results ?? []) as RestaurantListItem[], props.preferredSellerId)
+  const sellerIds = resolveSellerIds((data?.results ?? []) as unknown as Record<string, unknown>[], props.preferredSellerId)
   const rows: CatalogProduct[] = []
 
   await Promise.all(

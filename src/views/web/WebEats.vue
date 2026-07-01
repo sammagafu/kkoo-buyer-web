@@ -122,6 +122,7 @@ import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import BuyerVenueCard from '@/components/buyer/experience/BuyerVenueCard.vue'
 import { resolveAssetUrl, venueImageUrl } from '@/utils/assetUrl'
 import { venueDetailLink } from '@/utils/buyerDetailLinks'
+import { formatApiError } from '@/utils/formatApiError'
 
 const { t } = useI18n()
 const route = useRoute()

@@ -821,9 +821,9 @@ async function addToCart(item: MenuItem) {
   await addProductToCart({
     id: productId,
     title: item.title,
-    base_price: item.base_price ?? item.price,
-    discount_price: item.discount_price,
-    primary_media_url: item.primary_media_url ?? item.image_url,
+    base_price: Number(item.base_price ?? item.price) || undefined,
+    discount_price: typeof item.discount_price === 'number' ? item.discount_price : undefined,
+    primary_media_url: String(item.primary_media_url ?? item.image_url ?? ''),
     skus: item.skus,
   })
 }
