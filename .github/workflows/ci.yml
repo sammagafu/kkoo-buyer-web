@@ -15,7 +15,8 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - run: npm run type-check
+      - run: npm run build-only
 
   deploy:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
