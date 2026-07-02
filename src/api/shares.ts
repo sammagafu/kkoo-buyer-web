@@ -5,7 +5,15 @@ import client from './client'
 
 export const sharesApi = {
   create(body: { product_id?: number; product_slug?: string }) {
-    return client.post<{ id?: number; code?: string; product_id?: number; land_url?: string }>('/shares/', body)
+    return client.post<{
+      id?: number
+      code?: string
+      product_id?: number
+      land_url?: string
+      share_url?: string
+      share_text?: string
+      whatsapp_share_url?: string
+    }>('/shares/', body)
   },
   land(ref: string) {
     return client.get<{ share_code?: string; product?: unknown }>('/shares/land/', { params: { ref } })

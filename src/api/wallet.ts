@@ -5,9 +5,25 @@
 import client from './client'
 import type { KkooWallet, WalletTransaction } from '../types/wallet'
 
+export type WalletBalanceResponse = {
+  wallet: KkooWallet
+  transaction_count?: number
+  total_deposited?: number
+  total_spent?: number
+  total_withdrawn?: number
+}
+
+function normalizeWalletBalancePayload(data: unknown): WalletBalanceResponse {
+  if (data && typeof data === 'object' && 'wallet' in data) {
+    return data as WalletBalanceResponse
+  }
+  return { wallet: data as KkooWallet }
+}
+
 // User wallet endpoints
-export async function getWalletBalance(): Promise<KkooWallet> {
-  return client.get('/wallet/').then((r) => r.data)
+export async function getWalletBalance(): Promise<WalletBalanceResponse> {
+  const data = await client.get('/wallet/').then((r) => r.data)
+  return normalizeWalletBalancePayload(data)
 }
 
 export async function depositToWallet(amount: number): Promise<{
@@ -31,7 +47,13 @@ export async function getWalletTransactions(params?: {
   page_size?: number
   type?: string
 }): Promise<{ results: WalletTransaction[]; total: number; page: number }> {
-  return client.get('/wallet/transactions/', { params }).then((r) => r.data)
+  const data = await client.get('/wallet/transactions/', { params }).then((r) => r.data)
+  const count = typeof data?.count === 'number' ? data.count : data?.total ?? 0
+  return {
+    results: data?.results ?? [],
+    total: count,
+    page: data?.page ?? params?.page ?? 1,
+  }
 }
 
 // Admin endpoints

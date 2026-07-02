@@ -2,10 +2,13 @@
  * Format an API error (e.g. axios error) into a user-readable string.
  * API.md: 4xx/5xx return { "error": "..." }; 403 may include error_code (seller_profile_required, admin_use_admin_endpoints).
  */
+import { isAuthSessionError } from '@/utils/authRedirect'
+
 export function formatApiError(
   e: unknown,
   fallback = 'Something went wrong'
 ): string {
+  if (isAuthSessionError(e)) return ''
   const err = e as {
     response?: { data?: Record<string, unknown>; status?: number };
     message?: string;

@@ -1,6 +1,6 @@
 import type { MenuItemType } from '@/types/menu'
 import type { RouteType } from '@/types/index'
-import { buyerRoutes } from '@/config/landing-links'
+import { buyerRoutes, bizSellerRegisterUrl } from '@/config/landing-links'
 import { adminWebPath, bizWebPath } from '@/config/cross-app-links'
 import { ROLES } from '@/acl'
 import type { User } from '@/types/auth'
@@ -79,6 +79,14 @@ export function getBuyerMenuItems(
         target: '_blank',
       },
     )
+  } else {
+    items.push({
+      key: 'sell-on-kkoo',
+      icon: 'solar:shop-2-bold',
+      label: 'Sell on KKOO',
+      url: bizSellerRegisterUrl,
+      target: '_blank',
+    })
   }
 
   if (role === ROLES.CRM_MEMBER) {

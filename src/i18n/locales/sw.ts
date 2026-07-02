@@ -1328,7 +1328,7 @@ export default {
     footerWhisper5: 'Imejengwa kwa miji ya Afrika Mashariki.',
     footerEasterEgg: 'Umepata kikapu cha siri. Asante kwa kusogeza hadi hapa.',
     footerDevelopedBy: 'Imetengenezwa na',
-    footerAgencyName: 'Neotelabs Digital Agency',
+    footerAgencyName: 'Neotelabs Creative Limited',
     ifYouShopLabel: 'PROGRAMU YA WANUNUZI',
     ifYouShopHeadline: 'Nunua kwa ujasiri kutoka malipo hadi kufikishwa.',
     ifYouShopHeadline1: 'Nunua kwa ujasiri',

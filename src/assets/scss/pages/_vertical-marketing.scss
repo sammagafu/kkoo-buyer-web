@@ -123,6 +123,21 @@
   color: var(--lp-text-faint);
 }
 
+.hp-footer__credit {
+  color: var(--lp-text-faint);
+  font-size: 0.82rem;
+}
+
+.hp-footer__credit a {
+  color: var(--lp-text-soft);
+  text-decoration: none;
+}
+
+.hp-footer__credit a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 // Vertical hero + card grid
 
 .vx-hero__grid {

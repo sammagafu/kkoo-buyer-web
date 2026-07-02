@@ -25,6 +25,24 @@ export function orderStatusPillClass(status: unknown) {
   return 'buyer-status-pill'
 }
 
+export function rideStatusPillClass(status: unknown) {
+  const s = String(status ?? '').toLowerCase()
+  if (s === 'delivered' || s === 'completed') return 'buyer-status-pill buyer-status-pill--ok'
+  if (s === 'cancelled' || s === 'canceled' || s === 'failed') return 'buyer-status-pill'
+  if (['assigned', 'en_route', 'accepted', 'searching', 'pending', 'scheduled'].includes(s)) {
+    return 'buyer-status-pill buyer-status-pill--warn'
+  }
+  return 'buyer-status-pill'
+}
+
+export function formatRideStatus(status: unknown) {
+  return String(status ?? 'pending').replace(/_/g, ' ')
+}
+
+export function formatOrderStatus(status: unknown) {
+  return String(status ?? 'pending').replace(/_/g, ' ')
+}
+
 export function flashSaleCountdown(endAt: string, now = Date.now()) {
   const end = new Date(endAt).getTime()
   const diff = end - now

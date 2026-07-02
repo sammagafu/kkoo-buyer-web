@@ -1,70 +1,109 @@
 <template>
-  <div class="buyer-xp buyer-xp--wide">
+  <div class="buyer-xp buyer-xp--wide buyer-order-detail-page">
     <header class="buyer-page-head">
       <div class="buyer-page-head__row">
         <button type="button" class="buyer-page-head__back" :aria-label="t('buyerXp.common.back')" @click="router.back()">
           <Icon icon="solar:arrow-left-linear" />
         </button>
-        <div>
+        <div class="buyer-page-head__copy">
           <h1 class="buyer-page-head__title">{{ t('buyerXp.common.orderNumber', { number: order?.order_number || id }) }}</h1>
           <p v-if="order?.status" class="buyer-page-head__meta">
-            <span class="buyer-status-pill" :class="statusClass">{{ order.status }}</span>
-            <span v-if="order.payment_status" class="buyer-page-head__meta ms-2">{{ order.payment_status }}</span>
+            <span :class="orderStatusPillClass(order.status)">{{ formatOrderStatus(order.status) }}</span>
+            <span v-if="order.payment_status" class="buyer-order-card__meta ms-2">{{ order.payment_status }}</span>
           </p>
         </div>
       </div>
     </header>
 
-    <p v-if="loading" class="shop-products__status">{{ t('buyerXp.common.loading') }}</p>
+    <p v-if="loading && !order" class="shop-products__status">{{ t('buyerXp.common.loading') }}</p>
     <p v-else-if="error" class="buyer-xp-toast buyer-xp-toast--err">{{ error }}</p>
 
     <template v-else-if="order">
+      <section class="buyer-order-detail-hero">
+        <p class="buyer-order-detail-hero__label">{{ t('buyerXp.common.total') }}</p>
+        <p class="buyer-order-detail-hero__total">{{ formatMoney(order.final_total ?? order.total_amount) }}</p>
+        <p v-if="order.created_at" class="buyer-order-detail-hero__meta">{{ formatDate(order.created_at) }}</p>
+      </section>
+
       <section class="buyer-detail-card">
         <BuyerSectionHeader :title="t('buyerXp.orders.summary')" />
-        <div class="buyer-detail-row"><span>{{ t('buyerXp.common.placed') }}</span><span>{{ formatDate(order.created_at) }}</span></div>
-        <div class="buyer-detail-row"><span>{{ t('buyerXp.common.total') }}</span><strong>{{ formatMoney(order.final_total ?? order.total_amount) }}</strong></div>
-        <div v-if="order.delivery_fee != null" class="buyer-detail-row"><span>{{ t('buyerXp.orders.deliveryFee') }}</span><span>{{ formatMoney(order.delivery_fee) }}</span></div>
-        <div v-if="order.discount_amount" class="buyer-detail-row"><span>{{ t('buyerXp.orders.discount') }}</span><span>-{{ formatMoney(order.discount_amount) }}</span></div>
-        <div v-if="order.payment_method" class="buyer-detail-row"><span>{{ t('buyerXp.common.payment') }}</span><span>{{ order.payment_method }}</span></div>
-        <div v-if="order.fulfillment_type" class="buyer-detail-row"><span>{{ t('buyerXp.orders.fulfillment') }}</span><span>{{ order.fulfillment_type }}</span></div>
-        <div v-if="order.delivery_location_text" class="buyer-detail-row buyer-detail-row--stack">
-          <span>{{ t('buyerXp.orders.deliveryAddress') }}</span>
-          <span>{{ order.delivery_location_text }}</span>
+        <div class="buyer-order-detail-rows">
+          <div class="buyer-order-detail-row">
+            <span class="buyer-order-detail-row__label">{{ t('buyerXp.common.placed') }}</span>
+            <span class="buyer-order-detail-row__value">{{ formatDate(order.created_at) }}</span>
+          </div>
+          <div v-if="order.payment_method" class="buyer-order-detail-row">
+            <span class="buyer-order-detail-row__label">{{ t('buyerXp.common.payment') }}</span>
+            <span class="buyer-order-detail-row__value">{{ order.payment_method }}</span>
+          </div>
+          <div v-if="order.fulfillment_type" class="buyer-order-detail-row">
+            <span class="buyer-order-detail-row__label">{{ t('buyerXp.orders.fulfillment') }}</span>
+            <span class="buyer-order-detail-row__value">{{ String(order.fulfillment_type).replace(/_/g, ' ') }}</span>
+          </div>
+          <div v-if="order.delivery_fee != null" class="buyer-order-detail-row">
+            <span class="buyer-order-detail-row__label">{{ t('buyerXp.orders.deliveryFee') }}</span>
+            <span class="buyer-order-detail-row__value">{{ formatMoney(order.delivery_fee) }}</span>
+          </div>
+          <div v-if="order.discount_amount" class="buyer-order-detail-row">
+            <span class="buyer-order-detail-row__label">{{ t('buyerXp.orders.discount') }}</span>
+            <span class="buyer-order-detail-row__value">-{{ formatMoney(order.discount_amount) }}</span>
+          </div>
+          <div v-if="order.delivery_zone" class="buyer-order-detail-row">
+            <span class="buyer-order-detail-row__label">{{ t('buyerXp.orders.zone') }}</span>
+            <span class="buyer-order-detail-row__value">{{ order.delivery_zone }}</span>
+          </div>
+          <div v-if="order.delivery_location_text" class="buyer-order-detail-row buyer-order-detail-row--stack">
+            <span class="buyer-order-detail-row__label">{{ t('buyerXp.orders.deliveryAddress') }}</span>
+            <span class="buyer-order-detail-row__value">{{ order.delivery_location_text }}</span>
+          </div>
         </div>
-        <div v-if="order.delivery_zone" class="buyer-detail-row"><span>{{ t('buyerXp.orders.zone') }}</span><span>{{ order.delivery_zone }}</span></div>
       </section>
 
       <section v-if="subOrders.length" class="buyer-detail-card">
         <BuyerSectionHeader :title="t('buyerXp.orders.storeProgress')" />
-        <article v-for="(so, i) in subOrders" :key="i" class="buyer-detail-card buyer-detail-card--nested mb-2">
-          <div class="buyer-detail-row">
-            <strong>{{ subOrderLabel(so) }}</strong>
-            <span class="buyer-status-pill buyer-status-pill--warn">{{ so.status || 'pending' }}</span>
+        <article v-for="(so, i) in subOrders" :key="i" class="buyer-order-subcard">
+          <div class="buyer-order-detail-row">
+            <strong class="buyer-order-detail-row__value">{{ subOrderLabel(so) }}</strong>
+            <span class="buyer-status-pill buyer-status-pill--warn">{{ formatOrderStatus(so.status) }}</span>
           </div>
-          <div v-if="so.seller_notes" class="buyer-detail-row buyer-detail-row--stack">
-            <span>{{ t('buyerXp.orders.storeNote') }}</span>
-            <span>{{ so.seller_notes }}</span>
+          <div v-if="so.seller_notes" class="buyer-order-detail-row buyer-order-detail-row--stack">
+            <span class="buyer-order-detail-row__label">{{ t('buyerXp.orders.storeNote') }}</span>
+            <span class="buyer-order-detail-row__value">{{ so.seller_notes }}</span>
           </div>
-          <div v-if="so.estimated_ready_at" class="buyer-detail-row">
-            <span>{{ t('buyerXp.orders.estimatedReady') }}</span>
-            <span>{{ formatDate(so.estimated_ready_at) }}</span>
+          <div v-if="so.estimated_ready_at" class="buyer-order-detail-row">
+            <span class="buyer-order-detail-row__label">{{ t('buyerXp.orders.estimatedReady') }}</span>
+            <span class="buyer-order-detail-row__value">{{ formatDate(so.estimated_ready_at) }}</span>
           </div>
         </article>
       </section>
 
-      <section v-if="tracking" class="buyer-detail-card">
+      <section v-if="tracking" class="buyer-detail-card buyer-order-detail-tracking">
         <BuyerSectionHeader :title="t('buyerXp.orders.tracking')" />
-        <div class="buyer-detail-row"><span>{{ t('buyerXp.common.status') }}</span><span>{{ tracking.status || '—' }}</span></div>
-        <a v-if="tracking.gps_track_link" :href="String(tracking.gps_track_link)" target="_blank" rel="noopener" class="buyer-section-head__action">
+        <div class="buyer-order-detail-tracking__grid">
+          <div class="buyer-order-detail-stat">
+            <span class="buyer-order-detail-stat__label">{{ t('buyerXp.common.status') }}</span>
+            <span class="buyer-order-detail-stat__value">{{ tracking.status || '—' }}</span>
+          </div>
+        </div>
+        <a
+          v-if="tracking.gps_track_link"
+          :href="String(tracking.gps_track_link)"
+          target="_blank"
+          rel="noopener"
+          class="buyer-venue__chip buyer-venue__chip--primary buyer-order-detail-tracking__map"
+        >
+          <Icon icon="solar:map-point-bold" aria-hidden="true" />
           {{ t('buyerXp.orders.liveMap') }}
         </a>
       </section>
 
       <section v-if="items.length" class="buyer-detail-card">
         <BuyerSectionHeader :title="t('buyerXp.orders.items')" />
-        <div v-for="(item, i) in items" :key="i" class="buyer-detail-row">
-          <span>{{ itemLabel(item) }}</span>
-          <span>{{ formatMoney(item.total_price ?? item.line_total ?? item.unit_price) }}</span>
+        <div class="buyer-order-detail-rows">
+          <div v-for="(item, i) in items" :key="i" class="buyer-order-detail-row">
+            <span class="buyer-order-detail-row__label">{{ itemLabel(item) }}</span>
+            <span class="buyer-order-detail-row__value">{{ formatMoney(item.total_price ?? item.line_total ?? item.unit_price) }}</span>
+          </div>
         </div>
       </section>
 
@@ -86,27 +125,32 @@
         />
       </div>
 
-      <button
-        v-if="canCancel"
-        type="button"
-        class="buyer-venue__chip mt-2"
-        style="color: #b91c1c"
-        :disabled="cancelling"
-        @click="cancelOrder"
-      >
-        {{ cancelling ? t('buyerXp.orders.cancelling') : t('buyerXp.orders.cancelOrder') }}
-      </button>
+      <div class="buyer-order-detail-actions">
+        <button
+          v-if="canCancel"
+          type="button"
+          class="buyer-venue__chip buyer-order-detail-actions__cancel"
+          :disabled="cancelling"
+          @click="cancelOrder"
+        >
+          {{ cancelling ? t('buyerXp.orders.cancelling') : t('buyerXp.orders.cancelOrder') }}
+        </button>
+        <RouterLink :to="{ name: 'buyer.orders' }" class="buyer-venue__chip">
+          {{ t('buyerXp.orders.title') }}
+        </RouterLink>
+      </div>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import { ordersUserApi, logisticsBuyerApi } from '@/api'
 import { formatApiError } from '@/utils/formatApiError'
+import { formatOrderStatus, orderStatusPillClass } from '@/utils/buyerFormat'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerHubCard from '@/components/buyer/experience/BuyerHubCard.vue'
 
@@ -128,13 +172,6 @@ const cancelling = ref(false)
 const items = computed(() => {
   const raw = order.value?.items ?? order.value?.order_items
   return Array.isArray(raw) ? (raw as Record<string, unknown>[]) : []
-})
-
-const statusClass = computed(() => {
-  const s = String(order.value?.status ?? '').toLowerCase()
-  if (s === 'delivered' || s === 'completed') return 'buyer-status-pill--ok'
-  if (s === 'cancelled') return ''
-  return 'buyer-status-pill--warn'
 })
 
 const canCancel = computed(() => {
@@ -213,16 +250,3 @@ async function cancelOrder() {
 
 onMounted(load)
 </script>
-
-<style scoped>
-.buyer-detail-row--stack {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-}
-.buyer-detail-card--nested {
-  padding: 12px;
-  background: var(--buyer-surface-muted, rgba(0, 0, 0, 0.03));
-  border-radius: 12px;
-}
-</style>

@@ -10,7 +10,7 @@
         @click="onTabClick($event, item)"
       >
         <Icon :icon="activeTab === item.tab ? item.iconActive : item.icon" class="buyer-bottom-nav__icon" />
-        <span v-if="activeTab === item.tab" class="buyer-bottom-nav__label">{{ item.label }}</span>
+        <span class="buyer-bottom-nav__label">{{ item.label }}</span>
       </RouterLink>
     </div>
   </nav>
@@ -20,6 +20,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { Icon } from '@iconify/vue'
+import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import {
@@ -29,16 +30,16 @@ import {
 } from '@/composables/useBuyerAppShell'
 
 const router = useRouter()
+const { t } = useI18n()
 const auth = useAuthStore()
 const { isAuthenticated } = storeToRefs(auth)
 const { activeTab } = useBuyerAppShell()
 
 const items = computed(() => [
-  { tab: 'home' as BuyerTab, label: 'Home', icon: 'solar:home-2-linear', iconActive: 'solar:home-2-bold', to: buyerTabRoutes.home },
-  { tab: 'search' as BuyerTab, label: 'Search', icon: 'solar:magnifer-linear', iconActive: 'solar:magnifer-bold', to: buyerTabRoutes.search },
-  { tab: 'cart' as BuyerTab, label: 'Cart', icon: 'solar:cart-large-minimalistic-linear', iconActive: 'solar:cart-large-minimalistic-bold', to: buyerTabRoutes.cart },
-  { tab: 'orders' as BuyerTab, label: 'Orders', icon: 'solar:bag-check-linear', iconActive: 'solar:bag-check-bold', to: buyerTabRoutes.orders, auth: true },
-  { tab: 'profile' as BuyerTab, label: 'Profile', icon: 'solar:user-circle-linear', iconActive: 'solar:user-circle-bold', to: buyerTabRoutes.profile, auth: true },
+  { tab: 'home' as BuyerTab, label: t('buyerXp.nav.home'), icon: 'solar:home-2-linear', iconActive: 'solar:home-2-bold', to: buyerTabRoutes.home },
+  { tab: 'shop' as BuyerTab, label: t('buyerXp.nav.shop'), icon: 'solar:bag-3-linear', iconActive: 'solar:bag-3-bold', to: buyerTabRoutes.shop },
+  { tab: 'orders' as BuyerTab, label: t('buyerXp.nav.orders'), icon: 'solar:box-linear', iconActive: 'solar:box-bold', to: buyerTabRoutes.orders, auth: true },
+  { tab: 'profile' as BuyerTab, label: t('buyerXp.nav.me'), icon: 'solar:user-circle-linear', iconActive: 'solar:user-circle-bold', to: buyerTabRoutes.profile, auth: true },
 ])
 
 function onTabClick(event: MouseEvent, item: (typeof items.value)[number]) {
@@ -59,66 +60,52 @@ function onTabClick(event: MouseEvent, item: (typeof items.value)[number]) {
   bottom: 0;
   z-index: 1040;
   pointer-events: none;
-  padding: 0 1.25rem calc(0.375rem + env(safe-area-inset-bottom, 0px));
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.buyer-bottom-nav__portal-badge {
-  pointer-events: auto;
-  font-size: 0.55rem;
-  padding: 0.12rem 0.45rem;
-  opacity: 0.92;
+  padding: 0 calc(0.5rem + env(safe-area-inset-left, 0px)) calc(0.25rem + env(safe-area-inset-bottom, 0px))
+    calc(0.5rem + env(safe-area-inset-right, 0px));
 }
 
 .buyer-bottom-nav__bar {
   pointer-events: auto;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  max-width: 32rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: stretch;
+  max-width: 28rem;
   margin: 0 auto;
-  padding: 0.5rem 0.375rem;
+  padding: 0.35rem 0.25rem;
   background: var(--buyer-surface, var(--bs-body-bg));
   border: 1px solid var(--buyer-border-strong, rgba(var(--bs-primary-rgb), 0.12));
-  border-radius: 1.75rem;
-  box-shadow: 0 0.5rem 1.5rem var(--buyer-shadow-color, rgba(0, 0, 0, 0.1));
+  border-radius: 1rem 1rem 0 0;
+  box-shadow: 0 -0.35rem 1.25rem var(--buyer-shadow-color, rgba(0, 0, 0, 0.08));
 }
 
 .buyer-bottom-nav__item {
-  flex: 1;
-  min-width: 3rem;
+  min-height: 3.25rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 0.75rem;
-  border-radius: 1.375rem;
-  color: var(--bs-secondary-color);
+  gap: 0.15rem;
+  padding: 0.35rem 0.25rem;
+  border-radius: 0.75rem;
+  color: var(--buyer-muted, var(--bs-secondary-color));
   text-decoration: none;
-  transition: background 0.2s ease, color 0.2s ease, flex 0.2s ease;
+  transition: color 0.15s ease, background 0.15s ease;
 }
 
 .buyer-bottom-nav__item--active {
-  flex: 2.5;
-  background: var(--bs-secondary);
-  color: #fff;
-  box-shadow: 0 0.25rem 0.75rem rgba(var(--bs-secondary-rgb), 0.35);
+  color: var(--kkoo-primary, var(--bs-primary));
+  background: color-mix(in srgb, var(--kkoo-primary, #5d318e) 10%, transparent);
 }
 
 .buyer-bottom-nav__icon {
-  font-size: 1.375rem;
+  font-size: 1.35rem;
   flex-shrink: 0;
 }
 
 .buyer-bottom-nav__label {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.1;
 }
 
 @media (min-width: 992px) {
@@ -130,11 +117,11 @@ function onTabClick(event: MouseEvent, item: (typeof items.value)[number]) {
 
 <style>
 html.buyer-shell-active {
-  scroll-padding-bottom: 5.5rem;
+  scroll-padding-bottom: 4.75rem;
 }
 
 html.buyer-shell-active body {
-  padding-bottom: 5.5rem;
+  padding-bottom: 4.75rem;
 }
 
 @media (min-width: 992px) {

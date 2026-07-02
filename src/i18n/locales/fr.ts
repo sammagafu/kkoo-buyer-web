@@ -1286,7 +1286,7 @@ export default {
     footerWhisper5: 'Conçu pour l\'Afrique de l\'Est, pas pour une démo californienne.',
     footerEasterEgg: 'Panier secret trouvé. Merci d\'être allé jusqu\'ici.',
     footerDevelopedBy: 'Développé par',
-    footerAgencyName: 'Neotelabs Digital Agency',
+    footerAgencyName: 'Neotelabs Creative Limited',
     ifYouShopLabel: 'APP ACHETEURS',
     ifYouShopHeadline: 'Achetez en confiance du paiement à la livraison.',
     ifYouShopHeadline1: 'Achetez en confiance',

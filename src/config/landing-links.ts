@@ -10,6 +10,7 @@ export const buyerRoutes = {
   eats: { name: 'buyer.eats' },
   grocery: { name: 'buyer.grocery' },
   send: { name: 'buyer.send' },
+  parcel: { name: 'buyer.parcel' },
   ride: { name: 'buyer.ride' },
   booking: { name: 'buyer.booking' },
   checkout: { name: 'buyer.checkout' },
@@ -39,10 +40,28 @@ export const buyerRoutes = {
 
 export const landingAnchors = {
   solutions: { name: 'pages.landing', hash: '#solutions' },
+  hero: { name: 'pages.landing', hash: '#hero' },
   download: { name: 'pages.landing', hash: '#download' },
+  sell: { name: 'pages.landing', hash: '#sell-section' },
+  ridePartners: { name: 'pages.landing', hash: '#ride-partners' },
+  creator: { name: 'pages.landing', hash: '#creator' },
   work: { name: 'pages.landing', hash: '#work' },
   businesses: { name: 'pages.landing', hash: '#businesses' },
+  how: { name: 'pages.landing', hash: '#how' },
+  features: { name: 'pages.landing', hash: '#features' },
+  services: { name: 'pages.landing', hash: '#services' },
+  preview: { name: 'pages.landing', hash: '#preview' },
+  stories: { name: 'pages.landing', hash: '#stories' },
 } as const
+
+/** In-page section anchors for the premium landing header. */
+export const landingSectionNavItems = [
+  { key: 'eat', sectionId: 'services', pillar: 'eat' as const, labelKey: 'landing.superApp.pillarEat' },
+  { key: 'buy', sectionId: 'services', pillar: 'buy' as const, labelKey: 'landing.superApp.pillarBuy' },
+  { key: 'go', sectionId: 'services', pillar: 'go' as const, labelKey: 'landing.superApp.pillarGo' },
+  { key: 'showcase', sectionId: 'showcase', labelKey: 'landing.premium.navShowcase' },
+  { key: 'stories', sectionId: 'stories', labelKey: 'landing.premium.navStories' },
+] as const
 
 /** Header nav — five focused links (Get app lives in header actions). */
 export const primaryNavItems = [

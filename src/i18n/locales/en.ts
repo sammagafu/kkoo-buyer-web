@@ -1594,7 +1594,7 @@ export default {
     footerWhisper5: 'Built for East African cities, not Silicon Valley demos.',
     footerEasterEgg: 'You found the secret cart. Thanks for scrolling this far.',
     footerDevelopedBy: 'Developed by',
-    footerAgencyName: 'Neotelabs Digital Agency',
+    footerAgencyName: 'Neotelabs Creative Limited',
     footerTaglineMain: 'East Africa\'s commerce, finally guaranteed.',
     footerTaglineSub:
       'For buyers: your money is safe until your order arrives. For sellers: your revenue is protected, your customers are loyal, your operations are structured.',

@@ -1,4 +1,5 @@
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { RouteLocationRaw } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
@@ -19,12 +20,20 @@ type WorkspaceCard = {
   fallbackCta?: string
 }
 
-const roleMeta: Record<AccountRole, { label: string; icon: string }> = {
-  [BUYER_ACCOUNT_ROLE]: { label: 'Buyer', icon: 'solar:cart-large-2-bold' },
-  [ROLES.SELLER]: { label: 'Seller', icon: 'solar:shop-2-bold' },
-  [ROLES.ADMIN]: { label: 'Admin', icon: 'solar:shield-user-bold' },
-  [ROLES.STAFF]: { label: 'Staff', icon: 'solar:users-group-rounded-bold' },
-  [ROLES.CRM_MEMBER]: { label: 'Business team', icon: 'solar:buildings-3-bold' },
+const roleIcons: Record<AccountRole, string> = {
+  [BUYER_ACCOUNT_ROLE]: 'solar:cart-large-2-bold',
+  [ROLES.SELLER]: 'solar:shop-2-bold',
+  [ROLES.ADMIN]: 'solar:shield-user-bold',
+  [ROLES.STAFF]: 'solar:users-group-rounded-bold',
+  [ROLES.CRM_MEMBER]: 'solar:buildings-3-bold',
+}
+
+const roleLabelKeys: Record<AccountRole, string> = {
+  [BUYER_ACCOUNT_ROLE]: 'buyerXp.hub.workspaces.roles.buyer',
+  [ROLES.SELLER]: 'buyerXp.hub.workspaces.roles.seller',
+  [ROLES.ADMIN]: 'buyerXp.hub.workspaces.roles.admin',
+  [ROLES.STAFF]: 'buyerXp.hub.workspaces.roles.staff',
+  [ROLES.CRM_MEMBER]: 'buyerXp.hub.workspaces.roles.crm',
 }
 
 const roleDefaultRoutes: Record<AccountRole, { name?: string; href?: string }> = {
@@ -36,68 +45,80 @@ const roleDefaultRoutes: Record<AccountRole, { name?: string; href?: string }> =
 }
 
 export function useAccountWorkspaces() {
+  const { t, locale } = useI18n()
   const auth = useAuthStore()
   const router = useRouter()
   const { activeAccountRole, availableAccountRoles } = storeToRefs(auth)
 
-  const roleSwitchOptions = computed(() =>
-    availableAccountRoles.value.map((role) => ({
+  const roleSwitchOptions = computed(() => {
+    void locale.value
+    return availableAccountRoles.value.map((role) => ({
       role,
-      label: roleMeta[role].label,
-      icon: roleMeta[role].icon,
-    })),
-  )
+      label: t(roleLabelKeys[role]),
+      icon: roleIcons[role],
+    }))
+  })
 
   const roleAvailability = computed(() => new Set(availableAccountRoles.value))
 
-  const workspaceCards = computed((): WorkspaceCard[] => [
-    {
-      title: 'Buyer account',
-      icon: 'solar:user-circle-bold',
-      available: true,
-      status: activeAccountRole.value === BUYER_ACCOUNT_ROLE ? 'Current' : 'Available',
-      role: BUYER_ACCOUNT_ROLE,
-      cta: 'Open buyer',
-    },
-    {
-      title: 'Seller account',
-      icon: 'solar:shop-2-bold',
-      available: roleAvailability.value.has(ROLES.SELLER),
-      status: roleAvailability.value.has(ROLES.SELLER) ? 'Available' : 'Register required',
-      role: roleAvailability.value.has(ROLES.SELLER) ? ROLES.SELLER : null,
-      href: roleAvailability.value.has(ROLES.SELLER) ? bizSellerAccountUrl : bizSellerRegisterUrl,
-      cta: roleAvailability.value.has(ROLES.SELLER) ? 'Open seller account' : 'Register business',
-      fallbackCta: 'Register business',
-    },
-    {
-      title: 'Business CRM',
-      icon: 'solar:buildings-3-bold',
-      available: roleAvailability.value.has(ROLES.CRM_MEMBER),
-      status: roleAvailability.value.has(ROLES.CRM_MEMBER) ? 'Available' : 'Invite required',
-      role: roleAvailability.value.has(ROLES.CRM_MEMBER) ? ROLES.CRM_MEMBER : null,
-      href: roleAvailability.value.has(ROLES.CRM_MEMBER) ? bizWebPath('/seller/crm') : undefined,
-      cta: 'Open CRM',
-    },
-    {
-      title: 'Admin dashboard',
-      icon: 'solar:shield-user-bold',
-      available: roleAvailability.value.has(ROLES.ADMIN) || roleAvailability.value.has(ROLES.STAFF),
-      status:
-        roleAvailability.value.has(ROLES.ADMIN) || roleAvailability.value.has(ROLES.STAFF)
-          ? 'Available'
-          : 'Restricted',
-      role: roleAvailability.value.has(ROLES.ADMIN)
-        ? ROLES.ADMIN
-        : roleAvailability.value.has(ROLES.STAFF)
-          ? ROLES.STAFF
-          : null,
-      href:
-        roleAvailability.value.has(ROLES.ADMIN) || roleAvailability.value.has(ROLES.STAFF)
-          ? adminWebPath('/dashboard')
-          : undefined,
-      cta: 'Open admin',
-    },
-  ])
+  const workspaceCards = computed((): WorkspaceCard[] => {
+    void locale.value
+    const hasSeller = roleAvailability.value.has(ROLES.SELLER)
+    const hasCrm = roleAvailability.value.has(ROLES.CRM_MEMBER)
+    const hasAdmin = roleAvailability.value.has(ROLES.ADMIN)
+    const hasStaff = roleAvailability.value.has(ROLES.STAFF)
+
+    return [
+      {
+        title: t('buyerXp.hub.workspaces.buyerAccount'),
+        icon: 'solar:user-circle-bold',
+        available: true,
+        status:
+          activeAccountRole.value === BUYER_ACCOUNT_ROLE
+            ? t('buyerXp.hub.workspaces.current')
+            : t('buyerXp.hub.workspaces.available'),
+        role: BUYER_ACCOUNT_ROLE,
+        cta: t('buyerXp.hub.workspaces.openBuyer'),
+      },
+      {
+        title: t('buyerXp.hub.workspaces.sellerAccount'),
+        icon: 'solar:shop-2-bold',
+        available: hasSeller,
+        status: hasSeller
+          ? t('buyerXp.hub.workspaces.available')
+          : t('buyerXp.hub.workspaces.registerRequired'),
+        role: hasSeller ? ROLES.SELLER : null,
+        href: hasSeller ? bizSellerAccountUrl : bizSellerRegisterUrl,
+        cta: hasSeller
+          ? t('buyerXp.hub.workspaces.openSellerAccount')
+          : t('buyerXp.hub.workspaces.sellOnKkoo'),
+        fallbackCta: t('buyerXp.hub.workspaces.sellOnKkoo'),
+      },
+      {
+        title: t('buyerXp.hub.workspaces.businessCrm'),
+        icon: 'solar:buildings-3-bold',
+        available: hasCrm,
+        status: hasCrm
+          ? t('buyerXp.hub.workspaces.available')
+          : t('buyerXp.hub.workspaces.inviteRequired'),
+        role: hasCrm ? ROLES.CRM_MEMBER : null,
+        href: hasCrm ? bizWebPath('/seller/crm') : undefined,
+        cta: t('buyerXp.hub.workspaces.openCrm'),
+      },
+      {
+        title: t('buyerXp.hub.workspaces.adminDashboard'),
+        icon: 'solar:shield-user-bold',
+        available: hasAdmin || hasStaff,
+        status:
+          hasAdmin || hasStaff
+            ? t('buyerXp.hub.workspaces.available')
+            : t('buyerXp.hub.workspaces.restricted'),
+        role: hasAdmin ? ROLES.ADMIN : hasStaff ? ROLES.STAFF : null,
+        href: hasAdmin || hasStaff ? adminWebPath('/dashboard') : undefined,
+        cta: t('buyerXp.hub.workspaces.openAdmin'),
+      },
+    ]
+  })
 
   async function switchRole(role: AccountRole) {
     auth.setActiveAccountRole(role)

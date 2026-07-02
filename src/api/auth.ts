@@ -25,20 +25,19 @@ export const authApi = {
   refresh(refreshToken: string) {
     return client.post<{ access: string; refresh?: string }>('/users/token/refresh/', { refresh: refreshToken })
   },
-  /** POST /users/otp/request/ – phone_number; also_push can deliver code in-app when user exists (fewer SMS). */
+  /** POST /users/otp/request/ – WhatsApp only (no SMS). */
   requestOtp(
     phone_number: string,
-    options?: { country_code?: string; channel?: 'sms'; also_push?: boolean; app_key?: string },
+    options?: { country_code?: string; also_push?: boolean; app_key?: string },
   ) {
     const body: {
       phone_number: string
       country_code?: string
-      channel?: string
+      channel: 'whatsapp'
       also_push?: boolean
       app_key?: string
-    } = { phone_number }
+    } = { phone_number, channel: 'whatsapp' }
     if (options?.country_code) body.country_code = options.country_code
-    if (options?.channel) body.channel = options.channel
     if (options?.also_push) {
       body.also_push = true
       body.app_key = options.app_key ?? 'admin_panel'
@@ -46,6 +45,7 @@ export const authApi = {
     return client.post<{
       message?: string
       debug_otp?: string
+      channel?: string
       skipped_resend?: boolean
       cooldown_seconds?: number
     }>('/users/otp/request/', body)
@@ -55,10 +55,12 @@ export const authApi = {
     return client.post<LoginResponse>('/users/otp/verify/', { phone_number, otp_code })
   },
   /** Legacy OTP path aliases on the backend. */
-  requestOtpLegacy(phone_number: string, country_code?: string, channel?: 'sms') {
-    const body: { phone_number: string; country_code?: string; channel?: string } = { phone_number }
+  requestOtpLegacy(phone_number: string, country_code?: string) {
+    const body: { phone_number: string; country_code?: string; channel: 'whatsapp' } = {
+      phone_number,
+      channel: 'whatsapp',
+    }
     if (country_code) body.country_code = country_code
-    if (channel) body.channel = channel
     return client.post<{ message?: string; debug_otp?: string }>('/users/auth/otp-request/', body)
   },
   verifyOtpLegacy(phone_number: string, otp_code: string) {
@@ -80,17 +82,7 @@ export const authApi = {
   patchSellerStorefrontTheme(storefront_theme: Record<string, unknown> | null) {
     return client.patch('/users/seller/profile/storefront-theme/', { storefront_theme })
   },
-  /** Register as seller: same as register with is_buyer: false or omitted. OTP-only — no password field. */
-  registerSeller(data: { phone_number: string; first_name?: string; last_name?: string; email?: string }) {
-    const payload = {
-      phone_number: data.phone_number,
-      first_name: data.first_name ?? '',
-      last_name: data.last_name ?? '',
-      is_buyer: false as const,
-    }
-    return client.post<{ user: unknown; tokens: { access: string; refresh: string }; message?: string }>('/users/register/', payload)
-  },
-  /** Register as buyer/customer. OTP-only — sign in with SMS code after registration. */
+  /** Register as buyer/customer. OTP-only — sign in with WhatsApp code after registration. */
   registerBuyer(data: { phone_number: string; first_name?: string; last_name?: string }) {
     const payload: Record<string, unknown> = {
       phone_number: data.phone_number,

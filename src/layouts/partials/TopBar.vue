@@ -24,10 +24,7 @@
               height="32"
               decoding="async"
             />
-            <span class="topbar-brand-title">KKOO</span>
           </router-link>
-
-          <PortalBadge portal="buyer" />
 
           <!-- App Search-->
           <form class="app-search d-none d-md-block me-auto" @submit.prevent="onSearchSubmit">
@@ -234,11 +231,10 @@ function setLocale(code: LocaleCode) {
 }
 
 import DropDown from "@/components/DropDown.vue";
-import PortalBadge from '@/components/PortalBadge.vue';
 import { resolveAssetUrl } from '@/utils/assetUrl';
 import { buyerWebPath, adminWebPath, bizWebPath } from '@/config/cross-app-links'
-import logoLight from '@/assets/images/logo-mark-light.svg';
-import logoDark from '@/assets/images/logo-mark-dark.svg';
+import logoLight from '@/assets/images/logo-light.svg';
+import logoDark from '@/assets/images/logo-dark.svg';
 
 const router = useRouter();
 const searchQuery = ref('');

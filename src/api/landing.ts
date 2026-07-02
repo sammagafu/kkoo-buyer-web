@@ -29,7 +29,7 @@ function isLandingStatsResponse(data: unknown): data is LandingStatsResponse {
 export async function fetchLandingStats(): Promise<LandingStatsResponse | null> {
   try {
     const statsRes = await client.get<LandingStatsResponse>('/public/landing/stats/', {
-      validateStatus: (status) => status === 200 || status === 404,
+      validateStatus: (status) => status === 200 || status === 404 || status >= 500,
     })
     if (statsRes.status === 200 && isLandingStatsResponse(statsRes.data)) {
       return statsRes.data
@@ -40,7 +40,7 @@ export async function fetchLandingStats(): Promise<LandingStatsResponse | null> 
 
   try {
     const landingRes = await client.get<PublicLandingResponse>('/public/landing/', {
-      validateStatus: (status) => status === 200 || status === 404,
+      validateStatus: (status) => status === 200 || status === 404 || status >= 500,
     })
     if (
       landingRes.status === 200 &&

@@ -70,7 +70,7 @@
               class="buyer-venue__chip buyer-venue__chip--primary"
               @click="switchRole(workspace.role)"
             >
-              Switch here
+              {{ t('buyerXp.hub.workspaces.switchHere') }}
             </button>
             <a
               v-else-if="workspace.href"
@@ -111,7 +111,7 @@ import { useAccountWorkspaces } from '@/composables/useAccountWorkspaces'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerHubCard from '@/components/buyer/experience/BuyerHubCard.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const auth = useAuthStore()
 const router = useRouter()
 const { user, availableAccountRoles } = storeToRefs(auth)
@@ -119,6 +119,7 @@ const { accountTiles } = useBuyerFeatureTiles()
 const { activeAccountRole, roleSwitchOptions, workspaceCards, switchRole } = useAccountWorkspaces()
 
 const displayName = computed(() => {
+  void locale.value
   const u = user.value
   return (
     u?.full_name ||
@@ -130,6 +131,7 @@ const displayName = computed(() => {
 })
 
 const contactLine = computed(() => {
+  void locale.value
   const u = user.value
   return [u?.phone_number, u?.email].filter(Boolean).join(' • ') || t('buyerXp.hub.profileSignedIn')
 })

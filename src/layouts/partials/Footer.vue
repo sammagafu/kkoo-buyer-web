@@ -52,8 +52,8 @@
           <p class="footer__credit mb-0">
             Powered by <strong class="footer-text footer-text--sm">kkooapps</strong>
             <span class="footer__sep" aria-hidden="true">·</span>
-            Developed by
-            <a href="https://neotelabs.com" target="_blank" rel="noopener noreferrer" class="footer-agency">Neotelabs Digital Agency</a>
+            {{ t('landing.footerDevelopedBy') }}
+            <a href="https://neotelabs.com" target="_blank" rel="noopener noreferrer" class="footer-agency">{{ t('landing.footerAgencyName') }}</a>
           </p>
         </div>
       </div>
@@ -64,10 +64,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { Icon } from '@iconify/vue'
+import { useI18n } from 'vue-i18n'
 import { healthApi } from '@/api'
 import { appLinks } from '@/config/app-links'
 import { buildLabel, displayVersion } from '@/config/buildInfo'
 
+const { t } = useI18n()
 const apiStatus = ref<'idle' | 'ok' | 'error'>('idle')
 const spotlightStyle = ref<Record<string, string>>({ '--fx-x': '50%', '--fx-y': '50%' })
 

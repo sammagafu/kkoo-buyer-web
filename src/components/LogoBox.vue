@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import logoLightImg from '@/assets/images/logo-mark-light.svg'
+import logoLightImg from '@/assets/images/logo-light.svg'
 
 type PropsType = {
   customClass?: string

@@ -3,7 +3,7 @@
     <p v-if="loading" class="shop-products__status">{{ t('buyerXp.products.loading') }}</p>
     <p v-else-if="error" class="shop-products__status shop-products__status--error">{{ error }}</p>
     <p v-else-if="!products.length" class="shop-products__status">{{ t('buyerXp.products.notFound') }}</p>
-    <div v-else class="shop-product-grid">
+    <div v-else class="shop-product-grid" :class="{ 'shop-product-grid--popular-row': layout === 'popular-row' }">
       <BuyerStoreProductCard
         v-for="prod in products"
         :key="productKey(prod)"
@@ -12,6 +12,8 @@
         :price-label="formatPrice(prod.price ?? prod.base_price)"
         :image-url="productImage(prod)"
         :store-label="showStoreLabel ? prod.store_name : undefined"
+        :product-id="prod.id"
+        :product-slug="prod.slug"
         :disabled="!prod.skus?.length"
         :adding="adding"
         @add="$emit('add', prod)"
@@ -34,6 +36,7 @@ const { t } = useI18n()
 
 export type GridProduct = {
   id?: number
+  slug?: string
   title?: string
   description?: string
   price?: number
@@ -53,6 +56,7 @@ defineProps<{
   addError?: string
   adding?: boolean
   showStoreLabel?: boolean
+  layout?: 'default' | 'popular-row'
 }>()
 
 defineEmits<{ add: [product: GridProduct] }>()

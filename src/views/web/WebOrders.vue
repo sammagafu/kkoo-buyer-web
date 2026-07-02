@@ -1,8 +1,8 @@
 <template>
-  <div class="buyer-xp buyer-xp--wide">
+  <div class="buyer-xp buyer-xp--wide buyer-orders-page">
     <header class="buyer-page-head">
       <div class="buyer-page-head__row">
-        <div>
+        <div class="buyer-page-head__copy">
           <h1 class="buyer-page-head__title">{{ t('buyerXp.orders.title') }}</h1>
           <p class="buyer-page-head__meta">{{ t('buyerXp.orders.meta') }}</p>
         </div>
@@ -10,45 +10,69 @@
           <button type="button" class="buyer-venue__chip" :disabled="loading" @click="load">
             {{ loading ? t('buyerXp.common.refreshing') : t('buyerXp.common.refresh') }}
           </button>
+          <RouterLink :to="BUYER_DASHBOARD_ROUTE" class="buyer-venue__chip buyer-venue__chip--primary d-none d-md-inline-flex">
+            {{ t('buyerXp.common.startShopping') }}
+          </RouterLink>
         </div>
       </div>
+      <RouterLink :to="BUYER_DASHBOARD_ROUTE" class="buyer-venue__chip buyer-venue__chip--primary d-md-none">
+        {{ t('buyerXp.common.startShopping') }}
+      </RouterLink>
     </header>
 
     <div class="buyer-orders-toolbar">
       <BuyerSearchBar v-model="search" :placeholder="t('buyerXp.orders.searchPlaceholder')" />
-      <select v-model="statusFilter" aria-label="Filter by status">
-        <option v-for="opt in statusOptions" :key="opt.value" :value="opt.value">{{ opt.text }}</option>
-      </select>
+    </div>
+
+    <div class="buyer-filter-row" role="tablist" :aria-label="t('buyerXp.orders.statusFilterLabel')">
+      <button
+        v-for="opt in statusOptions"
+        :key="opt.value"
+        type="button"
+        role="tab"
+        class="buyer-filter-chip"
+        :class="{ 'buyer-filter-chip--active': statusFilter === opt.value }"
+        :aria-selected="statusFilter === opt.value"
+        @click="statusFilter = opt.value"
+      >
+        {{ opt.text }}
+      </button>
     </div>
 
     <p v-if="loading" class="shop-products__status">{{ t('buyerXp.orders.loading') }}</p>
     <p v-else-if="error" class="buyer-xp-toast buyer-xp-toast--err">{{ error }}</p>
 
-    <section v-else-if="displayItems.length" class="buyer-hub-list">
-      <article
-        v-for="order in displayItems"
-        :key="String(order.id)"
-        class="buyer-detail-card buyer-detail-card--clickable"
-        role="button"
-        tabindex="0"
-        @click="openOrder(order)"
-        @keydown.enter="openOrder(order)"
-      >
-        <div class="buyer-detail-row">
-          <strong>#{{ order.order_number || order.id }}</strong>
-          <span :class="orderStatusPillClass(order.status)">{{ order.status || 'pending' }}</span>
-        </div>
-        <div class="buyer-detail-row">
-          <span>{{ t('buyerXp.common.placed') }}</span>
-          <span>{{ formatBuyerDateTime(order.created_at) }}</span>
-        </div>
-        <div class="buyer-detail-row">
-          <span>{{ t('buyerXp.common.total') }}</span>
-          <strong>{{ formatBuyerMoney(order.final_total ?? order.total_amount) }}</strong>
-        </div>
-        <div class="buyer-btn-row mt-2">
-          <span class="buyer-venue__chip buyer-venue__chip--primary">{{ t('buyerXp.common.viewDetails') }}</span>
-        </div>
+    <section v-else-if="displayItems.length" class="buyer-orders-list">
+      <article v-for="order in displayItems" :key="String(order.id)" class="buyer-order-card">
+        <RouterLink :to="orderLink(order)" class="buyer-order-card__main">
+          <div class="buyer-order-card__head">
+            <div class="buyer-order-card__title-block">
+              <div class="buyer-order-card__icon" aria-hidden="true">
+                <Icon icon="solar:bag-check-bold" />
+              </div>
+              <div>
+                <p class="buyer-order-card__id">#{{ order.order_number || order.id }}</p>
+                <p v-if="order.created_at" class="buyer-order-card__when">{{ formatWhen(order.created_at) }}</p>
+              </div>
+            </div>
+            <span :class="orderStatusPillClass(order.status)">{{ formatOrderStatus(order.status) }}</span>
+          </div>
+
+          <div v-if="orderSummary(order)" class="buyer-order-card__summary">
+            {{ orderSummary(order) }}
+          </div>
+
+          <div class="buyer-order-card__foot">
+            <div class="buyer-order-card__total">
+              <span class="buyer-order-card__total-label">{{ t('buyerXp.common.total') }}</span>
+              <strong>{{ formatBuyerMoney(order.final_total ?? order.total_amount) }}</strong>
+            </div>
+            <span class="buyer-order-card__cta">
+              {{ t('buyerXp.orders.viewOrder') }}
+              <Icon icon="solar:alt-arrow-right-linear" aria-hidden="true" />
+            </span>
+          </div>
+        </RouterLink>
       </article>
     </section>
 
@@ -59,7 +83,9 @@
       :message="t('buyerXp.orders.emptyMessage')"
     >
       <template #action>
-        <RouterLink :to="BUYER_DASHBOARD_ROUTE" class="buyer-venue__chip buyer-venue__chip--primary">{{ t('buyerXp.common.startShopping') }}</RouterLink>
+        <RouterLink :to="BUYER_DASHBOARD_ROUTE" class="buyer-venue__chip buyer-venue__chip--primary">
+          {{ t('buyerXp.common.startShopping') }}
+        </RouterLink>
       </template>
     </BuyerEmptyState>
   </div>
@@ -67,18 +93,22 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { RouterLink, type RouteLocationRaw } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { Icon } from '@iconify/vue'
 import { ordersUserApi } from '@/api'
 import { formatApiError } from '@/utils/formatApiError'
-import { formatBuyerDateTime, formatBuyerMoney, orderStatusPillClass } from '@/utils/buyerFormat'
+import {
+  formatBuyerMoney,
+  formatOrderStatus,
+  orderStatusPillClass,
+} from '@/utils/buyerFormat'
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 import { BUYER_DASHBOARD_ROUTE } from '@/constants/buyerDashboard'
 
 type OrderRow = Record<string, unknown>
 
-const router = useRouter()
 const { t } = useI18n()
 const search = ref('')
 const statusFilter = ref('')
@@ -103,6 +133,33 @@ function normalizeList(data: unknown): OrderRow[] {
   return (obj?.results ?? []) as OrderRow[]
 }
 
+function formatWhen(value: unknown) {
+  const date = new Date(String(value))
+  if (Number.isNaN(date.getTime())) return ''
+  return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(date)
+}
+
+function orderItemCount(order: OrderRow) {
+  const raw = order.items ?? order.order_items
+  if (Array.isArray(raw)) return raw.length
+  const n = Number(order.item_count)
+  return Number.isFinite(n) && n > 0 ? n : 0
+}
+
+function orderSummary(order: OrderRow) {
+  const count = orderItemCount(order)
+  if (count > 0) return t('buyerXp.orders.itemCount', { count })
+  const fulfillment = String(order.fulfillment_type ?? '').trim()
+  if (fulfillment) return fulfillment.replace(/_/g, ' ')
+  const vertical = String(order.vertical ?? order.channel ?? '').trim()
+  if (vertical) return vertical.replace(/_/g, ' ')
+  return ''
+}
+
+function orderLink(order: OrderRow): RouteLocationRaw {
+  return { name: 'buyer.order', params: { id: String(order.id) } }
+}
+
 const displayItems = computed(() => {
   let list = items.value
   if (statusFilter.value) {
@@ -118,11 +175,6 @@ const displayItems = computed(() => {
   }
   return list
 })
-
-function openOrder(order: OrderRow) {
-  const id = order.id
-  if (id != null) void router.push({ name: 'buyer.order', params: { id: String(id) } })
-}
 
 async function load() {
   loading.value = true

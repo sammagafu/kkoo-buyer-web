@@ -6,9 +6,17 @@ function redirectSellerRegisterToBiz(to: RouteLocationGeneric) {
   if (typeof window !== 'undefined') {
     const q = new URLSearchParams(to.query as Record<string, string>).toString()
     window.location.replace(q ? `${bizSellerRegisterUrl}?${q}` : bizSellerRegisterUrl)
-    return { name: 'auth.sign-in' }
+    return false
   }
-  return { name: 'auth.sign-up', query: { ...to.query, as: 'seller' } }
+  return { name: 'auth.sign-in' }
+}
+
+function redirectSignUpSellerIntent(to: RouteLocationGeneric) {
+  const v = typeof to.query.as === 'string' ? to.query.as.toLowerCase().trim() : ''
+  if (v === 'seller' || v === 'sell' || v === 'business') {
+    return redirectSellerRegisterToBiz(to)
+  }
+  return true
 }
 
 export const authRoutes = [
@@ -26,8 +34,9 @@ export const authRoutes = [
         name: 'auth.sign-up',
         meta: {
             title: setTitle('Sign Up'),
-            description: "Create your KKOO account. Shop, sell, send, and move from one trusted platform."
+            description: "Create your KKOO account. Shop, send, and move from one trusted platform."
         },
+        beforeEnter: redirectSignUpSellerIntent,
         component: () => import('@/views/auth/sign-up.vue')
     },
     {
@@ -38,7 +47,13 @@ export const authRoutes = [
             description:
                 "Register for KKOO Business. List products, manage orders, request delivery, and get paid in one place.",
         },
-        redirect: (to: RouteLocationGeneric) => redirectSellerRegisterToBiz(to),
+        redirect: (to: RouteLocationGeneric) => {
+            if (typeof window !== 'undefined') {
+                const q = new URLSearchParams(to.query as Record<string, string>).toString()
+                window.location.replace(q ? `${bizSellerRegisterUrl}?${q}` : bizSellerRegisterUrl)
+            }
+            return { name: 'auth.sign-in' }
+        },
     },
     {
         path: '/auth/oauth/callback',

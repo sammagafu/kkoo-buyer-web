@@ -17,6 +17,9 @@ export const wishlistApi = {
     return client.post('/users/wishlist/clear/')
   },
   check(product_id: number) {
-    return client.get<{ in_wishlist: boolean }>('/users/wishlist/check/', { params: { product_id } })
+    return client.get<{ is_in_wishlist: boolean; product_id?: string }>(
+      '/users/wishlist/check/',
+      { params: { product_id } },
+    )
   },
 }

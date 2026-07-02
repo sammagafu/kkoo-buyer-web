@@ -8,6 +8,7 @@ import {
 } from '@/config/landing-links'
 
 export type SuperAppAudienceId = 'consumer' | 'merchant' | 'rider' | 'business'
+export type SuperAppPillarId = 'eat' | 'buy' | 'go' | 'sell'
 
 export type SuperAppLink = {
   key: string
@@ -124,6 +125,113 @@ export const superAppServiceGroups: Record<SuperAppAudienceId, SuperAppServiceGr
   merchant: merchantGroups,
   rider: riderGroups,
   business: businessGroups,
+}
+
+/** Brand pillars — Eat · Buy · Go · Sell */
+export const superAppPillars: {
+  id: SuperAppPillarId
+  labelKey: string
+  taglineKey: string
+  descKey: string
+  icon: string
+  tone: SuperAppPillarId
+}[] = [
+  {
+    id: 'eat',
+    labelKey: 'landing.superApp.pillarEat',
+    taglineKey: 'landing.superApp.pillarEatTag',
+    descKey: 'landing.superApp.pillarEatDesc',
+    icon: 'solar:cup-hot-bold',
+    tone: 'eat',
+  },
+  {
+    id: 'buy',
+    labelKey: 'landing.superApp.pillarBuy',
+    taglineKey: 'landing.superApp.pillarBuyTag',
+    descKey: 'landing.superApp.pillarBuyDesc',
+    icon: 'solar:cart-large-2-bold',
+    tone: 'buy',
+  },
+  {
+    id: 'go',
+    labelKey: 'landing.superApp.pillarGo',
+    taglineKey: 'landing.superApp.pillarGoTag',
+    descKey: 'landing.superApp.pillarGoDesc',
+    icon: 'solar:scooter-bold',
+    tone: 'go',
+  },
+  {
+    id: 'sell',
+    labelKey: 'landing.superApp.pillarSell',
+    taglineKey: 'landing.superApp.pillarSellTag',
+    descKey: 'landing.superApp.pillarSellDesc',
+    icon: 'solar:shop-2-bold',
+    tone: 'sell',
+  },
+]
+
+const eatGroups: SuperAppServiceGroup[] = [
+  {
+    key: 'deliveries',
+    titleKey: 'landing.superApp.groupDeliveries',
+    items: [
+      { key: 'eats', labelKey: 'landing.navEats', descKey: 'landing.superApp.eatsDesc', icon: 'solar:cup-hot-bold', to: buyerRoutes.eats },
+      { key: 'grocery', labelKey: 'landing.navGrocery', descKey: 'landing.superApp.groceryDesc', icon: 'solar:bag-2-bold', to: buyerRoutes.grocery },
+    ],
+  },
+  {
+    key: 'stay',
+    titleKey: 'landing.superApp.groupStay',
+    items: [
+      { key: 'restaurants', labelKey: 'landing.exploreRestaurants', descKey: 'landing.superApp.restaurantsDesc', icon: 'solar:chef-hat-bold', to: buyerRoutes.restaurants },
+      { key: 'booking', labelKey: 'landing.navBooking', descKey: 'landing.superApp.bookingDesc', icon: 'solar:calendar-bold', to: buyerRoutes.booking },
+    ],
+  },
+]
+
+const buyGroups: SuperAppServiceGroup[] = [
+  {
+    key: 'shop',
+    titleKey: 'landing.superApp.groupShop',
+    items: [
+      { key: 'marketplace', labelKey: 'landing.navMarketplace', descKey: 'landing.superApp.marketplaceDesc', icon: 'solar:cart-large-2-bold', to: buyerRoutes.marketplace },
+      { key: 'hotels', labelKey: 'landing.exploreHotels', descKey: 'landing.superApp.hotelsDesc', icon: 'solar:bed-bold', to: buyerRoutes.hotels },
+      { key: 'vouchers', labelKey: 'landing.exploreVouchers', descKey: 'landing.superApp.vouchersDesc', icon: 'solar:ticket-bold', to: buyerRoutes.vouchers },
+      { key: 'community', labelKey: 'landing.navCommunity', descKey: 'landing.superApp.communityDesc', icon: 'solar:users-group-rounded-bold', to: buyerRoutes.community },
+    ],
+  },
+  {
+    key: 'rewards',
+    titleKey: 'landing.superApp.groupRewards',
+    items: [
+      { key: 'share-earn', labelKey: 'landing.exploreShareEarn', descKey: 'landing.superApp.shareEarnDesc', icon: 'solar:gift-bold', to: buyerRoutes.shareEarn },
+    ],
+  },
+]
+
+const goGroups: SuperAppServiceGroup[] = [
+  {
+    key: 'mobility',
+    titleKey: 'landing.superApp.groupMobility',
+    items: [
+      { key: 'ride', labelKey: 'landing.navRide', descKey: 'landing.superApp.rideDesc', icon: 'solar:scooter-bold', to: buyerRoutes.ride },
+      { key: 'courier', labelKey: 'landing.exploreCourier', descKey: 'landing.superApp.courierDesc', icon: 'solar:delivery-bold', to: buyerRoutes.courier },
+      { key: 'send', labelKey: 'landing.navSend', descKey: 'landing.superApp.sendDesc', icon: 'solar:box-bold', to: buyerRoutes.send },
+    ],
+  },
+]
+
+const sellGroups: SuperAppServiceGroup[] = [
+  ...merchantGroups,
+  ...riderGroups,
+  ...businessGroups,
+]
+
+export const superAppPillarGroups: Record<SuperAppPillarId, SuperAppServiceGroup[]> = {
+  eat: eatGroups,
+  buy: buyGroups,
+  go: goGroups,
+  sell: sellGroups,
 }
 
 export const superAppEarnCards: SuperAppLink[] = [

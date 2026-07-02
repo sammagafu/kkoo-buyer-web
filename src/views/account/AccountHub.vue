@@ -206,7 +206,7 @@ const restrictedMessage = computed(() => {
     case 'admin':
       return 'No admin access on this account.'
     case 'business':
-      return 'Register as a seller to open business tools.'
+      return 'Open the seller portal on KKOO Business to register your store.'
     default:
       return ''
   }
@@ -225,7 +225,7 @@ const frontendApps = computed(() => [
   { title: 'Restaurants', icon: 'solar:chef-hat-bold', badge: 'Eat', to: { name: 'buyer.eats' } },
   { title: 'Hotels', icon: 'solar:bed-bold', badge: 'Stay', to: { name: 'buyer.booking' } },
   { title: 'Community', icon: 'solar:users-group-rounded-bold', badge: 'People', to: { name: 'pages.community' } },
-  { title: 'Share & earn', icon: 'solar:gift-bold', badge: 'Growth', to: { name: 'pages.share-earn' } },
+  { title: 'Share & earn', icon: 'solar:gift-bold', badge: 'Growth', to: { name: 'buyer.share-earn' } },
   { title: 'Gift vouchers', icon: 'solar:ticket-bold', badge: 'Gifting', to: { name: 'pages.vouchers' } },
   { title: 'Merchant', icon: 'solar:bag-5-bold', badge: 'Business', to: { name: 'pages.merchant' } },
   { title: 'KKOORide', icon: 'solar:scooter-bold', badge: 'Mobility', to: { name: 'pages.courier' } },
@@ -250,8 +250,8 @@ const workspaceCards = computed(() => [
     status: roleAvailability.value.has(ROLES.SELLER) ? 'Available' : 'Register required',
     role: roleAvailability.value.has(ROLES.SELLER) ? ROLES.SELLER : null,
     href: roleAvailability.value.has(ROLES.SELLER) ? bizSellerAccountUrl : bizSellerRegisterUrl,
-    cta: roleAvailability.value.has(ROLES.SELLER) ? 'Open seller account' : 'Register business',
-    fallbackCta: 'Register business',
+    cta: roleAvailability.value.has(ROLES.SELLER) ? 'Open seller account' : 'Sell on KKOO',
+    fallbackCta: 'Sell on KKOO',
   },
   {
     title: 'Business CRM',

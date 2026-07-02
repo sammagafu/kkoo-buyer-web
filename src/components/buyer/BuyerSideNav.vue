@@ -47,9 +47,16 @@
     </nav>
 
     <div class="buyer-side-nav__footer">
-      <label class="buyer-side-nav__locale">
-        <span class="visually-hidden">{{ t('buyerXp.nav.language') }}</span>
-        <select :value="locale" class="buyer-side-nav__locale-select" @change="onLocaleChange">
+      <label class="buyer-side-nav__locale" :aria-label="t('buyerXp.nav.language')">
+        <span class="buyer-side-nav__locale-icon" aria-hidden="true">
+          <Icon icon="solar:global-bold" />
+        </span>
+        <select
+          :value="locale"
+          class="buyer-side-nav__locale-select"
+          :aria-label="t('buyerXp.nav.language')"
+          @change="onLocaleChange"
+        >
           <option v-for="loc in supportedLocales" :key="loc.code" :value="loc.code">{{ loc.name }}</option>
         </select>
       </label>
@@ -78,8 +85,8 @@ import { useBuyerGreeting } from '@/composables/useBuyerGreeting'
 import { resolveAssetUrl } from '@/utils/assetUrl'
 import { BUYER_DASHBOARD_ROUTE } from '@/constants/buyerDashboard'
 import { supportedLocales, setLocale, type LocaleCode } from '@/i18n'
-import logoLight from '@/assets/images/logo-mark-light.svg'
-import logoDark from '@/assets/images/logo-mark-dark.svg'
+import logoLight from '@/assets/images/logo-light.svg'
+import logoDark from '@/assets/images/logo-dark.svg'
 
 type NavItemBase = { name: string; labelKey: string; icon: string; to: RouteLocationRaw; match?: string[] }
 type NavItem = NavItemBase & { label: string }
@@ -134,7 +141,8 @@ const shopLinks = computed((): NavItem[] => {
   { name: 'eats', labelKey: 'buyerXp.nav.eats', icon: 'solar:cup-hot-bold', to: { name: 'buyer.eats' }, match: ['buyer.eats', 'buyer.eats.store'] },
   { name: 'grocery', labelKey: 'buyerXp.nav.groceries', icon: 'solar:bag-2-bold', to: { name: 'buyer.grocery' }, match: ['buyer.grocery', 'buyer.grocery.store'] },
   { name: 'pharmacy', labelKey: 'buyerXp.nav.pharmacy', icon: 'solar:health-bold', to: { name: 'buyer.pharmacy' }, match: ['buyer.pharmacy', 'buyer.pharmacy.reminders', 'buyer.pharmacy.store'] },
-  { name: 'send', labelKey: 'buyerXp.nav.send', icon: 'solar:box-bold', to: { name: 'buyer.send' }, match: ['buyer.send'] },
+  { name: 'send', labelKey: 'buyerXp.nav.send', icon: 'solar:cart-large-2-bold', to: { name: 'buyer.send' }, match: ['buyer.send'] },
+  { name: 'parcel', labelKey: 'buyerXp.nav.parcel', icon: 'solar:box-bold', to: { name: 'buyer.parcel' }, match: ['buyer.parcel'] },
   { name: 'search', labelKey: 'buyerXp.nav.search', icon: 'solar:magnifer-bold', to: { name: 'buyer.search' }, match: ['buyer.search'] },
   { name: 'ride', labelKey: 'buyerXp.nav.ride', icon: 'solar:scooter-bold', to: { name: 'buyer.ride' }, match: ['buyer.ride', 'buyer.rides', 'buyer.ride.detail'] },
   { name: 'services', labelKey: 'buyerXp.nav.services', icon: 'solar:widget-5-bold', to: { name: 'buyer.services' }, match: ['buyer.services', 'buyer.nearby', 'buyer.flash-sales', 'buyer.wholesale'] },
@@ -146,7 +154,7 @@ const accountLinks = computed((): NavItem[] => {
   return [
   { name: 'orders', labelKey: 'buyerXp.nav.orders', icon: 'solar:bag-check-bold', to: { name: 'buyer.orders' }, match: ['buyer.orders', 'buyer.order'] },
   { name: 'wallet', labelKey: 'buyerXp.nav.wallet', icon: 'solar:wallet-bold', to: { name: 'buyer.wallet' }, match: ['buyer.wallet'] },
-  { name: 'rewards', labelKey: 'buyerXp.nav.rewards', icon: 'solar:gift-bold', to: { name: 'buyer.rewards' }, match: ['buyer.rewards', 'buyer.referral', 'buyer.gamification', 'buyer.weekly-pass'] },
+  { name: 'rewards', labelKey: 'buyerXp.nav.rewards', icon: 'solar:gift-bold', to: { name: 'buyer.rewards' }, match: ['buyer.rewards', 'buyer.referral', 'buyer.share-earn', 'buyer.gamification', 'buyer.weekly-pass'] },
   { name: 'favorites', labelKey: 'buyerXp.nav.saved', icon: 'solar:heart-bold', to: { name: 'buyer.favorites' }, match: ['buyer.favorites'] },
   { name: 'messages', labelKey: 'buyerXp.nav.messages', icon: 'solar:chat-round-bold', to: { name: 'buyer.messages' }, match: ['buyer.messages', 'buyer.messages.thread'] },
   { name: 'profile', labelKey: 'buyerXp.nav.account', icon: 'solar:user-circle-bold', to: { name: 'buyer.profile' }, match: ['buyer.profile', 'buyer.settings', 'account.profile', 'account.notifications', 'account.backup-codes', 'buyer.reservations', 'buyer.returns', 'buyer.disputes', 'buyer.premium'] },
@@ -170,20 +178,19 @@ function onLocaleChange(e: Event) {
 </script>
 
 <style scoped>
-.buyer-side-nav__footer {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 .buyer-side-nav__locale {
+  position: relative;
   flex: 1;
   min-width: 0;
-  margin: 0;
+}
+
+.buyer-side-nav__locale-icon {
+  display: none;
 }
 
 .buyer-side-nav__locale-select {
   width: 100%;
+  margin: 0;
   border: 1px solid rgba(var(--bs-primary-rgb), 0.15);
   border-radius: 999px;
   padding: 0.35rem 0.65rem;

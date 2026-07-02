@@ -3,19 +3,27 @@
  */
 import client from './client'
 
+export type ReferralCodePayload = {
+  code?: string
+  share_url?: string
+  share_text?: string
+}
+
+export type ReferralStatsPayload = ReferralCodePayload & {
+  total_referrals?: number
+  completed_referrals?: number
+  rewarded_referrals?: number
+  total_earnings?: number
+}
+
 export const referralApi = {
   getCode() {
-    return client.get<{ code: string }>('/users/referral/code/')
+    return client.get<ReferralCodePayload>('/users/referral/code/')
   },
   apply(code: string) {
     return client.post<{ message?: string }>('/users/referral/apply/', { code })
   },
   getStats() {
-    return client.get<{
-      total_referrals?: number
-      completed_referrals?: number
-      rewarded_referrals?: number
-      total_earnings?: number
-    }>('/users/referral/stats/')
+    return client.get<ReferralStatsPayload>('/users/referral/stats/')
   },
 }

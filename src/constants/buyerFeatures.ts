@@ -32,6 +32,7 @@ export const BUYER_ACCOUNT_TILES: BuyerFeatureTile[] = [
   { id: 'gamification', title: 'XP & streaks', subtitle: 'Achievements', icon: 'solar:medal-ribbons-star-bold', routeName: 'buyer.gamification', auth: true },
   { id: 'weekly-pass', title: 'Weekly pass', subtitle: 'Challenges', icon: 'solar:ticket-bold', routeName: 'buyer.weekly-pass', auth: true },
   { id: 'referral', title: 'Refer friends', subtitle: 'Earn together', icon: 'solar:users-group-rounded-bold', routeName: 'buyer.referral', auth: true },
+  { id: 'share-earn', title: 'Share & earn', subtitle: 'Influencer earnings', icon: 'solar:share-bold', routeName: 'buyer.share-earn', auth: true },
   { id: 'premium', title: 'Premium', subtitle: 'Membership perks', icon: 'solar:crown-bold', routeName: 'buyer.premium' },
   { id: 'returns', title: 'Returns', subtitle: 'Refund requests', icon: 'solar:restart-bold', routeName: 'buyer.returns', auth: true },
   { id: 'disputes', title: 'Disputes', subtitle: 'Order issues', icon: 'solar:shield-warning-bold', routeName: 'buyer.disputes', auth: true },

@@ -3,6 +3,7 @@ import { allRoutes } from './routes/index';
 import { useAuthStore } from '@/stores/auth'
 import { initNavigationAnalytics } from '@/services/navigationAnalytics'
 import { isPublicMarketingRouteName } from '@/constants/publicRoutes'
+import { ensureAuthSessionValid } from '@/utils/ensureAuthSession'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,7 +55,8 @@ router.beforeEach(async (routeTo, _routeFrom, next) => {
   const authRequired = routeTo.matched.some((route) => route.meta.authRequired);
   if (!authRequired) return next();
 
-  if (!auth.isAuthenticated) {
+  const sessionValid = await ensureAuthSessionValid(auth);
+  if (!sessionValid) {
     return next({ name: 'auth.sign-in', query: { redirectedFrom: routeTo.fullPath } });
   }
   next();

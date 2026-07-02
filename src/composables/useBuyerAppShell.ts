@@ -2,7 +2,7 @@ import { computed, watchEffect } from 'vue'
 import { useRoute, type RouteLocationRaw } from 'vue-router'
 import { BUYER_DASHBOARD_ROUTE } from '@/constants/buyerDashboard'
 
-export type BuyerTab = 'home' | 'search' | 'cart' | 'orders' | 'profile'
+export type BuyerTab = 'home' | 'shop' | 'orders' | 'profile'
 
 const HOME_ROUTES = new Set([
   'buyer.marketplace',
@@ -12,6 +12,7 @@ const HOME_ROUTES = new Set([
   'buyer.grocery',
   'buyer.pharmacy',
   'buyer.ride',
+  'buyer.parcel',
   'buyer.booking',
   'buyer.send',
   'buyer.compare',
@@ -30,10 +31,10 @@ export function useBuyerAppShell() {
 
   const activeTab = computed<BuyerTab>(() => {
     const name = String(route.name ?? '')
-    if (name === 'buyer.search') return 'search'
-    if (name === 'buyer.checkout') return 'cart'
-    if (name === 'buyer.orders') return 'orders'
-    if (name === 'buyer.profile') return 'profile'
+    if (name === 'buyer.search' || name === 'buyer.product' || name === 'buyer.category') return 'shop'
+    if (name === 'buyer.orders' || name === 'buyer.order') return 'orders'
+    if (name === 'buyer.profile' || name === 'buyer.settings') return 'profile'
+    if (name === 'buyer.marketplace' || name === 'buyer.dashboard' || name === 'buyer.market') return 'home'
     if (HOME_ROUTES.has(name)) return 'home'
     return 'home'
   })
@@ -48,8 +49,7 @@ export function useBuyerAppShell() {
 
 export const buyerTabRoutes: Record<BuyerTab, RouteLocationRaw> = {
   home: BUYER_DASHBOARD_ROUTE,
-  search: { name: 'buyer.search' },
-  cart: { name: 'buyer.checkout' },
+  shop: { name: 'buyer.search' },
   orders: { name: 'buyer.orders' },
   profile: { name: 'buyer.profile' },
 }

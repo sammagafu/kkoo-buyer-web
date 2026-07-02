@@ -9,10 +9,18 @@ import {
   clearAdminAuthSession,
   readAdminAuthTokens,
 } from '@/utils/adminAuthSessionStorage'
-import { isPublicAppPath } from '@/constants/publicRoutes'
+import {
+  appPathFromLocation,
+  isAuthRequiredApiUrl,
+  markAuthSessionError,
+  redirectToSignIn,
+  shouldRedirectToSignIn,
+} from '@/utils/authRedirect'
 import { resolveApiBaseUrl } from '@/utils/apiBaseUrl'
 import { refreshAccessTokenSingleFlight } from '@/utils/tokenRefresh'
 import { resetPiniaAuthAfterRefreshFailure } from '@/utils/syncPiniaAuthFromStorage'
+
+export { isAuthRequiredApiUrl } from '@/utils/authRedirect'
 
 const baseURL = resolveApiBaseUrl()
 
@@ -92,13 +100,26 @@ client.interceptors.response.use(
         return client(original)
       }
       clearStoredAuth()
-      const basePath = (import.meta.env.BASE_URL || '/').replace(/\/$/, '')
-      const appPath = window.location.pathname.startsWith(basePath)
-        ? window.location.pathname.slice(basePath.length) || '/'
-        : window.location.pathname
-      const onAuthPage = appPath.startsWith('/auth/')
-      if (!onAuthPage && !isPublicAppPath(appPath)) {
-        window.location.href = (window.location.origin || '') + basePath + '/auth/sign-in'
+      const appPath = appPathFromLocation()
+      const method = String(original.method ?? 'get').toLowerCase()
+      const needsSignIn = shouldRedirectToSignIn(originalUrl, method, appPath)
+      if (needsSignIn) {
+        markAuthSessionError(err)
+        const returnPath = `${appPath}${window.location.search || ''}`
+        redirectToSignIn(returnPath)
+        return Promise.reject(err)
+      }
+      // Stale token on a guest-browse page: retry once without Authorization (public catalog only).
+      const authRequiredUrl =
+        originalUrl.includes('/cart/') ||
+        originalUrl.includes('/orders/') ||
+        originalUrl.includes('/wishlist/') ||
+        originalUrl.includes('/notifications/') ||
+        originalUrl.includes('/logistics/passenger/rides')
+      if (original && !original._guestRetry && method === 'get' && !authRequiredUrl) {
+        original._guestRetry = true
+        delete original.headers.Authorization
+        return client(original)
       }
     }
     return Promise.reject(err)

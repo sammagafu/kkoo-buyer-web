@@ -59,6 +59,7 @@ html.theme-dark {
   .shop-main,
   .eats-main,
   .booking-page,
+  .booking-stays-page,
   .webcheckout-page,
   .web-compare-page,
   .send-main {
@@ -70,6 +71,15 @@ html.theme-dark {
   .buyer-search-page__title,
   .buyer-home-hero__name {
     color: var(--buyer-ink);
+  }
+
+  .buyer-services-hero__title {
+    color: #fff;
+  }
+
+  .booking-stays-hero__title,
+  .booking-stays-detail__title {
+    color: #fff;
   }
 
   html.buyer-shell-active,
@@ -114,6 +124,9 @@ html.theme-dark {
   .booking-hotel-card,
   .booking-room-card,
   .booking-rooms-panel,
+  .booking-stay-option,
+  .booking-room-row,
+  .booking-stays-chip,
   .compare-result-card,
   .compare-card,
   .compare-result-empty,
@@ -178,6 +191,7 @@ html.theme-dark {
   .buyer-ride-field input,
   .buyer-ride-field textarea,
   .buyer-ride-field select,
+  .ride-place-field__list,
   .buyer-orders-toolbar select,
   .form-select,
   .form-control {
@@ -244,31 +258,29 @@ html.theme-dark {
   }
 
   // Booking / map
-  .booking-page__modes {
-    background: rgba(92, 48, 143, 0.2);
-  }
-
-  .booking-page__mode {
-    color: var(--buyer-ink);
-  }
-
-  .booking-page__mode--active {
-    background: var(--buyer-surface);
-    box-shadow: 0 4px 12px var(--buyer-shadow-color);
-  }
-
-  .booking-page__filter,
-  .booking-page__count,
-  .booking-hotel-card__addr,
-  .booking-hotel-card__pill,
-  .booking-rooms-panel__overline {
+  .booking-stays-hero__filter,
+  .booking-stays-hero__count,
+  .booking-stay-option__addr,
+  .booking-rooms-panel__kicker,
+  .booking-room-row__desc {
     color: var(--buyer-muted);
   }
 
-  .booking-hotel-card__name,
+  .booking-stay-option__name,
   .booking-rooms-panel__title,
-  .booking-room-card__title {
+  .booking-room-row__title,
+  .booking-room-row__price {
     color: var(--buyer-ink);
+  }
+
+  .booking-stay-option__meta,
+  .booking-stays-chip--active {
+    color: #5eead4;
+  }
+
+  .booking-stays-chip--active {
+    background: color-mix(in srgb, #0f766e 18%, var(--buyer-surface));
+    border-color: color-mix(in srgb, #0f766e 45%, var(--buyer-border));
   }
 
   .buyer-hotels-map__hint,

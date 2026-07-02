@@ -52,7 +52,7 @@ const restrictedMessage = computed(() => {
     case 'admin':
       return 'No admin access on this account.'
     case 'business':
-      return 'Register as a seller to open business tools.'
+      return 'Open the seller portal on KKOO Business to register your store.'
     default:
       return ''
   }

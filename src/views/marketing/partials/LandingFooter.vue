@@ -92,6 +92,10 @@
         <small class="hp-footer__copy">
           {{ t('landing.footerCopyright', { year: new Date().getFullYear() }) }}
         </small>
+        <small class="hp-footer__credit">
+          {{ t('landing.footerDevelopedBy') }}
+          <a href="https://neotelabs.com" target="_blank" rel="noopener noreferrer">{{ t('landing.footerAgencyName') }}</a>
+        </small>
       </div>
     </div>
   </footer>

@@ -21,7 +21,7 @@
           </div>
           <div>
             <button type="button" class="buyer-venue__chip" :disabled="avatarUploading" @click="triggerAvatarPick">
-              {{ avatarPreview ? 'Change photo' : 'Upload photo' }}
+              {{ avatarPreview ? t('buyerXp.profileEdit.changePhoto') : t('buyerXp.profileEdit.uploadPhoto') }}
             </button>
             <input
               ref="avatarInput"
@@ -30,42 +30,42 @@
               class="visually-hidden"
               @change="onAvatarSelected"
             />
-            <p class="buyer-page-head__meta mt-2">JPEG, PNG, GIF or WebP. Max 5 MB.</p>
+            <p class="buyer-page-head__meta mt-2">{{ t('buyerXp.profileEdit.photoHint') }}</p>
           </div>
         </div>
 
         <div class="buyer-ride-field mt-3">
-          <label for="first_name">First name</label>
-          <input id="first_name" v-model="form.first_name" type="text" placeholder="First name" />
+          <label for="first_name">{{ t('buyerXp.profileEdit.firstName') }}</label>
+          <input id="first_name" v-model="form.first_name" type="text" :placeholder="t('buyerXp.profileEdit.firstName')" />
         </div>
         <div class="buyer-ride-field mt-2">
-          <label for="last_name">Last name</label>
-          <input id="last_name" v-model="form.last_name" type="text" placeholder="Last name" />
+          <label for="last_name">{{ t('buyerXp.profileEdit.lastName') }}</label>
+          <input id="last_name" v-model="form.last_name" type="text" :placeholder="t('buyerXp.profileEdit.lastName')" />
         </div>
         <div class="buyer-ride-field mt-2">
-          <label for="email">Email</label>
-          <input id="email" v-model="form.email" type="email" placeholder="Email" />
+          <label for="email">{{ t('buyerXp.profileEdit.email') }}</label>
+          <input id="email" v-model="form.email" type="email" :placeholder="t('buyerXp.profileEdit.email')" />
         </div>
         <div class="buyer-ride-field mt-2">
-          <label for="phone_number">Phone number</label>
+          <label for="phone_number">{{ t('buyerXp.profileEdit.phone') }}</label>
           <input id="phone_number" v-model="form.phone_number" type="tel" placeholder="+255..." readonly disabled />
-          <p class="buyer-page-head__meta mt-1">Phone cannot be changed here. Contact support if needed.</p>
+          <p class="buyer-page-head__meta mt-1">{{ t('buyerXp.profileEdit.phoneReadonlyHint') }}</p>
         </div>
 
         <div class="buyer-btn-row buyer-form-actions mt-3">
           <button type="submit" class="buyer-venue__chip buyer-venue__chip--primary" :disabled="saving">
-            {{ saving ? 'Saving…' : 'Save profile' }}
+            {{ saving ? t('buyerXp.profileEdit.saving') : t('buyerXp.profileEdit.saveProfile') }}
           </button>
         </div>
 
         <div class="mt-4 pt-3" style="border-top: 1px solid var(--buyer-border)">
-          <p class="buyer-page-head__meta mb-2">Sign-in backup codes (if SMS OTP is unavailable)</p>
+          <p class="buyer-page-head__meta mb-2">{{ t('buyerXp.profileEdit.backupCodesTitle') }}</p>
           <router-link :to="{ name: 'account.backup-codes' }" class="buyer-venue__chip">
-            View backup codes
+            {{ t('buyerXp.profileEdit.viewBackupCodes') }}
           </router-link>
         </div>
       </form>
-      <p v-else-if="loading" class="shop-products__status">Loading…</p>
+      <p v-else-if="loading" class="shop-products__status">{{ t('buyerXp.common.loading') }}</p>
     </section>
   </div>
 </template>
@@ -125,7 +125,7 @@ onMounted(async () => {
     applyUserFields(auth.user as Record<string, unknown>)
     loaded.value = true
   } catch (e: unknown) {
-    error.value = formatApiError(e, 'Failed to load profile')
+    error.value = formatApiError(e, t('buyerXp.profileEdit.loadFailed'))
   } finally {
     loading.value = false
   }
@@ -154,9 +154,9 @@ async function onAvatarSelected(ev: Event) {
     } else if (auth.user && url) {
       auth.setUser({ ...auth.user, avatar_url: url, avatar: url })
     }
-    toastSuccess('Profile photo updated')
+    toastSuccess(t('buyerXp.profileEdit.photoUpdated'))
   } catch (e: unknown) {
-    toastError(formatApiError(e, 'Could not upload photo'))
+    toastError(formatApiError(e, t('buyerXp.profileEdit.photoUploadFailed')))
   } finally {
     avatarUploading.value = false
   }
@@ -182,10 +182,10 @@ async function save() {
         avatar: avatarUrl.value,
       })
     }
-    successMessage.value = 'Profile saved successfully.'
+    successMessage.value = t('buyerXp.profileEdit.saved')
   } catch (e: unknown) {
     const err = e as { response?: { data?: { detail?: string } }; message?: string }
-    error.value = err.response?.data?.detail ?? err.message ?? 'Save failed'
+    error.value = err.response?.data?.detail ?? err.message ?? t('buyerXp.profileEdit.saveFailed')
   } finally {
     saving.value = false
   }

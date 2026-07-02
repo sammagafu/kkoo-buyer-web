@@ -5,9 +5,11 @@
 import { ref } from 'vue'
 import * as api from '../api/wallet'
 import type { KkooWallet, WalletTransaction } from '../types/wallet'
+import type { WalletBalanceResponse } from '../api/wallet'
 
 // State
 const wallet = ref<KkooWallet | null>(null)
+const walletSummary = ref<Omit<WalletBalanceResponse, 'wallet'> | null>(null)
 const transactions = ref<{ results: WalletTransaction[]; total: number; page: number }>({
   results: [],
   total: 0,
@@ -23,7 +25,14 @@ export async function fetchWalletBalance() {
   isLoading.value = true
   error.value = null
   try {
-    wallet.value = await api.getWalletBalance()
+    const data = await api.getWalletBalance()
+    wallet.value = data.wallet
+    walletSummary.value = {
+      transaction_count: data.transaction_count,
+      total_deposited: data.total_deposited,
+      total_spent: data.total_spent,
+      total_withdrawn: data.total_withdrawn,
+    }
   } catch (err: any) {
     error.value = err.message || 'Failed to fetch wallet'
     console.error('fetchWalletBalance error:', err)
@@ -89,6 +98,7 @@ export function useWallet() {
   return {
     // State
     wallet,
+    walletSummary,
     transactions,
     isLoading,
     error,
