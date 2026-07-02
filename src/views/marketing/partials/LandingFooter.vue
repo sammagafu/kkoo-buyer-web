@@ -106,15 +106,16 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { appLinks } from '@/config/app-links'
+import { brandIconLogoForTheme } from '@/config/brand-logos'
 import { buyerRoutes, primaryNavItems, secondaryNavItems, sellerNavItems } from '@/config/landing-links'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { useLayoutStore } from '@/stores/layout'
-import logoLight from '@/assets/images/logo-light.svg'
-import logoDark from '@/assets/images/logo-dark.svg'
 
 const { t } = useI18n()
 const { layout } = storeToRefs(useLayoutStore())
 const { isAuthenticated, dashboardRoute } = useAuthDisplay()
 
-const logoSrc = computed(() => (layout.value.theme === 'dark' ? logoDark : logoLight))
+const logoSrc = computed(() =>
+  brandIconLogoForTheme(layout.value.theme === 'dark' ? 'dark' : 'light'),
+)
 </script>

@@ -16,10 +16,8 @@
 
         <div class="mk-header__brand-group">
           <router-link to="/" class="mk-header__brand mk-link" @click="closeMobileNav">
-            <img :src="headerLogo" alt="" class="mk-header__logo" />
-            <span class="mk-header__title">KKOO</span>
+            <img :src="headerLogo" alt="KKOO" class="mk-header__logo" />
           </router-link>
-          <PortalBadge portal="buyer" class="mk-header__portal-badge" />
         </div>
 
         <div class="mk-header__actions mk-header__actions--compact">
@@ -51,10 +49,8 @@
       <div class="mk-header__row d-none d-lg-flex">
         <div class="mk-header__brand-group">
           <router-link to="/" class="mk-header__brand mk-link">
-            <img :src="headerLogo" alt="" class="mk-header__logo mk-header__logo--lg" />
-            <span class="mk-header__title">KKOO</span>
+            <img :src="headerLogo" alt="KKOO" class="mk-header__logo mk-header__logo--lg" />
           </router-link>
-          <PortalBadge portal="buyer" class="mk-header__portal-badge" />
         </div>
 
         <nav class="mk-nav" aria-label="Primary">
@@ -142,9 +138,7 @@
       <template #header>
         <div class="mk-mobile-offcanvas__head">
           <div class="mk-mobile-offcanvas__brand">
-            <img :src="headerLogo" alt="" class="mk-mobile-offcanvas__logo" />
-            <span class="mk-header__title">KKOO</span>
-            <PortalBadge portal="buyer" class="mk-header__portal-badge" />
+            <img :src="headerLogo" alt="KKOO" class="mk-mobile-offcanvas__logo" />
           </div>
           <b-button
             variant="link"
@@ -227,10 +221,8 @@ import { supportedLocales, setLocale } from '@/i18n'
 import { useLayoutStore } from '@/stores/layout'
 import { useKkooAccountAuth } from '@/composables/useKkooAccountAuth'
 import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
-import PortalBadge from '@/components/PortalBadge.vue'
+import { brandIconLogoForTheme } from '@/config/brand-logos'
 import { buyerRoutes, landingAnchors, primaryNavItems, secondaryNavItems } from '@/config/landing-links'
-import logoMarkLight from '@/assets/images/logo-mark-light.svg'
-import logoMarkDark from '@/assets/images/logo-mark-dark.svg'
 
 const { t, locale } = useI18n()
 const layoutStore = useLayoutStore()
@@ -241,7 +233,9 @@ const mobileNavPanelId = 'mk-landing-mobile-nav'
 const mobileNavOpen = ref(false)
 
 const isDark = computed(() => layout.value.theme === 'dark')
-const headerLogo = computed(() => (isDark.value ? logoMarkDark : logoMarkLight))
+const headerLogo = computed(() =>
+  brandIconLogoForTheme(isDark.value ? 'dark' : 'light'),
+)
 
 function toggleTheme() {
   layoutStore.setTheme(isDark.value ? 'light' : 'dark')
@@ -334,28 +328,16 @@ const mobileNavItems = computed((): MobileNavItem[] => [
   justify-content: flex-start;
 }
 
-.mk-header__portal-badge {
-  flex-shrink: 0;
-}
-
 .mk-header__logo {
-  height: 32px;
-  width: 32px;
+  height: 36px;
+  width: 36px;
   object-fit: contain;
   flex-shrink: 0;
 }
 
-.mk-header__title {
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  color: #0284c7;
-  line-height: 1;
-}
-
 .mk-header__logo--lg {
-  height: 36px;
-  width: 36px;
+  height: 40px;
+  width: 40px;
 }
 
 .mk-header__actions {
@@ -504,8 +486,8 @@ html[data-bs-theme='dark'] .mk-nav__link--dropdown {
 }
 
 .mk-mobile-offcanvas__logo {
-  height: 32px;
-  width: 32px;
+  height: 36px;
+  width: 36px;
   object-fit: contain;
   flex-shrink: 0;
 }
