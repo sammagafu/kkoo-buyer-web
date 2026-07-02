@@ -17,11 +17,11 @@ jobs:
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
           script: |
-            set -e
+            set -euo pipefail
             cd "${{ secrets.DO_APP_DIR }}"
-            git pull
+            git pull origin main
             npm ci
-            npm run build
-            rsync -av --delete dist/ "${{ secrets.DO_WEB_DIR }}/"
+            VITE_API_BASE_URL=https://api.kkooapp.co.tz/api/v1 npm run build-only
+            sudo rsync -av --delete dist/ "${{ secrets.DO_WEB_DIR }}/"
             sudo nginx -t
             sudo systemctl reload nginx
