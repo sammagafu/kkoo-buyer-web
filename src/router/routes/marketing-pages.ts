@@ -9,7 +9,7 @@ export const pagesRoutes = [
             description:
                 'Shop and pay on the Kkoo buyers app. Run catalog, orders, delivery, and payouts on the Kkoo admin site. Escrow, tracking, rewards—one KKOO ecosystem for shoppers and teams.',
         },
-        component: () => import('@/views/marketing/Landing.vue'),
+        component: () => import('@/views/marketing/partials/LandingPremiumPage.vue'),
     },
     {
         path: '/app',

@@ -8,8 +8,8 @@
           <p class="lp-audience__lead">{{ t('landing.premium.creatorLead') }}</p>
 
           <div class="lp-creator-commission">
-            <span class="lp-creator-commission__rate">{{ t('landing.premium.creatorCommissionRate') }}</span>
-            <span class="lp-creator-commission__desc">{{ t('landing.premium.creatorCommissionDesc') }}</span>
+            <span class="lp-creator-commission__rate">{{ creatorCommissionRate }}</span>
+            <span class="lp-creator-commission__desc">{{ creatorCommissionDesc }}</span>
           </div>
 
           <p class="lp-audience__proof">
@@ -29,22 +29,6 @@
             <h3>{{ t(perk.titleKey) }}</h3>
             <p>{{ t(perk.descKey) }}</p>
           </article>
-
-          <div class="lp-creator-preview" aria-hidden="true">
-            <div class="lp-creator-preview__bar" />
-            <div class="lp-creator-preview__stat">
-              <span>{{ t('landing.premium.creatorPreviewClicks') }}</span>
-              <strong>1,284</strong>
-            </div>
-            <div class="lp-creator-preview__stat">
-              <span>{{ t('landing.premium.creatorPreviewOrders') }}</span>
-              <strong>96</strong>
-            </div>
-            <div class="lp-creator-preview__stat lp-creator-preview__stat--highlight">
-              <span>{{ t('landing.premium.creatorPreviewEarned') }}</span>
-              <strong>TZS 428K</strong>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -52,9 +36,29 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
+import { useKkooPricing } from '@/composables/useKkooPricing'
 import { creatorPerks, creatorSignupUrl } from '@/config/landing-audiences'
 
 const { t } = useI18n()
+const { config: pricingConfig, load: loadPricing } = useKkooPricing()
+
+const creatorCommissionRate = computed(() =>
+  t('landing.premium.creatorCommissionRateLive', {
+    percent: pricingConfig.value.creator.shareCommissionPercent,
+  }),
+)
+
+const creatorCommissionDesc = computed(() =>
+  t('landing.premium.creatorCommissionDescLive', {
+    amount: Math.round(pricingConfig.value.creator.avgOrderTzs).toLocaleString('en-TZ'),
+    currency: pricingConfig.value.currency,
+  }),
+)
+
+onMounted(() => {
+  void loadPricing()
+})
 </script>

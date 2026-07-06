@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import LandingStoreBadges from '@/views/marketing/components/LandingStoreBadges.vue'
+import LandingStoreBadges from '@/views/marketing/partials/LandingStoreBadges.vue'
 import LandingPhoneMockup from '@/views/marketing/partials/LandingPhoneMockup.vue'
 import { appLinks } from '@/config/app-links'
 import { buyerRoutes } from '@/config/landing-links'

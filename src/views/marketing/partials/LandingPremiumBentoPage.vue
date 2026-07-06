@@ -2,38 +2,6 @@
   <div ref="rootRef" class="lp-bento">
     <LandingPremiumHeroShowcase />
 
-    <!-- Visual regions -->
-    <section id="regions" class="lp-bento-section">
-      <div class="ui-container">
-        <header class="lp-bento-section__head lp-bento-section__head--split ui-reveal">
-          <h2 class="lp-bento-section__title">
-            {{ t('landing.sisyphus.regionsLine1') }}
-            <span class="lp-bento-accent">{{ t('landing.sisyphus.regionsAccent') }}</span>
-          </h2>
-          <p class="lp-bento-section__desc">{{ t('landing.sisyphus.regionsDesc') }}</p>
-        </header>
-
-        <div class="lp-bento-regions">
-          <component
-            v-for="card in premiumRegionCards"
-            :key="card.key"
-            :is="regionCardTag(card)"
-            :href="regionCardHref(card)"
-            :to="regionCardTo(card)"
-            class="lp-bento-regions__card ui-reveal"
-            :aria-label="t(card.labelKey)"
-            @click="onRegionCardClick(card, $event)"
-          >
-            <img :src="card.image" :alt="t(card.altKey)" loading="lazy" />
-            <span class="lp-bento-regions__pill">
-              <Icon :icon="card.icon" aria-hidden="true" />
-              {{ t(card.labelKey) }}
-            </span>
-          </component>
-        </div>
-      </div>
-    </section>
-
     <LandingPremiumSuperApp />
     <LandingPremiumSellerSection />
     <LandingPremiumRiderSection />
@@ -42,42 +10,43 @@
     <!-- Project showcase -->
     <section id="showcase" class="lp-bento-section">
       <div class="ui-container">
-        <header class="lp-bento-section__head lp-bento-section__head--row ui-reveal">
+        <header class="lp-bento-section__head lp-bento-section__head--split ui-reveal">
           <h2 class="lp-bento-section__title">
             {{ t('landing.sisyphus.showcaseLine1') }}
             <span class="lp-bento-accent">{{ t('landing.sisyphus.showcaseAccent') }}</span>
           </h2>
-          <div class="lp-bento-section__actions">
-            <a
-              :href="landingAnchors.download.hash"
-              class="lp-bento-btn lp-bento-btn--primary"
-              @click.prevent="onAnchorClick('download', $event)"
-            >
-              {{ t('landing.premium.ctaDownloadProtected') }}
-            </a>
+          <div class="lp-bento-section__aside">
+            <p class="lp-bento-section__desc">{{ t('landing.premium.showcaseDesc') }}</p>
           </div>
         </header>
 
-        <div class="lp-bento-showcase" role="list">
-          <router-link
-            v-for="(item, index) in premiumShowcaseItems"
-            :key="item.key"
-            :to="item.to ?? buyerRoutes.marketplace"
-            class="lp-bento-showcase__card ui-reveal"
-            :class="{ 'lp-bento-showcase__card--wide': item.wide }"
-            role="listitem"
-            :aria-label="t(item.titleKey)"
-          >
-            <div class="lp-bento-showcase__frame">
-              <img :src="item.image" :alt="t(item.altKey)" loading="lazy" />
-              <div class="lp-bento-showcase__overlay" aria-hidden="true" />
-              <span class="lp-bento-showcase__index">{{ String(index + 1).padStart(2, '0') }}</span>
-              <div class="lp-bento-showcase__meta">
-                <h3>{{ t(item.titleKey) }}</h3>
-                <p>{{ t(item.descKey) }}</p>
+        <div
+          class="lp-bento-showcase"
+          role="list"
+          :aria-label="t('landing.premium.showcaseScrollAria')"
+        >
+          <div class="lp-bento-showcase__track">
+            <router-link
+              v-for="item in premiumShowcaseItems"
+              :key="item.key"
+              :to="item.to ?? buyerRoutes.marketplace"
+              class="lp-bento-showcase__card ui-reveal"
+              role="listitem"
+              :aria-label="t(item.titleKey)"
+            >
+              <div class="lp-bento-showcase__cover">
+                <img :src="item.image" :alt="t(item.altKey)" loading="lazy" />
+                <div class="lp-bento-showcase__overlay" aria-hidden="true" />
+                <span class="lp-bento-showcase__badge" aria-hidden="true">
+                  <Icon :icon="item.icon" />
+                </span>
+                <div class="lp-bento-showcase__body">
+                  <h3>{{ t(item.titleKey) }}</h3>
+                  <p>{{ t(item.descKey) }}</p>
+                </div>
               </div>
-            </div>
-          </router-link>
+            </router-link>
+          </div>
         </div>
       </div>
     </section>
@@ -152,44 +121,12 @@ import {
   testimonialRoleTabs,
   type TestimonialRole,
 } from '@/config/landing-audiences'
-import {
-  premiumRegionCards,
-  premiumShowcaseItems,
-  type PremiumRegionCard,
-} from '@/config/landing-premium'
-import { landingAnchors, buyerRoutes } from '@/config/landing-links'
+import { premiumShowcaseItems } from '@/config/landing-premium'
+import { buyerRoutes } from '@/config/landing-links'
 import { observeRevealChildren } from '@/composables/useLandingReveal'
-import { useLandingPillar } from '@/composables/useLandingPillar'
-import { useLandingScroll } from '@/composables/useLandingScroll'
 
 const { t } = useI18n()
-const { onAnchorClick } = useLandingScroll()
-const { navigateToPillar } = useLandingPillar()
 const rootRef = ref<HTMLElement | null>(null)
-
-function regionCardTag(card: PremiumRegionCard) {
-  return card.link.kind === 'route' ? 'router-link' : 'a'
-}
-
-function regionCardHref(card: PremiumRegionCard) {
-  if (card.link.kind === 'pillar') return `#services-${card.link.pillar}`
-  if (card.link.kind === 'anchor') return `#${card.link.sectionId}`
-  return undefined
-}
-
-function regionCardTo(card: PremiumRegionCard) {
-  return card.link.kind === 'route' ? card.link.to : undefined
-}
-
-function onRegionCardClick(card: PremiumRegionCard, event: MouseEvent) {
-  if (card.link.kind === 'route') return
-  event.preventDefault()
-  if (card.link.kind === 'pillar') {
-    navigateToPillar(card.link.pillar)
-    return
-  }
-  onAnchorClick(card.link.sectionId, event)
-}
 
 type Testimonial = { name: string; role: string; text: string; initials: string }
 

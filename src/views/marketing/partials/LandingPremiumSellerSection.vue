@@ -79,9 +79,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
+import { useKkooPricing } from '@/composables/useKkooPricing'
+import { estimateSellerMonthlyEarnings, formatTzs } from '@/utils/kkooPricing'
 import {
   bizSellerRegisterUrl,
   sellerBenefitPills,
@@ -90,6 +92,7 @@ import {
 } from '@/config/landing-audiences'
 
 const { t } = useI18n()
+const { config: pricingConfig, load: loadPricing } = useKkooPricing()
 
 const name = ref('')
 const phone = ref('')
@@ -97,10 +100,8 @@ const businessType = ref(sellerBusinessTypes[0].value)
 const ordersPerMonth = ref(80)
 
 const formattedEstimate = computed(() => {
-  const avgOrderTzs = 45000
-  const margin = 0.22
-  const monthly = Math.round(ordersPerMonth.value * avgOrderTzs * margin)
-  return new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(monthly)
+  const amount = estimateSellerMonthlyEarnings(ordersPerMonth.value, pricingConfig.value)
+  return formatTzs(amount, pricingConfig.value.currency)
 })
 
 function onSubmit() {
@@ -111,4 +112,8 @@ function onSubmit() {
   })
   window.location.href = `${bizSellerRegisterUrl}?${params.toString()}`
 }
+
+onMounted(() => {
+  void loadPricing()
+})
 </script>

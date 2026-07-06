@@ -57,7 +57,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
-import LandingStoreBadges from '@/views/marketing/components/LandingStoreBadges.vue'
+import LandingStoreBadges from '@/views/marketing/partials/LandingStoreBadges.vue'
 import LandingPhoneMockup from '@/views/marketing/partials/LandingPhoneMockup.vue'
 import { audienceSwitcherItems, heroMockupSlides } from '@/config/landing-audiences'
 import { buyerRoutes } from '@/config/landing-links'

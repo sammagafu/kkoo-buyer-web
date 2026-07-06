@@ -55,7 +55,7 @@
         </div>
 
         <div class="hp-footer__col">
-          <h6 class="hp-footer__heading">{{ t('landing.footerCompany') }}</h6>
+          <h6 class="hp-footer__heading">{{ t('landing.footerCompanyHelp') }}</h6>
           <router-link :to="{ name: 'pages.app-homepage' }">{{ t('appHomepage.footerLink') }}</router-link>
           <router-link :to="buyerRoutes.careers">{{ t('landing.footerCareers') }}</router-link>
           <router-link v-if="!isAuthenticated" :to="buyerRoutes.partnerRegister">
@@ -67,10 +67,6 @@
           <template v-else>
             <router-link :to="{ name: 'auth.sign-in' }">{{ t('landing.footerSignIn') }}</router-link>
           </template>
-        </div>
-
-        <div class="hp-footer__col">
-          <h6 class="hp-footer__heading">{{ t('landing.footerHelp') }}</h6>
           <router-link :to="buyerRoutes.community">{{ t('landing.navCommunity') }}</router-link>
           <router-link :to="{ name: 'pages.terms' }">{{ t('landing.footerTermsOfUse') }}</router-link>
           <router-link :to="{ name: 'pages.privacy' }">{{ t('landing.footerPrivacyPolicy') }}</router-link>
