@@ -15,6 +15,17 @@ function getSavedLocale(): string {
   } catch {
     // ignore
   }
+  // First visit: follow the device language for Swahili/French speakers.
+  try {
+    const langs = navigator.languages?.length ? navigator.languages : [navigator.language]
+    for (const lang of langs) {
+      const base = (lang ?? '').toLowerCase().split('-')[0]
+      if (base === 'sw' || base === 'fr') return base
+      if (base === 'en') return 'en'
+    }
+  } catch {
+    // ignore (SSR or restricted environments)
+  }
   return 'en'
 }
 

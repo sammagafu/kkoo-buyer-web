@@ -125,7 +125,7 @@ export const buyerXpVerticalsFr = {
       orders: { title: 'Commandes', subtitle: 'Suivi & historique' },
       reservations: { title: 'Réservations', subtitle: 'Tables & hôtels' },
       wallet: { title: 'Portefeuille', subtitle: 'Solde & recharge' },
-      rewards: { title: 'Récompenses', subtitle: 'Points & bons' },
+      rewards: { title: 'Récompenses', subtitle: 'Jusqu\'à 1 % · valable sur toute commande' },
       gamification: { title: 'XP & séries', subtitle: 'Succès' },
       'weekly-pass': { title: 'Pass hebdo', subtitle: 'Défis' },
       referral: { title: 'Parrainer', subtitle: 'Gagnez ensemble' },
@@ -483,5 +483,19 @@ export const buyerXpVerticalsFr = {
     channelReferral: 'Parrainage',
     channelShare: 'Lien partagé',
     channelRecommendation: 'Recommandation',
+  },
+  rewards: {
+    tagline:
+      'Gagnez jusqu\'à 1 % en points KKOO sur chaque achat. Utilisez vos points sur la nourriture, les courses, les shops et plus — jusqu\'à 25 % de réduction sur votre commande.',
+    policyTagline:
+      'Gagnez jusqu\'à 1 % en points KKOO sur chaque achat. Utilisez vos points sur la nourriture, les courses, les shops et plus — jusqu\'à 25 % de réduction sur votre commande.',
+  },
+  wallet: {
+    policyTagline:
+      'Gagnez jusqu\'à 1 % en points KKOO sur chaque achat. Utilisez vos points sur la nourriture, les courses, les shops et plus — jusqu\'à 25 % de réduction sur votre commande.',
+  },
+  checkout: {
+    loyaltyPolicyNote:
+      'Gagnez jusqu\'à 1 % en points KKOO sur chaque achat. Utilisez vos points sur la nourriture, les courses, les shops et plus — jusqu\'à 25 % de réduction sur votre commande.',
   },
 } as const

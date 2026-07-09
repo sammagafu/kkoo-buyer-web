@@ -242,7 +242,7 @@ export default {
     downloadWhisper2: 'Vendeurs payés à l’échéance—acheteurs avec preuve de livraison.',
     downloadWhisper3: 'Astuce : quatre clics sur la pastille « Obtenir l’app ».',
     downloadWhisper4: 'Téléphone en poche. Dashboard au bureau.',
-    downloadWhisper5: 'Marketplace · Eats · Rides — même confiance.',
+    downloadWhisper5: 'Shopping · Livraison · Business — même confiance.',
     downloadLaneBuyers: "J'achète",
     downloadLaneSellers: 'Je vends',
     downloadLaneA11y: 'Choisissez votre voie KKOO',

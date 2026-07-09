@@ -33,21 +33,26 @@
           <ul class="lp-services__list">
             <li v-for="item in flatItems" :key="item.key">
               <component
-                :is="item.href ? 'a' : 'router-link'"
-                :href="item.href"
-                :to="item.to"
+                :is="item.comingSoon ? 'div' : item.href ? 'a' : 'router-link'"
+                :href="item.comingSoon ? undefined : item.href"
+                :to="item.comingSoon ? undefined : item.to"
                 class="lp-services__row text-decoration-none"
-                :target="item.href ? '_blank' : undefined"
-                :rel="item.href ? 'noopener noreferrer' : undefined"
+                :class="{ 'lp-services__row--soon': item.comingSoon }"
+                :target="!item.comingSoon && item.href ? '_blank' : undefined"
+                :rel="!item.comingSoon && item.href ? 'noopener noreferrer' : undefined"
+                :aria-disabled="item.comingSoon ? 'true' : undefined"
               >
                 <span class="lp-services__row-icon" aria-hidden="true">
                   <Icon :icon="item.icon" />
                 </span>
                 <span class="lp-services__row-body">
-                  <span class="lp-services__row-title">{{ t(item.labelKey) }}</span>
+                  <span class="lp-services__row-title">
+                    {{ t(item.labelKey) }}
+                    <span v-if="item.comingSoon" class="lp-services__row-badge">{{ t('landing.superApp.comingSoon') }}</span>
+                  </span>
                   <span class="lp-services__row-desc">{{ t(item.descKey) }}</span>
                 </span>
-                <Icon icon="solar:arrow-right-linear" class="lp-services__row-arrow" aria-hidden="true" />
+                <Icon v-if="!item.comingSoon" icon="solar:arrow-right-linear" class="lp-services__row-arrow" aria-hidden="true" />
               </component>
             </li>
           </ul>

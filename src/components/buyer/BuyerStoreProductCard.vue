@@ -15,7 +15,6 @@
         </div>
         <div class="store-product-card__veil" aria-hidden="true" />
         <span v-if="categoryLabel" class="store-product-card__category">{{ categoryLabel }}</span>
-        <span v-if="priceLabel" class="store-product-card__price-tag">{{ priceLabel }}</span>
         <div v-if="productId" class="store-product-card__actions-top" @click.stop>
           <button
             type="button"
@@ -45,10 +44,8 @@
     </div>
     <div class="store-product-card__meta" @click="emit('open')">
       <p v-if="storeLabel" class="store-product-card__store">{{ storeLabel }}</p>
-      <div class="store-product-card__title-row">
-        <h3 class="store-product-card__title">{{ title || t('buyerXp.products.productFallback') }}</h3>
-        <span v-if="priceLabel" class="store-product-card__price-inline">{{ priceLabel }}</span>
-      </div>
+      <h3 class="store-product-card__title">{{ title || t('buyerXp.products.productFallback') }}</h3>
+      <p v-if="priceLabel" class="store-product-card__price">{{ priceLabel }}</p>
       <p v-if="description" class="store-product-card__desc">{{ description }}</p>
     </div>
   </article>

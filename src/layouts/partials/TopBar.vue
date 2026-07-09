@@ -42,6 +42,18 @@
         </div>
 
         <div class="d-flex align-items-center gap-1">
+          <router-link
+            :to="{ name: 'buyer.messages' }"
+            class="topbar-item topbar-button position-relative d-inline-flex align-items-center justify-content-center text-decoration-none"
+            :aria-label="$t('buyerXp.nav.messages')"
+          >
+            <Icon icon="solar:chat-round-bold" class="fs-24 align-middle" />
+            <span v-if="chatUnreadCount > 0" class="position-absolute topbar-badge fs-10 translate-middle badge bg-danger rounded-pill">
+              {{ chatUnreadCount }}
+              <span class="visually-hidden">unread chats</span>
+            </span>
+          </router-link>
+
           <!-- Seller: Display microsite link -->
           <a
             v-if="auth.isSeller && hasSellerStoreLink"
@@ -222,6 +234,7 @@ import { useSellerStoreLink } from '@/composables/useSellerStoreLink';
 import { toggleDocumentAttribute } from "@/helpers";
 import { profileMenuItems } from "@/layouts/partials/data";
 import { notificationsApi } from '@/api';
+import { listConversations } from '@/api/chat';
 import { ROLES } from '@/acl';
 import { supportedLocales, setLocale as setLocaleStorage, type LocaleCode } from '@/i18n';
 
@@ -265,6 +278,7 @@ const profileRouteTo = computed<RouteLocationRaw>(() => (profileCompletion.profi
 
 const notificationItems = ref<{ id: number; title?: string; message?: string; created_at?: string; read_at?: string | null; data?: Record<string, unknown> }[]>([]);
 const notificationUnreadCount = ref(0);
+const chatUnreadCount = ref(0);
 const notificationLoading = ref(false);
 const notificationMarkingAll = ref(false);
 
@@ -314,6 +328,21 @@ function loadNotifications() {
     notificationItems.value = (list as typeof notificationItems.value) || [];
     notificationUnreadCount.value = (countRes.data?.unread_count ?? 0) as number;
   }).finally(() => { notificationLoading.value = false; });
+}
+
+async function loadChatUnread() {
+  if (!auth.isAuthenticated) {
+    chatUnreadCount.value = 0;
+    return;
+  }
+  try {
+    const data = await listConversations({ page_size: 50 });
+    const results = Array.isArray(data?.results) ? data.results : [];
+    const unread = results.reduce((sum, conv) => sum + Math.max(0, conv.unread_count || 0), 0);
+    chatUnreadCount.value = unread > 99 ? 99 : unread;
+  } catch {
+    chatUnreadCount.value = 0;
+  }
 }
 
 const topbarAvatarUrl = computed(() => {
@@ -379,6 +408,7 @@ const showBackdrop = () => {
 onMounted(() => {
   useLayout.init();
   loadNotifications();
+  void loadChatUnread();
 });
 </script>
 

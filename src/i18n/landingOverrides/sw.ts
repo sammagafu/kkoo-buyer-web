@@ -242,7 +242,7 @@ export default {
     downloadWhisper2: 'Wauzaji wanalipwa kwa ratiba—wanunuzi wanapata uthibitisho.',
     downloadWhisper3: 'Kidokezo: gonga kidonge cha “Pata programu” mara nne.',
     downloadWhisper4: 'Simu mfukoni. Dashibodi mezani.',
-    downloadWhisper5: 'Marketplace · Eats · Rides — uaminifu mmoja.',
+    downloadWhisper5: 'Ununuzi · Usafirishaji · Biashara — uaminifu mmoja.',
     downloadLaneBuyers: 'Ninanunua',
     downloadLaneSellers: 'Ninauza',
     downloadLaneA11y: 'Chagua njia yako ya KKOO',

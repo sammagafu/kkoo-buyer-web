@@ -157,7 +157,7 @@ html[data-bs-theme='dark'] .mk-landing--premium .lp-bento-pillars__tab--sell.lp-
   width: 100%;
   max-width: 72rem;
   margin-inline: auto;
-  padding-inline: clamp(1rem, 4vw, 1.5rem);
+  padding-inline: clamp(1.25rem, 5vw, 2rem);
 }
 
 .lp-bento-accent {
@@ -1632,6 +1632,29 @@ html[data-bs-theme='dark'] .mk-landing--premium .lp-bento-pillars__tab--sell.lp-
   color: var(--lp-bento-muted);
 }
 
+.lp-services__row--soon {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.lp-services__row--soon:hover .lp-services__row-icon {
+  transform: none;
+}
+
+.lp-services__row-badge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  background: rgba(var(--lp-bento-primary-rgb), 0.12);
+  color: var(--lp-bento-primary);
+}
+
 .lp-services__row-arrow {
   flex-shrink: 0;
   font-size: 1rem;
@@ -2412,6 +2435,13 @@ html[data-bs-theme='light'] .lp-hero-showcase--download .lp-hero-showcase__stat-
   color: var(--lp-bento-ink);
 }
 
+.lp-rider-calc__breakdown {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--lp-bento-muted);
+}
+
 .lp-rider__highlights {
   display: grid;
   gap: 0.65rem;
@@ -2797,9 +2827,8 @@ html[data-bs-theme='dark'] .lp-rider__reqs li {
   gap: 1rem;
 }
 
-.lp-seller-form,
-.lp-seller-calc {
-  padding: 1.35rem;
+.lp-seller-form {
+  padding: clamp(1.25rem, 3vw, 1.75rem);
   border-radius: var(--lp-bento-radius);
   background: var(--lp-bento-surface);
   border: 1px solid color-mix(in srgb, var(--lp-bento-ink) 7%, transparent);
@@ -2807,20 +2836,17 @@ html[data-bs-theme='dark'] .lp-rider__reqs li {
   transition: box-shadow 0.35s var(--lp-ease-out);
 }
 
-.lp-seller-form:focus-within,
-.lp-seller-calc:focus-within {
+.lp-seller-form:focus-within {
   box-shadow: var(--lp-bento-shadow-hover);
 }
 
-.lp-seller-form__title,
-.lp-seller-calc__title {
+.lp-seller-form__title {
   margin: 0 0 0.35rem;
   font-size: 1.05rem;
   font-weight: 700;
 }
 
-.lp-seller-form__lead,
-.lp-seller-calc__lead {
+.lp-seller-form__lead {
   margin: 0 0 1rem;
   font-size: 0.9rem;
   color: var(--lp-bento-muted);
@@ -2844,12 +2870,12 @@ html[data-bs-theme='dark'] .lp-rider__reqs li {
   font: inherit;
 }
 
-.lp-seller-calc__result {
-  margin: 0.75rem 0 0;
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: var(--lp-bento-primary);
+.lp-seller-form__submit {
+  width: auto;
+  min-width: 11rem;
+  margin-top: 0.25rem;
 }
+
 
 .lp-audience__split {
   display: grid;
@@ -3058,6 +3084,13 @@ html[data-bs-theme='dark'] .lp-rider__reqs li {
 
 .lp-testimonial-move {
   transition: transform 0.45s var(--lp-ease-out);
+}
+
+
+// Anchored sections land below the sticky header on jump navigation.
+.lp-bento-section,
+.lp-bento-cta {
+  scroll-margin-top: 5rem;
 }
 
 // Super-app panel swap

@@ -395,8 +395,7 @@ html.theme-dark {
     background: var(--buyer-input-bg);
   }
 
-  .shop-top__search,
-  .store-product-card__price-tag {
+  .shop-top__search {
     background: var(--buyer-card-bg, var(--buyer-surface));
     border-color: var(--buyer-card-border, var(--buyer-border-strong));
     color: var(--buyer-ink);

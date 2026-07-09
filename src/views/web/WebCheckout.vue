@@ -105,11 +105,14 @@
       <b-form-checkbox
         v-if="loyaltyPointsAvailable"
         v-model="useLoyaltyPoints"
-        class="mb-3"
+        class="mb-2"
         :disabled="!isAuthenticated"
       >
         {{ t('buyerXp.checkout.useLoyaltyPoints', { points: loyaltyBalance }) }}
       </b-form-checkbox>
+      <p v-if="loyaltyPointsAvailable" class="small text-muted mb-3">
+        {{ t('buyerXp.checkout.loyaltyPolicyNote') }}
+      </p>
 
       <b-form-group :label="t('buyerXp.checkout.payment')" label-for="payment" class="mb-3">
         <p v-if="paymentMethodsLoading" class="text-muted small mb-2">{{ t('buyerXp.checkout.loadingPayments') }}</p>
@@ -147,6 +150,7 @@ import { useRoute } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
 import { addressesApi, ordersUserApi, cartApi, paymentsApi } from '@/api'
+import { rewardsUserApi } from '@/api/rewards'
 import { pharmacyApi } from '@/api/pharmacy'
 import type { PaymentMethodRow } from '@/api/payments'
 import { useAuthStore } from '@/stores/auth'
@@ -177,14 +181,69 @@ const paymentMethods = ref<PaymentMethodRow[]>([])
 const prescriptionIds = ref<number[]>([])
 const giftVoucherCode = ref('')
 const useLoyaltyPoints = ref(false)
+const loyaltyBalance = ref(0)
+const maxLoyaltyPoints = ref(0)
+const loyaltyLoading = ref(false)
 
 const isAuthenticated = computed(() => auth.isAuthenticated)
 
 const needsRx = computed(() => cartItems.value.some((i) => i.requiresPrescription))
 
-const loyaltyBalance = computed(() => auth.user?.loyalty_points_balance ?? 0)
+const loyaltyPointsAvailable = computed(
+  () => isAuthenticated.value && loyaltyBalance.value >= 100 && maxLoyaltyPoints.value >= 100,
+)
 
-const loyaltyPointsAvailable = computed(() => isAuthenticated.value && loyaltyBalance.value >= 100)
+function checkoutVertical(): string {
+  const path = route.path.toLowerCase()
+  if (path.includes('/pharmacy') || needsRx.value) return 'pharmacy'
+  if (path.includes('/eats') || path.includes('/restaurant')) return 'food'
+  if (path.includes('/grocery')) return 'grocery'
+  return 'marketplace'
+}
+
+async function loadLoyalty() {
+  if (!isAuthenticated.value) return
+  loyaltyLoading.value = true
+  try {
+    const { data } = await rewardsUserApi.getBalance()
+    loyaltyBalance.value = Math.round(data?.available_balance ?? data?.total_balance ?? 0)
+    await refreshLoyaltyQuote()
+  } catch {
+    loyaltyBalance.value = Math.round(auth.user?.loyalty_points_balance ?? 0)
+  } finally {
+    loyaltyLoading.value = false
+  }
+}
+
+async function refreshLoyaltyQuote() {
+  if (!isAuthenticated.value || loyaltyBalance.value < 100) {
+    maxLoyaltyPoints.value = 0
+    return
+  }
+  const subtotal = cartItems.value.reduce((sum, item) => {
+    if (item.total_price != null) return sum + Number(item.total_price)
+    const price = Number(item.product?.base_price ?? item.product?.price ?? 0)
+    return sum + price * Number(item.quantity ?? 1)
+  }, 0)
+  if (subtotal <= 0) {
+    maxLoyaltyPoints.value = 0
+    return
+  }
+  try {
+    const { data } = await rewardsUserApi.quoteRedemption({
+      vertical: checkoutVertical(),
+      subtotal,
+      fees: 0,
+    })
+    if (data?.eligible) {
+      maxLoyaltyPoints.value = Math.floor(Number(data.max_points_usable ?? 0))
+    } else {
+      maxLoyaltyPoints.value = 0
+    }
+  } catch {
+    maxLoyaltyPoints.value = loyaltyBalance.value
+  }
+}
 
 const fulfillmentType = computed<FulfillmentType>(() => {
   const raw = String(route.query.fulfillment || '').toLowerCase()
@@ -348,8 +407,8 @@ async function placeOrder() {
     if (giftVoucherCode.value.trim()) {
       payload.gift_voucher_code = giftVoucherCode.value.trim()
     }
-    if (useLoyaltyPoints.value && loyaltyBalance.value > 0) {
-      payload.use_loyalty_points = true
+    if (useLoyaltyPoints.value && maxLoyaltyPoints.value > 0) {
+      payload.use_loyalty_points = maxLoyaltyPoints.value
     }
     if (prescriptionIds.value.length) {
       payload.prescription_ids = [...prescriptionIds.value]
@@ -396,10 +455,19 @@ watch(selectedAddressId, (id) => {
   if (id != null) deliveryLocationText.value = ''
 })
 
+watch(cartItems, () => {
+  void refreshLoyaltyQuote()
+}, { deep: true })
+
+watch(isAuthenticated, (authed) => {
+  if (authed) void loadLoyalty()
+})
+
 onMounted(() => {
-  void loadCart()
+  void loadCart().then(() => refreshLoyaltyQuote())
   void loadAddresses()
   void loadPaymentMethods()
+  void loadLoyalty()
 })
 </script>
 

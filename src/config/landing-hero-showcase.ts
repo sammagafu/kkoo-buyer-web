@@ -2,11 +2,9 @@ import type { RouteLocationRaw } from 'vue-router'
 import { bizSellerRegisterUrl, buyerRoutes } from '@/config/landing-links'
 import type { SuperAppPillarId } from '@/config/landing-superapp'
 import heroImage from '@/assets/landing/hero.jpg'
-import foodImage from '@/assets/landing/services/food.jpg'
 import shopImage from '@/assets/landing/services/shop.jpg'
 import rideImage from '@/assets/landing/services/ride.jpg'
 import sendImage from '@/assets/landing/services/Untitled-2.jpg'
-import communityImage from '@/assets/landing/cat.jpg'
 
 /** KKOO brand palette — purple, gold, ink only */
 const KKOO_BRAND = {
@@ -51,7 +49,7 @@ export type HeroShowcaseSlide = {
   href?: string
 }
 
-/** Every major KKOO vertical — one hero slide each. */
+/** Launch verticals only — shopping, delivery/send, and business tools (food/rides return later). */
 export const premiumHeroSlides: HeroShowcaseSlide[] = [
   {
     key: 'home',
@@ -68,111 +66,6 @@ export const premiumHeroSlides: HeroShowcaseSlide[] = [
     chipLabelKey: 'landing.heroShowcase.chipLabel',
     altKey: 'landing.premium.heroMockupAlt',
     to: buyerRoutes.marketplace,
-  },
-  {
-    key: 'food-local',
-    pillar: 'eat',
-    image: foodImage,
-    tint: brandTint('eat'),
-    wordLeftKey: 'landing.heroShowcase.foodLocal.wordLeft',
-    wordRightKey: 'landing.heroShowcase.foodLocal.wordRight',
-    brandKey: 'landing.heroShowcase.foodLocal.brand',
-    descKey: 'landing.heroShowcase.foodLocal.desc',
-    ctaKey: 'landing.heroShowcase.foodLocal.cta',
-    tabLabelKey: 'landing.heroShowcase.foodLocal.tab',
-    chipLabelKey: 'landing.heroShowcase.chipLabel',
-    altKey: 'landing.heroShowcase.foodLocal.tab',
-    to: buyerRoutes.marketplace,
-  },
-  {
-    key: 'hotels',
-    pillar: 'buy',
-    image: heroImage,
-    tint: brandTint('buy'),
-    wordLeftKey: 'landing.heroShowcase.hotels.wordLeft',
-    wordRightKey: 'landing.heroShowcase.hotels.wordRight',
-    brandKey: 'landing.heroShowcase.hotels.brand',
-    descKey: 'landing.superApp.hotelsDesc',
-    ctaKey: 'landing.heroShowcase.hotels.cta',
-    tabLabelKey: 'landing.exploreHotels',
-    chipLabelKey: 'landing.heroShowcase.chipLabel',
-    altKey: 'landing.exploreHotels',
-    to: buyerRoutes.hotels,
-  },
-  {
-    key: 'vouchers',
-    pillar: 'buy',
-    image: shopImage,
-    tint: brandTint('buy'),
-    wordLeftKey: 'landing.heroShowcase.vouchers.wordLeft',
-    wordRightKey: 'landing.heroShowcase.vouchers.wordRight',
-    brandKey: 'landing.heroShowcase.vouchers.brand',
-    descKey: 'landing.superApp.vouchersDesc',
-    ctaKey: 'landing.heroShowcase.vouchers.cta',
-    tabLabelKey: 'landing.exploreVouchers',
-    chipLabelKey: 'landing.heroShowcase.chipLabel',
-    altKey: 'landing.exploreVouchers',
-    to: buyerRoutes.vouchers,
-  },
-  {
-    key: 'community',
-    pillar: 'buy',
-    image: communityImage,
-    tint: brandTint('buy'),
-    wordLeftKey: 'landing.heroShowcase.community.wordLeft',
-    wordRightKey: 'landing.heroShowcase.community.wordRight',
-    brandKey: 'landing.heroShowcase.community.brand',
-    descKey: 'landing.superApp.communityDesc',
-    ctaKey: 'landing.heroShowcase.community.cta',
-    tabLabelKey: 'landing.navCommunity',
-    chipLabelKey: 'landing.heroShowcase.chipLabel',
-    altKey: 'landing.navCommunity',
-    to: buyerRoutes.community,
-  },
-  {
-    key: 'share-earn',
-    pillar: 'buy',
-    image: communityImage,
-    tint: brandTint('buy'),
-    wordLeftKey: 'landing.heroShowcase.shareEarn.wordLeft',
-    wordRightKey: 'landing.heroShowcase.shareEarn.wordRight',
-    brandKey: 'landing.heroShowcase.shareEarn.brand',
-    descKey: 'landing.superApp.shareEarnDesc',
-    ctaKey: 'landing.heroShowcase.shareEarn.cta',
-    tabLabelKey: 'landing.exploreShareEarn',
-    chipLabelKey: 'landing.heroShowcase.chipLabel',
-    altKey: 'landing.exploreShareEarn',
-    to: buyerRoutes.shareEarn,
-  },
-  {
-    key: 'ride',
-    pillar: 'go',
-    image: rideImage,
-    tint: brandTint('go'),
-    wordLeftKey: 'landing.heroShowcase.ride.wordLeft',
-    wordRightKey: 'landing.heroShowcase.ride.wordRight',
-    brandKey: 'landing.heroShowcase.ride.brand',
-    descKey: 'landing.superApp.rideDesc',
-    ctaKey: 'landing.heroShowcase.ride.cta',
-    tabLabelKey: 'landing.navRide',
-    chipLabelKey: 'landing.heroShowcase.chipLabel',
-    altKey: 'landing.navRide',
-    to: buyerRoutes.ride,
-  },
-  {
-    key: 'courier',
-    pillar: 'go',
-    image: rideImage,
-    tint: brandTint('go'),
-    wordLeftKey: 'landing.heroShowcase.courier.wordLeft',
-    wordRightKey: 'landing.heroShowcase.courier.wordRight',
-    brandKey: 'landing.heroShowcase.courier.brand',
-    descKey: 'landing.superApp.courierDesc',
-    ctaKey: 'landing.heroShowcase.courier.cta',
-    tabLabelKey: 'landing.exploreCourier',
-    chipLabelKey: 'landing.heroShowcase.chipLabel',
-    altKey: 'landing.exploreCourier',
-    to: buyerRoutes.courier,
   },
   {
     key: 'send',

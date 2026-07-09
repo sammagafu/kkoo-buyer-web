@@ -1,7 +1,8 @@
 import { ref } from 'vue'
 import type { SuperAppPillarId } from '@/config/landing-superapp'
 
-const activePillar = ref<SuperAppPillarId>('eat')
+// Launch focus: shopping first (food and rides are gated as coming soon).
+const activePillar = ref<SuperAppPillarId>('buy')
 
 const pillarHashRe = /^#services-(eat|buy|go|sell)$/
 

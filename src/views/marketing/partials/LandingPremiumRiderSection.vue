@@ -5,6 +5,7 @@
           <p class="lp-rider__eyebrow">{{ t('landing.premium.riderEyebrow') }}</p>
           <h2 class="lp-rider__title">{{ t('landing.premium.riderTitle') }}</h2>
           <div
+            v-if="hasLivePricing"
             class="lp-rider__earnings-hero"
             :aria-label="t('landing.premium.riderEarnings')"
           >
@@ -19,8 +20,18 @@
               <p class="lp-rider-calc__result">
                 {{ t('landing.premium.riderCalcResult', { amount: weeklyEstimateLabel }) }}
               </p>
+              <p class="lp-rider-calc__breakdown">
+                {{ t('landing.premium.riderCalcBreakdown', calcBreakdown) }}
+              </p>
             </div>
             <span class="lp-rider__earnings-note">{{ t('landing.premium.riderEarningsNote') }}</span>
+          </div>
+          <div
+            v-else
+            class="lp-rider__earnings-hero"
+            :aria-label="t('landing.premium.riderEarnings')"
+          >
+            <span class="lp-rider__earnings-unit">{{ t('landing.premium.riderRatesPending') }}</span>
           </div>
           <p class="lp-rider__lead">{{ t('landing.premium.riderLead') }}</p>
         </header>
@@ -116,8 +127,12 @@ import {
 } from '@/config/landing-audiences'
 
 const { t } = useI18n()
-const { config: pricingConfig, load: loadPricing } = useKkooPricing()
+const { config: pricingConfig, source: pricingSource, load: loadPricing } = useKkooPricing()
 const tripsPerDay = ref(8)
+
+// Amounts render only when the platform published real rates; built-in
+// fallback numbers are never shown as earnings claims.
+const hasLivePricing = computed(() => pricingSource.value === 'live')
 
 const weeklyRangeLabel = computed(() =>
   formatCompactTzsRange(
@@ -130,6 +145,13 @@ const weeklyRangeLabel = computed(() =>
 const weeklyEstimateLabel = computed(() =>
   formatTzs(estimateRiderWeeklyEarnings(tripsPerDay.value, pricingConfig.value), pricingConfig.value.currency),
 )
+
+const calcBreakdown = computed(() => ({
+  base: formatTzs(pricingConfig.value.rider.baseFeeTzs, pricingConfig.value.currency),
+  perKm: formatTzs(pricingConfig.value.rider.perKmFeeTzs, pricingConfig.value.currency),
+  km: pricingConfig.value.rider.avgTripDistanceKm,
+  commission: pricingConfig.value.rider.platformCommissionPercent,
+}))
 
 watch(
   () => pricingConfig.value.rider.tripsPerDayMin,

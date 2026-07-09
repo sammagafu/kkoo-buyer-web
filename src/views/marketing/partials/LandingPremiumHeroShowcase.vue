@@ -52,9 +52,9 @@
 
             <LandingStoreBadges layout="row" />
 
-            <p class="lp-download-hero__proof">
+            <p v-if="usersProofValue" class="lp-download-hero__proof">
               <Icon icon="solar:users-group-rounded-bold" aria-hidden="true" />
-              {{ t('landing.premium.downloadHeroProof') }}
+              {{ t('landing.premium.downloadHeroProof', { count: usersProofValue }) }}
             </p>
 
             <div class="lp-download-hero__secondary">
@@ -113,18 +113,23 @@
         />
       </div>
 
-      <div class="lp-hero-showcase__stats" role="list">
+      <!-- Live platform metrics from /public/landing/stats/ — hidden until real numbers arrive. -->
+      <div v-if="liveStats.length" class="lp-hero-showcase__stats" role="list">
         <article
-          v-for="(stat, i) in premiumStats"
+          v-for="(stat, i) in liveStats"
           :key="stat.key"
-          class="lp-hero-showcase__stat ui-reveal"
+          class="lp-hero-showcase__stat"
           :class="{ 'lp-hero-showcase__stat--featured': i === 0 }"
-          :style="{ '--reveal-delay': `${i * 100}ms` }"
           role="listitem"
         >
-          <Icon v-if="stat.icon && i === 0" :icon="stat.icon" class="lp-hero-showcase__stat-icon" aria-hidden="true" />
+          <Icon
+            v-if="i === 0 && iconifyName(stat.icon)"
+            :icon="iconifyName(stat.icon)!"
+            class="lp-hero-showcase__stat-icon"
+            aria-hidden="true"
+          />
           <h3 class="lp-hero-showcase__stat-value">{{ stat.value }}</h3>
-          <p class="lp-hero-showcase__stat-label">{{ t(stat.labelKey) }}</p>
+          <p class="lp-hero-showcase__stat-label">{{ stat.label }}</p>
         </article>
       </div>
     </div>
@@ -132,7 +137,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
@@ -140,7 +145,7 @@ import LandingStoreBadges from '@/views/marketing/partials/LandingStoreBadges.vu
 import { audienceSwitcherItems } from '@/config/landing-audiences'
 import { buyerRoutes } from '@/config/landing-links'
 import { HERO_SHOWCASE_AUTO_MS, premiumHeroSlides, type HeroShowcaseSlide } from '@/config/landing-hero-showcase'
-import { premiumStats } from '@/config/landing-premium'
+import { fetchLandingStats, type LandingStatItem } from '@/api/landing'
 import { useLandingScroll } from '@/composables/useLandingScroll'
 import { observeRevealChildren } from '@/composables/useLandingReveal'
 
@@ -151,6 +156,35 @@ const { scrollToSection } = useLandingScroll()
 
 const activeIndex = ref(0)
 let timer: ReturnType<typeof setInterval> | undefined
+
+/** Live metric tiles from the platform; empty means the strip stays hidden (no invented numbers). */
+const liveStats = ref<LandingStatItem[]>([])
+
+/** Backend sends bootstrap-icon classes ("bi bi-people-fill"); Iconify wants "bi:people-fill". */
+function iconifyName(icon?: string): string | null {
+  const cls = (icon ?? '').trim()
+  if (!cls) return null
+  if (cls.includes(':')) return cls
+  const m = cls.match(/bi-([a-z0-9-]+)/)
+  return m ? `bi:${m[1]}` : null
+}
+
+/** Parses "1.2K+" / "3M+" / "250+" tile values back to a number for thresholds. */
+function parseStatCount(value: string): number {
+  const m = value.trim().match(/^([\d,.]+)\s*([KM]?)/i)
+  if (!m) return 0
+  const n = Number.parseFloat(m[1].replace(/,/g, ''))
+  if (!Number.isFinite(n)) return 0
+  const unit = m[2].toUpperCase()
+  return Math.round(n * (unit === 'M' ? 1_000_000 : unit === 'K' ? 1_000 : 1))
+}
+
+/** Social proof only once there is proof: real user count, shown from 100 users up. */
+const usersProofValue = computed(() => {
+  const tile = liveStats.value.find((s) => s.key === 'wallets' || s.key === 'users')
+  if (!tile) return null
+  return parseStatCount(tile.value) >= 100 ? tile.value : null
+})
 
 function slideCta(slide: HeroShowcaseSlide) {
   if (slide.href) return { is: 'a' as const, href: slide.href, to: undefined }
@@ -170,9 +204,13 @@ function prev() {
   goTo(activeIndex.value - 1)
 }
 
-onMounted(() => {
+onMounted(async () => {
   timer = setInterval(() => next(), HERO_SHOWCASE_AUTO_MS)
   observeRevealChildren(heroRef.value)
+  const payload = await fetchLandingStats()
+  if (payload?.stats?.length) {
+    liveStats.value = payload.stats.slice(0, 4)
+  }
 })
 
 onUnmounted(() => {

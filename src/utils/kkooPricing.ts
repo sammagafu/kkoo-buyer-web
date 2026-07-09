@@ -54,17 +54,16 @@ export function normalizeKkooPricingConfig(
   const seller = { ...DEFAULT_KKOO_PRICING.seller, ...partial.seller }
   const rider = { ...DEFAULT_KKOO_PRICING.rider, ...partial.rider }
   const creator = { ...DEFAULT_KKOO_PRICING.creator, ...partial.creator }
-  return {
+  const config: KkooPricingConfig = {
     currency: partial.currency ?? DEFAULT_KKOO_PRICING.currency,
     seller,
-    rider: {
-      ...rider,
-      tripEarningsTzs: estimateRiderTripEarnings(rider),
-      weeklyEarningsMinTzs: estimateRiderWeeklyEarnings(rider.tripsPerDayMin, rider),
-      weeklyEarningsMaxTzs: estimateRiderWeeklyEarnings(rider.tripsPerDayMax, rider),
-    },
+    rider,
     creator,
   }
+  rider.tripEarningsTzs = estimateRiderTripEarnings(rider)
+  rider.weeklyEarningsMinTzs = estimateRiderWeeklyEarnings(rider.tripsPerDayMin, config)
+  rider.weeklyEarningsMaxTzs = estimateRiderWeeklyEarnings(rider.tripsPerDayMax, config)
+  return config
 }
 
 export function sellerKeepRate(platformCommissionPercent: number) {

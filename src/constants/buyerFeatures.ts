@@ -28,7 +28,7 @@ export const BUYER_ACCOUNT_TILES: BuyerFeatureTile[] = [
   { id: 'orders', title: 'Orders', subtitle: 'Track & history', icon: 'solar:bag-check-bold', routeName: 'buyer.orders', auth: true },
   { id: 'reservations', title: 'Reservations', subtitle: 'Tables & hotels', icon: 'solar:calendar-bold', routeName: 'buyer.reservations', auth: true },
   { id: 'wallet', title: 'Wallet', subtitle: 'Balance & top-up', icon: 'solar:wallet-bold', routeName: 'buyer.wallet', auth: true },
-  { id: 'rewards', title: 'Rewards', subtitle: 'Points & vouchers', icon: 'solar:gift-bold', routeName: 'buyer.rewards', auth: true },
+  { id: 'rewards', title: 'Rewards', subtitle: 'Up to 1% back · redeem on any order', icon: 'solar:gift-bold', routeName: 'buyer.rewards', auth: true },
   { id: 'gamification', title: 'XP & streaks', subtitle: 'Achievements', icon: 'solar:medal-ribbons-star-bold', routeName: 'buyer.gamification', auth: true },
   { id: 'weekly-pass', title: 'Weekly pass', subtitle: 'Challenges', icon: 'solar:ticket-bold', routeName: 'buyer.weekly-pass', auth: true },
   { id: 'referral', title: 'Refer friends', subtitle: 'Earn together', icon: 'solar:users-group-rounded-bold', routeName: 'buyer.referral', auth: true },

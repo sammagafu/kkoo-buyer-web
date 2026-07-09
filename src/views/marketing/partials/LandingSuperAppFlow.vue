@@ -43,13 +43,14 @@
                 <component
                   v-for="(item, idx) in group.items"
                   :key="item.key"
-                  :is="item.href ? 'a' : 'router-link'"
-                  :href="item.href"
-                  :to="item.to"
+                  :is="item.comingSoon ? 'div' : item.href ? 'a' : 'router-link'"
+                  :href="item.comingSoon ? undefined : item.href"
+                  :to="item.comingSoon ? undefined : item.to"
                   class="lp-vivid-card text-decoration-none"
-                  :class="`lp-vivid-card--${accentFor(group.key, idx)}`"
-                  :target="item.href ? '_blank' : undefined"
-                  :rel="item.href ? 'noopener noreferrer' : undefined"
+                  :class="[`lp-vivid-card--${accentFor(group.key, idx)}`, { 'lp-vivid-card--soon': item.comingSoon }]"
+                  :target="!item.comingSoon && item.href ? '_blank' : undefined"
+                  :rel="!item.comingSoon && item.href ? 'noopener noreferrer' : undefined"
+                  :aria-disabled="item.comingSoon ? 'true' : undefined"
                   role="listitem"
                 >
                   <span class="lp-vivid-card__stripe" aria-hidden="true" />
@@ -57,10 +58,13 @@
                     <Icon :icon="item.icon" />
                   </span>
                   <span class="lp-vivid-card__body">
-                    <span class="lp-vivid-card__title">{{ t(item.labelKey) }}</span>
+                    <span class="lp-vivid-card__title">
+                      {{ t(item.labelKey) }}
+                      <span v-if="item.comingSoon" class="lp-vivid-card__badge">{{ t('landing.superApp.comingSoon') }}</span>
+                    </span>
                     <span class="lp-vivid-card__desc">{{ t(item.descKey) }}</span>
                   </span>
-                  <Icon icon="solar:arrow-right-up-linear" class="lp-vivid-card__arrow" aria-hidden="true" />
+                  <Icon v-if="!item.comingSoon" icon="solar:arrow-right-up-linear" class="lp-vivid-card__arrow" aria-hidden="true" />
                 </component>
               </div>
             </div>
@@ -347,6 +351,30 @@ html[data-bs-theme='dark'] .lp-vivid-flow__section--earn {
   font-size: 0.8rem;
   line-height: 1.4;
   color: rgba(var(--bs-body-color-rgb), 0.62);
+}
+
+.lp-vivid-card--soon {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.lp-vivid-card--soon:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.lp-vivid-card__badge {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.08rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  background: rgba(var(--bs-primary-rgb), 0.12);
+  color: var(--bs-primary);
 }
 
 .lp-vivid-card__arrow {

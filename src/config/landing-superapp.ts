@@ -17,6 +17,8 @@ export type SuperAppLink = {
   icon: string
   to?: RouteLocationRaw
   href?: string
+  /** Launch gating: render as a non-clickable "coming soon" card. */
+  comingSoon?: boolean
 }
 
 export type SuperAppServiceGroup = {
@@ -39,39 +41,37 @@ export const superAppAudiences: {
 
 const consumerGroups: SuperAppServiceGroup[] = [
   {
+    key: 'shop',
+    titleKey: 'landing.superApp.groupShop',
+    items: [
+      { key: 'marketplace', labelKey: 'landing.navMarketplace', descKey: 'landing.superApp.marketplaceDesc', icon: 'solar:cart-large-2-bold', to: buyerRoutes.marketplace },
+      { key: 'vouchers', labelKey: 'landing.exploreVouchers', descKey: 'landing.superApp.vouchersDesc', icon: 'solar:ticket-bold', to: buyerRoutes.vouchers },
+    ],
+  },
+  {
     key: 'deliveries',
     titleKey: 'landing.superApp.groupDeliveries',
     items: [
-      { key: 'eats', labelKey: 'landing.navEats', descKey: 'landing.superApp.eatsDesc', icon: 'solar:cup-hot-bold', to: buyerRoutes.eats },
-      { key: 'grocery', labelKey: 'landing.navGrocery', descKey: 'landing.superApp.groceryDesc', icon: 'solar:bag-2-bold', to: buyerRoutes.grocery },
-      { key: 'marketplace', labelKey: 'landing.navMarketplace', descKey: 'landing.superApp.marketplaceDesc', icon: 'solar:cart-large-2-bold', to: buyerRoutes.marketplace },
       { key: 'send', labelKey: 'landing.navSend', descKey: 'landing.superApp.sendDesc', icon: 'solar:box-bold', to: buyerRoutes.send },
-    ],
-  },
-  {
-    key: 'mobility',
-    titleKey: 'landing.superApp.groupMobility',
-    items: [
-      { key: 'ride', labelKey: 'landing.navRide', descKey: 'landing.superApp.rideDesc', icon: 'solar:scooter-bold', to: buyerRoutes.ride },
       { key: 'courier', labelKey: 'landing.exploreCourier', descKey: 'landing.superApp.courierDesc', icon: 'solar:delivery-bold', to: buyerRoutes.courier },
-    ],
-  },
-  {
-    key: 'stay',
-    titleKey: 'landing.superApp.groupStay',
-    items: [
-      { key: 'restaurants', labelKey: 'landing.exploreRestaurants', descKey: 'landing.superApp.restaurantsDesc', icon: 'solar:chef-hat-bold', to: buyerRoutes.restaurants },
-      { key: 'hotels', labelKey: 'landing.exploreHotels', descKey: 'landing.superApp.hotelsDesc', icon: 'solar:bed-bold', to: buyerRoutes.hotels },
-      { key: 'booking', labelKey: 'landing.navBooking', descKey: 'landing.superApp.bookingDesc', icon: 'solar:calendar-bold', to: buyerRoutes.booking },
     ],
   },
   {
     key: 'rewards',
     titleKey: 'landing.superApp.groupRewards',
     items: [
-      { key: 'vouchers', labelKey: 'landing.exploreVouchers', descKey: 'landing.superApp.vouchersDesc', icon: 'solar:ticket-bold', to: buyerRoutes.vouchers },
       { key: 'share-earn', labelKey: 'landing.exploreShareEarn', descKey: 'landing.superApp.shareEarnDesc', icon: 'solar:gift-bold', to: buyerRoutes.shareEarn },
       { key: 'community', labelKey: 'landing.navCommunity', descKey: 'landing.superApp.communityDesc', icon: 'solar:users-group-rounded-bold', to: buyerRoutes.community },
+    ],
+  },
+  {
+    key: 'coming-soon',
+    titleKey: 'landing.superApp.groupComingSoon',
+    items: [
+      { key: 'eats', labelKey: 'landing.navEats', descKey: 'landing.superApp.eatsDesc', icon: 'solar:cup-hot-bold', comingSoon: true },
+      { key: 'grocery', labelKey: 'landing.navGrocery', descKey: 'landing.superApp.groceryDesc', icon: 'solar:bag-2-bold', comingSoon: true },
+      { key: 'ride', labelKey: 'landing.navRide', descKey: 'landing.superApp.rideDesc', icon: 'solar:scooter-bold', comingSoon: true },
+      { key: 'hotels', labelKey: 'landing.exploreHotels', descKey: 'landing.superApp.hotelsDesc', icon: 'solar:bed-bold', comingSoon: true },
     ],
   },
 ]
@@ -103,7 +103,7 @@ const riderGroups: SuperAppServiceGroup[] = [
     titleKey: 'landing.superApp.groupEarnRider',
     items: [
       { key: 'courier', labelKey: 'landing.superApp.driveCourier', descKey: 'landing.superApp.driveCourierDesc', icon: 'solar:delivery-bold', to: buyerRoutes.courier },
-      { key: 'ride', labelKey: 'landing.superApp.driveRide', descKey: 'landing.superApp.driveRideDesc', icon: 'solar:scooter-bold', to: buyerRoutes.ride },
+      { key: 'ride', labelKey: 'landing.superApp.driveRide', descKey: 'landing.superApp.driveRideDesc', icon: 'solar:scooter-bold', comingSoon: true },
     ],
   },
 ]
@@ -127,7 +127,7 @@ export const superAppServiceGroups: Record<SuperAppAudienceId, SuperAppServiceGr
   business: businessGroups,
 }
 
-/** Brand pillars — Eat · Buy · Go · Sell */
+/** Brand pillars — launch order: Buy · Go · Sell, with Eat gated as coming soon. */
 export const superAppPillars: {
   id: SuperAppPillarId
   labelKey: string
@@ -136,14 +136,6 @@ export const superAppPillars: {
   icon: string
   tone: SuperAppPillarId
 }[] = [
-  {
-    id: 'eat',
-    labelKey: 'landing.superApp.pillarEat',
-    taglineKey: 'landing.superApp.pillarEatTag',
-    descKey: 'landing.superApp.pillarEatDesc',
-    icon: 'solar:cup-hot-bold',
-    tone: 'eat',
-  },
   {
     id: 'buy',
     labelKey: 'landing.superApp.pillarBuy',
@@ -168,23 +160,25 @@ export const superAppPillars: {
     icon: 'solar:shop-2-bold',
     tone: 'sell',
   },
+  {
+    id: 'eat',
+    labelKey: 'landing.superApp.pillarEat',
+    taglineKey: 'landing.superApp.pillarEatTag',
+    descKey: 'landing.superApp.pillarEatDesc',
+    icon: 'solar:cup-hot-bold',
+    tone: 'eat',
+  },
 ]
 
 const eatGroups: SuperAppServiceGroup[] = [
   {
-    key: 'deliveries',
-    titleKey: 'landing.superApp.groupDeliveries',
+    key: 'coming-soon',
+    titleKey: 'landing.superApp.groupComingSoon',
     items: [
-      { key: 'eats', labelKey: 'landing.navEats', descKey: 'landing.superApp.eatsDesc', icon: 'solar:cup-hot-bold', to: buyerRoutes.eats },
-      { key: 'grocery', labelKey: 'landing.navGrocery', descKey: 'landing.superApp.groceryDesc', icon: 'solar:bag-2-bold', to: buyerRoutes.grocery },
-    ],
-  },
-  {
-    key: 'stay',
-    titleKey: 'landing.superApp.groupStay',
-    items: [
-      { key: 'restaurants', labelKey: 'landing.exploreRestaurants', descKey: 'landing.superApp.restaurantsDesc', icon: 'solar:chef-hat-bold', to: buyerRoutes.restaurants },
-      { key: 'booking', labelKey: 'landing.navBooking', descKey: 'landing.superApp.bookingDesc', icon: 'solar:calendar-bold', to: buyerRoutes.booking },
+      { key: 'eats', labelKey: 'landing.navEats', descKey: 'landing.superApp.eatsDesc', icon: 'solar:cup-hot-bold', comingSoon: true },
+      { key: 'grocery', labelKey: 'landing.navGrocery', descKey: 'landing.superApp.groceryDesc', icon: 'solar:bag-2-bold', comingSoon: true },
+      { key: 'restaurants', labelKey: 'landing.exploreRestaurants', descKey: 'landing.superApp.restaurantsDesc', icon: 'solar:chef-hat-bold', comingSoon: true },
+      { key: 'booking', labelKey: 'landing.navBooking', descKey: 'landing.superApp.bookingDesc', icon: 'solar:calendar-bold', comingSoon: true },
     ],
   },
 ]
@@ -195,9 +189,9 @@ const buyGroups: SuperAppServiceGroup[] = [
     titleKey: 'landing.superApp.groupShop',
     items: [
       { key: 'marketplace', labelKey: 'landing.navMarketplace', descKey: 'landing.superApp.marketplaceDesc', icon: 'solar:cart-large-2-bold', to: buyerRoutes.marketplace },
-      { key: 'hotels', labelKey: 'landing.exploreHotels', descKey: 'landing.superApp.hotelsDesc', icon: 'solar:bed-bold', to: buyerRoutes.hotels },
       { key: 'vouchers', labelKey: 'landing.exploreVouchers', descKey: 'landing.superApp.vouchersDesc', icon: 'solar:ticket-bold', to: buyerRoutes.vouchers },
       { key: 'community', labelKey: 'landing.navCommunity', descKey: 'landing.superApp.communityDesc', icon: 'solar:users-group-rounded-bold', to: buyerRoutes.community },
+      { key: 'hotels', labelKey: 'landing.exploreHotels', descKey: 'landing.superApp.hotelsDesc', icon: 'solar:bed-bold', comingSoon: true },
     ],
   },
   {
@@ -214,9 +208,9 @@ const goGroups: SuperAppServiceGroup[] = [
     key: 'mobility',
     titleKey: 'landing.superApp.groupMobility',
     items: [
-      { key: 'ride', labelKey: 'landing.navRide', descKey: 'landing.superApp.rideDesc', icon: 'solar:scooter-bold', to: buyerRoutes.ride },
-      { key: 'courier', labelKey: 'landing.exploreCourier', descKey: 'landing.superApp.courierDesc', icon: 'solar:delivery-bold', to: buyerRoutes.courier },
       { key: 'send', labelKey: 'landing.navSend', descKey: 'landing.superApp.sendDesc', icon: 'solar:box-bold', to: buyerRoutes.send },
+      { key: 'courier', labelKey: 'landing.exploreCourier', descKey: 'landing.superApp.courierDesc', icon: 'solar:delivery-bold', to: buyerRoutes.courier },
+      { key: 'ride', labelKey: 'landing.navRide', descKey: 'landing.superApp.rideDesc', icon: 'solar:scooter-bold', comingSoon: true },
     ],
   },
 ]

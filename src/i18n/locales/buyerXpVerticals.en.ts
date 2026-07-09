@@ -86,7 +86,7 @@ export const buyerXpVerticals = {
       orders: { title: 'Orders', subtitle: 'Track & history' },
       reservations: { title: 'Reservations', subtitle: 'Tables & hotels' },
       wallet: { title: 'Wallet', subtitle: 'Balance & top-up' },
-      rewards: { title: 'Rewards', subtitle: 'Points & vouchers' },
+      rewards: { title: 'Rewards', subtitle: 'Up to 1% back · redeem on any order' },
       gamification: { title: 'XP & streaks', subtitle: 'Achievements' },
       'weekly-pass': { title: 'Weekly pass', subtitle: 'Challenges' },
       referral: { title: 'Refer friends', subtitle: 'Earn together' },
@@ -286,6 +286,8 @@ export const buyerXpVerticals = {
     giftVoucher: 'Gift voucher',
     giftVoucherPlaceholder: 'Enter voucher code (optional)',
     useLoyaltyPoints: 'Use loyalty points ({points} available)',
+    loyaltyPolicyNote:
+      'Earn up to 1% back in KKOO Points on every purchase. Use your points on food, rides, shops, and more — up to 25% off your order.',
     cartSummary: 'Cart: {count} items · {total}',
     placeOrder: 'Place order',
     placingOrder: 'Placing order…',
@@ -632,6 +634,8 @@ export const buyerXpVerticals = {
   wallet: {
     overline: 'KKOO Wallet',
     tagline: 'Pay faster at checkout and for Send me holds.',
+    policyTagline:
+      'Earn up to 1% back in KKOO Points on every purchase. Use your points on food, rides, shops, and more — up to 25% off your order.',
     balance: 'Balance',
     totalDeposited: 'Total deposited',
     totalSpent: 'Total spent',
@@ -648,7 +652,10 @@ export const buyerXpVerticals = {
   },
   rewards: {
     overline: 'KKOO Rewards',
-    tagline: 'Earn on rides, food, and shopping — redeem at checkout.',
+    tagline:
+      'Earn up to 1% back in KKOO Points on every purchase. Use your points on food, rides, shops, and more — up to 25% off your order.',
+    policyTagline:
+      'Earn up to 1% back in KKOO Points on every purchase. Use your points on food, rides, shops, and more — up to 25% off your order.',
     totalPoints: 'Total points',
     availablePoints: 'Available',
     minRedeem: 'Min redeem',

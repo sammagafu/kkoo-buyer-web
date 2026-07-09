@@ -156,6 +156,13 @@ export const buyerVerticalRoutes = [
     component: () => import('@/views/web/WebCheckout.vue'),
   },
   {
+    path: '/pay/cart/:token',
+    name: 'buyer.smart-cart.pay',
+    meta: { title: setTitle('Pay in store'), ...buyerShell },
+    component: () => import('@/views/web/WebSmartCartPay.vue'),
+    props: true,
+  },
+  {
     path: '/orders',
     name: 'buyer.orders',
     meta: { title: setTitle('Orders'), ...authShell },

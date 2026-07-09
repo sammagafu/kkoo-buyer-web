@@ -2,8 +2,11 @@
   <div ref="rootRef" class="lp-bento">
     <LandingPremiumHeroShowcase />
 
+    <LandingQuickNav />
+
     <LandingPremiumSuperApp />
     <LandingPremiumSellerSection />
+    <LandingPremiumSellerValue />
     <LandingPremiumRiderSection />
     <LandingPremiumCreatorSection />
 
@@ -112,8 +115,10 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import LandingPremiumHeroShowcase from '@/views/marketing/partials/LandingPremiumHeroShowcase.vue'
+import LandingQuickNav from '@/views/marketing/partials/LandingQuickNav.vue'
 import LandingPremiumSuperApp from '@/views/marketing/partials/LandingPremiumSuperApp.vue'
 import LandingPremiumSellerSection from '@/views/marketing/partials/LandingPremiumSellerSection.vue'
+import LandingPremiumSellerValue from '@/views/marketing/partials/LandingPremiumSellerValue.vue'
 import LandingPremiumRiderSection from '@/views/marketing/partials/LandingPremiumRiderSection.vue'
 import LandingPremiumCreatorSection from '@/views/marketing/partials/LandingPremiumCreatorSection.vue'
 import {

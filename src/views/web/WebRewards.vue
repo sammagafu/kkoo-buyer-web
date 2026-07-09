@@ -3,7 +3,7 @@
     <header class="buyer-home-hero buyer-detail-card">
       <p class="buyer-home-hero__overline">{{ t('buyerXp.rewards.overline') }}</p>
       <h1 class="buyer-home-hero__name">{{ totalPoints }} pts</h1>
-      <p class="buyer-home-hero__tagline">{{ t('buyerXp.rewards.tagline') }}</p>
+      <p class="buyer-home-hero__tagline">{{ t('buyerXp.rewards.policyTagline') }}</p>
     </header>
 
     <p v-if="loading" class="shop-products__status">{{ t('buyerXp.common.loading') }}</p>

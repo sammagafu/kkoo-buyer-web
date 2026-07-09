@@ -54,24 +54,12 @@
               </select>
             </label>
 
-            <button type="submit" class="lp-bento-btn lp-bento-btn--primary w-100">
+            <button type="submit" class="lp-bento-btn lp-bento-btn--primary lp-seller-form__submit">
               {{ t('landing.premium.sellerCta') }}
               <Icon icon="solar:arrow-right-linear" aria-hidden="true" />
             </button>
           </form>
 
-          <div class="lp-seller-calc">
-            <h4 class="lp-seller-calc__title">{{ t('landing.premium.sellerCalcTitle') }}</h4>
-            <p class="lp-seller-calc__lead">{{ t('landing.premium.sellerCalcLead') }}</p>
-            <label class="lp-seller-form__field">
-              <span>{{ t('landing.premium.sellerCalcOrders') }}</span>
-              <input v-model.number="ordersPerMonth" type="range" min="10" max="500" step="10" />
-              <output>{{ ordersPerMonth }} {{ t('landing.premium.sellerCalcOrdersUnit') }}</output>
-            </label>
-            <p class="lp-seller-calc__result">
-              {{ t('landing.premium.sellerCalcResult', { amount: formattedEstimate }) }}
-            </p>
-          </div>
         </aside>
       </div>
     </div>
@@ -79,11 +67,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
-import { useKkooPricing } from '@/composables/useKkooPricing'
-import { estimateSellerMonthlyEarnings, formatTzs } from '@/utils/kkooPricing'
 import {
   bizSellerRegisterUrl,
   sellerBenefitPills,
@@ -92,17 +78,10 @@ import {
 } from '@/config/landing-audiences'
 
 const { t } = useI18n()
-const { config: pricingConfig, load: loadPricing } = useKkooPricing()
 
 const name = ref('')
 const phone = ref('')
 const businessType = ref(sellerBusinessTypes[0].value)
-const ordersPerMonth = ref(80)
-
-const formattedEstimate = computed(() => {
-  const amount = estimateSellerMonthlyEarnings(ordersPerMonth.value, pricingConfig.value)
-  return formatTzs(amount, pricingConfig.value.currency)
-})
 
 function onSubmit() {
   const params = new URLSearchParams({
@@ -112,8 +91,4 @@ function onSubmit() {
   })
   window.location.href = `${bizSellerRegisterUrl}?${params.toString()}`
 }
-
-onMounted(() => {
-  void loadPricing()
-})
 </script>

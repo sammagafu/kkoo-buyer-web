@@ -125,7 +125,7 @@ export const buyerXpVerticalsSw = {
       orders: { title: 'Maagizo', subtitle: 'Fuatilia na historia' },
       reservations: { title: 'Uhifadhi', subtitle: 'Meza na hoteli' },
       wallet: { title: 'Pochi', subtitle: 'Salio na kuongeza' },
-      rewards: { title: 'Zawadi', subtitle: 'Pointi na vocha' },
+      rewards: { title: 'Zawadi', subtitle: 'Hadi 1% · tumia kwenye agizo lolote' },
       gamification: { title: 'XP na mfululizo', subtitle: 'Mafanikio' },
       'weekly-pass': { title: 'Pasi ya wiki', subtitle: 'Changamoto' },
       referral: { title: 'Alika marafiki', subtitle: 'Pata pamoja' },
@@ -461,5 +461,19 @@ export const buyerXpVerticalsSw = {
     channelReferral: 'Rufaa',
     channelShare: 'Kushiriki kiungo',
     channelRecommendation: 'Mapendekezo',
+  },
+  rewards: {
+    tagline:
+      'Pata hadi 1% ya pointi za KKOO kila unaponunua. Tumia pointi zako kwa chakula, safari, maduka na zaidi — punguzo hadi 25% kwa agizo lako.',
+    policyTagline:
+      'Pata hadi 1% ya pointi za KKOO kila unaponunua. Tumia pointi zako kwa chakula, safari, maduka na zaidi — punguzo hadi 25% kwa agizo lako.',
+  },
+  wallet: {
+    policyTagline:
+      'Pata hadi 1% ya pointi za KKOO kila unaponunua. Tumia pointi zako kwa chakula, safari, maduka na zaidi — punguzo hadi 25% kwa agizo lako.',
+  },
+  checkout: {
+    loyaltyPolicyNote:
+      'Pata hadi 1% ya pointi za KKOO kila unaponunua. Tumia pointi zako kwa chakula, safari, maduka na zaidi — punguzo hadi 25% kwa agizo lako.',
   },
 } as const

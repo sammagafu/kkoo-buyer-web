@@ -4,6 +4,7 @@
       <p class="buyer-home-hero__overline">{{ t('buyerXp.wallet.overline') }}</p>
       <h1 class="buyer-home-hero__name">{{ formatBuyerMoney(wallet?.balance, 'TZS 0') }}</h1>
       <p class="buyer-home-hero__tagline">{{ t('buyerXp.wallet.tagline') }}</p>
+      <p class="buyer-home-hero__tagline small mt-2 mb-0">{{ t('buyerXp.wallet.policyTagline') }}</p>
     </header>
 
     <p v-if="loading" class="shop-products__status">{{ t('buyerXp.common.loading') }}</p>
