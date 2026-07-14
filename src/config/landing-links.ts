@@ -54,12 +54,11 @@ export const landingAnchors = {
   stories: { name: 'pages.landing', hash: '#stories' },
 } as const
 
-/** In-page section anchors for the premium landing header (launch order: buy/go/sell). */
+/** In-page section anchors for the premium landing header (shopper-first). */
 export const landingSectionNavItems = [
   { key: 'buy', sectionId: 'services', pillar: 'buy' as const, labelKey: 'landing.superApp.pillarBuy' },
   { key: 'go', sectionId: 'services', pillar: 'go' as const, labelKey: 'landing.superApp.pillarGo' },
-  { key: 'sell', sectionId: 'services', pillar: 'sell' as const, labelKey: 'landing.superApp.pillarSell' },
-  { key: 'showcase', sectionId: 'showcase', labelKey: 'landing.premium.navShowcase' },
+  { key: 'sell', sectionId: 'sell-section', pillar: 'sell' as const, labelKey: 'landing.superApp.pillarSell' },
   { key: 'stories', sectionId: 'stories', labelKey: 'landing.premium.navStories' },
 ] as const
 

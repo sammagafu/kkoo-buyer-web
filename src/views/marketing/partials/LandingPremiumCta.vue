@@ -6,11 +6,6 @@
         <h2 class="lp-bento-cta__title">{{ t('landing.premium.ctaTitle') }}</h2>
         <p class="lp-bento-cta__lead">{{ t('landing.premium.ctaLead') }}</p>
 
-        <div class="lp-bento-cta__rating" aria-label="4.7 out of 5 stars, 2.4K ratings">
-          <span class="lp-bento-cta__stars" aria-hidden="true">★★★★★</span>
-          <span>{{ t('landing.premium.ctaRating') }}</span>
-        </div>
-
         <LandingStoreBadges />
 
         <router-link :to="buyerRoutes.marketplace" class="lp-bento-cta__web">
