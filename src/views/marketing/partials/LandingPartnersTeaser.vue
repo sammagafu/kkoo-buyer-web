@@ -6,14 +6,10 @@
         <p class="lp-partners-teaser__lead">{{ t('landing.premium.partnersLead') }}</p>
       </div>
       <div class="lp-partners-teaser__links">
-        <a
-          href="#sell-section"
-          class="lp-partners-teaser__link"
-          @click.prevent="scrollToSection('sell-section')"
-        >
+        <RouterLink :to="buyerRoutes.merchant" class="lp-partners-teaser__link">
           {{ t('landing.premium.partnersSell') }}
           <Icon icon="solar:arrow-right-linear" aria-hidden="true" />
-        </a>
+        </RouterLink>
         <RouterLink :to="buyerRoutes.courier" class="lp-partners-teaser__link">
           {{ t('landing.premium.partnersRide') }}
           <Icon icon="solar:arrow-right-linear" aria-hidden="true" />
@@ -32,51 +28,52 @@ import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import { buyerRoutes } from '@/config/landing-links'
-import { useLandingScroll } from '@/composables/useLandingScroll'
 
 const { t } = useI18n()
-const { scrollToSection } = useLandingScroll()
 </script>
 
 <style scoped>
 .lp-partners-teaser {
-  padding: clamp(2.5rem, 6vw, 3.5rem) 0;
-  border-top: 1px solid color-mix(in srgb, var(--lp-bento-ink, #3b1a5a) 8%, transparent);
-  background: var(--lp-bento-surface, #fff);
+  padding: clamp(4rem, 9vw, 6rem) 0;
+  background: var(--lp-bento-bg, #f7f5f8);
 }
 
 .lp-partners-teaser__inner {
   display: grid;
-  gap: 1.5rem;
-  align-items: center;
+  gap: clamp(2rem, 4vw, 3rem);
+  align-items: end;
 }
 
 @media (min-width: 768px) {
   .lp-partners-teaser__inner {
-    grid-template-columns: 1.2fr 1fr;
-    gap: 2rem;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 3rem;
   }
 }
 
 .lp-partners-teaser__title {
-  margin: 0 0 0.5rem;
-  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  margin: 0 0 0.85rem;
+  font-size: clamp(1.5rem, 3.2vw, 2rem);
   font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--lp-bento-ink, #3b1a5a);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--lp-bento-ink, #1a1224);
+  text-wrap: balance;
 }
 
 .lp-partners-teaser__lead {
   margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: color-mix(in srgb, var(--lp-bento-ink, #3b1a5a) 68%, transparent);
+  max-width: 32rem;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--lp-bento-muted, #5c5663);
 }
 
 .lp-partners-teaser__links {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.15rem;
+  border-top: 1px solid color-mix(in srgb, var(--lp-bento-ink, #1a1224) 12%, transparent);
 }
 
 .lp-partners-teaser__link {
@@ -84,21 +81,18 @@ const { scrollToSection } = useLandingScroll()
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  min-height: 2.75rem;
-  padding: 0.7rem 1rem;
-  border-radius: 13px;
-  border: 1px solid color-mix(in srgb, #5c308f 16%, transparent);
-  background: color-mix(in srgb, #5c308f 5%, transparent);
-  color: #5c308f;
+  min-height: 3.25rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--lp-bento-ink, #1a1224) 12%, transparent);
+  color: var(--lp-bento-ink, #1a1224);
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: 1rem;
   text-decoration: none;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition: color 0.15s ease, padding-inline-start 0.15s ease;
 }
 
 .lp-partners-teaser__link:hover {
-  background: color-mix(in srgb, #5c308f 10%, transparent);
-  border-color: color-mix(in srgb, #5c308f 28%, transparent);
-  color: #3b1a5a;
+  color: var(--lp-bento-primary, #5c308f);
+  padding-inline-start: 0.35rem;
 }
 </style>

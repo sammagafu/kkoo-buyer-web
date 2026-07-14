@@ -20,7 +20,7 @@ export const subdomainConfig = {
   },
   serviceInfo: {
     eats: {
-      name: "K'KOO Eats",
+      name: "KkooApp Eats",
       icon: 'solar:cup-hot-bold',
       description: 'Order food from verified restaurants',
       color: '#F7A829',
@@ -28,7 +28,7 @@ export const subdomainConfig = {
       dark: false,
     },
     stay: {
-      name: "K'KOO Stay",
+      name: "KkooApp Stay",
       icon: 'solar:home-bold',
       description: 'Book hotels and accommodations',
       color: '#7B46B3',
@@ -36,7 +36,7 @@ export const subdomainConfig = {
       dark: false,
     },
     ride: {
-      name: "K'KOO Ride",
+      name: "KkooApp Ride",
       icon: 'solar:delivery-bold',
       description: 'Rides and delivery',
       color: '#F7A829',
@@ -44,7 +44,7 @@ export const subdomainConfig = {
       dark: false,
     },
     market: {
-      name: "K'KOO Market",
+      name: "KkooApp Market",
       icon: 'solar:cart-large-2-bold',
       description: 'Shop from trusted sellers',
       color: '#5C308F',

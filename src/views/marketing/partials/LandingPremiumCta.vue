@@ -49,48 +49,50 @@ const qrCodeUrl = computed(() => {
 
 <style scoped>
 .lp-bento-cta {
-  padding: clamp(3.5rem, 8vw, 5rem) 0;
+  padding: clamp(4.5rem, 10vw, 7rem) 0;
   background: var(--lp-bento-surface);
   border-top: 1px solid color-mix(in srgb, var(--lp-bento-ink) 8%, transparent);
 }
 
 .lp-bento-cta__grid {
   display: grid;
-  gap: 2rem;
+  gap: clamp(2.5rem, 5vw, 4rem);
   align-items: center;
 }
 
 @media (min-width: 992px) {
   .lp-bento-cta__grid {
     grid-template-columns: 1.1fr 0.9fr;
-    gap: 2.5rem;
+    gap: 4rem;
   }
 }
 
 .lp-bento-cta__copy {
-  max-width: 28rem;
+  max-width: 30rem;
 }
 
 .lp-bento-cta__eyebrow {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.75rem;
   font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--lp-bento-primary);
 }
 
 .lp-bento-cta__title {
-  margin: 0 0 0.75rem;
-  font-size: clamp(1.75rem, 4vw, 2.35rem);
-  font-weight: 800;
-  letter-spacing: -0.025em;
+  margin: 0 0 1rem;
+  font-size: clamp(1.85rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  text-wrap: balance;
 }
 
 .lp-bento-cta__lead {
-  margin: 0 0 1rem;
-  font-size: 1rem;
-  line-height: 1.6;
+  margin: 0 0 1.5rem;
+  font-size: 1.05rem;
+  line-height: 1.65;
   color: var(--lp-bento-muted);
 }
 

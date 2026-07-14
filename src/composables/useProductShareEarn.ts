@@ -18,6 +18,7 @@ export type ProductShareResult = {
   share_url?: string
   share_text?: string
   whatsapp_share_url?: string
+  facebook_share_url?: string
 }
 
 const open = ref(false)
@@ -81,7 +82,34 @@ export function useProductShareEarn() {
   function whatsappUrl() {
     const msg = shareMessage()
     if (!msg) return ''
-    return `https://wa.me/?text=${encodeURIComponent(msg)}`
+    return result.value?.whatsapp_share_url?.trim()
+      || `https://wa.me/?text=${encodeURIComponent(msg)}`
+  }
+
+  function facebookUrl() {
+    const link = shareLink()
+    if (!link) return ''
+    return result.value?.facebook_share_url?.trim()
+      || `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`
+  }
+
+  async function shareViaSystem() {
+    const link = shareLink()
+    const text = shareMessage()
+    if (!link && !text) return false
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      try {
+        await navigator.share({
+          title: preview.value?.title || 'KKOO',
+          text: text || undefined,
+          url: link || undefined,
+        })
+        return true
+      } catch {
+        return false
+      }
+    }
+    return false
   }
 
   return {
@@ -95,5 +123,7 @@ export function useProductShareEarn() {
     shareLink,
     shareMessage,
     whatsappUrl,
+    facebookUrl,
+    shareViaSystem,
   }
 }

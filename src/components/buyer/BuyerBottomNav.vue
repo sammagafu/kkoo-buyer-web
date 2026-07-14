@@ -97,6 +97,12 @@ function onTabClick(event: MouseEvent, item: (typeof items.value)[number]) {
   background: color-mix(in srgb, var(--kkoo-primary, #5d318e) 10%, transparent);
 }
 
+html[data-bs-theme='dark'] .buyer-bottom-nav__item--active,
+html.theme-dark .buyer-bottom-nav__item--active {
+  color: var(--kkoo-accent, #f7a829);
+  background: color-mix(in srgb, var(--kkoo-accent, #f7a829) 16%, transparent);
+}
+
 .buyer-bottom-nav__icon {
   font-size: 1.35rem;
   flex-shrink: 0;

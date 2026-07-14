@@ -48,6 +48,44 @@
 
           <template v-else-if="shareLink()">
             <p class="product-share-sheet__link text-break">{{ shareLink() }}</p>
+
+            <p class="product-share-sheet__step">{{ t('buyerXp.shareEarn.chooseApp') }}</p>
+            <div class="product-share-sheet__apps" role="list">
+              <button
+                v-for="app in SHARE_APPS"
+                :key="app.id"
+                type="button"
+                class="product-share-sheet__app"
+                :class="[
+                  `product-share-sheet__app--${app.tone}`,
+                  { 'is-active': selectedAppId === app.id },
+                ]"
+                @click="selectApp(app.id)"
+              >
+                <Icon :icon="app.icon" />
+                <span>{{ app.label }}</span>
+              </button>
+            </div>
+
+            <template v-if="selectedApp">
+              <p class="product-share-sheet__step">
+                {{ t('buyerXp.shareEarn.chooseAction', { app: selectedApp.label }) }}
+              </p>
+              <div class="product-share-sheet__actions-grid" role="group">
+                <button
+                  v-for="action in selectedApp.actions"
+                  :key="action.id"
+                  type="button"
+                  class="product-share-sheet__action"
+                  @click="runAction(selectedApp, action)"
+                >
+                  {{ t(action.labelKey) }}
+                </button>
+              </div>
+            </template>
+
+            <p v-if="actionHint" class="product-share-sheet__hint">{{ actionHint }}</p>
+
             <div class="buyer-btn-row product-share-sheet__actions">
               <button type="button" class="buyer-venue__chip buyer-venue__chip--primary" @click="copyLink">
                 {{ copiedLink ? t('buyerXp.common.copied') : t('buyerXp.shareEarn.copyLink') }}
@@ -55,15 +93,6 @@
               <button type="button" class="buyer-venue__chip" @click="copyMessage">
                 {{ copiedMessage ? t('buyerXp.common.copied') : t('buyerXp.shareEarn.copyMessage') }}
               </button>
-              <a
-                v-if="whatsappUrl()"
-                class="buyer-venue__chip"
-                :href="whatsappUrl()"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                WhatsApp
-              </a>
             </div>
             <RouterLink :to="{ name: 'buyer.share-earn' }" class="product-share-sheet__dashboard" @click="closeShareSheet">
               {{ t('buyerXp.shareEarn.viewEarnings') }}
@@ -76,26 +105,49 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
 import { useProductShareEarn } from '@/composables/useProductShareEarn'
+import {
+  SHARE_APPS,
+  hintKeyForAction,
+  type ShareAction,
+  type ShareApp,
+  type ShareAppId,
+} from '@/utils/productSocialShare'
 
 const { t } = useI18n()
-const { open, loading, error, preview, closeShareSheet, shareLink, shareMessage, whatsappUrl } = useProductShareEarn()
+const {
+  open,
+  loading,
+  error,
+  preview,
+  closeShareSheet,
+  shareLink,
+  shareMessage,
+  shareViaSystem,
+} = useProductShareEarn()
 
 const copiedLink = ref(false)
 const copiedMessage = ref(false)
+const selectedAppId = ref<ShareAppId | null>(null)
+const actionHint = ref('')
 
-async function copyText(value: string, flag: typeof copiedLink) {
-  if (!value) return
+const selectedApp = computed(() => SHARE_APPS.find((a) => a.id === selectedAppId.value) ?? null)
+
+async function copyText(value: string, flag?: typeof copiedLink) {
+  if (!value) return false
   try {
     await navigator.clipboard.writeText(value)
-    flag.value = true
-    setTimeout(() => { flag.value = false }, 2000)
+    if (flag) {
+      flag.value = true
+      setTimeout(() => { flag.value = false }, 2000)
+    }
+    return true
   } catch {
-    // ignore
+    return false
   }
 }
 
@@ -107,6 +159,36 @@ function copyMessage() {
   copyText(shareMessage(), copiedMessage)
 }
 
+function selectApp(id: ShareAppId) {
+  selectedAppId.value = id
+  actionHint.value = ''
+}
+
+async function runAction(app: ShareApp, action: ShareAction) {
+  const link = shareLink()
+  const message = shareMessage()
+  actionHint.value = ''
+
+  if (app.id === 'system') {
+    const ok = await shareViaSystem()
+    if (!ok) {
+      await copyText(message || link, copiedMessage)
+      actionHint.value = t('buyerXp.shareEarn.hintCopied')
+    }
+    return
+  }
+
+  if (action.copyFirst) {
+    await copyText(message || link, copiedMessage)
+    actionHint.value = t(hintKeyForAction(app.id, action.id))
+  }
+
+  const href = action.href?.(link, message) ?? ''
+  if (href) {
+    window.open(href, '_blank', 'noopener,noreferrer')
+  }
+}
+
 function onKeydown(e: KeyboardEvent) {
   if (e.key === 'Escape' && open.value) closeShareSheet()
 }
@@ -114,6 +196,8 @@ function onKeydown(e: KeyboardEvent) {
 watch(open, () => {
   copiedLink.value = false
   copiedMessage.value = false
+  selectedAppId.value = null
+  actionHint.value = ''
 })
 
 onMounted(() => document.addEventListener('keydown', onKeydown))
@@ -129,7 +213,7 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
 
 .product-share-sheet__panel {
   width: min(100%, 26rem);
-  max-height: min(92vh, 40rem);
+  max-height: min(92vh, 44rem);
   margin: auto;
   overflow: auto;
   border-radius: 1.25rem;
@@ -200,6 +284,78 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
   font-size: 0.8125rem;
   opacity: 0.85;
   word-break: break-all;
+}
+
+.product-share-sheet__step {
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--buyer-muted, #64748b);
+}
+
+.product-share-sheet__apps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.product-share-sheet__app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-height: 4.25rem;
+  padding: 0.55rem 0.35rem;
+  border-radius: 0.85rem;
+  border: 1px solid var(--buyer-border-strong, rgba(15, 23, 42, 0.1));
+  background: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.product-share-sheet__app :deep(svg) {
+  font-size: 1.35rem;
+}
+
+.product-share-sheet__app.is-active {
+  outline: 2px solid var(--buyer-accent, #0d9488);
+  outline-offset: 1px;
+}
+
+.product-share-sheet__app--wa { color: #128c7e; background: #ecfdf5; }
+.product-share-sheet__app--fb { color: #1877f2; background: #eff6ff; }
+.product-share-sheet__app--ig { color: #c13584; background: #fdf2f8; }
+.product-share-sheet__app--tt { color: #111; background: #f4f4f5; }
+.product-share-sheet__app--sys { color: #0f766e; background: #f0fdfa; }
+
+.product-share-sheet__actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-bottom: 0.75rem;
+}
+
+.product-share-sheet__action {
+  min-height: 2.4rem;
+  border-radius: 0.7rem;
+  border: 1px solid var(--buyer-border-strong, rgba(15, 23, 42, 0.12));
+  background: rgba(15, 23, 42, 0.03);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.product-share-sheet__action:hover {
+  background: rgba(13, 148, 136, 0.08);
+}
+
+.product-share-sheet__hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.75rem;
+  color: var(--buyer-muted, #64748b);
 }
 
 .product-share-sheet__actions {

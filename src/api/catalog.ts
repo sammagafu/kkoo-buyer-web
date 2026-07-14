@@ -28,8 +28,8 @@ export type MissingProductReportRow = {
 
 /** Public catalog. API.md: categories, brands, products (with filters), recommended, by-id, by slug. */
 export const catalogPublicApi = {
-  listCategories() {
-    return client.get<{ results: unknown[] }>('/catalog/categories/')
+  listCategories(params?: { kind?: string; include_kinds?: boolean }) {
+    return client.get<{ results: unknown[] }>('/catalog/categories/', { params })
   },
   listBrands() {
     return client.get<{ results: unknown[] }>('/catalog/brands/')

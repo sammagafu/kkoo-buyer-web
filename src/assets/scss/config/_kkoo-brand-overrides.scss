@@ -137,14 +137,102 @@ html:not([data-bs-theme='dark']) {
   }
 }
 
-// Dark mode: input focus ring uses brand purple
-html[data-bs-theme='dark'] {
-  --#{$prefix}input-focus-border-color: #{$kkoo-primary-light};
+// Dark mode: gold for readable accents; purple is reserved for fills
+html[data-bs-theme='dark'],
+html.theme-dark {
+  --#{$prefix}input-focus-border-color: #{$kkoo-secondary};
 
   .alert-info {
     --#{$prefix}alert-color: #{tint-color($kkoo-primary-light, 20%)};
     --#{$prefix}alert-bg: #{rgba($kkoo-primary, 0.2)};
     --#{$prefix}alert-border-color: #{rgba($kkoo-primary-light, 0.35)};
+  }
+
+  .text-primary,
+  .link-primary {
+    color: $kkoo-secondary !important;
+  }
+
+  .text-info,
+  .text-info-emphasis {
+    color: $kkoo-secondary !important;
+  }
+
+  // Outline / ghost labels were locked to dark purple ink — invisible on dark canvas
+  .btn-outline-primary {
+    --#{$prefix}btn-color: #{$kkoo-secondary};
+    --#{$prefix}btn-border-color: #{$kkoo-secondary};
+    --#{$prefix}btn-hover-color: #{$kkoo-primary-dark};
+    --#{$prefix}btn-hover-bg: #{$kkoo-secondary};
+    --#{$prefix}btn-hover-border-color: #{$kkoo-secondary};
+    --#{$prefix}btn-active-color: #{$kkoo-primary-dark};
+    --#{$prefix}btn-active-bg: #{$kkoo-secondary};
+    --#{$prefix}btn-active-border-color: #{$kkoo-secondary};
+    --#{$prefix}btn-disabled-color: #{rgba($kkoo-secondary, 0.45)};
+    --#{$prefix}btn-disabled-border-color: #{rgba($kkoo-secondary, 0.35)};
+  }
+
+  .btn-outline-secondary {
+    --#{$prefix}btn-color: #{$kkoo-secondary};
+    --#{$prefix}btn-border-color: #{rgba($kkoo-secondary, 0.55)};
+    --#{$prefix}btn-hover-color: #{$kkoo-primary-dark};
+    --#{$prefix}btn-hover-bg: #{$kkoo-secondary};
+    --#{$prefix}btn-hover-border-color: #{$kkoo-secondary};
+    --#{$prefix}btn-active-color: #{$kkoo-primary-dark};
+    --#{$prefix}btn-active-bg: #{$kkoo-secondary};
+    --#{$prefix}btn-active-border-color: #{$kkoo-secondary};
+    --#{$prefix}btn-disabled-color: #{rgba($kkoo-secondary, 0.45)};
+    --#{$prefix}btn-disabled-border-color: #{rgba($kkoo-secondary, 0.3)};
+  }
+
+  .btn-secondary {
+    --#{$prefix}btn-color: #{$kkoo-primary-dark};
+    --#{$prefix}btn-hover-color: #{$kkoo-primary-dark};
+    --#{$prefix}btn-active-color: #{$kkoo-primary-dark};
+  }
+
+  .btn:disabled,
+  .btn.disabled {
+    color: rgba(237, 233, 245, 0.45);
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: transparent;
+  }
+
+  .nav-tabs .nav-link.active,
+  .wrapper .navbar-nav .nav-link.active,
+  .wrapper .main-nav .nav-link.active,
+  .wrapper .side-nav .nav-link.active,
+  .wrapper .vertical-menu .nav-link.active,
+  .wrapper .main-nav .nav-link.active .nav-icon,
+  .wrapper .side-nav .nav-link.active .nav-icon,
+  .wrapper .vertical-menu .nav-link.active .nav-icon {
+    color: $kkoo-secondary !important;
+  }
+
+  .wrapper .main-nav .nav-link.active,
+  .wrapper .side-nav .nav-link.active,
+  .wrapper .vertical-menu .nav-link.active {
+    background-color: rgba($kkoo-secondary, 0.18) !important;
+  }
+
+  .wrapper .page-link {
+    color: $kkoo-secondary;
+
+    &:hover {
+      color: tint-color($kkoo-secondary, 12%);
+    }
+  }
+
+  .dropdown-item.active,
+  .dropdown-item:active {
+    background-color: rgba($kkoo-secondary, 0.16);
+    color: $kkoo-secondary;
+  }
+
+  // Soft purple chips keep gold numbers/icons readable
+  .bg-soft-primary,
+  .text-bg-primary-subtle {
+    color: $kkoo-secondary !important;
   }
 }
 
@@ -243,19 +331,26 @@ html[data-bs-theme='dark'] {
     box-shadow: $kkoo-card-shadow;
   }
 
+  // Use theme CSS vars so dark sidebar + dark mode stay gold (not buried purple)
   .navbar-nav .nav-link.active,
   .main-nav .nav-link.active,
   .side-nav .nav-link.active,
   .vertical-menu .nav-link.active {
-    color: $kkoo-primary;
+    color: var(--#{$prefix}main-nav-item-active-color, #{$kkoo-primary});
     font-weight: $kkoo-font-semibold;
   }
 
   .main-nav .nav-link.active,
   .side-nav .nav-link.active,
   .vertical-menu .nav-link.active {
-    background-color: rgba($kkoo-primary, 0.08);
+    background-color: var(--#{$prefix}main-nav-item-active-bg, #{rgba($kkoo-primary, 0.08)});
     border-inline-start: 3px solid $kkoo-accent;
+  }
+
+  .main-nav .nav-link.active .nav-icon,
+  .side-nav .nav-link.active .nav-icon,
+  .vertical-menu .nav-link.active .nav-icon {
+    color: var(--#{$prefix}main-nav-item-active-color, #{$kkoo-primary});
   }
 }
 

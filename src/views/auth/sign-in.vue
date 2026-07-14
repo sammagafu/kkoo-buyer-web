@@ -3,8 +3,6 @@
     <AuthCard
       :title="otpSent ? t('auth.verifyTitle') : t('auth.signInWithKkooAccount')"
       :subtitle="otpSent ? t('auth.otpPromptSent') : t('auth.kkooAccountSubtitle')"
-      :info-lines="otpSent ? [] : signInInfoLines"
-      :tag-icons="signInTagIcons"
       show-logo
       :icon="otpSent ? 'bi-shield-lock' : 'bi-box-arrow-in-right'"
       :logo-height="68"
@@ -126,14 +124,6 @@ const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 const { t } = useI18n()
-
-const signInInfoLines = computed(() => [
-  t('auth.kkooAccountHint'),
-  t('auth.signInInfo1'),
-  t('auth.signInInfo2'),
-])
-
-const signInTagIcons = ['bi-phone', 'bi-shield-check', 'bi-bag']
 
 const submitDisabled = computed(() => {
   if (loading.value || redirecting.value) return true

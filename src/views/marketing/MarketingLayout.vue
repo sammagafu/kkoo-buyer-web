@@ -404,8 +404,8 @@ const appLauncherItems = computed(() => {
     { label: 'Community', icon: 'solar:users-group-rounded-bold', to: buyerRoutes.community },
     { label: 'Share & earn', icon: 'solar:gift-bold', to: { name: 'pages.share-earn' } },
     { label: 'Vouchers', icon: 'solar:ticket-bold', to: { name: 'pages.vouchers' } },
-    { label: 'Business', icon: 'solar:shop-2-bold', to: buyerRoutes.business },
-    { label: 'Merchants', icon: 'solar:bag-5-bold', to: { name: 'pages.merchant' } },
+    { label: 'Sell', icon: 'solar:shop-2-bold', to: { name: 'pages.merchant' } },
+    { label: 'Business tools', icon: 'solar:widget-5-bold', to: { name: 'pages.business' } },
   ]
 
   if (availableAccountRoles.value.includes(ROLES.ADMIN) || availableAccountRoles.value.includes(ROLES.STAFF)) {
@@ -468,11 +468,12 @@ async function switchLauncherRole(role: AccountRole) {
   --lp-rhythm-phi3: calc(1rem * var(--lp-phi) * var(--lp-phi) * var(--lp-phi));
   --lp-prose-max: min(65ch, 42rem);
   --lp-prose-lh: var(--lp-phi);
-  --lp-section-py: var(--lp-rhythm-phi2);
-  --lp-section-py-md: var(--lp-rhythm-phi3);
-  --lp-section-py-sm: calc(var(--lp-rhythm-phi) * var(--lp-phi));
+  --lp-section-py: clamp(3.5rem, 8vw, 5rem);
+  --lp-section-py-md: clamp(4.5rem, 10vw, 7rem);
+  --lp-section-py-sm: clamp(3rem, 8vw, 4rem);
   --lp-section-inner-gap: var(--lp-rhythm-phi);
   --lp-content-gap: calc(var(--lp-rhythm-phi) * var(--lp-inv-phi));
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   /* 8px grid — shared with landing; use for padding/gaps where precision helps */
   --lp-grid-8: 0.5rem;
   --lp-space-1: 0.25rem;
@@ -544,20 +545,17 @@ async function switchLauncherRole(role: AccountRole) {
 .lp-layout :deep(.context-nav) {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--lp-space-3);
-  padding: 0.85rem 1.1rem;
-  margin: 0.5rem var(--lp-page-container-px) 1.5rem;
-  border-radius: 1.25rem;
-  border: 1px solid rgba(var(--bs-primary-rgb, 92, 48, 143), 0.18);
-  background:
-    radial-gradient(circle at 82% 18%, rgba(247, 168, 41, 0.14), transparent 36%),
-    linear-gradient(120deg, rgba(92, 48, 143, 0.08), rgba(255, 255, 255, 0.92));
-  box-shadow: 0 12px 34px rgba(35, 20, 46, 0.12);
-  backdrop-filter: blur(10px);
-  position: sticky;
-  top: 0.75rem;
-  z-index: 5;
+  justify-content: flex-start;
+  gap: var(--lp-space-2);
+  padding: 1rem var(--lp-page-container-px) 0;
+  margin: 0 0 0.5rem;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  position: static;
+  z-index: auto;
 }
 
 .lp-layout :deep(.context-nav-left),
@@ -565,41 +563,47 @@ async function switchLauncherRole(role: AccountRole) {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--lp-space-2);
+  gap: var(--lp-space-4);
 }
 
 .lp-layout :deep(.context-nav-link) {
-  padding: 0.55rem 0.85rem;
-  border-radius: 0.9rem;
-  border: 1px solid rgba(var(--bs-primary-rgb, 92, 48, 143), 0.14);
-  background: rgba(255, 255, 255, 0.72);
-  color: var(--bs-body-color);
-  font-weight: 700;
+  padding: 0.35rem 0;
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--lp-text-soft, var(--bs-body-color));
+  font-weight: 600;
+  font-size: 0.92rem;
   text-decoration: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 
-.lp-layout :deep(.context-nav-link:hover) {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(35, 20, 46, 0.1);
-  background: rgba(255, 255, 255, 0.9);
+.lp-layout :deep(.context-nav-link:hover),
+.lp-layout :deep(.context-nav-link.router-link-active) {
+  transform: none;
+  box-shadow: none;
+  background: transparent;
+  color: var(--lp-heading-ink, #1a1224);
+  border-bottom-color: #5c308f;
 }
 
 .lp-layout :deep(.context-nav-pill) {
-  padding: 0.55rem 0.95rem;
-  border-radius: 999px;
-  border: 1px solid rgba(247, 168, 41, 0.3);
-  background: linear-gradient(135deg, rgba(247, 168, 41, 0.18), rgba(92, 48, 143, 0.12));
-  color: #5c308f;
-  font-weight: 800;
+  padding: 0.35rem 0;
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid #f7a829;
+  background: transparent;
+  color: var(--lp-heading-ink, #1a1224);
+  font-weight: 700;
   text-decoration: none;
-  letter-spacing: 0.01em;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  letter-spacing: 0;
+  box-shadow: none;
 }
 
 .lp-layout :deep(.context-nav-pill:hover) {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 22px rgba(35, 20, 46, 0.12);
+  transform: none;
+  box-shadow: none;
 }
 
 @media (max-width: 767.98px) {
@@ -630,46 +634,46 @@ async function switchLauncherRole(role: AccountRole) {
   }
 }
 
-/* Light mode: warm beige surfaces + dark purple ink (replaces default white/black) */
+/* Light mode: cool paper + purple ink (avoid warm cream AI default) */
 html:not([data-bs-theme='dark']) .lp-layout {
-  --lp-cream: #faf6f0;
-  --lp-cream-rgb: 250, 246, 240;
-  --lp-beige: #f0e8df;
-  --lp-beige-rgb: 240, 232, 223;
-  --lp-beige-muted: #e5dbd0;
-  --lp-beige-paper: #ede4d8;
-  --lp-ink: #2a1836;
-  --lp-ink-rgb: 42, 24, 54;
-  --lp-text-on-purple: var(--lp-cream);
+  --lp-cream: #fbfafc;
+  --lp-cream-rgb: 251, 250, 252;
+  --lp-beige: #f3f0f5;
+  --lp-beige-rgb: 243, 240, 245;
+  --lp-beige-muted: #ebe7ef;
+  --lp-beige-paper: #f7f5f8;
+  --lp-ink: #1a1224;
+  --lp-ink-rgb: 26, 18, 36;
+  --lp-text-on-purple: #fbfafc;
   --lp-landing-paper: var(--lp-beige-paper);
   --lp-landing-paper-muted: var(--lp-beige-muted);
-  --lp-section-label: color-mix(in srgb, var(--lp-ink) 84%, var(--lp-beige) 16%);
-  --lp-section-light-bg: color-mix(in srgb, var(--lp-beige) 82%, var(--lp-cream) 18%);
-  --lp-section-white-bg: var(--lp-cream);
-  --lp-card-bg: var(--lp-cream);
+  --lp-section-label: color-mix(in srgb, var(--lp-ink) 84%, white 16%);
+  --lp-section-light-bg: #f3f0f5;
+  --lp-section-white-bg: #ffffff;
+  --lp-card-bg: #ffffff;
   --lp-heading-ink: var(--lp-ink);
-  --lp-body-ink: color-mix(in srgb, var(--lp-ink) 74%, var(--lp-beige) 26%);
+  --lp-body-ink: color-mix(in srgb, var(--lp-ink) 72%, white 28%);
   --lp-text-body: var(--lp-body-ink);
   --lp-accent-on-purple-tint: var(--kkoo-accent-dark, #e8940f);
   --lp-accent-on-gold-tint: var(--kkoo-primary-dark, #3b1a5a);
-  --lp-text-soft: color-mix(in srgb, var(--lp-ink) 56%, var(--lp-beige) 44%);
-  --lp-text-quote: color-mix(in srgb, var(--lp-ink) 78%, var(--lp-beige) 22%);
-  --lp-text-faint: color-mix(in srgb, var(--lp-ink) 44%, var(--lp-beige) 56%);
-  --lp-border-color: color-mix(in srgb, var(--lp-ink) 12%, var(--lp-beige) 88%);
+  --lp-text-soft: color-mix(in srgb, var(--lp-ink) 58%, #8a8490 42%);
+  --lp-text-quote: color-mix(in srgb, var(--lp-ink) 78%, white 22%);
+  --lp-text-faint: color-mix(in srgb, var(--lp-ink) 44%, #8a8490 56%);
+  --lp-border-color: color-mix(in srgb, var(--lp-ink) 12%, white 88%);
   --lp-gold-on-light: #c97c00;
-  --bs-body-bg: var(--lp-beige);
-  --bs-body-bg-rgb: var(--lp-beige-rgb);
+  --bs-body-bg: var(--lp-beige-paper);
+  --bs-body-bg-rgb: 247, 245, 248;
   --bs-body-color: var(--lp-ink);
   --bs-body-color-rgb: var(--lp-ink-rgb);
   --bs-emphasis-color: var(--lp-ink);
   --bs-emphasis-color-rgb: var(--lp-ink-rgb);
   --bs-heading-color: var(--lp-ink);
-  --bs-primary: var(--lp-ink);
-  --bs-primary-text-emphasis: var(--lp-ink);
-  --bs-secondary-color: color-mix(in srgb, var(--lp-ink) 58%, var(--lp-beige) 42%);
+  --bs-primary: #5c308f;
+  --bs-primary-text-emphasis: #5c308f;
+  --bs-secondary-color: var(--lp-text-soft);
   --bs-tertiary-bg: var(--lp-beige-muted);
-  --bs-border-color: color-mix(in srgb, var(--lp-ink) 12%, var(--lp-beige) 88%);
-  --lp-switch-knob: var(--lp-cream);
+  --bs-border-color: var(--lp-border-color);
+  --lp-switch-knob: #fff;
 }
 
 html:not([data-bs-theme='dark']) .lp-layout .text-white {
@@ -728,6 +732,8 @@ html[data-bs-theme='dark'] .lp-layout {
   --bs-emphasis-color: #fff4e8;
   --bs-emphasis-color-rgb: 255, 244, 232;
   --bs-heading-color: #fff4e8;
+  --bs-secondary: #f7a829;
+  --bs-secondary-rgb: 247, 168, 41;
   --bs-secondary-color: color-mix(in srgb, var(--lp-cream) 62%, #72677c 38%);
   --bs-tertiary-bg: #17121b;
   --bs-border-color: rgba(255, 255, 255, 0.09);
@@ -986,6 +992,17 @@ html[data-bs-theme='dark'] .lp-header::before {
 
 .lp-header-nav .lp-nav-link:hover::after,
 .lp-header-nav .lp-nav-link.router-link-active::after {
+  transform: scaleX(1);
+}
+
+html[data-bs-theme='dark'] .lp-header-nav .lp-nav-link:hover,
+html[data-bs-theme='dark'] .lp-header-nav .lp-nav-link.router-link-active {
+  color: #f7a829;
+}
+
+html[data-bs-theme='dark'] .lp-header-nav .lp-nav-link:hover::after,
+html[data-bs-theme='dark'] .lp-header-nav .lp-nav-link.router-link-active::after {
+  background: #f7a829;
   transform: scaleX(1);
 }
 
@@ -1264,20 +1281,18 @@ html[data-bs-theme='dark'] .lp-layout :deep(.context-nav) {
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
 }
 
-html[data-bs-theme='dark'] .lp-layout :deep(.context-nav-link) {
-  border-color: rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.04);
-}
-
-html[data-bs-theme='dark'] .lp-layout :deep(.context-nav-link:hover) {
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+html[data-bs-theme='dark'] .lp-layout :deep(.context-nav-link:hover),
+html[data-bs-theme='dark'] .lp-layout :deep(.context-nav-link.router-link-active) {
+  color: #f7a829;
+  border-bottom-color: #f7a829;
+  background: transparent;
+  box-shadow: none;
 }
 
 html[data-bs-theme='dark'] .lp-layout :deep(.context-nav-pill) {
-  border-color: rgba(var(--bs-secondary-rgb, 247, 168, 41), 0.28);
-  background: linear-gradient(135deg, rgba(var(--bs-secondary-rgb, 247, 168, 41), 0.14), rgba(var(--bs-primary-rgb, 92, 48, 143), 0.18));
-  color: rgba(255, 244, 232, 0.94);
+  border-bottom-color: #f7a829;
+  color: #f7a829;
+  background: transparent;
 }
 
 html[data-bs-theme='dark'] .lp-layout :deep(.context-nav-pill:hover) {

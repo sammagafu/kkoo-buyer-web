@@ -227,7 +227,7 @@ const frontendApps = computed(() => [
   { title: 'Community', icon: 'solar:users-group-rounded-bold', badge: 'People', to: { name: 'pages.community' } },
   { title: 'Share & earn', icon: 'solar:gift-bold', badge: 'Growth', to: { name: 'buyer.share-earn' } },
   { title: 'Gift vouchers', icon: 'solar:ticket-bold', badge: 'Gifting', to: { name: 'pages.vouchers' } },
-  { title: 'Merchant', icon: 'solar:bag-5-bold', badge: 'Business', to: { name: 'pages.merchant' } },
+  { title: 'Sell', icon: 'solar:shop-2-bold', badge: 'Shop', to: { name: 'pages.merchant' } },
   { title: 'KKOORide', icon: 'solar:scooter-bold', badge: 'Mobility', to: { name: 'pages.courier' } },
 ])
 

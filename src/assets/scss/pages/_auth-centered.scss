@@ -136,24 +136,31 @@ html[data-bs-theme='dark'] body.authentication-bg {
 .auth-center-stage {
   position: relative;
   z-index: 1;
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   display: flex;
   align-items: center;
   justify-content: center;
+  align-self: stretch;
   min-height: 0;
   width: 100%;
   max-width: 36rem;
+  margin-inline: auto;
   padding: 0.5rem 0.75rem;
 }
 
 .auth-viewport-fit {
   width: 100%;
   max-width: 32rem;
+  height: 100%;
   margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .auth-viewport-fit__inner {
   width: 100%;
+  transform-origin: center center;
 }
 
 /* Card — flat panel on animated scene */

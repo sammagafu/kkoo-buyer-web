@@ -434,6 +434,12 @@ const mobileNavItems = computed((): MobileNavItem[] => [
   color: var(--mk-primary, #5c308f);
 }
 
+.mk-nav__link.router-link-active,
+.mk-nav__link.router-link-exact-active {
+  color: var(--mk-primary, #5c308f);
+  font-weight: 700;
+}
+
 html[data-bs-theme='dark'] .mk-nav__link--dropdown {
   color: rgba(255, 255, 255, 0.78);
 }
@@ -603,6 +609,13 @@ html[data-bs-theme='dark'] .mk-mobile-drawer__link.router-link-active {
 
 html[data-bs-theme='dark'] .mk-nav__link {
   color: rgba(255, 255, 255, 0.78);
+}
+
+html[data-bs-theme='dark'] .mk-nav__link:hover,
+html[data-bs-theme='dark'] .mk-nav__link.router-link-active,
+html[data-bs-theme='dark'] .mk-nav__link.router-link-exact-active,
+html[data-bs-theme='dark'] .mk-nav__link--dropdown:hover {
+  color: var(--mk-secondary, #f7a829);
 }
 
 html[data-bs-theme='dark'] .mk-header__user-name,

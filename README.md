@@ -30,6 +30,9 @@ npm install
 npm run dev
 ```
 
+Dev server proxies `/api` → **`http://localhost:8000`**.  
+See [../docs/CROSS_APP_INTEGRATION.md](../docs/CROSS_APP_INTEGRATION.md).
+
 ## Deploy (staging)
 
 Push to `main` → GitHub Actions SSH deploy:

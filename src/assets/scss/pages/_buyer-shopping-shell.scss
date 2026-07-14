@@ -147,6 +147,21 @@
   color: var(--bs-primary);
 }
 
+.buyer-side-nav__link--active .buyer-side-nav__icon {
+  color: inherit;
+}
+
+html[data-bs-theme='dark'] .buyer-side-nav__link--active,
+html.theme-dark .buyer-side-nav__link--active {
+  color: var(--kkoo-accent, #f7a829) !important;
+  background: color-mix(in srgb, var(--kkoo-accent, #f7a829) 18%, transparent);
+}
+
+html[data-bs-theme='dark'] .buyer-side-nav__link--active .buyer-side-nav__icon,
+html.theme-dark .buyer-side-nav__link--active .buyer-side-nav__icon {
+  color: var(--kkoo-accent, #f7a829) !important;
+}
+
 .buyer-side-nav__icon {
   font-size: 1.15rem;
   flex-shrink: 0;
@@ -159,7 +174,13 @@
   font-size: 0.62rem;
   font-weight: 800;
   background: var(--bs-secondary);
-  color: #fff;
+  color: #1a1224;
+}
+
+html[data-bs-theme='dark'] .buyer-side-nav__badge,
+html.theme-dark .buyer-side-nav__badge {
+  background: var(--kkoo-accent, #f7a829);
+  color: #1a1224;
 }
 
 .buyer-side-nav__link--counter {
@@ -189,6 +210,14 @@
 
 .buyer-side-nav__counter--cart {
   background: var(--bs-primary);
+}
+
+html[data-bs-theme='dark'] .buyer-side-nav__counter,
+html[data-bs-theme='dark'] .buyer-side-nav__counter--cart,
+html.theme-dark .buyer-side-nav__counter,
+html.theme-dark .buyer-side-nav__counter--cart {
+  background: var(--kkoo-accent, #f7a829);
+  color: #1a1224;
 }
 
 .buyer-side-nav__promo {
@@ -2354,6 +2383,15 @@
   background: var(--buyer-surface);
   color: var(--bs-primary);
   border-color: var(--buyer-border-strong);
+}
+
+html[data-bs-theme='dark'] .buyer-float-action__badge,
+html.theme-dark .buyer-float-action__badge,
+html[data-bs-theme='dark'] .buyer-float-action--cart .buyer-float-action__badge,
+html.theme-dark .buyer-float-action--cart .buyer-float-action__badge {
+  background: var(--kkoo-accent, #f7a829);
+  color: #1a1224;
+  border-color: var(--buyer-surface, #1c1822);
 }
 
 .buyer-float-cart {

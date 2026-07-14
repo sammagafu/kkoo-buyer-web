@@ -1,23 +1,23 @@
 // KKOO bento landing — Sisyphus-inspired visuals with brand tokens
 .mk-landing--premium {
-  --lp-bento-bg: #eceaeb;
+  --lp-bento-bg: #f7f5f8;
   --lp-bento-surface: #ffffff;
-  --lp-bento-muted-bg: #f3f1f4;
+  --lp-bento-muted-bg: #f3f0f5;
   --lp-bento-ink: #1a1224;
-  --lp-bento-muted: #6b6570;
-  --lp-bento-primary: #5d318e;
-  --lp-bento-primary-rgb: 93, 49, 142;
-  --lp-bento-primary-dark: #3f1f66;
-  --lp-bento-accent: #f7a828;
+  --lp-bento-muted: #5c5663;
+  --lp-bento-primary: #5c308f;
+  --lp-bento-primary-rgb: 92, 48, 143;
+  --lp-bento-primary-dark: #3b1a5a;
+  --lp-bento-accent: #f7a829;
   --lp-bento-stats-bar: #1a1224;
-  --lp-bento-radius: 1.5rem;
-  --lp-bento-radius-lg: 2rem;
-  --lp-bento-shadow: 0 16px 40px rgba(93, 49, 142, 0.1);
-  --lp-bento-shadow-hover: 0 24px 48px rgba(93, 49, 142, 0.16);
-  --lp-bento-section-y: clamp(3.5rem, 8vw, 5.5rem);
+  --lp-bento-radius: 1.25rem;
+  --lp-bento-radius-lg: 1.5rem;
+  --lp-bento-shadow: 0 12px 32px rgba(92, 48, 143, 0.08);
+  --lp-bento-shadow-hover: 0 18px 40px rgba(92, 48, 143, 0.12);
+  --lp-bento-section-y: clamp(4.5rem, 10vw, 7rem);
   --lp-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --lp-ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
-  --ui-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --ui-font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--lp-bento-bg);
   color: var(--lp-bento-ink);
   font-family: var(--ui-font);
@@ -97,10 +97,26 @@ html[data-bs-theme='dark'] .mk-landing--premium .lp-bento-pillars__tab--sell.lp-
   color: var(--lp-bento-primary);
 }
 
+.mk-landing--premium .mk-nav__link.router-link-active,
+.mk-landing--premium .mk-nav__link.router-link-exact-active {
+  color: var(--lp-bento-primary);
+  font-weight: 700;
+}
+
 .mk-landing--premium .mk-nav__link--eat:hover { color: var(--lp-bento-accent); }
 .mk-landing--premium .mk-nav__link--buy:hover { color: var(--lp-bento-primary); }
 .mk-landing--premium .mk-nav__link--go:hover { color: var(--lp-bento-primary-dark); }
 .mk-landing--premium .mk-nav__link--sell:hover { color: var(--lp-bento-accent); }
+
+html[data-bs-theme='dark'] .mk-landing--premium .mk-nav__link:hover,
+html[data-bs-theme='dark'] .mk-landing--premium .mk-nav__link.router-link-active,
+html[data-bs-theme='dark'] .mk-landing--premium .mk-nav__link.router-link-exact-active,
+html[data-bs-theme='dark'] .mk-landing--premium .mk-nav__link--buy:hover,
+html[data-bs-theme='dark'] .mk-landing--premium .mk-nav__link--go:hover,
+html[data-bs-theme='dark'] .mk-landing--premium .mk-nav__link--eat:hover,
+html[data-bs-theme='dark'] .mk-landing--premium .mk-nav__link--sell:hover {
+  color: var(--lp-bento-accent, #f7a829);
+}
 
 .mk-landing--premium .mk-header__logo--landing {
   height: 2.75rem;
@@ -171,20 +187,20 @@ html[data-bs-theme='dark'] .mk-landing--premium .lp-bento-pillars__tab--sell.lp-
   align-items: center;
   gap: 0.4rem;
   padding: 0.7rem 1.25rem;
-  border-radius: 999px;
+  border-radius: 13px;
   font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
 .lp-bento-btn--primary,
 .ui-btn--primary {
   background: var(--lp-bento-primary);
   color: #fff;
-  box-shadow: 0 2px 10px rgba(var(--lp-bento-primary-rgb), 0.28);
+  box-shadow: none;
 }
 
 .lp-bento-btn--outline,
@@ -976,7 +992,7 @@ html[data-bs-theme='dark'] .mk-landing--premium .lp-bento-pillars__tab--sell.lp-
 }
 
 .lp-bento-section__head {
-  margin-bottom: 2rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
 }
 
 .lp-bento-section__head--split {
@@ -1002,17 +1018,19 @@ html[data-bs-theme='dark'] .mk-landing--premium .lp-bento-pillars__tab--sell.lp-
 
 .lp-bento-section__title {
   margin: 0;
-  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.025em;
+  font-size: clamp(1.85rem, 3.8vw, 2.65rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.03em;
+  color: var(--lp-bento-ink);
+  text-wrap: balance;
 }
 
 .lp-bento-section__desc {
   margin: 0;
-  max-width: 32rem;
-  font-size: 0.98rem;
-  line-height: 1.6;
+  max-width: 34rem;
+  font-size: 1.05rem;
+  line-height: 1.65;
   color: var(--lp-bento-muted);
 }
 
@@ -1375,55 +1393,44 @@ html[data-bs-theme='dark'] .mk-landing--premium .lp-bento-pillars__tab--sell.lp-
 
 .lp-bento-testimonials__card {
   position: relative;
-  padding: 1.5rem 1.35rem;
-  border-radius: var(--lp-bento-radius);
-  background: var(--lp-bento-surface);
-  border: 1px solid color-mix(in srgb, var(--lp-bento-ink) 7%, transparent);
-  box-shadow: 0 4px 20px rgba(var(--lp-bento-primary-rgb), 0.05);
-  transition:
-    transform 0.4s var(--lp-ease-out),
-    box-shadow 0.4s var(--lp-ease-out),
-    border-color 0.3s ease;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  border-top: 1px solid color-mix(in srgb, var(--lp-bento-ink) 10%, transparent);
+  box-shadow: none;
+  padding-top: 1.5rem;
+  transition: none;
 }
 
 .lp-bento-testimonials__card::before {
-  content: '\201C';
-  position: absolute;
-  top: 0.65rem;
-  right: 1rem;
-  font-size: 3.5rem;
-  line-height: 1;
-  font-weight: 800;
-  color: color-mix(in srgb, var(--lp-bento-primary) 12%, transparent);
-  pointer-events: none;
-  transition: color 0.3s ease, transform 0.3s var(--lp-ease-out);
+  display: none;
 }
 
 .lp-bento-testimonials__card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--lp-bento-shadow-hover);
-  border-color: color-mix(in srgb, var(--lp-bento-primary) 18%, transparent);
+  transform: none;
+  box-shadow: none;
+  border-color: color-mix(in srgb, var(--lp-bento-ink) 10%, transparent);
 }
 
 .lp-bento-testimonials__card:hover::before {
-  color: color-mix(in srgb, var(--lp-bento-primary) 22%, transparent);
-  transform: scale(1.08);
+  display: none;
 }
 
 .lp-bento-testimonials__card--featured {
-  background: linear-gradient(145deg, var(--lp-bento-primary) 0%, var(--lp-bento-primary-dark) 100%);
-  border-color: transparent;
-  color: #fff;
-  box-shadow: 0 12px 36px rgba(var(--lp-bento-primary-rgb), 0.35);
+  background: transparent;
+  border-color: color-mix(in srgb, var(--lp-bento-ink) 10%, transparent);
+  color: inherit;
+  box-shadow: none;
 }
 
 .lp-bento-testimonials__card--featured::before {
-  color: rgba(255, 255, 255, 0.15);
+  display: none;
 }
 
 .lp-bento-testimonials__card--featured .lp-bento-testimonials__role,
 .lp-bento-testimonials__card--featured .lp-bento-testimonials__quote {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--lp-bento-muted);
 }
 
 .lp-bento-testimonials__profile {
@@ -1453,8 +1460,8 @@ html[data-bs-theme='dark'] .mk-landing--premium .lp-bento-pillars__tab--sell.lp-
 }
 
 .lp-bento-testimonials__card--featured .lp-bento-testimonials__avatar {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background: rgba(var(--lp-bento-primary-rgb), 0.12);
+  color: var(--lp-bento-primary);
 }
 
 .lp-bento-testimonials__name {
@@ -1481,24 +1488,25 @@ html[data-bs-theme='dark'] .mk-landing--premium .lp-bento-pillars__tab--sell.lp-
 }
 
 .lp-services__head {
-  max-width: 36rem;
-  margin-bottom: 1.75rem;
+  max-width: 38rem;
+  margin-bottom: clamp(2rem, 4vw, 2.75rem);
 }
 
 .lp-services__eyebrow {
-  margin: 0 0 0.4rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  margin: 0 0 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--lp-bento-primary);
 }
 
 .lp-services__lead {
-  margin: 0.65rem 0 0;
-  font-size: 1rem;
-  line-height: 1.55;
+  margin: 0.85rem 0 0;
+  font-size: 1.05rem;
+  line-height: 1.65;
   color: var(--lp-bento-muted);
+  max-width: 36rem;
 }
 
 .lp-services__pillars {
@@ -2670,14 +2678,14 @@ html[data-bs-theme='dark'] .lp-rider__reqs li {
 
 .lp-audience__head {
   max-width: 40rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: clamp(2rem, 4vw, 2.75rem);
 }
 
 .lp-audience__eyebrow {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.65rem;
   font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--lp-bento-primary);
 }
@@ -2695,8 +2703,10 @@ html[data-bs-theme='dark'] .lp-rider__reqs li {
 
 .lp-audience__lead {
   margin: 0;
-  line-height: 1.6;
+  font-size: 1.05rem;
+  line-height: 1.65;
   color: var(--lp-bento-muted);
+  max-width: 36rem;
 }
 
 .lp-audience__earnings {

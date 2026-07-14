@@ -160,8 +160,19 @@ const isActiveTrip = computed(() => {
 })
 
 const canCancel = computed(() => {
-  const s = String(rideStatus.value).toLowerCase()
-  return ['pending', 'searching', 'scheduled', 'assigned', 'accepted', 'requested'].includes(s)
+  const s = String(rideStatus.value).toLowerCase().replace(/-/g, '_')
+  return [
+    'pending',
+    'searching',
+    'scheduled',
+    'assigned',
+    'accepted',
+    'requested',
+    'offered',
+    'en_route',
+    'arriving',
+    'driver_arrived',
+  ].includes(s)
 })
 
 function formatMoney(v: unknown) {

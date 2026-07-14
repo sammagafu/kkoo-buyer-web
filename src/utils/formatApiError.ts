@@ -38,9 +38,9 @@ export function formatApiError(
   if (code === 'admin_use_admin_endpoints') {
     parts.push('Use the admin dashboard for this action.')
   } else if (code === 'otp_required') {
-    parts.push('OTP-only sign-in. Request a code and sign in with OTP.')
+    parts.push('OTP-only sign-in. Request a WhatsApp code and sign in with OTP.')
   } else if (code === 'password_auth_disabled') {
-    parts.push('Password login is disabled. Use OTP to sign in.')
+    parts.push('Password login is disabled. Use the WhatsApp OTP to sign in.')
   } else if (code === 'phone_number_already_registered') {
     parts.push('Phone number already registered.')
   } else if (code === 'otp_delivery_not_configured') {

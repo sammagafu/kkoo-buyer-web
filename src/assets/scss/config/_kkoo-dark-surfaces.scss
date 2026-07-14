@@ -102,7 +102,16 @@ html.theme-dark {
 
   .buyer-side-nav__promo-btn {
     background: var(--buyer-surface);
-    color: var(--kkoo-primary);
+    color: var(--kkoo-accent, #f7a829);
+  }
+
+  .buyer-side-nav__link--active {
+    color: var(--kkoo-accent, #f7a829) !important;
+    background: color-mix(in srgb, var(--kkoo-accent, #f7a829) 18%, transparent);
+  }
+
+  .buyer-side-nav__link--active .buyer-side-nav__icon {
+    color: var(--kkoo-accent, #f7a829) !important;
   }
 
   // Surfaces & cards — landing/admin dark gradient
@@ -370,8 +379,14 @@ html.theme-dark {
   }
 
   .fulfillment-bar__mode--active {
-    background: rgba(92, 48, 143, 0.35);
-    border-color: rgba(92, 48, 143, 0.5);
+    background: rgba(247, 168, 41, 0.18);
+    border-color: rgba(247, 168, 41, 0.45);
+    color: var(--kkoo-accent, #f7a829);
+  }
+
+  .buyer-shopping-shell .text-primary,
+  .buyer-shopping-shell .link-primary {
+    color: var(--kkoo-accent, #f7a829) !important;
   }
 
   // Compare hero

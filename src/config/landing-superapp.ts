@@ -36,7 +36,7 @@ export const superAppAudiences: {
   { id: 'consumer', labelKey: 'landing.superApp.audienceConsumer', descKey: 'landing.superApp.audienceConsumerDesc', icon: 'solar:cart-large-2-bold' },
   { id: 'merchant', labelKey: 'landing.superApp.audienceMerchant', descKey: 'landing.superApp.audienceMerchantDesc', icon: 'solar:shop-2-bold' },
   { id: 'rider', labelKey: 'landing.superApp.audienceRider', descKey: 'landing.superApp.audienceRiderDesc', icon: 'solar:scooter-bold' },
-  { id: 'business', labelKey: 'landing.superApp.audienceBusiness', descKey: 'landing.superApp.audienceBusinessDesc', icon: 'solar:buildings-3-bold' },
+  { id: 'business', labelKey: 'landing.superApp.audienceBusiness', descKey: 'landing.superApp.audienceBusinessDesc', icon: 'solar:widget-5-bold' },
 ]
 
 const consumerGroups: SuperAppServiceGroup[] = [
@@ -91,8 +91,8 @@ const merchantGroups: SuperAppServiceGroup[] = [
     key: 'grow',
     titleKey: 'landing.superApp.groupGrowMerchant',
     items: [
-      { key: 'business', labelKey: 'landing.navBusiness', descKey: 'landing.exploreBusinessDesc', icon: 'solar:shop-2-bold', to: buyerRoutes.business },
-      { key: 'merchant', labelKey: 'landing.exploreMerchant', descKey: 'landing.exploreMerchantDesc', icon: 'solar:bag-5-bold', to: buyerRoutes.merchant },
+      { key: 'sell', labelKey: 'landing.navSell', descKey: 'landing.exploreMerchantDesc', icon: 'solar:shop-2-bold', to: buyerRoutes.merchant },
+      { key: 'tools', labelKey: 'landing.navBusinessTools', descKey: 'landing.exploreBusinessDesc', icon: 'solar:widget-5-bold', to: buyerRoutes.business },
     ],
   },
 ]
@@ -110,10 +110,11 @@ const riderGroups: SuperAppServiceGroup[] = [
 
 const businessGroups: SuperAppServiceGroup[] = [
   {
-    key: 'enterprise',
-    titleKey: 'landing.superApp.groupEnterprise',
+    key: 'tools',
+    titleKey: 'landing.superApp.groupBusinessTools',
     items: [
-      { key: 'business', labelKey: 'landing.navBusiness', descKey: 'landing.superApp.enterpriseBusinessDesc', icon: 'solar:shop-2-bold', to: buyerRoutes.business },
+      { key: 'tools', labelKey: 'landing.navBusinessTools', descKey: 'landing.superApp.enterpriseBusinessDesc', icon: 'solar:widget-5-bold', to: buyerRoutes.business },
+      { key: 'sell', labelKey: 'landing.navSell', descKey: 'landing.exploreMerchantDesc', icon: 'solar:shop-2-bold', to: buyerRoutes.merchant },
       { key: 'partner', labelKey: 'landing.footerPartnerApi', descKey: 'landing.superApp.partnerDesc', icon: 'solar:code-square-bold', to: { name: 'pages.partner-register' } },
       { key: 'careers', labelKey: 'landing.footerCareers', descKey: 'landing.superApp.careersDesc', icon: 'solar:case-round-bold', to: buyerRoutes.careers },
     ],

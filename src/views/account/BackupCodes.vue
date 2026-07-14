@@ -10,7 +10,7 @@
 
     <section class="buyer-detail-card">
       <p class="buyer-page-head__meta">
-        One-time codes you can use at sign-in if you cannot receive SMS OTP. Each code works once. Store them in a
+        One-time codes you can use at sign-in if you cannot receive a WhatsApp OTP. Each code works once. Store them in a
         password manager or print them—KKOO cannot show the same codes again from the server after you leave this page.
       </p>
 

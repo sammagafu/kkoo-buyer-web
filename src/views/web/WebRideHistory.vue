@@ -120,7 +120,18 @@ import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 type RideRow = Record<string, unknown>
 type TripFilter = 'all' | 'passenger' | 'parcel'
 
-const CANCELLABLE = new Set(['pending', 'searching', 'scheduled', 'assigned', 'accepted', 'requested'])
+const CANCELLABLE = new Set([
+  'pending',
+  'searching',
+  'scheduled',
+  'assigned',
+  'accepted',
+  'requested',
+  'offered',
+  'en_route',
+  'arriving',
+  'driver_arrived',
+])
 
 const router = useRouter()
 const { t } = useI18n()

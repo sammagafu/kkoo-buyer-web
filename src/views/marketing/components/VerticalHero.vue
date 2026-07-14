@@ -12,6 +12,10 @@
           <div v-if="$slots.actions" class="vx-actions">
             <slot name="actions" />
           </div>
+          <p v-if="badgeLabel || badgeTitle" class="vx-proof">
+            <span v-if="badgeLabel" class="vx-proof__label">{{ badgeLabel }}</span>
+            <strong v-if="badgeTitle">{{ badgeTitle }}</strong>
+          </p>
           <div v-if="chips?.length" class="vx-chips">
             <span v-for="chip in chips" :key="chip" class="vx-chip">{{ chip }}</span>
           </div>
@@ -23,10 +27,6 @@
             <div v-else class="vx-media__placeholder" aria-hidden="true">
               <Icon icon="solar:gallery-bold-duotone" class="vx-media__placeholder-icon" />
             </div>
-          </div>
-          <div v-if="badgeLabel || badgeTitle" class="vx-badge">
-            <span v-if="badgeLabel">{{ badgeLabel }}</span>
-            <strong v-if="badgeTitle">{{ badgeTitle }}</strong>
           </div>
         </div>
       </div>

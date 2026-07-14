@@ -3117,6 +3117,12 @@ button.buyer-search-bar {
   text-align: center;
 }
 
+html[data-bs-theme='dark'] .buyer-mhome-header__badge,
+html.theme-dark .buyer-mhome-header__badge {
+  background: var(--kkoo-accent, #f7a829);
+  color: #1a1224;
+}
+
 .buyer-mhome-greeting__line {
   margin: 0;
   font-size: 1.15rem;

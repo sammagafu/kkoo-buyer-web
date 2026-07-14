@@ -78,13 +78,13 @@ onMounted(() => observeRevealChildren(rootRef.value))
 <style scoped>
 .lp-bento-testimonials--static {
   display: grid;
-  gap: 1rem;
+  gap: clamp(2rem, 4vw, 3rem);
 }
 
 @media (min-width: 768px) {
   .lp-bento-testimonials--static {
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
+    gap: clamp(2rem, 4vw, 3rem);
   }
 }
 </style>

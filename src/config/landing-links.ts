@@ -62,7 +62,7 @@ export const landingSectionNavItems = [
   { key: 'stories', sectionId: 'stories', labelKey: 'landing.premium.navStories' },
 ] as const
 
-/** Header nav — launch scope: shopping, delivery, and business tools for sellers. */
+/** Header nav — shopper + send + one clear seller entry. */
 export const primaryNavItems = [
   {
     key: 'shop',
@@ -77,16 +77,10 @@ export const primaryNavItems = [
     icon: 'solar:box-bold',
   },
   {
-    key: 'business',
-    route: buyerRoutes.business,
-    labelKey: 'landing.navBusiness',
-    icon: 'solar:shop-2-bold',
-  },
-  {
-    key: 'merchant',
+    key: 'sell',
     route: buyerRoutes.merchant,
-    labelKey: 'landing.exploreMerchant',
-    icon: 'solar:bag-5-bold',
+    labelKey: 'landing.navSell',
+    icon: 'solar:shop-2-bold',
   },
 ] as const
 
@@ -145,11 +139,11 @@ export const adminDashboardUrl = adminWebPath('/dashboard')
 /** Footer / help links for sellers — marketing pages on buyer + tools on biz. */
 export const sellerNavItems = {
   business: {
-    labelKey: 'landing.navBusiness',
+    labelKey: 'landing.navBusinessTools',
     route: buyerRoutes.business,
   },
   merchant: {
-    labelKey: 'landing.exploreMerchant',
+    labelKey: 'landing.navSell',
     route: buyerRoutes.merchant,
   },
   register: {
@@ -233,17 +227,17 @@ export const marketingPrograms = [
   {
     key: 'business',
     route: buyerRoutes.business,
-    labelKey: 'landing.navBusiness',
+    labelKey: 'landing.navBusinessTools',
     descKey: 'landing.exploreBusinessDesc',
-    icon: 'solar:shop-2-bold',
+    icon: 'solar:widget-5-bold',
     accent: 'business',
   },
   {
     key: 'merchant',
     route: buyerRoutes.merchant,
-    labelKey: 'landing.exploreMerchant',
+    labelKey: 'landing.navSell',
     descKey: 'landing.exploreMerchantDesc',
-    icon: 'solar:bag-5-bold',
+    icon: 'solar:shop-2-bold',
     accent: 'merchant',
   },
   {

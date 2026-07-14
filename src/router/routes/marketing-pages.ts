@@ -35,9 +35,9 @@ export const pagesRoutes = [
         path: '/business',
         name: 'pages.business',
         meta: {
-            title: setLandingTitle('For Business'),
+            title: setLandingTitle('Business tools'),
             description:
-                'Sell on KKOO: list products, take orders, request delivery, get paid on schedule. Marketplace, restaurant, or grocery. Optional CRM: customers, invoices, deni, stock, suppliers.',
+                'KKOO Business tools for shops already selling: seller dashboard, staff roles, CRM, stock, and day-to-day operations.',
         },
         component: () => import('@/views/marketing/Business.vue'),
     },
@@ -45,11 +45,19 @@ export const pagesRoutes = [
         path: '/merchant',
         name: 'pages.merchant',
         meta: {
-            title: setLandingTitle('For Merchants'),
+            title: setLandingTitle('Sell'),
             description:
-                "Grow with KKOO: sell food, groceries, and retail with menus, storefronts, delivery, and payouts built for busy shops and repeat customers.",
+                'Sell on KKOO: open a shop for food, groceries, or retail. List products, take orders, delivery, and clear payouts.',
         },
         component: () => import('@/views/marketing/Merchant.vue'),
+    },
+    {
+        path: '/sell',
+        redirect: { name: 'pages.merchant' },
+    },
+    {
+        path: '/tools',
+        redirect: { name: 'pages.business' },
     },
     {
         path: '/restaurants',

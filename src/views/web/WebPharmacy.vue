@@ -63,9 +63,97 @@
       </div>
 
       <BuyerSearchBar v-model="search" :placeholder="t('buyerXp.pharmacy.searchPlaceholder')" />
+
+      <div v-if="categoryOptions.length" class="buyer-pharmacy-filters mt-2">
+        <button
+          type="button"
+          class="buyer-venue__chip"
+          :class="{ 'buyer-venue__chip--primary': activeCategory === 'all' }"
+          @click="activeCategory = 'all'; activeSubcategory = 'all'"
+        >
+          All categories
+        </button>
+        <button
+          v-for="c in categoryOptions"
+          :key="c.slug"
+          type="button"
+          class="buyer-venue__chip"
+          :class="{ 'buyer-venue__chip--primary': activeCategory === c.slug }"
+          @click="activeCategory = c.slug; activeSubcategory = 'all'"
+        >
+          {{ c.name }}
+        </button>
+      </div>
+      <div v-if="subcategoryOptions.length" class="buyer-pharmacy-filters mt-1">
+        <button
+          type="button"
+          class="buyer-venue__chip"
+          :class="{ 'buyer-venue__chip--primary': activeSubcategory === 'all' }"
+          @click="activeSubcategory = 'all'"
+        >
+          All subcategories
+        </button>
+        <button
+          v-for="c in subcategoryOptions"
+          :key="c.slug"
+          type="button"
+          class="buyer-venue__chip"
+          :class="{ 'buyer-venue__chip--primary': activeSubcategory === c.slug }"
+          @click="activeSubcategory = c.slug"
+        >
+          {{ c.name }}
+        </button>
+      </div>
+      <div class="buyer-pharmacy-filters mt-1">
+        <button
+          v-for="age in ageOptions"
+          :key="age.value"
+          type="button"
+          class="buyer-venue__chip"
+          :class="{ 'buyer-venue__chip--primary': activeAge === age.value }"
+          @click="activeAge = age.value"
+        >
+          {{ age.label }}
+        </button>
+      </div>
+      <div v-if="requirementOptions.length" class="buyer-pharmacy-filters mt-1">
+        <button
+          type="button"
+          class="buyer-venue__chip"
+          :class="{ 'buyer-venue__chip--primary': activeRequirement === 'all' }"
+          @click="activeRequirement = 'all'"
+        >
+          All needs
+        </button>
+        <button
+          v-for="req in requirementOptions"
+          :key="req"
+          type="button"
+          class="buyer-venue__chip"
+          :class="{ 'buyer-venue__chip--primary': activeRequirement === req }"
+          @click="activeRequirement = req"
+        >
+          {{ req.replaceAll('_', ' ') }}
+        </button>
+      </div>
+
+      <template v-if="groupedProducts.length">
+        <div v-for="group in groupedProducts" :key="group.title" class="mt-3">
+          <h3 class="buyer-page-head__meta" style="font-weight:700;margin-bottom:0.5rem">{{ group.title }}</h3>
+          <BuyerProductGridSection
+            :products="group.products"
+            :loading="false"
+            :error="''"
+            :adding="adding"
+            :add-error="addError"
+            @add="(p) => addProduct(p)"
+          />
+        </div>
+      </template>
       <BuyerProductGridSection
+        v-else
         class="mt-3"
-        :products="products"
+        :products="filteredProducts"
         :loading="loading"
         :error="error"
         :adding="adding"
@@ -131,8 +219,11 @@ const fulfillmentHint = computed(() =>
 
 const checkoutLink = computed(() => buildCheckoutLink(fulfillmentMode.value))
 
+type CatNode = { id: number; name: string; slug: string; parent_id?: number | null; children?: CatNode[] }
+
 const viewMode = ref<'hub' | 'store'>('hub')
 const products = ref<GridProduct[]>([])
+const pharmacyTree = ref<CatNode[]>([])
 const search = ref('')
 const loading = ref(false)
 const error = ref('')
@@ -141,18 +232,111 @@ const rxFile = ref<File | null>(null)
 const rxNotes = ref('')
 const uploading = ref(false)
 const uploadMsg = ref('')
+const activeCategory = ref('all')
+const activeSubcategory = ref('all')
+const activeAge = ref('all')
+const activeRequirement = ref('all')
+
+const ageOptions = [
+  { value: 'all', label: 'All ages' },
+  { value: 'infant', label: 'Infant' },
+  { value: 'child', label: 'Child' },
+  { value: 'adolescent', label: 'Adolescent' },
+  { value: 'adult', label: 'Adult' },
+  { value: 'elderly', label: 'Elderly' },
+]
+
+const pharmacyRoot = computed(() => {
+  const roots = pharmacyTree.value
+  return roots.find((c) => c.slug === PHARMACY_SLUG) ?? roots[0] ?? null
+})
+
+const categoryOptions = computed(() => pharmacyRoot.value?.children ?? [])
+
+const subcategoryOptions = computed(() => {
+  if (activeCategory.value === 'all') return []
+  const cat = categoryOptions.value.find((c) => c.slug === activeCategory.value)
+  return cat?.children ?? []
+})
+
+function flattenSlugs(node: CatNode): string[] {
+  const out = [node.slug]
+  for (const child of node.children ?? []) out.push(...flattenSlugs(child))
+  return out
+}
+
+const filteredProducts = computed(() => {
+  let list = products.value as Array<GridProduct & {
+    category_slug?: string
+    category_name?: string
+    patient_age_group?: string
+    patient_requirements?: string[]
+  }>
+
+  if (activeSubcategory.value !== 'all') {
+    list = list.filter((p) => p.category_slug === activeSubcategory.value)
+  } else if (activeCategory.value !== 'all') {
+    const cat = categoryOptions.value.find((c) => c.slug === activeCategory.value)
+    if (cat) {
+      const slugs = new Set(flattenSlugs(cat))
+      list = list.filter((p) => (p.category_slug && slugs.has(p.category_slug)) || p.category_name === cat.name)
+    }
+  }
+
+  if (activeAge.value !== 'all') {
+    list = list.filter((p) => {
+      const g = (p.patient_age_group || '').toLowerCase()
+      return !g || g === 'all_ages' || g === activeAge.value
+    })
+  }
+
+  if (activeRequirement.value !== 'all') {
+    list = list.filter((p) =>
+      (p.patient_requirements || []).map((x) => x.toLowerCase()).includes(activeRequirement.value),
+    )
+  }
+
+  return list
+})
+
+const requirementOptions = computed(() => {
+  const tags = new Set<string>()
+  for (const p of products.value as Array<{ patient_requirements?: string[] }>) {
+    for (const t of p.patient_requirements || []) tags.add(String(t).toLowerCase())
+  }
+  return [...tags].sort()
+})
+
+const groupedProducts = computed(() => {
+  const map = new Map<string, GridProduct[]>()
+  for (const p of filteredProducts.value) {
+    const title = (p as { category_name?: string }).category_name || 'Medicines'
+    if (!map.has(title)) map.set(title, [])
+    map.get(title)!.push(p)
+  }
+  return [...map.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([title, products]) => ({ title, products }))
+})
 
 async function loadProducts() {
   loading.value = true
   error.value = ''
   try {
-    const { data } = await catalogPublicApi.listProducts({
-      category_slug: PHARMACY_SLUG,
-      search: search.value || undefined,
-      page_size: 48,
-      in_stock: true,
-    } as never)
-    products.value = (data?.results as GridProduct[]) ?? []
+    const [prodRes, catRes] = await Promise.all([
+      catalogPublicApi.listProducts({
+        category: PHARMACY_SLUG,
+        search: search.value || undefined,
+        page_size: 80,
+        in_stock: true,
+      } as never),
+      catalogPublicApi.listCategories({ kind: 'pharmacy' }),
+    ])
+    products.value = (prodRes.data?.results as GridProduct[]) ?? []
+    pharmacyTree.value = ((catRes.data?.results as CatNode[]) ?? []).map((n) => ({
+      ...n,
+      children: n.children ?? [],
+    }))
   } catch (e) {
     error.value = formatApiError(e, t('buyerXp.pharmacy.couldNotLoadMedicines'))
   } finally {
@@ -191,3 +375,11 @@ watch(viewMode, (mode) => {
   if (mode === 'store') void loadProducts()
 })
 </script>
+
+<style scoped>
+.buyer-pharmacy-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+</style>

@@ -130,12 +130,22 @@ async function verify() {
   }
 }
 
+function navigateToRedirect(uri: string) {
+  // Custom schemes (kkoo://…) must leave the page for ASWebAuthenticationSession.
+  const isCustomScheme = /^[a-z][a-z0-9+.-]*:/i.test(uri) && !/^https?:/i.test(uri)
+  if (isCustomScheme) {
+    window.location.replace(uri)
+    return
+  }
+  window.location.assign(uri)
+}
+
 async function approve(allow: boolean) {
   if (!challenge.value) return
   busy.value = true
   try {
     const { redirect_uri: redirectUri } = await approveOAuthChallenge(challenge.value.challenge_id, allow)
-    window.location.href = redirectUri
+    navigateToRedirect(redirectUri)
   } catch (e: unknown) {
     formError.value = e instanceof Error ? e.message : 'Could not complete authorization'
   } finally {

@@ -3,8 +3,6 @@
     <AuthCard
       :title="t('auth.signUpTitleBuyer')"
       :subtitle="t('auth.signUpCopyBuyer')"
-      :info-lines="signUpInfoLines"
-      :tag-icons="signUpTagIcons"
       :logo-height="64"
       wide
       show-logo
@@ -70,7 +68,7 @@ import AuthLayout from '@/layouts/AuthLayout.vue'
 import AuthCard from '@/components/auth/AuthCard.vue'
 import AuthField from '@/components/auth/AuthField.vue'
 import AuthTermsCheck from '@/components/auth/AuthTermsCheck.vue'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { authApi } from '@/api'
@@ -91,14 +89,6 @@ const lastName = ref('')
 const acceptTerms = ref(false)
 const error = ref('')
 const loading = ref(false)
-
-const signUpInfoLines = computed(() => [
-  t('auth.signUpInfo1'),
-  t('auth.signUpInfo2'),
-  t('auth.signUpInfo3'),
-])
-
-const signUpTagIcons = ['bi-bag', 'bi-phone', 'bi-shield-check']
 
 async function handleSubmit() {
   error.value = ''
