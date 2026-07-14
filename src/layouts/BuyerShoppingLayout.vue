@@ -60,6 +60,7 @@ import BuyerNotificationsDrawer from '@/components/buyer/BuyerNotificationsDrawe
 import BuyerCampaignModal from '@/components/buyer/BuyerCampaignModal.vue'
 import ProductShareEarnSheet from '@/components/buyer/ProductShareEarnSheet.vue'
 import { useWebCart } from '@/composables/useWebCart'
+import { syncGuestWishlistToServer } from '@/composables/useProductFavorite'
 import { useBuyerNotifications } from '@/composables/useBuyerNotifications'
 import { useBuyerCampaigns } from '@/composables/useBuyerCampaigns'
 import { useAuthStore } from '@/stores/auth'
@@ -117,6 +118,7 @@ watch(
       void loadUnreadCount()
       void loadAdvertCampaign()
       await syncGuestCartToServer()
+      await syncGuestWishlistToServer()
       void loadCart()
     } else {
       notificationUnreadCount.value = 0

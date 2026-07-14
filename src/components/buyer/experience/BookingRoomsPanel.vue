@@ -16,7 +16,10 @@
           <p class="booking-room-row__desc">{{ item.description || t('buyerXp.booking.hospitality') }}</p>
         </div>
         <div class="booking-room-row__side">
-          <strong class="booking-room-row__price">{{ formatPrice(item.price ?? item.base_price) }}</strong>
+          <div class="booking-room-row__prices">
+            <strong class="booking-room-row__price">{{ formatPrice(displayPrice(item)) }}</strong>
+            <span v-if="compareAt(item)" class="booking-room-row__was">{{ formatPrice(compareAt(item)) }}</span>
+          </div>
           <button
             type="button"
             class="booking-room-row__book"
@@ -68,6 +71,19 @@ withDefaults(
 defineEmits<{ 'add-to-cart': [item: MenuItem] }>()
 
 const { t } = useI18n()
+
+function displayPrice(item: MenuItem) {
+  const row = item as MenuItem & { discount_price?: number }
+  return row.discount_price ?? item.price ?? item.base_price
+}
+
+function compareAt(item: MenuItem) {
+  const row = item as MenuItem & { discount_price?: number }
+  if (row.discount_price == null) return null
+  const anchor = item.base_price ?? item.price
+  if (anchor == null || Number(anchor) <= Number(row.discount_price)) return null
+  return Number(anchor)
+}
 
 function formatPrice(val?: number | null) {
   if (val == null) return '—'

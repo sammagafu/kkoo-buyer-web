@@ -8,18 +8,34 @@
       <Icon icon="solar:chair-2-bold" class="table-booking__head-icon" aria-hidden="true" />
     </header>
 
+    <div
+      class="table-booking__progress"
+      role="progressbar"
+      :aria-valuenow="bookingProgress"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-label="Reservation progress"
+    >
+      <div class="table-booking__progress-bar" :style="{ width: `${bookingProgress}%` }" />
+      <span class="table-booking__progress-label">{{ bookingProgress }}%</span>
+    </div>
+
     <div class="table-booking__fields">
       <label class="table-booking__field">
-        <span>Guests</span>
+        <span>Guests <em class="table-booking__rec">Recommended</em></span>
         <input v-model.number="partySize" type="number" min="1" max="20" />
       </label>
       <label class="table-booking__field">
         <span>Date</span>
-        <input v-model="date" type="date" />
+        <input v-model="date" type="date" :min="minDate" />
       </label>
       <label class="table-booking__field">
-        <span>Time</span>
-        <input v-model="time" type="time" />
+        <span>Time <em class="table-booking__rec">Dinner</em></span>
+        <select v-model="time">
+          <option v-for="slot in timeSlots" :key="slot.value" :value="slot.value">
+            {{ slot.label }}
+          </option>
+        </select>
       </label>
     </div>
 
@@ -39,14 +55,19 @@
         {{ checking ? 'Checking…' : 'Check availability' }}
       </button>
       <button type="button" class="table-booking__btn" :disabled="booking || !canSubmit" @click="bookTable">
-        {{ booking ? 'Booking…' : 'Reserve table' }}
+        {{ reserveCta }}
       </button>
     </div>
+
+    <p v-if="!auth.isAuthenticated" class="table-booking__guest-hint">
+      Pick guests, date, and time first — sign in only when you reserve so you don’t lose this table.
+    </p>
   </section>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { superAppApi } from '@/api/superApp'
 import { useAuthStore } from '@/stores/auth'
@@ -58,6 +79,9 @@ const props = defineProps<{
 }>()
 
 const auth = useAuthStore()
+const router = useRouter()
+const route = useRoute()
+
 const partySize = ref(2)
 const date = ref(defaultDate())
 const time = ref('19:00')
@@ -69,13 +93,42 @@ const availabilityOk = ref(false)
 const error = ref('')
 const success = ref('')
 
+const timeSlots = [
+  { value: '12:00', label: '12:00 · Lunch' },
+  { value: '13:00', label: '13:00 · Lunch' },
+  { value: '18:00', label: '18:00 · Early dinner' },
+  { value: '19:00', label: '19:00 · Dinner (recommended)' },
+  { value: '20:00', label: '20:00 · Dinner' },
+  { value: '21:00', label: '21:00 · Late' },
+]
+
 function defaultDate() {
   const d = new Date()
   d.setDate(d.getDate() + 1)
   return d.toISOString().slice(0, 10)
 }
 
+const minDate = computed(() => new Date().toISOString().slice(0, 10))
+
 const canSubmit = computed(() => Boolean(props.sellerUserId && date.value && time.value && partySize.value > 0))
+
+/** Goal gradient: defaults already fill party + dinner slot — never 0%. */
+const bookingProgress = computed(() => {
+  let pct = 25
+  if (partySize.value > 0) pct = 40
+  if (date.value) pct = Math.max(pct, 55)
+  if (time.value) pct = Math.max(pct, 70)
+  if (availabilityOk.value) pct = Math.max(pct, 85)
+  if (success.value) pct = 100
+  return pct
+})
+
+const reserveCta = computed(() => {
+  if (booking.value) return 'Booking…'
+  if (!auth.isAuthenticated) return 'Keep this table'
+  if (availabilityOk.value) return 'Reserve table'
+  return 'Reserve table'
+})
 
 function reservedAtIso(): string | null {
   if (!date.value || !time.value) return null
@@ -83,6 +136,50 @@ function reservedAtIso(): string | null {
   if (Number.isNaN(local.getTime())) return null
   return local.toISOString()
 }
+
+const DRAFT_KEY = 'kkoo_table_booking_draft'
+
+function loadDraft() {
+  try {
+    const raw = sessionStorage.getItem(DRAFT_KEY)
+    if (!raw) return
+    const d = JSON.parse(raw) as {
+      sellerUserId?: number
+      partySize?: number
+      date?: string
+      time?: string
+      notes?: string
+    }
+    if (d.sellerUserId && props.sellerUserId && d.sellerUserId !== props.sellerUserId) return
+    if (d.partySize) partySize.value = d.partySize
+    if (d.date) date.value = d.date
+    if (d.time) time.value = d.time
+    if (d.notes != null) notes.value = d.notes
+  } catch {
+    /* ignore */
+  }
+}
+
+function saveDraft() {
+  try {
+    sessionStorage.setItem(
+      DRAFT_KEY,
+      JSON.stringify({
+        sellerUserId: props.sellerUserId,
+        partySize: partySize.value,
+        date: date.value,
+        time: time.value,
+        notes: notes.value,
+      }),
+    )
+  } catch {
+    /* ignore */
+  }
+}
+
+loadDraft()
+
+watch([partySize, date, time, notes], saveDraft)
 
 watch(
   () => [props.sellerUserId, date.value, time.value, partySize.value],
@@ -111,7 +208,7 @@ async function checkAvailability() {
     })
     availabilityOk.value = Boolean(data?.available)
     availabilityMessage.value = data?.available
-      ? `Table available for ${partySize.value} guests.`
+      ? `Table available for ${partySize.value} guests — hold it before someone else does.`
       : (data?.reason as string) || 'Not available for this time.'
   } catch (e) {
     error.value = formatApiError(e, 'Could not check availability')
@@ -124,7 +221,11 @@ async function bookTable() {
   error.value = ''
   success.value = ''
   if (!auth.isAuthenticated) {
-    error.value = 'Sign in to book a table.'
+    // IKEA + loss aversion: let them customize first, then soft gate
+    await router.push({
+      name: 'auth.sign-in',
+      query: { redirectedFrom: route.fullPath },
+    })
     return
   }
   const at = reservedAtIso()

@@ -2681,6 +2681,13 @@ button.buyer-search-bar {
   flex-shrink: 0;
 }
 
+.booking-room-row__prices {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+}
+
 .booking-room-row__price {
   font-size: 0.95rem;
   font-weight: 800;
@@ -2688,11 +2695,17 @@ button.buyer-search-bar {
   white-space: nowrap;
 }
 
+.booking-room-row__was {
+  font-size: 0.75rem;
+  color: var(--buyer-muted, #6a4c86);
+  text-decoration: line-through;
+}
+
 .booking-room-row__book {
   padding: 0.45rem 0.85rem;
   border-radius: 999px;
   border: none;
-  background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+  background: var(--kkoo-primary, #5c308f);
   color: #fff;
   font-size: 0.78rem;
   font-weight: 800;

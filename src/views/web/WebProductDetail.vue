@@ -34,7 +34,11 @@
         <p v-if="product.store_name" class="buyer-page-head__meta mb-2">{{ product.store_name }}</p>
         <p v-if="product.description" class="buyer-page-head__meta mb-3">{{ product.description }}</p>
         <div class="buyer-detail-row buyer-detail-row--actions">
-          <strong style="font-size: 1.35rem">{{ formatPrice(price) }}</strong>
+          <div class="buyer-product-price">
+            <strong class="buyer-product-price__now">{{ formatPrice(price) }}</strong>
+            <span v-if="compareAtPrice" class="buyer-product-price__was">{{ formatPrice(compareAtPrice) }}</span>
+            <span v-if="saveAmount" class="buyer-product-price__save">{{ t('buyerXp.product.saveAmount', { amount: formatPrice(saveAmount) }) }}</span>
+          </div>
           <div class="buyer-detail-actions">
             <button
               v-if="product.id"
@@ -151,13 +155,36 @@ const selectedSkuId = ref<number | null>(null)
 const sharing = ref(false)
 
 const productId = computed(() => product.value?.id ?? null)
-const { favorited, toggling: togglingFavorite, toggleFavorite } = useProductFavorite(productId)
 
 const price = computed(() => {
   const p = product.value as { discount_price?: number; price?: number; base_price?: number } | null
   return p?.discount_price ?? p?.price ?? p?.base_price
 })
+const compareAtPrice = computed(() => {
+  const p = product.value as { discount_price?: number; price?: number; base_price?: number } | null
+  if (!p?.discount_price) return null
+  const anchor = p.base_price ?? p.price
+  if (anchor == null || Number(anchor) <= Number(p.discount_price)) return null
+  return Number(anchor)
+})
+const saveAmount = computed(() => {
+  if (compareAtPrice.value == null || price.value == null) return null
+  const delta = compareAtPrice.value - Number(price.value)
+  return delta > 0 ? delta : null
+})
 const imageUrl = computed(() => resolveAssetUrl(product.value?.cover_image ?? product.value?.image_url))
+const favoriteMeta = computed(() => {
+  if (!product.value) return null
+  return {
+    title: product.value.title,
+    slug: product.value.slug,
+    price: price.value ?? undefined,
+    basePrice: compareAtPrice.value ?? undefined,
+    imageUrl: imageUrl.value || undefined,
+    skuId: selectedSkuId.value ?? undefined,
+  }
+})
+const { favorited, toggling: togglingFavorite, toggleFavorite } = useProductFavorite(productId, favoriteMeta)
 const skuOptions = computed(() => {
   const skus = (product.value?.skus ?? []) as SkuRow[]
   return skus.filter((s) => s.id != null)
@@ -281,6 +308,27 @@ onMounted(load)
   font-size: 1.05rem;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(59, 26, 90, 0.08);
+}
+
+.buyer-product-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+}
+.buyer-product-price__now {
+  font-size: 1.35rem;
+  color: var(--buyer-ink, #3b1a5a);
+}
+.buyer-product-price__was {
+  font-size: 0.95rem;
+  color: var(--buyer-muted, #6a4c86);
+  text-decoration: line-through;
+}
+.buyer-product-price__save {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--kkoo-secondary, #f7a829);
 }
 
 .buyer-detail-actions__btn--active {

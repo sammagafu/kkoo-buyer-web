@@ -990,13 +990,51 @@ html.theme-dark .buyer-side-nav__counter--cart {
   grid-column: 1 / -1;
 }
 
-.table-booking__field input {
+.table-booking__progress {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.table-booking__progress-bar {
+  height: 0.35rem;
+  border-radius: 999px;
+  background: var(--kkoo-secondary, #f7a829);
+  transition: width 0.35s ease;
+  flex: 1 1 auto;
+  max-width: calc(100% - 3rem);
+}
+
+.table-booking__progress-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--bs-primary);
+  min-width: 2.5rem;
+}
+
+.table-booking__rec {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--kkoo-secondary, #f7a829);
+  font-size: 0.68rem;
+  margin-left: 0.25rem;
+}
+
+.table-booking__field input,
+.table-booking__field select {
   padding: 0.5rem 0.65rem;
   border-radius: 0.5rem;
   border: 1px solid rgba(var(--bs-primary-rgb), 0.14);
   background: var(--bs-body-bg);
   color: var(--bs-body-color);
   font-size: 0.88rem;
+}
+
+.table-booking__guest-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--bs-secondary-color);
+  line-height: 1.4;
 }
 
 .table-booking__status {

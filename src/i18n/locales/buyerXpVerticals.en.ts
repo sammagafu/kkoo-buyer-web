@@ -289,6 +289,13 @@ export const buyerXpVerticals = {
     loyaltyPolicyNote:
       'Earn up to 1% back in KKOO Points on every purchase. Use your points on food, rides, shops, and more — up to 25% off your order.',
     cartSummary: 'Cart: {count} items · {total}',
+    itemsCount: '{count} items',
+    checkoutProgressLabel: 'Checkout steps',
+    stepCart: 'Cart',
+    stepDelivery: 'Delivery',
+    stepPay: 'Pay',
+    showExtras: 'Gift code & points',
+    hideExtras: 'Hide extras',
     placeOrder: 'Place order',
     placingOrder: 'Placing order…',
     orderPlaced: 'Order placed successfully.',
@@ -296,6 +303,7 @@ export const buyerXpVerticals = {
     fulfillmentDelivery: 'Delivery to your address',
     fulfillmentPickup: 'Pick up from seller',
     fulfillmentDineIn: 'Dine in at venue',
+    paymentRecommended: 'Recommended',
   },
   orders: {
     title: 'Your orders',
@@ -419,6 +427,8 @@ export const buyerXpVerticals = {
     saveFavorite: 'Save to favorites',
     removeFavorite: 'Remove from favorites',
     share: 'Share',
+    wasPrice: 'Was {price}',
+    saveAmount: 'You save {amount}',
   },
   profileEdit: {
     changePhoto: 'Change photo',

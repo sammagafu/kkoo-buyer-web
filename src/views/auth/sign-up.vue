@@ -7,6 +7,20 @@
       wide
       show-logo
     >
+      <div
+        class="auth-signup-progress mb-3"
+        role="progressbar"
+        aria-valuenow="25"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        :aria-label="t('auth.signUpProgressLabel')"
+      >
+        <div class="auth-signup-progress__track">
+          <div class="auth-signup-progress__fill" style="width: 25%" />
+        </div>
+        <p class="auth-signup-progress__hint mb-0">{{ t('auth.signUpProgressHint') }}</p>
+      </div>
+
       <b-form class="auth-center-form" @submit.prevent="handleSubmit" novalidate>
         <div v-if="error.length > 0" class="auth-alert auth-alert--danger">{{ error }}</div>
 
@@ -131,3 +145,23 @@ async function handleSubmit() {
   }
 }
 </script>
+
+<style scoped>
+.auth-signup-progress__track {
+  height: 0.35rem;
+  border-radius: 999px;
+  background: rgba(92, 48, 143, 0.12);
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+.auth-signup-progress__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--kkoo-secondary, #f7a829);
+}
+.auth-signup-progress__hint {
+  font-size: 0.8rem;
+  color: var(--kkoo-muted, #6a4c86);
+  text-align: center;
+}
+</style>
