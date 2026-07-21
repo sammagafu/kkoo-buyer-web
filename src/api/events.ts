@@ -12,6 +12,8 @@ export type EventTicketClass = {
   sold_count: number
   remaining: number
   on_sale: boolean
+  gift_card_amount?: number
+  attendance_bonus_points?: number
 }
 
 export type PlatformEvent = {
@@ -91,6 +93,15 @@ export const eventsApi = {
   },
   myTickets() {
     return client.get<{ results: MyTicketRow[] }>('/discover/events/my-tickets/')
+  },
+  /** Record venue spend to earn loyalty points; optional gift voucher at the event. */
+  recordSpend(ref: string, body: {
+    amount: number
+    merchant_label?: string
+    gift_voucher_code?: string
+    ticket_code?: string
+  }) {
+    return client.post(`/discover/events/${encodeURIComponent(ref)}/spend/`, body)
   },
   initiatePayment(body: {
     event_ticket_purchase_id: number

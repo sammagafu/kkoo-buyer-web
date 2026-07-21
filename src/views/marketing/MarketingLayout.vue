@@ -1,7 +1,6 @@
 <template>
-  <div class="landing-page lp-layout" :class="{ 'lp-landing-snap': landingSnap }">
-    <!-- Use the same top navbar as Landing page -->
-    <LandingHeader />
+  <div class="landing-page lp-layout lh-chrome" :class="{ 'lp-landing-snap': landingSnap }">
+    <LhHeader />
 
     <!-- Keep legacy header markup but disable rendering -->
     <header v-if="false" class="lp-header">
@@ -289,7 +288,7 @@
     <!-- Anchor keeps slotted <footer> in column flex (margin-top:auto on inner footer is not enough if slot root is anonymous) -->
     <div class="lp-footer-anchor">
       <slot name="footer">
-        <LandingFooter />
+        <LhFooter />
       </slot>
     </div>
   </div>
@@ -307,8 +306,8 @@ import { supportedLocales, setLocale } from '@/i18n'
 import { appLinks } from '@/config/app-links'
 import { useLayoutStore } from '@/stores/layout'
 import { BUYER_ACCOUNT_ROLE, useAuthStore, type AccountRole } from '@/stores/auth'
-import LandingHeader from '@/views/marketing/partials/LandingHeader.vue'
-import LandingFooter from '@/views/marketing/partials/LandingFooter.vue'
+import LhHeader from '@/views/marketing/partials/house/LhHeader.vue'
+import LhFooter from '@/views/marketing/partials/house/LhFooter.vue'
 import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
 import { buyerRoutes, landingAnchors, primaryNavItems, bizSellerAccountUrl, bizSellerDashboardUrl, bizCrmUrl, bizSellerRegisterUrl, adminDashboardUrl } from '@/config/landing-links'
 import logoLight from '@/assets/images/logo-light.svg'
@@ -508,6 +507,22 @@ async function switchLauncherRole(role: AccountRole) {
   --lp-page-container-px-lg: var(--lp-space-8);
 }
 
+/* House landing shell — overrides legacy lp purple/cream when lh-chrome is active */
+.lp-layout.lh-chrome {
+  background: linear-gradient(180deg, var(--lh-bg, #f2f2f2) 0%, var(--lh-bg-deep, #ececec) 100%);
+  color: var(--lh-text, #1a1a1a);
+  font-family: var(--lh-font-body, 'Poppins', sans-serif);
+  overflow-x: clip;
+}
+
+.lp-layout.lh-chrome :deep(section.lp-section) {
+  padding-block: var(--lh-space-8, 4rem);
+}
+
+.lp-layout.lh-chrome .lp-main::before {
+  display: none;
+}
+
 @media (min-width: 576px) {
   .lp-layout {
     --lp-page-container-px: var(--lp-space-6);
@@ -539,84 +554,6 @@ async function switchLauncherRole(role: AccountRole) {
   .lp-layout {
     --lp-surface-tile-padding: 1.65rem 1.85rem 1.65rem 1.85rem;
     --lp-stat-tile-padding-sm: 0.95rem 0.85rem 0.95rem 0.75rem;
-  }
-}
-
-.lp-layout :deep(.context-nav) {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--lp-space-2);
-  padding: 1rem var(--lp-page-container-px) 0;
-  margin: 0 0 0.5rem;
-  border-radius: 0;
-  border: none;
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
-  position: static;
-  z-index: auto;
-}
-
-.lp-layout :deep(.context-nav-left),
-.lp-layout :deep(.context-nav-right) {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--lp-space-4);
-}
-
-.lp-layout :deep(.context-nav-link) {
-  padding: 0.35rem 0;
-  border-radius: 0;
-  border: none;
-  border-bottom: 2px solid transparent;
-  background: transparent;
-  color: var(--lp-text-soft, var(--bs-body-color));
-  font-weight: 600;
-  font-size: 0.92rem;
-  text-decoration: none;
-  transition: color 0.15s ease, border-color 0.15s ease;
-}
-
-.lp-layout :deep(.context-nav-link:hover),
-.lp-layout :deep(.context-nav-link.router-link-active) {
-  transform: none;
-  box-shadow: none;
-  background: transparent;
-  color: var(--lp-heading-ink, #1a1224);
-  border-bottom-color: #5c308f;
-}
-
-.lp-layout :deep(.context-nav-pill) {
-  padding: 0.35rem 0;
-  border-radius: 0;
-  border: none;
-  border-bottom: 2px solid #f7a829;
-  background: transparent;
-  color: var(--lp-heading-ink, #1a1224);
-  font-weight: 700;
-  text-decoration: none;
-  letter-spacing: 0;
-  box-shadow: none;
-}
-
-.lp-layout :deep(.context-nav-pill:hover) {
-  transform: none;
-  box-shadow: none;
-}
-
-@media (max-width: 767.98px) {
-  .lp-layout :deep(.context-nav) {
-    flex-direction: column;
-    align-items: stretch;
-    top: 0.5rem;
-  }
-
-  .lp-layout :deep(.context-nav-left),
-  .lp-layout :deep(.context-nav-right) {
-    width: 100%;
-    justify-content: flex-start;
   }
 }
 
@@ -1273,32 +1210,6 @@ html[data-bs-theme='dark'] .lp-app-launcher-trigger:hover {
   text-wrap: balance;
 }
 
-html[data-bs-theme='dark'] .lp-layout :deep(.context-nav) {
-  border-color: rgba(255, 255, 255, 0.08);
-  background:
-    radial-gradient(circle at 84% 18%, rgba(var(--bs-secondary-rgb, 247, 168, 41), 0.12), transparent 34%),
-    linear-gradient(135deg, rgba(24, 19, 31, 0.94), rgba(15, 12, 20, 0.9));
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
-}
-
-html[data-bs-theme='dark'] .lp-layout :deep(.context-nav-link:hover),
-html[data-bs-theme='dark'] .lp-layout :deep(.context-nav-link.router-link-active) {
-  color: #f7a829;
-  border-bottom-color: #f7a829;
-  background: transparent;
-  box-shadow: none;
-}
-
-html[data-bs-theme='dark'] .lp-layout :deep(.context-nav-pill) {
-  border-bottom-color: #f7a829;
-  color: #f7a829;
-  background: transparent;
-}
-
-html[data-bs-theme='dark'] .lp-layout :deep(.context-nav-pill:hover) {
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.24);
-}
-
 .lp-lang-label {
   min-width: 4rem;
   text-align: left;
@@ -1532,7 +1443,14 @@ html[data-bs-theme='dark'] .lp-main::before {
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 22%);
 }
 
-.lp-layout :deep(.section-heading) {
+.lp-layout.lh-chrome :deep(.section-heading) {
+  display: block;
+  gap: 0;
+  max-width: 40rem;
+  margin-bottom: var(--lh-space-6, 2rem);
+}
+
+.lp-layout:not(.lh-chrome) :deep(.section-heading) {
   display: grid;
   gap: 0.75rem;
   max-width: 48rem;
@@ -1563,7 +1481,7 @@ html[data-bs-theme='dark'] .lp-main::before {
   text-align: center;
 }
 
-.lp-layout :deep(.section-kicker) {
+.lp-layout:not(.lh-chrome) :deep(.section-kicker) {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
@@ -1576,7 +1494,7 @@ html[data-bs-theme='dark'] .lp-main::before {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-.lp-layout :deep(.section-kicker)::before {
+.lp-layout:not(.lh-chrome) :deep(.section-kicker)::before {
   content: '';
   width: 0.45rem;
   height: 0.45rem;
@@ -1585,7 +1503,12 @@ html[data-bs-theme='dark'] .lp-main::before {
   box-shadow: 0 0 0 0.2rem rgba(247, 168, 41, 0.12);
 }
 
-.lp-layout :deep(.section-title) {
+.lp-layout.lh-chrome :deep(.section-title) {
+  max-width: 18ch;
+  letter-spacing: -0.03em;
+}
+
+.lp-layout:not(.lh-chrome) :deep(.section-title) {
   max-width: 14ch;
   letter-spacing: -0.03em;
 }
@@ -1594,63 +1517,63 @@ html[data-bs-theme='dark'] .lp-main::before {
   max-width: 62ch;
 }
 
-.lp-layout :deep(.benefit-grid),
-.lp-layout :deep(.summary-grid),
-.lp-layout :deep(.steps-grid),
-.lp-layout :deep(.booster-grid),
-.lp-layout :deep(.vertical-grid),
-.lp-layout :deep(.status-grid) {
+.lp-layout:not(.lh-chrome) :deep(.benefit-grid),
+.lp-layout:not(.lh-chrome) :deep(.summary-grid),
+.lp-layout:not(.lh-chrome) :deep(.steps-grid),
+.lp-layout:not(.lh-chrome) :deep(.booster-grid),
+.lp-layout:not(.lh-chrome) :deep(.vertical-grid),
+.lp-layout:not(.lh-chrome) :deep(.status-grid) {
   gap: clamp(1rem, 2vw, 1.5rem);
 }
 
-.lp-layout :deep(.benefit-card),
-.lp-layout :deep(.summary-card),
-.lp-layout :deep(.step-card),
-.lp-layout :deep(.booster-card),
-.lp-layout :deep(.vertical-card),
-.lp-layout :deep(.status-card),
-.lp-layout :deep(.requirements-card),
-.lp-layout :deep(.quote-card),
-.lp-layout :deep(.insight-card),
-.lp-layout :deep(.composer-card),
-.lp-layout :deep(.thread-card),
-.lp-layout :deep(.feature-card),
-.lp-layout :deep(.faq-item) {
+.lp-layout:not(.lh-chrome) :deep(.benefit-card),
+.lp-layout:not(.lh-chrome) :deep(.summary-card),
+.lp-layout:not(.lh-chrome) :deep(.step-card),
+.lp-layout:not(.lh-chrome) :deep(.booster-card),
+.lp-layout:not(.lh-chrome) :deep(.vertical-card),
+.lp-layout:not(.lh-chrome) :deep(.status-card),
+.lp-layout:not(.lh-chrome) :deep(.requirements-card),
+.lp-layout:not(.lh-chrome) :deep(.quote-card),
+.lp-layout:not(.lh-chrome) :deep(.insight-card),
+.lp-layout:not(.lh-chrome) :deep(.composer-card),
+.lp-layout:not(.lh-chrome) :deep(.thread-card),
+.lp-layout:not(.lh-chrome) :deep(.feature-card),
+.lp-layout:not(.lh-chrome) :deep(.faq-item) {
   position: relative;
   border: 1px solid rgba(92, 48, 143, 0.12);
   box-shadow: 0 18px 50px rgba(35, 20, 46, 0.06);
 }
 
-.lp-layout :deep(.benefit-card),
-.lp-layout :deep(.summary-card),
-.lp-layout :deep(.step-card),
-.lp-layout :deep(.booster-card),
-.lp-layout :deep(.vertical-card),
-.lp-layout :deep(.status-card),
-.lp-layout :deep(.requirements-card),
-.lp-layout :deep(.quote-card),
-.lp-layout :deep(.insight-card),
-.lp-layout :deep(.composer-card),
-.lp-layout :deep(.thread-card),
-.lp-layout :deep(.feature-card) {
+.lp-layout:not(.lh-chrome) :deep(.benefit-card),
+.lp-layout:not(.lh-chrome) :deep(.summary-card),
+.lp-layout:not(.lh-chrome) :deep(.step-card),
+.lp-layout:not(.lh-chrome) :deep(.booster-card),
+.lp-layout:not(.lh-chrome) :deep(.vertical-card),
+.lp-layout:not(.lh-chrome) :deep(.status-card),
+.lp-layout:not(.lh-chrome) :deep(.requirements-card),
+.lp-layout:not(.lh-chrome) :deep(.quote-card),
+.lp-layout:not(.lh-chrome) :deep(.insight-card),
+.lp-layout:not(.lh-chrome) :deep(.composer-card),
+.lp-layout:not(.lh-chrome) :deep(.thread-card),
+.lp-layout:not(.lh-chrome) :deep(.feature-card) {
   overflow: hidden;
   background:
     radial-gradient(circle at top right, rgba(247, 168, 41, 0.08), transparent 28%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.7));
 }
 
-.lp-layout :deep(.benefit-card::before),
-.lp-layout :deep(.summary-card::before),
-.lp-layout :deep(.step-card::before),
-.lp-layout :deep(.booster-card::before),
-.lp-layout :deep(.vertical-card::before),
-.lp-layout :deep(.status-card::before),
-.lp-layout :deep(.requirements-card::before),
-.lp-layout :deep(.quote-card::before),
-.lp-layout :deep(.insight-card::before),
-.lp-layout :deep(.composer-card::before),
-.lp-layout :deep(.thread-card::before),
-.lp-layout :deep(.feature-card::before) {
+.lp-layout:not(.lh-chrome) :deep(.benefit-card::before),
+.lp-layout:not(.lh-chrome) :deep(.summary-card::before),
+.lp-layout:not(.lh-chrome) :deep(.step-card::before),
+.lp-layout:not(.lh-chrome) :deep(.booster-card::before),
+.lp-layout:not(.lh-chrome) :deep(.vertical-card::before),
+.lp-layout:not(.lh-chrome) :deep(.status-card::before),
+.lp-layout:not(.lh-chrome) :deep(.requirements-card::before),
+.lp-layout:not(.lh-chrome) :deep(.quote-card::before),
+.lp-layout:not(.lh-chrome) :deep(.insight-card::before),
+.lp-layout:not(.lh-chrome) :deep(.composer-card::before),
+.lp-layout:not(.lh-chrome) :deep(.thread-card::before),
+.lp-layout:not(.lh-chrome) :deep(.feature-card::before) {
   content: '';
   position: absolute;
   inset: 0 auto auto 0;
@@ -1687,7 +1610,7 @@ html[data-bs-theme='dark'] .lp-main::before {
   padding: 0 0 1rem;
 }
 
-.lp-layout :deep(.cta-shell) {
+.lp-layout:not(.lh-chrome) :deep(.cta-shell) {
   position: relative;
   overflow: hidden;
   border-radius: clamp(1.6rem, 2.5vw, 2.2rem);
@@ -1698,7 +1621,7 @@ html[data-bs-theme='dark'] .lp-main::before {
   box-shadow: 0 24px 60px rgba(35, 20, 46, 0.09);
 }
 
-.lp-layout :deep(.cta-shell::after) {
+.lp-layout:not(.lh-chrome) :deep(.cta-shell::after) {
   content: '';
   position: absolute;
   inset: auto -8% -36% auto;

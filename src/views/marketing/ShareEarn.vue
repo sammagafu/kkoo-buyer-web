@@ -11,29 +11,13 @@
               <span>{{ t('shareEarn.heroAccent') }}</span>
             </h1>
             <p class="se-lead">{{ t('shareEarn.heroDesc') }}</p>
-            <div class="se-actions">
-              <b-button
-                class="lp-btn-pill lp-btn-pill--secondary lp-btn-pill--lg border-0 p-0 d-inline-flex align-items-center"
-                :to="{ name: 'auth.sign-up' }"
-              >
-                <span class="lp-btn-pill__label">
-                  <Icon icon="solar:users-group-rounded-bold" class="lp-btn-pill__lead-icon" aria-hidden="true" />
-                  {{ t('shareEarn.heroCtaPrimary') }}
-                </span>
-                <span class="lp-btn-pill__well" aria-hidden="true">
-                  <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
-                </span>
-              </b-button>
-              <b-button
-                variant="link"
-                class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg border-0 p-0 d-inline-flex align-items-center"
-                href="#how-it-works"
-              >
-                <span class="lp-btn-pill__label">{{ t('shareEarn.heroCtaSecondary') }}</span>
-                <span class="lp-btn-pill__well" aria-hidden="true">
-                  <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
-                </span>
-              </b-button>
+            <div class="se-actions lh-hero__cta">
+              <LhButton as="router-link" :to="{ name: 'auth.sign-up' }" variant="primary" size="lg" with-well>
+                {{ t('shareEarn.heroCtaPrimary') }}
+              </LhButton>
+              <LhButton as="a" href="#how-it-works" variant="ghost" size="lg">
+                {{ t('shareEarn.heroCtaSecondary') }}
+              </LhButton>
             </div>
           </div>
 
@@ -186,6 +170,7 @@
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import MarketingLayout from './MarketingLayout.vue'
+import LhButton from './partials/house/LhButton.vue'
 import shareEarnPlaceholder from '@/assets/images/landing/placeholders/share-earn-placeholder.svg'
 
 const { t } = useI18n()
@@ -211,110 +196,8 @@ const earnings = [
 </script>
 
 <style scoped>
-.section-kicker {
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--bs-secondary);
-  margin-bottom: 0.85rem;
-}
+/* Title sizes/layout: _lh-marketing-bridge.scss (house landing scale) */
 
-.section-title {
-  font-size: clamp(1.8rem, 4vw, 3.2rem);
-  font-weight: 800;
-  line-height: 1.12;
-  color: var(--bs-heading-color, var(--bs-body-color));
-  margin-bottom: 1rem;
-  letter-spacing: -0.025em;
-  text-wrap: balance;
-}
-
-.section-copy {
-  font-size: 1rem;
-  line-height: 1.72;
-  color: var(--bs-secondary-color);
-  max-width: 62ch;
-  margin: 0;
-  text-wrap: pretty;
-}
-
-.se-section-copy {
-  margin-top: 0.4rem;
-}
-
-.section-heading { margin-bottom: 2.5rem; }
-
-.se-features-section .section-kicker {
-  color: var(--bs-primary);
-}
-
-.se-features-section .section-title {
-  color: var(--bs-primary);
-}
-
-.se-features-section .section-copy {
-  color: color-mix(in srgb, var(--bs-primary) 38%, var(--bs-body-color) 62%);
-}
-
-/* ---- hero ---- */
-.se-hero {
-  padding-top: clamp(3rem, 8vw, 6rem);
-  padding-bottom: clamp(3rem, 8vw, 5rem);
-}
-
-.se-hero-grid {
-  display: grid;
-  gap: 3rem;
-  align-items: center;
-}
-
-@media (min-width: 992px) {
-  .se-hero-grid { grid-template-columns: 1fr 1fr; }
-}
-
-.se-eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--bs-secondary);
-  margin-bottom: 1rem;
-}
-
-.se-title {
-  font-size: clamp(2.4rem, 5vw, 4rem);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.03em;
-  margin-bottom: 1.2rem;
-  color: var(--bs-heading-color, var(--bs-body-color));
-  text-wrap: balance;
-}
-
-.se-title span {
-  display: block;
-  background: linear-gradient(90deg, #F7A829, #C97C00);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.se-lead {
-  font-size: 1.05rem;
-  line-height: 1.72;
-  color: var(--bs-secondary-color);
-  max-width: 52ch;
-}
-
-.se-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.9rem;
-  margin-top: 1.6rem;
-}
-
-/* ---- hero visual stats card ---- */
 .se-visual { display: flex; justify-content: center; }
 
 .se-visual-stack {
@@ -334,14 +217,10 @@ const earnings = [
 .se-stats-card {
   width: 340px;
   max-width: calc(100% - 1.5rem);
-  background: linear-gradient(145deg, #3B1A5A 0%, #5C308F 100%);
-  border-radius: 1.5rem;
-  padding: 1.75rem;
-  box-shadow: 0 28px 72px rgba(92, 48, 143, 0.38);
-  color: white;
   margin-top: -6rem;
   margin-left: auto;
   position: relative;
+  padding: 1.75rem;
 }
 
 .se-stat-row {

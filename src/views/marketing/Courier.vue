@@ -1,13 +1,5 @@
 <template>
   <MarketingLayout>
-    <div class="context-nav">
-      <div class="context-nav-left">
-        <RouterLink to="/parcel" class="context-nav-link">{{ t('courier.context.sendParcel') }}</RouterLink>
-        <RouterLink to="/send" class="context-nav-link">{{ t('courier.context.sendMe') }}</RouterLink>
-        <RouterLink to="/ride" class="context-nav-link">{{ t('courier.context.requestRide') }}</RouterLink>
-      </div>
-    </div>
-
     <VerticalHero
       :eyebrow="t('courier.hero.eyebrow')"
       :title="t('courier.hero.title1')"
@@ -19,18 +11,12 @@
       :badge-title="t('courier.hero.overlay.runsValue')"
     >
       <template #actions>
-        <RouterLink to="/parcel" class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--lg text-decoration-none d-inline-flex align-items-center text-white">
-          <span class="lp-btn-pill__label">{{ t('courier.hero.ctaParcel') }}</span>
-          <span class="lp-btn-pill__well" aria-hidden="true">
-            <Icon icon="solar:box-linear" class="lp-btn-pill__icon" />
-          </span>
-        </RouterLink>
-        <RouterLink to="/send" class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg text-decoration-none d-inline-flex align-items-center">
-          <span class="lp-btn-pill__label">{{ t('courier.hero.ctaSendMe') }}</span>
-          <span class="lp-btn-pill__well" aria-hidden="true">
-            <Icon icon="solar:bag-heart-linear" class="lp-btn-pill__icon" />
-          </span>
-        </RouterLink>
+        <LhButton as="router-link" to="/parcel" variant="primary" size="lg" with-well>
+          {{ t('courier.hero.ctaParcel') }}
+        </LhButton>
+        <LhButton as="router-link" to="/send" variant="ghost" size="lg">
+          {{ t('courier.hero.ctaSendMe') }}
+        </LhButton>
       </template>
     </VerticalHero>
 
@@ -84,6 +70,7 @@ import { RouterLink } from 'vue-router'
 
 import MarketingLayout from './MarketingLayout.vue'
 import VerticalHero from './components/VerticalHero.vue'
+import LhButton from './partials/house/LhButton.vue'
 import courierHeroImage from '@/assets/images/landing/services/ride.jpg'
 import foodImage from '@/assets/images/landing/services/food.jpg'
 import groceriesImage from '@/assets/images/landing/services/groceries.jpg'
@@ -92,14 +79,6 @@ const { t } = useI18n()
 </script>
 
 <style scoped>
-.courier-section-title {
-  margin: 0 0 1rem;
-  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
-  font-weight: 800;
-  line-height: 1.15;
-  color: var(--bs-heading-color, var(--bs-body-color));
-}
-
 .courier-quick-grid {
   display: grid;
   gap: 1rem;

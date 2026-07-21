@@ -1,6 +1,7 @@
 //
-// authentication.scss — viewport shell + shared auth scene container
+// authentication.scss — viewport shell + house auth
 //
+@import 'auth-split';
 @import 'auth-centered';
 @import 'auth-portal-themes';
 
@@ -20,10 +21,9 @@ html.auth-viewport-lock .kkoo-app-shell {
 }
 
 body.authentication-bg {
-  background: #f0e8df;
-  overflow: hidden;
   height: 100%;
   height: 100dvh;
+  overflow: hidden;
 
   .kkoo-portal-strip,
   .kkoo-portal-badge,
@@ -32,32 +32,30 @@ body.authentication-bg {
   }
 
   .account-pages {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     min-height: 100dvh;
     height: 100dvh;
     max-height: 100dvh;
     min-width: 0;
     position: relative;
     z-index: 1;
-    padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
-      max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
     box-sizing: border-box;
+    padding: 0;
+  }
+
+  .account-pages.auth-shell--split {
+    display: grid;
+    height: 100dvh;
+    max-height: 100dvh;
+    padding: 0;
   }
 }
 
-html[data-bs-theme='dark'] body.authentication-bg {
-  background: #100c14;
+body.authentication-bg:has(.auth-shell--split) {
+  background: #2a1240;
 }
 
-.auth-scene {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
+html[data-bs-theme='dark'] body.authentication-bg {
+  /* background set in _auth-split.scss */
 }
 
 .auth-shell {
@@ -67,14 +65,11 @@ html[data-bs-theme='dark'] body.authentication-bg {
   min-height: 100dvh;
   height: 100dvh;
   max-height: 100dvh;
-  overflow: hidden;
 }
 
-.auth-shell.auth-shell--centered {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.auth-shell--house {
+  overflow: auto;
+  max-height: 100dvh;
 }
 
 /* Utility template pages (maintenance, coming-soon) */
@@ -84,11 +79,48 @@ html[data-bs-theme='dark'] body.authentication-bg {
   margin-inline: auto;
   border: none;
   border-radius: 1.5rem;
-  background: color-mix(in srgb, #fff 94%, transparent);
-  backdrop-filter: blur(12px);
-  box-shadow: none;
+  background: var(--kkoo-surface);
+  box-shadow: var(--kkoo-shadow-soft);
 }
 
-html[data-bs-theme='dark'] .account-pages--auth .auth-card {
-  background: color-mix(in srgb, #1e2430 94%, transparent);
+.auth-form-grid {
+  display: grid;
+  gap: 1rem;
+
+  &--2 {
+    @media (min-width: 520px) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}
+
+.auth-signup-progress {
+  display: grid;
+  gap: 0.5rem;
+
+  &__track {
+    height: 0.35rem;
+    border-radius: 999px;
+    background: var(--kkoo-canvas);
+    overflow: hidden;
+  }
+
+  &__fill {
+    height: 100%;
+    background: var(--kkoo-accent);
+    border-radius: inherit;
+  }
+
+  &__hint {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--kkoo-text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+}
+
+.auth-terms--centered {
+  font-size: 0.875rem;
+  color: var(--kkoo-text-muted);
 }

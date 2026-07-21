@@ -1,451 +1,229 @@
 <template>
   <MarketingLayout>
-    <div class="community-page">
-    <section class="lp-section community-hero">
-      <b-container class="px-3 px-sm-4 px-lg-4">
-        <div class="community-hero-grid">
-          <div class="community-copy">
-            <span class="lp-section-pill">{{ t('community.eyebrow') }}</span>
-            <h1 class="display-4 fw-800 lp-section-heading mb-3">
-              {{ t('community.heroTitle') }}
-              <span class="lp-text-primary d-block d-md-inline">{{ t('community.heroTitleAccent') }}</span>
-            </h1>
-            <p class="lp-program-lead community-body-copy mb-0">{{ t('community.heroLead') }}</p>
-
-            <div class="community-actions">
-              <a
-                href="#ask-a-question"
-                class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--lg text-decoration-none d-inline-flex align-items-center"
-              >
-                <span class="lp-btn-pill__label">{{ t('community.actions.askQuestion') }}</span>
-                <span class="lp-btn-pill__well" aria-hidden="true">
-                  <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
-                </span>
-              </a>
-              <a
-                href="#request-a-feature"
-                class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg text-decoration-none d-inline-flex align-items-center"
-              >
-                <span class="lp-btn-pill__label">{{ t('community.actions.requestFeature') }}</span>
-                <span class="lp-btn-pill__well" aria-hidden="true">
-                  <Icon icon="solar:lightbulb-bolt-linear" class="lp-btn-pill__icon" />
-                </span>
-              </a>
-            </div>
-
-            <div class="community-proof-row">
-              <span v-for="point in communityProof" :key="point" class="community-proof-pill">{{ point }}</span>
-            </div>
-
-            <p v-if="isLoadingBoard" class="community-note">
-              {{ t('community.notes.loadingBoard') }}
-            </p>
-            <p v-else-if="boardErrorKey" class="community-note community-note--error">
-              {{ messageText(boardErrorKey) }}
-            </p>
-            <p v-else class="community-note">
-              {{ t('community.notes.savedBoard') }}
-            </p>
+    <div class="cm-page">
+      <section class="lp-section cm-hero">
+        <div class="lh-page cm-hero__inner">
+          <p class="cm-kicker">{{ t('community.eyebrow') }}</p>
+          <h1 class="cm-title">
+            {{ t('community.heroTitle') }}
+            <span>{{ t('community.heroTitleAccent') }}</span>
+          </h1>
+          <p class="cm-lead">{{ t('community.heroLead') }}</p>
+          <div class="cm-actions">
+            <LhButton as="a" href="#ask-a-question" variant="primary" size="lg" with-well>
+              {{ t('community.actions.askQuestion') }}
+            </LhButton>
+            <LhButton as="a" href="#request-a-feature" variant="ghost" size="lg">
+              {{ t('community.actions.requestFeature') }}
+            </LhButton>
           </div>
+          <p v-if="boardErrorKey" class="cm-note cm-note--error">{{ messageText(boardErrorKey) }}</p>
+        </div>
+      </section>
 
-          <article class="hero-board lp-program-card">
-            <div class="hero-board-media lp-buyers-visual">
-              <img :src="communityPlaceholder" :alt="t('community.heroImageAlt')" class="lp-buyers-visual__img" />
-              <div class="lp-buyers-visual__overlay" aria-hidden="true" />
-              <div class="hero-board-badge">{{ t('community.heroBoard.badge') }}</div>
-              <div class="hero-board-metrics">
-                <div class="hero-metric">
-                  <span>{{ t('community.metrics.openQuestions') }}</span>
-                  <strong>{{ threads.length }}</strong>
-                </div>
-                <div class="hero-metric">
-                  <span>{{ t('community.metrics.totalReplies') }}</span>
-                  <strong>{{ totalReplies }}</strong>
-                </div>
-                <div class="hero-metric">
-                  <span>{{ t('community.metrics.featureIdeas') }}</span>
-                  <strong>{{ featureIdeas.length }}</strong>
-                </div>
-              </div>
+      <section class="lp-section cm-band">
+        <div class="lh-page">
+          <div class="cm-pulse" aria-label="Board status">
+            <div class="cm-pulse__item">
+              <strong>{{ listeningCount }}</strong>
+              <span>{{ t('community.statuses.listening') }}</span>
             </div>
-
-            <div class="hero-board-body">
-              <p class="hero-board-title">{{ t('community.heroBoard.title') }}</p>
-              <div class="hero-board-summary">
-                <article v-for="item in heroBoardSummary" :key="item.title" class="hero-board-summary-item">
-                  <h2 class="community-card__title">{{ item.title }}</h2>
-                  <p class="community-card__copy">{{ item.copy }}</p>
-                </article>
-              </div>
+            <div class="cm-pulse__item">
+              <strong>{{ plannedCount }}</strong>
+              <span>{{ t('community.statuses.planned') }}</span>
             </div>
-          </article>
-        </div>
-      </b-container>
-    </section>
-
-    <section class="lp-section guidance-surface">
-      <b-container class="px-3 px-sm-4 px-lg-4">
-        <div class="section-heading text-center">
-          <span class="lp-section-pill">{{ t('community.guidance.kicker') }}</span>
-          <h2 class="display-4 fw-800 lp-section-heading mb-3">
-            {{ t('community.guidance.title') }}
-            <span class="lp-text-primary d-block d-md-inline">{{ t('community.guidance.titleAccent') }}</span>
-          </h2>
-          <p class="lp-program-copy community-body-copy mb-0 mx-auto">{{ t('community.guidance.copy') }}</p>
-        </div>
-
-        <div class="guide-grid">
-          <article v-for="guide in participationGuides" :key="guide.title" class="guide-card community-card lp-program-card">
-            <div class="guide-top">
-              <span class="guide-icon">
-                <Icon :icon="guide.icon" />
-              </span>
-              <span class="guide-tag">{{ guide.tag }}</span>
+            <div class="cm-pulse__item">
+              <strong>{{ shippedCount }}</strong>
+              <span>{{ t('community.statuses.shipped') }}</span>
             </div>
-            <h3 class="community-card__title">{{ guide.title }}</h3>
-            <p class="community-card__copy">{{ guide.copy }}</p>
-            <a :href="guide.href" class="guide-link">
-              {{ guide.action }}
-            </a>
-          </article>
-        </div>
-      </b-container>
-    </section>
-
-    <section class="lp-section listening-surface">
-      <b-container class="px-3 px-sm-4 px-lg-4">
-        <div class="section-heading text-center">
-          <span class="lp-section-pill">{{ t('community.pulse.kicker') }}</span>
-          <h2 class="display-4 fw-800 lp-section-heading mb-3">
-            {{ t('community.pulse.title') }}
-            <span class="lp-text-primary d-block d-md-inline">{{ t('community.pulse.titleAccent') }}</span>
-          </h2>
-          <p class="lp-program-copy community-body-copy mb-0 mx-auto">{{ t('community.pulse.copy') }}</p>
-        </div>
-
-        <div class="status-grid">
-          <article class="status-card community-card lp-program-card">
-            <span class="status-label status-label--listening">{{ t('community.statuses.listening') }}</span>
-            <strong class="community-stat">{{ listeningCount }}</strong>
-            <p class="community-card__copy">{{ t('community.statuses.listeningCopy') }}</p>
-          </article>
-          <article class="status-card community-card lp-program-card">
-            <span class="status-label status-label--planned">{{ t('community.statuses.planned') }}</span>
-            <strong class="community-stat">{{ plannedCount }}</strong>
-            <p class="community-card__copy">{{ t('community.statuses.plannedCopy') }}</p>
-          </article>
-          <article class="status-card community-card lp-program-card">
-            <span class="status-label status-label--shipped">{{ t('community.statuses.shipped') }}</span>
-            <strong class="community-stat">{{ shippedCount }}</strong>
-            <p class="community-card__copy">{{ t('community.statuses.shippedCopy') }}</p>
-          </article>
-        </div>
-      </b-container>
-    </section>
-
-    <section class="lp-section community-band">
-      <b-container class="px-3 px-sm-4 px-lg-4">
-        <div class="section-heading text-center">
-          <span class="lp-section-pill">{{ t('community.coverage.kicker') }}</span>
-          <h2 class="display-4 fw-800 lp-section-heading mb-3">
-            {{ t('community.coverage.title') }}
-            <span class="lp-text-primary d-block d-md-inline">{{ t('community.coverage.titleAccent') }}</span>
-          </h2>
-          <p class="lp-program-copy community-body-copy mb-0 mx-auto">{{ t('community.coverage.copy') }}</p>
-        </div>
-
-        <div class="coverage-grid">
-          <article v-for="item in featureCoverage" :key="item.title" class="coverage-card community-card lp-program-card">
-            <div class="coverage-top">
-              <span class="coverage-icon">
-                <Icon :icon="item.icon" />
-              </span>
-              <span class="coverage-tag">{{ item.tag }}</span>
+            <div class="cm-pulse__item">
+              <strong>{{ threads.length }}</strong>
+              <span>{{ t('community.metrics.openQuestions') }}</span>
             </div>
-            <h3 class="community-card__title">{{ item.title }}</h3>
-            <p class="community-card__copy">{{ item.copy }}</p>
-          </article>
+          </div>
         </div>
-      </b-container>
-    </section>
+      </section>
 
-    <section class="lp-section community-band">
-      <b-container class="px-3 px-sm-4 px-lg-4">
-        <div class="section-heading text-center">
-          <span class="lp-section-pill">{{ t('community.beforePost.kicker') }}</span>
-          <h2 class="display-4 fw-800 lp-section-heading mb-3">
-            {{ t('community.beforePost.title') }}
-            <span class="lp-text-primary d-block d-md-inline">{{ t('community.beforePost.titleAccent') }}</span>
-          </h2>
-          <p class="lp-program-copy community-body-copy mb-0 mx-auto">{{ t('community.beforePost.copy') }}</p>
-        </div>
-
-        <div class="posting-grid">
-          <article class="posting-guide community-card lp-program-card">
-            <div class="posting-guide-head">
-              <h3 class="community-card__title">{{ t('community.postingGuide.title') }}</h3>
-              <p class="community-card__copy">{{ t('community.postingGuide.copy') }}</p>
-            </div>
-
-            <div class="posting-list">
-              <article v-for="(tip, index) in postingTips" :key="tip.title" class="posting-tip">
-                <span class="posting-index">0{{ index + 1 }}</span>
-                <div>
-                  <h4 class="community-card__title community-card__title--sm">{{ tip.title }}</h4>
-                  <p class="community-card__copy">{{ tip.copy }}</p>
-                </div>
-              </article>
-            </div>
-          </article>
-
-          <div class="composer-grid">
-            <article id="ask-a-question" class="composer-card community-card lp-program-card">
-              <span class="lp-section-pill">{{ t('community.ask.kicker') }}</span>
-              <h2 class="composer-card__title mb-0">
-                {{ t('community.ask.title') }}
-                <span class="composer-card__accent">{{ t('community.ask.titleAccent') }}</span>
-              </h2>
-              <p class="composer-message" v-if="questionMessageKey">{{ messageText(questionMessageKey) }}</p>
-
-              <form class="composer-form community-form" @submit.prevent="submitQuestion">
-                <div class="field-row">
-                  <label>
+      <section class="lp-section cm-band">
+        <div class="lh-page">
+          <div class="cm-composers">
+            <article id="ask-a-question" class="cm-panel">
+              <p class="cm-kicker">{{ t('community.ask.kicker') }}</p>
+              <h2 class="cm-panel__title">{{ t('community.ask.title') }}</h2>
+              <p v-if="questionMessageKey" class="cm-note">{{ messageText(questionMessageKey) }}</p>
+              <form class="cm-form" @submit.prevent="submitQuestion">
+                <div class="cm-form__row">
+                  <label class="lh-field">
                     <span>{{ t('community.labels.yourName') }}</span>
                     <input v-model.trim="questionForm.name" type="text" :placeholder="t('community.placeholders.nameExample1')" />
                   </label>
-                  <label>
+                  <label class="lh-field">
                     <span>{{ t('community.labels.yourRole') }}</span>
                     <select v-model="questionForm.role">
                       <option v-for="role in roleOptions" :key="role.value" :value="role.value">{{ role.label }}</option>
                     </select>
                   </label>
                 </div>
-                <label>
+                <label class="lh-field">
                   <span>{{ t('community.labels.questionTitle') }}</span>
-                  <input
-                    v-model.trim="questionForm.title"
-                    type="text"
-                    :placeholder="t('community.placeholders.questionTitle')"
-                  />
+                  <input v-model.trim="questionForm.title" type="text" :placeholder="t('community.placeholders.questionTitle')" />
                 </label>
-                <label>
+                <label class="lh-field">
                   <span>{{ t('community.labels.details') }}</span>
-                  <textarea
-                    v-model.trim="questionForm.body"
-                    rows="4"
-                    :placeholder="t('community.placeholders.questionBody')"
-                  />
+                  <textarea v-model.trim="questionForm.body" rows="4" :placeholder="t('community.placeholders.questionBody')" />
                 </label>
-                <button
-                  type="submit"
-                  class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--md border-0 composer-submit"
-                  :disabled="questionSubmitting"
-                >
-                  <span class="lp-btn-pill__label">
-                    {{ questionSubmitting ? t('community.actions.postingQuestion') : t('community.actions.postQuestion') }}
-                  </span>
-                  <span class="lp-btn-pill__well" aria-hidden="true">
-                    <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
-                  </span>
-                </button>
+                <LhButton type="submit" variant="primary" size="lg" with-well :disabled="questionSubmitting">
+                  {{ questionSubmitting ? t('community.actions.postingQuestion') : t('community.actions.postQuestion') }}
+                </LhButton>
               </form>
             </article>
 
-            <article id="request-a-feature" class="composer-card composer-card--accent community-card lp-program-card">
-              <span class="lp-section-pill">{{ t('community.feature.kicker') }}</span>
-              <h2 class="composer-card__title mb-0">
-                {{ t('community.feature.title') }}
-                <span class="composer-card__accent">{{ t('community.feature.titleAccent') }}</span>
-              </h2>
-              <p class="composer-message" v-if="featureMessageKey">{{ messageText(featureMessageKey) }}</p>
-
-              <form class="composer-form community-form" @submit.prevent="submitFeature">
-                <div class="field-row">
-                  <label>
+            <article id="request-a-feature" class="cm-panel">
+              <p class="cm-kicker">{{ t('community.feature.kicker') }}</p>
+              <h2 class="cm-panel__title">{{ t('community.feature.title') }}</h2>
+              <p v-if="featureMessageKey" class="cm-note">{{ messageText(featureMessageKey) }}</p>
+              <form class="cm-form" @submit.prevent="submitFeature">
+                <div class="cm-form__row">
+                  <label class="lh-field">
                     <span>{{ t('community.labels.yourName') }}</span>
                     <input v-model.trim="featureForm.name" type="text" :placeholder="t('community.placeholders.nameExample2')" />
                   </label>
-                  <label>
+                  <label class="lh-field">
                     <span>{{ t('community.labels.area') }}</span>
                     <select v-model="featureForm.area">
                       <option v-for="area in areaOptions" :key="area.value" :value="area.value">{{ area.label }}</option>
                     </select>
                   </label>
                 </div>
-                <label>
+                <label class="lh-field">
                   <span>{{ t('community.labels.featureTitle') }}</span>
-                  <input
-                    v-model.trim="featureForm.title"
-                    type="text"
-                    :placeholder="t('community.placeholders.featureTitle')"
-                  />
+                  <input v-model.trim="featureForm.title" type="text" :placeholder="t('community.placeholders.featureTitle')" />
                 </label>
-                <label>
+                <label class="lh-field">
                   <span>{{ t('community.labels.whyItMatters') }}</span>
-                  <textarea
-                    v-model.trim="featureForm.why"
-                    rows="4"
-                    :placeholder="t('community.placeholders.featureWhy')"
-                  />
+                  <textarea v-model.trim="featureForm.why" rows="4" :placeholder="t('community.placeholders.featureWhy')" />
                 </label>
-                <button
-                  type="submit"
-                  class="lp-btn-pill lp-btn-pill--accent lp-btn-pill--md border-0 composer-submit"
-                  :disabled="featureSubmitting"
-                >
-                  <span class="lp-btn-pill__label">
-                    {{ featureSubmitting ? t('community.actions.savingFeature') : t('community.actions.addFeature') }}
-                  </span>
-                  <span class="lp-btn-pill__well" aria-hidden="true">
-                    <Icon icon="solar:lightbulb-bolt-linear" class="lp-btn-pill__icon" />
-                  </span>
-                </button>
+                <LhButton type="submit" variant="secondary" size="lg" with-well :disabled="featureSubmitting">
+                  {{ featureSubmitting ? t('community.actions.savingFeature') : t('community.actions.addFeature') }}
+                </LhButton>
               </form>
             </article>
           </div>
         </div>
-      </b-container>
-    </section>
+      </section>
 
-    <section class="lp-section community-band">
-      <b-container class="px-3 px-sm-4 px-lg-4">
-        <div class="section-heading text-center">
-          <span class="lp-section-pill">{{ t('community.sections.repliesKicker') }}</span>
-          <h2 class="display-4 fw-800 lp-section-heading mb-3">
-            {{ t('community.sections.repliesTitle') }}
-            <span class="lp-text-primary d-block d-md-inline">{{ t('community.sections.repliesTitleAccent') }}</span>
-          </h2>
-        </div>
+      <section class="lp-section cm-band">
+        <div class="lh-page">
+          <header class="cm-section-head">
+            <p class="cm-kicker">{{ t('community.sections.repliesKicker') }}</p>
+            <h2 class="cm-section-title">{{ t('community.sections.repliesTitle') }}</h2>
+          </header>
 
-        <div v-if="isLoadingBoard" class="empty-state lp-program-card">
-          {{ t('community.empty.threadsLoading') }}
-        </div>
-        <div v-else-if="threads.length === 0" class="empty-state lp-program-card">
-          {{ t('community.empty.threads') }}
-        </div>
-        <div v-else class="thread-list">
-          <article v-for="thread in threads" :key="thread.id" class="thread-card community-card lp-program-card">
-            <div class="thread-head">
-              <div class="thread-meta">
-                <span class="thread-tag">{{ displayRole(thread.author_role) }}</span>
-                <span class="thread-author">{{ thread.author_name }}</span>
-                <span class="thread-age">{{ formatRelativeTime(thread.created_at) }}</span>
+          <div v-if="isLoadingBoard" class="cm-empty">{{ t('community.empty.threadsLoading') }}</div>
+          <div v-else-if="threads.length === 0" class="cm-empty">{{ t('community.empty.threads') }}</div>
+          <div v-else class="cm-threads">
+            <article v-for="thread in threads" :key="thread.id" class="cm-panel cm-thread">
+              <div class="cm-thread__meta">
+                <span class="cm-tag">{{ displayRole(thread.author_role) }}</span>
+                <span class="cm-author">{{ thread.author_name }}</span>
+                <span class="cm-age">{{ formatRelativeTime(thread.created_at) }}</span>
               </div>
-              <h3 class="community-card__title">{{ thread.title }}</h3>
-              <p class="community-card__copy">{{ thread.body }}</p>
-            </div>
+              <h3 class="cm-thread__title">{{ thread.title }}</h3>
+              <p class="cm-thread__body">{{ thread.body }}</p>
 
-            <div class="reply-list">
-              <div v-for="reply in thread.replies" :key="reply.id" class="reply-card">
-                <div class="reply-avatar" :class="{ 'reply-avatar--team': reply.is_team_reply }" aria-hidden="true">
-                  {{ replyInitial(reply.author_name) }}
-                </div>
-                <div>
-                  <div class="reply-meta">
-                    <strong>{{ reply.author_name }}</strong>
-                    <span>{{ displayRole(reply.author_role) }}</span>
-                    <span v-if="reply.is_team_reply" class="reply-team-badge">{{ t('community.replies.teamBadge') }}</span>
+              <div v-if="thread.replies.length" class="cm-replies">
+                <div v-for="reply in thread.replies" :key="reply.id" class="cm-reply">
+                  <div class="cm-reply__avatar" :class="{ 'is-team': reply.is_team_reply }" aria-hidden="true">
+                    {{ replyInitial(reply.author_name) }}
                   </div>
-                  <p>{{ reply.body }}</p>
+                  <div>
+                    <div class="cm-reply__meta">
+                      <strong>{{ reply.author_name }}</strong>
+                      <span>{{ displayRole(reply.author_role) }}</span>
+                      <span v-if="reply.is_team_reply" class="cm-tag cm-tag--gold">{{ t('community.replies.teamBadge') }}</span>
+                    </div>
+                    <p>{{ reply.body }}</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <form class="reply-form community-form" @submit.prevent="submitReply(thread.id)">
-              <div class="field-row">
-                <label>
-                  <span>{{ t('community.labels.yourName') }}</span>
-                  <input
-                    v-model.trim="replyDrafts[thread.id].name"
-                    type="text"
-                    :placeholder="t('community.placeholders.replyName')"
+              <form class="cm-form cm-form--reply" @submit.prevent="submitReply(thread.id)">
+                <div class="cm-form__row">
+                  <label class="lh-field">
+                    <span>{{ t('community.labels.yourName') }}</span>
+                    <input
+                      v-model.trim="replyDrafts[thread.id].name"
+                      type="text"
+                      :placeholder="t('community.placeholders.replyName')"
+                    />
+                  </label>
+                  <label class="lh-field">
+                    <span>{{ t('community.labels.yourRole') }}</span>
+                    <select v-model="replyDrafts[thread.id].role">
+                      <option v-for="role in roleOptions" :key="role.value" :value="role.value">{{ role.label }}</option>
+                    </select>
+                  </label>
+                </div>
+                <label class="lh-field">
+                  <span class="visually-hidden">{{ t('community.actions.reply') }}</span>
+                  <textarea
+                    v-model.trim="replyDrafts[thread.id].body"
+                    rows="2"
+                    :placeholder="t('community.placeholders.replyBody')"
                   />
                 </label>
-                <label>
-                  <span>{{ t('community.labels.yourRole') }}</span>
-                  <select v-model="replyDrafts[thread.id].role">
-                    <option v-for="role in roleOptions" :key="role.value" :value="role.value">{{ role.label }}</option>
-                  </select>
-                </label>
-              </div>
-              <textarea
-                v-model.trim="replyDrafts[thread.id].body"
-                rows="2"
-                :placeholder="t('community.placeholders.replyBody')"
-              />
-              <p v-if="replyMessageKeys[thread.id]" class="composer-message">
-                {{ messageText(replyMessageKeys[thread.id]) }}
-              </p>
-              <button
-                type="submit"
-                class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--sm border-0"
-                :disabled="replySubmitting[thread.id]"
-              >
-                <span class="lp-btn-pill__label">
+                <p v-if="replyMessageKeys[thread.id]" class="cm-note">{{ messageText(replyMessageKeys[thread.id]) }}</p>
+                <LhButton type="submit" variant="primary" size="md" with-well :disabled="replySubmitting[thread.id]">
                   {{ replySubmitting[thread.id] ? t('community.actions.postingReply') : t('community.actions.reply') }}
-                </span>
-                <span class="lp-btn-pill__well" aria-hidden="true">
-                  <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
-                </span>
-              </button>
-            </form>
-          </article>
+                </LhButton>
+              </form>
+            </article>
+          </div>
         </div>
-      </b-container>
-    </section>
+      </section>
 
-    <section id="feature-board" class="lp-section roadmap-surface">
-      <b-container class="px-3 px-sm-4 px-lg-4">
-        <div class="section-heading text-center">
-          <span class="lp-section-pill">{{ t('community.sections.featureBoardKicker') }}</span>
-          <h2 class="display-4 fw-800 lp-section-heading mb-3">
-            {{ t('community.sections.featureBoardTitle') }}
-            <span class="lp-text-primary d-block d-md-inline">{{ t('community.sections.featureBoardTitleAccent') }}</span>
-          </h2>
-        </div>
+      <section id="feature-board" class="lp-section cm-band">
+        <div class="lh-page">
+          <header class="cm-section-head">
+            <p class="cm-kicker">{{ t('community.sections.featureBoardKicker') }}</p>
+            <h2 class="cm-section-title">{{ t('community.sections.featureBoardTitle') }}</h2>
+          </header>
 
-        <div v-if="isLoadingBoard" class="empty-state lp-program-card">
-          {{ t('community.empty.featuresLoading') }}
+          <div v-if="isLoadingBoard" class="cm-empty">{{ t('community.empty.featuresLoading') }}</div>
+          <div v-else-if="featureIdeas.length === 0" class="cm-empty">{{ t('community.empty.features') }}</div>
+          <div v-else class="cm-features">
+            <article v-for="idea in featureIdeas" :key="idea.id" class="cm-panel cm-feature">
+              <div class="cm-feature__head">
+                <span class="cm-tag" :class="statusClass(idea.status)">{{ statusLabel(idea.status) }}</span>
+                <span class="cm-age">{{ displayArea(idea.area) }}</span>
+              </div>
+              <h3 class="cm-thread__title">{{ idea.title }}</h3>
+              <p class="cm-thread__body">{{ idea.summary }}</p>
+              <div class="cm-feature__foot">
+                <LhButton
+                  type="button"
+                  variant="ghost"
+                  :disabled="hasSupportedIdea(idea.id) || voteSubmitting[idea.id]"
+                  @click="voteForIdea(idea.id)"
+                >
+                  {{ supportLabel(idea.id) }}
+                </LhButton>
+                <strong>{{ idea.votes }} {{ t('community.replies.supportersLabel') }}</strong>
+              </div>
+            </article>
+          </div>
         </div>
-        <div v-else-if="featureIdeas.length === 0" class="empty-state lp-program-card">
-          {{ t('community.empty.features') }}
-        </div>
-        <div v-else class="feature-grid">
-          <article v-for="idea in featureIdeas" :key="idea.id" class="feature-card community-card lp-program-card">
-            <div class="feature-head">
-              <span class="status-label" :class="statusClass(idea.status)">{{ statusLabel(idea.status) }}</span>
-              <span class="feature-area">{{ displayArea(idea.area) }}</span>
-            </div>
-            <h3 class="community-card__title">{{ idea.title }}</h3>
-            <p class="community-card__copy">{{ idea.summary }}</p>
-            <div class="feature-foot">
-              <button
-                type="button"
-                class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--sm border-0 vote-button"
-                :disabled="hasSupportedIdea(idea.id) || voteSubmitting[idea.id]"
-                @click="voteForIdea(idea.id)"
-              >
-                <span class="lp-btn-pill__label">{{ supportLabel(idea.id) }}</span>
-                <span class="lp-btn-pill__well" aria-hidden="true">
-                  <Icon icon="solar:heart-angle-linear" class="lp-btn-pill__icon" />
-                </span>
-              </button>
-              <strong>{{ idea.votes }} {{ t('community.replies.supportersLabel') }}</strong>
-            </div>
-          </article>
-        </div>
-      </b-container>
-    </section>
+      </section>
     </div>
   </MarketingLayout>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
-import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
 
 import MarketingLayout from './MarketingLayout.vue'
+import LhButton from './partials/house/LhButton.vue'
 import {
   createCommunityFeatureRequest,
   createCommunityReply,
@@ -454,7 +232,6 @@ import {
   listCommunityThreads,
   supportCommunityFeatureRequest,
 } from '@/api/community'
-import communityPlaceholder from '@/assets/images/landing/placeholders/community-hero-placeholder.svg'
 import type {
   CommunityFeatureRequest,
   CommunityFeatureStatus,
@@ -484,105 +261,6 @@ const SUPPORTED_IDEA_STORAGE_KEY = 'kkoo-community-supported-ideas-v1'
 
 const { t, locale } = useI18n()
 
-const communityProof = computed(() => [
-  t('community.proof.1'),
-  t('community.proof.2'),
-  t('community.proof.3'),
-  t('community.proof.4'),
-])
-
-const heroBoardSummary = computed(() => [
-  {
-    title: t('community.heroBoardSummary.1.title'),
-    copy: t('community.heroBoardSummary.1.copy'),
-  },
-  {
-    title: t('community.heroBoardSummary.2.title'),
-    copy: t('community.heroBoardSummary.2.copy'),
-  },
-  {
-    title: t('community.heroBoardSummary.3.title'),
-    copy: t('community.heroBoardSummary.3.copy'),
-  },
-])
-
-const participationGuides = computed(() => [
-  {
-    icon: 'solar:question-circle-linear',
-    tag: t('community.guides.ask.tag'),
-    title: t('community.guides.ask.title'),
-    copy: t('community.guides.ask.copy'),
-    action: t('community.guides.ask.action'),
-    href: '#ask-a-question',
-  },
-  {
-    icon: 'solar:danger-triangle-linear',
-    tag: t('community.guides.report.tag'),
-    title: t('community.guides.report.title'),
-    copy: t('community.guides.report.copy'),
-    action: t('community.guides.report.action'),
-    href: '#ask-a-question',
-  },
-  {
-    icon: 'solar:lightbulb-bolt-linear',
-    tag: t('community.guides.suggest.tag'),
-    title: t('community.guides.suggest.title'),
-    copy: t('community.guides.suggest.copy'),
-    action: t('community.guides.suggest.action'),
-    href: '#request-a-feature',
-  },
-  {
-    icon: 'solar:heart-angle-linear',
-    tag: t('community.guides.support.tag'),
-    title: t('community.guides.support.title'),
-    copy: t('community.guides.support.copy'),
-    action: t('community.guides.support.action'),
-    href: '#feature-board',
-  },
-])
-
-const postingTips = computed(() => [
-  {
-    title: t('community.postingTips.1.title'),
-    copy: t('community.postingTips.1.copy'),
-  },
-  {
-    title: t('community.postingTips.2.title'),
-    copy: t('community.postingTips.2.copy'),
-  },
-  {
-    title: t('community.postingTips.3.title'),
-    copy: t('community.postingTips.3.copy'),
-  },
-])
-
-const featureCoverage = computed(() => [
-  {
-    icon: 'solar:shop-2-linear',
-    tag: t('community.coverageCards.commerce.tag'),
-    title: t('community.coverageCards.commerce.title'),
-    copy: t('community.coverageCards.commerce.copy'),
-  },
-  {
-    icon: 'solar:wallet-money-linear',
-    tag: t('community.coverageCards.money.tag'),
-    title: t('community.coverageCards.money.title'),
-    copy: t('community.coverageCards.money.copy'),
-  },
-  {
-    icon: 'solar:gift-linear',
-    tag: t('community.coverageCards.rewards.tag'),
-    title: t('community.coverageCards.rewards.title'),
-    copy: t('community.coverageCards.rewards.copy'),
-  },
-  {
-    icon: 'solar:cup-star-linear',
-    tag: t('community.coverageCards.gamification.tag'),
-    title: t('community.coverageCards.gamification.title'),
-    copy: t('community.coverageCards.gamification.copy'),
-  },
-])
-
 const ROLE_VALUES = ['Buyer', 'Merchant', 'Driver', 'Partner', 'Community member'] as const
 const AREA_VALUES = ['Buyer app', 'Merchant tools', 'Driver app', 'Logistics', 'Payments', 'Community'] as const
 
@@ -590,13 +268,13 @@ const roleOptions = computed(() =>
   ROLE_VALUES.map((value) => ({
     value,
     label: displayRole(value),
-  }))
+  })),
 )
 const areaOptions = computed(() =>
   AREA_VALUES.map((value) => ({
     value,
     label: displayArea(value),
-  }))
+  })),
 )
 
 const questionForm = reactive({
@@ -629,17 +307,14 @@ const voteSubmitting = reactive<Record<number, boolean>>({})
 const threads = ref<CommunityThread[]>([])
 const featureIdeas = ref<CommunityFeatureRequest[]>([])
 
-const totalReplies = computed(() =>
-  threads.value.reduce((sum, thread) => sum + thread.replies.length, 0)
-)
 const listeningCount = computed(() =>
-  featureIdeas.value.filter((idea) => normalizeFeatureStatus(idea.status) === 'listening').length
+  featureIdeas.value.filter((idea) => normalizeFeatureStatus(idea.status) === 'listening').length,
 )
 const plannedCount = computed(() =>
-  featureIdeas.value.filter((idea) => normalizeFeatureStatus(idea.status) === 'planned').length
+  featureIdeas.value.filter((idea) => normalizeFeatureStatus(idea.status) === 'planned').length,
 )
 const shippedCount = computed(() =>
-  featureIdeas.value.filter((idea) => normalizeFeatureStatus(idea.status) === 'shipped').length
+  featureIdeas.value.filter((idea) => normalizeFeatureStatus(idea.status) === 'shipped').length,
 )
 
 onMounted(() => {
@@ -686,7 +361,6 @@ function hydrateSupportedIdeaIds() {
 
 function persistSupportedIdeaIds() {
   if (typeof window === 'undefined') return
-
   window.localStorage.setItem(SUPPORTED_IDEA_STORAGE_KEY, JSON.stringify(supportedIdeaIds.value))
 }
 
@@ -696,7 +370,6 @@ function syncReplyDrafts(items: CommunityThread[]) {
 
 function ensureReplyDraft(threadId: number) {
   if (replyDrafts[threadId]) return
-
   replyDrafts[threadId] = {
     name: '',
     role: 'Community member',
@@ -727,7 +400,7 @@ async function submitQuestion() {
         role: questionForm.role,
         title: questionForm.title,
         body: questionForm.body,
-      })
+      }),
     )
 
     threads.value = [thread, ...threads.value]
@@ -835,7 +508,6 @@ async function voteForIdea(id: number) {
 
 function markIdeaSupported(id: number) {
   if (hasSupportedIdea(id)) return
-
   supportedIdeaIds.value = [...supportedIdeaIds.value, id]
   persistSupportedIdeaIds()
 }
@@ -860,9 +532,9 @@ function normalizeFeatureStatus(status: string): CommunityFeatureStatus {
 
 function statusClass(status: string) {
   const normalized = normalizeFeatureStatus(status)
-  if (normalized === 'planned') return 'status-label--planned'
-  if (normalized === 'shipped') return 'status-label--shipped'
-  return 'status-label--listening'
+  if (normalized === 'planned') return 'cm-tag--planned'
+  if (normalized === 'shipped') return 'cm-tag--shipped'
+  return 'cm-tag--listening'
 }
 
 function statusLabel(status: string) {
@@ -974,711 +646,322 @@ function formatRelativeTime(value: string) {
 </script>
 
 <style scoped>
-:deep(.lp-layout) {
-  --cm-primary: var(--kkoo-primary, var(--bs-kkoo-primary, #5c308f));
-  --cm-primary-rgb: var(--bs-kkoo-primary-rgb, 92, 48, 143);
-  --cm-primary-dark: var(--kkoo-primary-dark, #3b1a5a);
-  --cm-primary-light: var(--kkoo-primary-light, #7b46b3);
-  --cm-gold: var(--kkoo-accent, var(--bs-kkoo-secondary, #f7a829));
-  --cm-gold-rgb: var(--bs-kkoo-secondary-rgb, 247, 168, 41);
-  --cm-gold-dark: var(--kkoo-accent-dark, #e8940f);
-  --cm-gold-light: var(--kkoo-gold-light, #f8b44b);
-  --cm-accent-light: var(--kkoo-accent-light, #c9a0e8);
+.cm-page {
+  color: var(--lh-text, #1a1a1a);
 }
 
-.community-hero,
-.guidance-surface,
-.listening-surface,
-.roadmap-surface {
-  background:
-    radial-gradient(circle at top right, rgba(var(--cm-gold-rgb), 0.1), transparent 26%),
-    radial-gradient(circle at left center, rgba(var(--cm-primary-rgb), 0.08), transparent 34%);
+.cm-hero {
+  padding-block: clamp(2.5rem, 6vw, 4rem) !important;
 }
 
-.community-hero-grid,
-.guide-grid,
-.status-grid,
-.coverage-grid,
-.posting-grid,
-.composer-grid,
-.thread-list,
-.feature-grid {
-  display: grid;
-  gap: 1.3rem;
+.cm-hero__inner {
+  max-width: 40rem;
 }
 
-.guide-tag,
-.hero-metric span,
-.status-label,
-.thread-tag,
-.thread-age,
-.feature-area {
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 0.74rem;
+.cm-kicker {
+  margin: 0 0 0.5rem;
+  font-family: var(--lh-font-display, 'Syne', sans-serif);
+  font-size: 0.75rem;
   font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lh-eyebrow, #3b1a5a);
 }
 
-.community-hero .lp-section-heading {
-  text-wrap: balance;
+.cm-title {
+  margin: 0;
+  font-family: var(--lh-font-display, 'Syne', sans-serif);
+  font-size: clamp(1.75rem, 3.2vw, 2.618rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--lh-text, #1a1a1a);
+  max-width: 12ch;
 }
 
-.section-heading {
-  margin-bottom: clamp(1.75rem, 2vw, 2.5rem);
+.cm-title span {
+  display: block;
+  color: var(--lh-eyebrow, #3b1a5a);
 }
 
-.community-actions,
-.community-proof-row {
+.cm-lead {
+  margin: 0.75rem 0 0;
+  max-width: 36ch;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--lh-text-muted, rgba(26, 26, 26, 0.62));
+}
+
+.cm-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.8rem;
+  gap: 0.75rem;
+  margin-top: 1.35rem;
 }
 
-.community-actions {
-  margin-top: 1.5rem;
-}
-
-.community-proof-row {
-  margin-top: 1.2rem;
-}
-
-.community-proof-pill {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.2rem;
-  padding: 0.52rem 0.88rem;
-  border-radius: 999px;
-  border: 1px solid rgba(var(--cm-primary-rgb), 0.08);
-  background: rgba(255, 255, 255, 0.82);
-  color: var(--bs-emphasis-color);
-  font-size: 0.9rem;
+.cm-note {
+  margin: 0.85rem 0 0;
+  font-size: 0.92rem;
   font-weight: 600;
-  box-shadow: 0 12px 24px rgba(35, 20, 46, 0.05);
+  color: var(--lh-text-muted, rgba(26, 26, 26, 0.62));
 }
 
-.community-note {
-  margin-top: 1.1rem;
-  color: var(--lp-body-ink, var(--bs-secondary-color));
-  font-size: 1.08rem;
-  font-weight: 400;
-  line-height: 1.65;
-  max-width: 58ch;
-}
-
-.community-note--error {
+.cm-note--error {
   color: #b42318;
 }
 
-.hero-board.lp-program-card {
-  overflow: hidden;
-  padding: 0;
+.cm-band {
+  padding-block: clamp(1.75rem, 4vw, 3rem) !important;
 }
 
-.hero-board-media.lp-buyers-visual {
-  min-height: 22rem;
-}
-
-.hero-board-badge {
-  position: absolute;
-  left: 1rem;
-  top: 1rem;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  min-height: 2rem;
-  padding: 0.38rem 0.72rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--cm-primary-dark) 82%, transparent);
-  color: var(--lp-text-on-purple, #fff6ef);
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  backdrop-filter: blur(14px);
-}
-
-.hero-board-metrics {
-  position: absolute;
-  inset: auto 1rem 1rem 1rem;
-  z-index: 1;
+.cm-pulse {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
 }
 
-.hero-metric {
-  border-radius: 1.1rem;
-  padding: 0.95rem;
-  background: rgba(15, 18, 28, 0.76);
-  color: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(18px);
-}
-
-.hero-metric span {
-  display: block;
-  opacity: 0.72;
-  margin-bottom: 0.35rem;
-}
-
-.hero-metric strong {
-  display: block;
-  font-size: 1.3rem;
-  line-height: 1.1;
-}
-
-.hero-board-body,
-.guide-card,
-.status-card,
-.coverage-card,
-.posting-guide,
-.composer-card,
-.thread-card,
-.feature-card,
-.empty-state {
-  padding: 1.4rem;
-}
-
-.hero-board-title {
-  margin: 0 0 1rem;
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--cm-primary-dark);
-}
-
-.hero-board-summary {
-  display: grid;
-  gap: 0.9rem;
-}
-
-.hero-board-summary-item {
-  padding-top: 0.9rem;
-  border-top: 1px solid color-mix(in srgb, var(--cm-primary) 12%, transparent);
-}
-
-.hero-board-summary-item:first-child {
-  padding-top: 0;
-  border-top: 0;
-}
-
-.composer-message,
-.empty-state {
-  margin: 0.45rem 0 0;
-  line-height: 1.65;
-  text-wrap: pretty;
-}
-
-.composer-message {
-  color: var(--cm-primary-dark);
-  font-weight: 600;
-}
-
-.guide-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.guide-top,
-.coverage-top,
-.feature-head,
-.feature-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.85rem;
-}
-
-.guide-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 1rem;
-  background: color-mix(in srgb, var(--cm-primary) 12%, transparent);
-  color: var(--cm-primary-dark);
-  font-size: 1.35rem;
-}
-
-.guide-tag,
-.coverage-tag {
-  color: var(--cm-primary-dark);
-}
-
-.guide-link {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  margin-top: auto;
-  color: var(--cm-primary-dark);
-  font-weight: 700;
-  text-decoration: none;
-  transition: color 180ms ease;
-}
-
-.guide-link:hover {
-  color: var(--cm-primary);
-}
-
-.guide-link:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--cm-gold) 58%, transparent);
-  outline-offset: 3px;
-}
-
-.status-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.community-stat {
-  margin: 0.8rem 0 0.35rem;
-}
-
-.status-label,
-.thread-tag,
-.thread-age,
-.feature-area {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.34rem 0.6rem;
-  border-radius: 999px;
-}
-
-.status-label--listening {
-  color: var(--cm-gold-dark);
-  background: color-mix(in srgb, var(--cm-gold) 20%, transparent);
-}
-
-.status-label--planned {
-  color: var(--cm-primary-dark);
-  background: color-mix(in srgb, var(--cm-primary) 16%, transparent);
-}
-
-.status-label--shipped {
-  color: var(--cm-primary);
-  background: color-mix(in srgb, var(--cm-accent-light) 40%, transparent);
-}
-
-.posting-grid {
-  grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
-  align-items: start;
-}
-
-.posting-guide-head {
-  margin-bottom: 1rem;
-}
-
-.posting-list {
-  display: grid;
-  gap: 0.95rem;
-}
-
-.posting-tip {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.95rem;
-  align-items: start;
-  padding-top: 0.95rem;
-  border-top: 1px solid color-mix(in srgb, var(--cm-primary) 12%, transparent);
-}
-
-.posting-tip:first-child {
-  padding-top: 0;
-  border-top: 0;
-}
-
-.posting-index {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--cm-primary) 12%, transparent);
-  color: var(--cm-primary-dark);
-  font-size: 0.78rem;
-  font-weight: 800;
-}
-
-.composer-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.composer-card--accent {
-  background:
-    radial-gradient(circle at top right, color-mix(in srgb, var(--cm-gold) 18%, transparent), transparent 32%),
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--cm-gold) 10%, var(--lp-card-bg, #fff)),
-      var(--lp-card-bg, #fff)
-    );
-}
-
-.composer-card__title {
-  font-size: clamp(1.2rem, 0.45vw + 1.05rem, 1.42rem);
-  font-weight: 800;
-  line-height: 1.25;
-  letter-spacing: normal;
-  color: var(--lp-heading-ink, var(--bs-heading-color));
-  text-wrap: balance;
-}
-
-.composer-card__accent {
-  display: inline;
-  color: var(--cm-primary-dark);
-  font-weight: 800;
-}
-
-.composer-form,
-.reply-form,
-.community-form {
-  display: grid;
-  gap: 1rem;
-}
-
-.community-form {
-  margin-top: 1.15rem;
-  padding-top: 1.15rem;
-  border-top: 1px solid color-mix(in srgb, var(--cm-primary) 16%, transparent);
-}
-
-.field-row {
-  display: grid;
-  gap: 1rem;
-}
-
-.composer-form label,
-.reply-form label,
-.community-form label {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.composer-form label > span,
-.reply-form label > span,
-.community-form label > span {
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: normal;
-  color: var(--lp-heading-ink, var(--bs-heading-color));
-}
-
-.composer-form input,
-.composer-form textarea,
-.composer-form select,
-.reply-form input,
-.reply-form select,
-.reply-form textarea,
-.community-form input,
-.community-form textarea,
-.community-form select {
-  width: 100%;
-  border-radius: 0.85rem;
-  border: 1.5px solid color-mix(in srgb, var(--cm-primary) 26%, var(--lp-border-color, #d8d0e4));
-  background: var(--lp-card-bg, #fff);
-  color: var(--bs-body-color);
-  font-size: 1rem;
-  line-height: 1.5;
-  padding: 0.75rem 0.95rem;
-  outline: none;
-  box-shadow: 0 1px 0 color-mix(in srgb, #fff 80%, transparent) inset;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.composer-form textarea,
-.reply-form textarea,
-.community-form textarea {
-  min-height: 6.5rem;
-  resize: vertical;
-}
-
-.composer-form select,
-.reply-form select,
-.community-form select {
-  padding-right: 2.25rem;
-}
-
-.composer-form input::placeholder,
-.composer-form textarea::placeholder,
-.reply-form input::placeholder,
-.reply-form textarea::placeholder,
-.community-form input::placeholder,
-.community-form textarea::placeholder {
-  color: var(--lp-text-soft, var(--bs-secondary-color));
-  font-size: 1rem;
-  opacity: 1;
-}
-
-.composer-form input:focus,
-.composer-form textarea:focus,
-.composer-form select:focus,
-.reply-form input:focus,
-.reply-form textarea:focus,
-.reply-form select:focus,
-.community-form input:focus,
-.community-form textarea:focus,
-.community-form select:focus {
-  border-color: color-mix(in srgb, var(--cm-primary) 55%, var(--cm-gold) 45%);
-  box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--cm-primary) 14%, transparent),
-    0 1px 0 color-mix(in srgb, #fff 80%, transparent) inset;
-}
-
-.composer-submit,
-.reply-form .lp-btn-pill {
-  justify-self: start;
-}
-
-.composer-submit:disabled,
-.reply-form .lp-btn-pill:disabled,
-.vote-button:disabled {
-  opacity: 0.72;
-  cursor: default;
-}
-
-.thread-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
-
-.thread-tag,
-.thread-age,
-.feature-area {
-  background: color-mix(in srgb, var(--cm-primary) 12%, transparent);
-  color: var(--cm-primary-dark);
-}
-
-.thread-author {
-  font-weight: 700;
-  color: var(--bs-heading-color);
-}
-
-.reply-list {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1.2rem;
-}
-
-.reply-card {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1rem;
-  padding: 1rem;
-  border-radius: 1.2rem;
-  background: color-mix(in srgb, var(--lp-card-bg, #fff) 88%, var(--cm-primary) 12%);
-  border: 1px solid color-mix(in srgb, var(--cm-primary) 12%, transparent);
-}
-
-.reply-avatar {
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  background: color-mix(in srgb, var(--cm-primary) 12%, transparent);
-  color: var(--cm-primary-dark);
-  font-weight: 800;
-}
-
-.reply-avatar--team {
-  background: var(--cm-primary);
-  color: var(--lp-text-on-purple, #fff6ef);
-}
-
-.reply-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.3rem;
-}
-
-.reply-meta span {
-  color: var(--bs-secondary-color);
-  font-size: 0.88rem;
-}
-
-.reply-team-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.24rem 0.55rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--cm-gold) 18%, transparent);
-  color: var(--cm-gold-dark);
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.feature-foot {
-  margin-top: 1.2rem;
-}
-
-.coverage-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.coverage-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 1rem;
-  background: rgba(var(--cm-gold-rgb), 0.14);
-  color: var(--cm-gold);
-  font-size: 1.35rem;
-}
-
-@media (min-width: 992px) {
-  .community-hero-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(360px, 520px);
-    align-items: center;
-  }
-}
-
-@media (max-width: 991.98px) {
-  .guide-grid,
-  .status-grid,
-  .coverage-grid,
-  .posting-grid,
-  .composer-grid,
-  .feature-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .community-hero .lp-section-heading {
-    max-width: none;
-  }
-
-  .community-hero-grid {
-    gap: 1.75rem;
-  }
-}
-
 @media (min-width: 768px) {
-  .field-row {
+  .cm-pulse {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.cm-pulse__item {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1rem;
+  border: 1px solid var(--lh-border, rgba(26, 26, 26, 0.08));
+  background: var(--lh-surface, #fff);
+}
+
+.cm-pulse__item strong {
+  font-family: var(--lh-font-display, 'Syne', sans-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--lh-text, #1a1a1a);
+}
+
+.cm-pulse__item span {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--lh-text-muted, rgba(26, 26, 26, 0.62));
+}
+
+.cm-composers,
+.cm-features {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 900px) {
+  .cm-composers,
+  .cm-features {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 767.98px) {
-  .hero-board-metrics {
-    grid-template-columns: 1fr;
+.cm-panel {
+  padding: 1.25rem 1.35rem;
+  border-radius: 1.25rem;
+  border: 1px solid var(--lh-border, rgba(26, 26, 26, 0.08));
+  background: var(--lh-surface, #fff);
+}
+
+.cm-panel__title,
+.cm-section-title,
+.cm-thread__title {
+  margin: 0;
+  font-family: var(--lh-font-display, 'Syne', sans-serif);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--lh-text, #1a1a1a);
+}
+
+.cm-panel__title {
+  font-size: clamp(1.15rem, 1.6vw, 1.618rem);
+  margin-bottom: 0.35rem;
+}
+
+.cm-section-head {
+  margin-bottom: 1.25rem;
+}
+
+.cm-section-title {
+  font-size: clamp(1.25rem, 2vw, 1.618rem);
+  max-width: 14ch;
+}
+
+.cm-form {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1rem;
+}
+
+.cm-form__row {
+  display: grid;
+  gap: 0.9rem;
+}
+
+@media (min-width: 640px) {
+  .cm-form__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .reply-card {
-    grid-template-columns: 1fr;
-  }
-
-  .feature-head,
-  .feature-foot,
-  .guide-top {
-    align-items: flex-start;
-    flex-direction: column;
-  }
 }
 
-/* Dark mode — readable cards + copy on marketing shell */
-html[data-bs-theme='dark'] .community-hero,
-html[data-bs-theme='dark'] .guidance-surface,
-html[data-bs-theme='dark'] .listening-surface,
-html[data-bs-theme='dark'] .roadmap-surface {
-  background:
-    radial-gradient(circle at top right, color-mix(in srgb, var(--cm-gold) 12%, transparent), transparent 26%),
-    radial-gradient(circle at left center, color-mix(in srgb, var(--cm-primary) 14%, transparent), transparent 34%);
+.cm-form :deep(.lh-field textarea) {
+  min-height: 6rem;
+  resize: vertical;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid var(--lh-border-strong, rgba(26, 26, 26, 0.14));
+  border-radius: var(--lh-radius-sm, 0.75rem);
+  background: var(--lh-surface, #fff);
+  color: var(--lh-text, #1a1a1a);
+  font: inherit;
 }
 
-html[data-bs-theme='dark'] .community-proof-pill {
-  background: color-mix(in srgb, var(--cm-primary-dark) 55%, transparent);
-  border-color: color-mix(in srgb, var(--cm-accent-light) 18%, transparent);
-  color: var(--bs-emphasis-color);
+.cm-form :deep(.lh-field textarea:focus-visible) {
+  outline: 2px solid var(--lh-focus, #5c308f);
+  outline-offset: 2px;
 }
 
-html[data-bs-theme='dark'] .hero-metric {
-  background: color-mix(in srgb, var(--cm-primary-dark) 76%, transparent);
-  color: var(--lp-text-on-purple, #fff6ef);
+.cm-threads {
+  display: grid;
+  gap: 1rem;
 }
 
-html[data-bs-theme='dark'] .composer-card--accent {
-  background:
-    radial-gradient(circle at top right, color-mix(in srgb, var(--cm-gold) 14%, transparent), transparent 32%),
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--cm-primary-dark) 92%, #000 8%),
-      color-mix(in srgb, var(--cm-primary-dark) 78%, #000 22%)
-    );
+.cm-thread__meta,
+.cm-feature__head,
+.cm-feature__foot,
+.cm-reply__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-html[data-bs-theme='dark'] .composer-card__accent {
-  color: var(--cm-gold-light);
+.cm-thread__meta {
+  margin-bottom: 0.55rem;
 }
 
-html[data-bs-theme='dark'] .community-form {
-  border-top-color: color-mix(in srgb, var(--cm-accent-light) 18%, transparent);
+.cm-thread__title {
+  font-size: clamp(1rem, 1.1vw, 1.272rem);
+  margin-bottom: 0.35rem;
 }
 
-html[data-bs-theme='dark'] .composer-form input,
-html[data-bs-theme='dark'] .composer-form textarea,
-html[data-bs-theme='dark'] .composer-form select,
-html[data-bs-theme='dark'] .reply-form input,
-html[data-bs-theme='dark'] .reply-form select,
-html[data-bs-theme='dark'] .reply-form textarea,
-html[data-bs-theme='dark'] .community-form input,
-html[data-bs-theme='dark'] .community-form textarea,
-html[data-bs-theme='dark'] .community-form select {
-  background: color-mix(in srgb, var(--cm-primary-dark) 55%, #000 45%);
-  border-color: color-mix(in srgb, var(--cm-accent-light) 28%, transparent);
-  color: var(--bs-body-color);
-  box-shadow: 0 1px 0 color-mix(in srgb, #fff 6%, transparent) inset;
+.cm-thread__body {
+  margin: 0;
+  color: var(--lh-text-muted, rgba(26, 26, 26, 0.62));
+  line-height: 1.5;
 }
 
-html[data-bs-theme='dark'] .composer-form input:focus,
-html[data-bs-theme='dark'] .composer-form textarea:focus,
-html[data-bs-theme='dark'] .composer-form select:focus,
-html[data-bs-theme='dark'] .reply-form input:focus,
-html[data-bs-theme='dark'] .reply-form textarea:focus,
-html[data-bs-theme='dark'] .reply-form select:focus,
-html[data-bs-theme='dark'] .community-form input:focus,
-html[data-bs-theme='dark'] .community-form textarea:focus,
-html[data-bs-theme='dark'] .community-form select:focus {
-  border-color: color-mix(in srgb, var(--cm-gold) 45%, var(--cm-accent-light) 55%);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cm-primary) 22%, transparent);
+.cm-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--lh-text, #1a1a1a) 8%, transparent);
+  color: var(--lh-text, #1a1a1a);
 }
 
-html[data-bs-theme='dark'] .reply-card {
-  background: color-mix(in srgb, var(--cm-primary-dark) 35%, transparent);
-  border-color: color-mix(in srgb, var(--cm-accent-light) 16%, transparent);
+.cm-tag--listening {
+  background: color-mix(in srgb, var(--lh-accent, #f7a829) 22%, transparent);
+  color: #92400e;
 }
 
-html[data-bs-theme='dark'] .guide-icon {
-  background: color-mix(in srgb, var(--cm-primary) 28%, transparent);
-  color: var(--cm-gold-light);
+.cm-tag--planned {
+  background: color-mix(in srgb, var(--lh-text, #1a1a1a) 10%, transparent);
+  color: var(--lh-text, #1a1a1a);
 }
 
-html[data-bs-theme='dark'] .coverage-icon {
-  color: var(--cm-gold-light);
-  background: color-mix(in srgb, var(--cm-gold) 18%, transparent);
+.cm-tag--shipped {
+  background: color-mix(in srgb, #0d9488 18%, transparent);
+  color: #0f766e;
 }
 
-html[data-bs-theme='dark'] .guide-tag,
-html[data-bs-theme='dark'] .coverage-tag,
-html[data-bs-theme='dark'] .guide-link,
-html[data-bs-theme='dark'] .vote-button,
-html[data-bs-theme='dark'] .thread-tag,
-html[data-bs-theme='dark'] .thread-age,
-html[data-bs-theme='dark'] .feature-area,
-html[data-bs-theme='dark'] .posting-index {
-  color: var(--cm-gold-light);
+.cm-tag--gold {
+  background: color-mix(in srgb, var(--lh-accent, #f7a829) 22%, transparent);
+  color: #92400e;
 }
 
-html[data-bs-theme='dark'] .guide-link:hover {
-  color: var(--cm-accent-light);
+.cm-author {
+  font-weight: 700;
+}
+
+.cm-age {
+  font-size: 0.85rem;
+  color: var(--lh-text-muted, rgba(26, 26, 26, 0.62));
+}
+
+.cm-replies {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.cm-reply {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border-radius: 0.9rem;
+  background: color-mix(in srgb, var(--lh-text, #1a1a1a) 4%, transparent);
+}
+
+.cm-reply__avatar {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  background: color-mix(in srgb, var(--lh-text, #1a1a1a) 10%, transparent);
+  color: var(--lh-text, #1a1a1a);
+}
+
+.cm-reply__avatar.is-team {
+  background: var(--lh-inverse, #3b1a5a);
+  color: #fff;
+}
+
+.cm-reply p {
+  margin: 0.2rem 0 0;
+  color: var(--lh-text-muted, rgba(26, 26, 26, 0.62));
+}
+
+.cm-form--reply {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--lh-border, rgba(26, 26, 26, 0.08));
+}
+
+.cm-feature__foot {
+  margin-top: 1rem;
+  justify-content: space-between;
+}
+
+.cm-empty {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px dashed var(--lh-border-strong, rgba(26, 26, 26, 0.14));
+  color: var(--lh-text-muted, rgba(26, 26, 26, 0.62));
+  text-align: center;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 </style>

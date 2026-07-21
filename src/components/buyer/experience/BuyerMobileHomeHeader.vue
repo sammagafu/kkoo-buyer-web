@@ -2,6 +2,7 @@
   <header class="buyer-mhome-header">
     <router-link :to="BUYER_DASHBOARD_ROUTE" class="buyer-mhome-header__brand" aria-label="KKOO Home">
       <img :src="logoSrc" alt="" class="buyer-mhome-header__logo" />
+      <span class="buyer-mhome-header__name">KKOO</span>
     </router-link>
 
     <button type="button" class="buyer-mhome-header__location" @click="$emit('location')">

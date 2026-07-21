@@ -1,17 +1,5 @@
 <template>
   <MarketingLayout>
-    <div class="context-nav">
-      <div class="context-nav-left">
-        <RouterLink :to="{ name: 'buyer.booking' }" class="context-nav-link">{{ t('hotels.context.bookStay') }}</RouterLink>
-        <RouterLink :to="{ name: 'buyer.eats' }" class="context-nav-link">{{ t('hotels.context.eats') }}</RouterLink>
-        <RouterLink :to="{ name: 'buyer.checkout' }" class="context-nav-link">{{ t('hotels.context.checkout') }}</RouterLink>
-      </div>
-      <div class="context-nav-right">
-        <RouterLink :to="{ name: 'buyer.compare' }" class="context-nav-pill">{{ t('hotels.context.compare') }}</RouterLink>
-        <RouterLink :to="{ name: 'buyer.ride' }" class="context-nav-pill">{{ t('hotels.context.ride') }}</RouterLink>
-      </div>
-    </div>
-
     <VerticalHero
       :eyebrow="t('hotels.hero.eyebrow')"
       :title="t('hotels.hero.title1')"
@@ -23,24 +11,12 @@
       :badge-title="`${hotels.length || t('hotels.hero.badgeFallback')} ${t('hotels.hero.badgeSuffix')}`"
     >
       <template #actions>
-        <RouterLink
-          :to="{ name: 'buyer.booking' }"
-          class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--lg text-decoration-none d-inline-flex align-items-center"
-        >
-          <span class="lp-btn-pill__label">{{ t('hotels.hero.ctaBookWeb') }}</span>
-          <span class="lp-btn-pill__well" aria-hidden="true">
-            <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
-          </span>
-        </RouterLink>
-        <RouterLink
-          :to="{ name: 'buyer.checkout' }"
-          class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg text-decoration-none d-inline-flex align-items-center"
-        >
-          <span class="lp-btn-pill__label">{{ t('hotels.hero.ctaCheckout') }}</span>
-          <span class="lp-btn-pill__well" aria-hidden="true">
-            <Icon icon="solar:cart-large-2-bold" class="lp-btn-pill__icon" />
-          </span>
-        </RouterLink>
+        <LhButton as="router-link" :to="{ name: 'buyer.booking' }" variant="primary" size="lg" with-well>
+          {{ t('hotels.hero.ctaBookWeb') }}
+        </LhButton>
+        <LhButton as="router-link" :to="{ name: 'buyer.checkout' }" variant="ghost" size="lg">
+          {{ t('hotels.hero.ctaCheckout') }}
+        </LhButton>
       </template>
     </VerticalHero>
 
@@ -109,6 +85,7 @@ import { useI18n } from 'vue-i18n'
 import MarketingLayout from './MarketingLayout.vue'
 import VerticalHero from './components/VerticalHero.vue'
 import VerticalCardGrid from './components/VerticalCardGrid.vue'
+import LhButton from './partials/house/LhButton.vue'
 import type { VerticalCard } from './components/VerticalCardGrid.vue'
 import { superAppApi, type HotelListItem } from '@/api/superApp'
 import { formatApiError } from '@/utils/formatApiError'

@@ -143,12 +143,12 @@
 }
 
 .buyer-side-nav__link--active {
-  background: rgba(var(--bs-secondary-rgb), 0.16);
-  color: var(--bs-primary);
+  background: rgba(92, 48, 143, 0.1);
+  color: var(--kkoo-primary);
 }
 
 .buyer-side-nav__link--active .buyer-side-nav__icon {
-  color: inherit;
+  color: var(--kkoo-accent);
 }
 
 html[data-bs-theme='dark'] .buyer-side-nav__link--active,
@@ -2337,16 +2337,16 @@ html.theme-dark .buyer-side-nav__counter--cart {
     padding-right: 1rem;
   }
 
+  .buyer-shopping-shell--ride .buyer-shopping-shell__main {
+    padding: 0;
+  }
+
   .buyer-shopping-shell--ride .buyer-float-actions {
     display: none;
   }
 
   .buyer-shopping-shell--send .buyer-float-actions {
     display: none;
-  }
-
-  .buyer-shopping-shell--ride .buyer-shopping-shell__main {
-    padding-bottom: 7.25rem;
   }
 }
 

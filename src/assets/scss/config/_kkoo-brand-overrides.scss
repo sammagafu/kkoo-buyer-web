@@ -357,3 +357,64 @@ html.theme-dark {
 html:not([data-bs-theme='dark']) body {
   background-color: var(--kkoo-canvas, #{$kkoo-canvas});
 }
+
+// ============================================================================
+// DISPLAY TYPOGRAPHY — Syne for h1–h3, brand, large numbers
+// Body, labels, and h4–h6 stay on Poppins (--kkoo-font-primary).
+// ============================================================================
+
+h1,
+h2,
+h3,
+.h1,
+.h2,
+.h3,
+.display-1,
+.display-2,
+.display-3,
+.display-4,
+.display-5,
+.display-6,
+.dashboard-heading,
+.stat-card-value,
+.kkoo-display,
+.topbar-brand-title,
+.auth-center-card__title {
+  font-family: var(--kkoo-font-display, #{$kkoo-font-display});
+  letter-spacing: -0.02em;
+}
+
+.topbar-brand-title {
+  letter-spacing: 0.04em;
+}
+
+// Commerce product cards — name + price always Poppins (never Syne)
+.shop-product-card__title,
+.shop-product-card__price,
+.store-product-card__title,
+.store-product-card__price,
+.menu-card-title,
+.menu-card-price-tag,
+.menu-card-price-inline {
+  font-family: var(--kkoo-font-primary, #{$kkoo-font-primary}) !important;
+  letter-spacing: normal;
+}
+
+@media (max-width: 575.98px) {
+  .shop-product-card__title,
+  .store-product-card__title,
+  .menu-card-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-width: 100%;
+  }
+
+  .shop-product-card__price,
+  .store-product-card__price,
+  .menu-card-price-tag,
+  .menu-card-price-inline {
+    font-weight: 800;
+  }
+}

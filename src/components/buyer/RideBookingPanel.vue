@@ -1,234 +1,178 @@
 <template>
-  <div class="buyer-ride">
-    <div class="buyer-ride-layout">
-      <div class="buyer-ride-main">
-        <header class="buyer-ride-hero">
-          <div class="buyer-ride-hero__icon" aria-hidden="true">
-            <Icon :icon="isParcel ? 'solar:box-bold' : 'solar:scooter-bold'" />
-          </div>
-          <div class="buyer-ride-hero__copy">
-            <p class="buyer-ride-hero__kicker">{{ kicker }}</p>
-            <h1 class="buyer-ride-hero__title">{{ stepTitle }}</h1>
-            <p class="buyer-ride-hero__tagline">{{ stepHint }}</p>
-          </div>
-        </header>
-
-        <div class="buyer-ride-history-link d-lg-none">
-          <RouterLink
-            :to="{ name: 'buyer.rides' }"
-            class="buyer-venue__chip"
-            @click="onHistoryNav"
-          >
-            <Icon icon="solar:history-bold" aria-hidden="true" />
-            {{ historyLabel }}
-          </RouterLink>
+  <div class="buyer-ride buyer-ride--map">
+    <div class="buyer-ride-stage" aria-hidden="false">
+      <GoogleMap
+        v-if="mapsApiKey"
+        ref="mapRef"
+        class="buyer-ride-map"
+        :api-key="mapsApiKey"
+        :center="mapCenter"
+        :zoom="mapZoom"
+        :clickable-icons="false"
+      >
+        <Marker v-if="pickupMarker" :options="pickupMarker" />
+        <Marker v-if="dropoffMarker" :options="dropoffMarker" />
+      </GoogleMap>
+      <div v-else class="buyer-ride-map buyer-ride-map--fallback">
+        <div class="buyer-ride-map__fallback-grid" />
+        <div v-if="pickup.lat != null && pickup.lng != null" class="buyer-ride-map__pin buyer-ride-map__pin--pickup" :style="fallbackPinStyle(pickup)">
+          <span />
         </div>
-
-        <div class="buyer-ride-steps" role="tablist" :aria-label="t('buyerXp.ride.stepNavLabel')">
-          <button
-            v-for="(step, index) in visibleSteps"
-            :key="step.id"
-            type="button"
-            role="tab"
-            class="buyer-ride-step"
-            :class="{
-              'buyer-ride-step--active': currentStep === index,
-              'buyer-ride-step--done': index < currentStep,
-              'buyer-ride-step--reachable': canNavigateToStep(index) && index !== currentStep,
-              'buyer-ride-step--locked': !canNavigateToStep(index) && index !== currentStep,
-            }"
-            :aria-selected="currentStep === index"
-            :aria-disabled="!canNavigateToStep(index) && index !== currentStep"
-            @click="onStepClick(index)"
-          >
-            {{ step.label }}
-          </button>
+        <div v-if="dropoff.lat != null && dropoff.lng != null" class="buyer-ride-map__pin buyer-ride-map__pin--dropoff" :style="fallbackPinStyle(dropoff)">
+          <span />
         </div>
-
-        <p v-if="stepError" class="buyer-ride-msg buyer-ride-msg--err buyer-ride-msg--steps">{{ stepError }}</p>
-
-        <!-- Step 1: Where -->
-        <section v-if="currentStep === 0" class="buyer-ride-step-panel" :aria-label="visibleSteps[0]?.label">
-          <div class="buyer-ride-card buyer-ride-route-card">
-            <div class="buyer-ride-route-card__rail" aria-hidden="true" />
-            <div class="buyer-ride-route-card__fields">
-              <RidePlaceField
-                id="pickup"
-                v-model:label="pickup.label"
-                v-model:lat="pickup.lat"
-                v-model:lng="pickup.lng"
-                v-model:map-place-id="pickup.mapPlaceId"
-                :title="pickupTitle"
-                :placeholder="pickupPlaceholder"
-                marker="pickup"
-              />
-              <RidePlaceField
-                id="dropoff"
-                v-model:label="dropoff.label"
-                v-model:lat="dropoff.lat"
-                v-model:lng="dropoff.lng"
-                v-model:map-place-id="dropoff.mapPlaceId"
-                :title="dropoffTitle"
-                :placeholder="dropoffPlaceholder"
-                marker="dropoff"
-              />
-            </div>
-            <button
-              type="button"
-              class="buyer-ride-swap"
-              :aria-label="swapLabel"
-              :disabled="!canSwap"
-              @click="swapRoute"
-            >
-              <Icon icon="solar:transfer-vertical-bold" />
-            </button>
-          </div>
-
-          <div v-if="isParcel" class="buyer-ride-card">
-            <p class="buyer-section-head__overline mb-2">{{ descriptionLabel }}</p>
-            <textarea
-              v-model="notes"
-              class="buyer-ride-notes"
-              rows="2"
-              :placeholder="descriptionPlaceholder"
-            />
-          </div>
-
-        </section>
-
-        <!-- Step 2: Ride (vehicle) -->
-        <section
-          v-else-if="!isParcel && currentStep === 1"
-          class="buyer-ride-step-panel"
-          :aria-label="visibleSteps[1]?.label"
-        >
-          <div class="buyer-ride-card">
-            <p class="buyer-section-head__overline mb-2">{{ vehicleLabel }}</p>
-            <div class="buyer-ride-vehicles" role="radiogroup" :aria-label="vehicleLabel">
-              <button
-                v-for="v in vehicles"
-                :key="v.id"
-                type="button"
-                class="buyer-ride-vehicle"
-                :class="{ 'buyer-ride-vehicle--active': vehicleType === v.id }"
-                :aria-pressed="vehicleType === v.id"
-                @click="vehicleType = v.id"
-              >
-                <Icon :icon="v.icon" class="buyer-ride-vehicle__icon" aria-hidden="true" />
-                {{ v.label }}
-              </button>
-            </div>
-          </div>
-
-          <BuyerRideRouteSummary
-            compact
-            :pickup-title="pickupTitle"
-            :dropoff-title="dropoffTitle"
-            :pickup-address="pickup.label"
-            :dropoff-address="dropoff.label"
-            :aria-label="t('buyerXp.ride.routeSummary')"
-          />
-        </section>
-
-        <!-- Final step: Go -->
-        <section
-          v-else-if="currentStep === lastStepIndex"
-          class="buyer-ride-step-panel"
-          :aria-label="visibleSteps[lastStepIndex]?.label"
-        >
-          <div class="buyer-ride-card buyer-ride-review">
-            <p class="buyer-section-head__overline mb-2">{{ t('buyerXp.ride.stepReviewTitle') }}</p>
-            <BuyerRideRouteSummary
-              class="mb-3"
-              :pickup-title="pickupTitle"
-              :dropoff-title="dropoffTitle"
-              :pickup-address="pickup.label"
-              :dropoff-address="dropoff.label"
-              :aria-label="t('buyerXp.ride.routeSummary')"
-            />
-            <dl class="buyer-ride-review__list">
-              <div v-if="!isParcel" class="buyer-ride-review__row">
-                <dt>{{ vehicleLabel }}</dt>
-                <dd>{{ selectedVehicleLabel }}</dd>
-              </div>
-              <div v-if="isParcel && notes.trim()" class="buyer-ride-review__row">
-                <dt>{{ descriptionLabel }}</dt>
-                <dd>{{ notes.trim() }}</dd>
-              </div>
-            </dl>
-          </div>
-
-          <div v-if="quoting" class="buyer-ride-fare buyer-ride-fare--inline">
-            <span class="buyer-ride-fare__label">{{ t('buyerXp.ride.quoteLoading') }}</span>
-          </div>
-          <div v-else-if="estimatedFare != null" class="buyer-ride-fare buyer-ride-fare--inline">
-            <span class="buyer-ride-fare__label">{{ fareLabel }}</span>
-            <strong class="buyer-ride-fare__amount">{{ formatPrice(estimatedFare) }}</strong>
-          </div>
-
-          <p v-if="!auth.isAuthenticated && currentStep === lastStepIndex" class="buyer-ride-msg buyer-ride-msg--hint">
-            {{ isParcel ? t('buyerXp.parcel.signInPrompt') : t('buyerXp.ride.signInPrompt') }}
-          </p>
-          <p v-if="bookingError" class="buyer-ride-msg buyer-ride-msg--err">{{ bookingError }}</p>
-        </section>
-
-        <div class="buyer-ride-bar buyer-ride-bar--inline d-none d-lg-flex">
-          <button
-            v-if="currentStep > 0"
-            type="button"
-            class="buyer-ride-bar__btn buyer-ride-bar__btn--secondary"
-            :disabled="submitting"
-            @click="prevStep"
-          >
-            {{ t('buyerXp.ride.stepBack') }}
-          </button>
-          <button
-            type="button"
-            class="buyer-ride-bar__btn"
-            :disabled="primaryDisabled"
-            @click="onPrimaryAction"
-          >
-            <Icon :icon="primaryIcon" aria-hidden="true" />
-            {{ primaryLabel }}
-          </button>
-        </div>
+        <p class="buyer-ride-map__fallback-note">{{ t('buyerXp.ride.mapPreviewHint') }}</p>
       </div>
+    </div>
 
-      <aside class="buyer-ride-aside" aria-label="Ride summary">
-        <div class="buyer-ride-aside__card">
-          <p class="buyer-ride-aside__title">{{ asideTitle }}</p>
-          <p class="buyer-ride-aside__text">{{ asideBody }}</p>
-          <RouterLink :to="{ name: 'buyer.rides' }" class="buyer-ride-aside__link" @click="onHistoryNav">
-            {{ historyLabel }}
-            <Icon icon="solar:arrow-right-linear" aria-hidden="true" />
-          </RouterLink>
+    <div class="buyer-ride-panel" :class="{ 'buyer-ride-panel--options': phase === 'options' }">
+      <header class="buyer-ride-panel__head">
+        <div class="buyer-ride-panel__brand">
+          <span class="buyer-ride-panel__logo" aria-hidden="true">KKOO</span>
+          <span class="buyer-ride-panel__mode">{{ isParcel ? t('buyerXp.parcel.overline') : t('buyerXp.ride.overline') }}</span>
         </div>
-        <div v-if="estimatedFare != null && currentStep === lastStepIndex" class="buyer-ride-fare buyer-ride-fare--aside">
+        <RouterLink
+          :to="{ name: 'buyer.rides' }"
+          class="buyer-ride-panel__trips"
+          @click="onHistoryNav"
+        >
+          {{ historyLabel }}
+        </RouterLink>
+      </header>
+
+      <!-- Plan phase -->
+      <section v-if="phase === 'plan'" class="buyer-ride-panel__body" :aria-label="isParcel ? t('buyerXp.parcel.title') : t('buyerXp.ride.findTrip')">
+        <h1 class="buyer-ride-panel__title">{{ isParcel ? t('buyerXp.parcel.title') : t('buyerXp.ride.findTrip') }}</h1>
+
+        <div class="buyer-ride-route">
+          <div class="buyer-ride-route__rail" aria-hidden="true">
+            <span class="buyer-ride-route__mark buyer-ride-route__mark--pickup" />
+            <span class="buyer-ride-route__stem" />
+            <span class="buyer-ride-route__mark buyer-ride-route__mark--dropoff" />
+          </div>
+          <div class="buyer-ride-route__fields">
+            <RidePlaceField
+              id="pickup"
+              v-model:label="pickup.label"
+              v-model:lat="pickup.lat"
+              v-model:lng="pickup.lng"
+              v-model:map-place-id="pickup.mapPlaceId"
+              :title="pickupTitle"
+              :placeholder="pickupPlaceholder"
+              marker="pickup"
+              dense
+            />
+            <RidePlaceField
+              id="dropoff"
+              v-model:label="dropoff.label"
+              v-model:lat="dropoff.lat"
+              v-model:lng="dropoff.lng"
+              v-model:map-place-id="dropoff.mapPlaceId"
+              :title="dropoffTitle"
+              :placeholder="dropoffPlaceholder"
+              marker="dropoff"
+              dense
+            />
+          </div>
+          <button
+            type="button"
+            class="buyer-ride-swap"
+            :aria-label="swapLabel"
+            :disabled="!canSwap"
+            @click="swapRoute"
+          >
+            <Icon icon="solar:transfer-vertical-bold" />
+          </button>
+        </div>
+
+        <div class="buyer-ride-chips" role="group" :aria-label="t('buyerXp.ride.tripOptions')">
+          <button type="button" class="buyer-ride-chip buyer-ride-chip--active" disabled>
+            <Icon icon="solar:clock-circle-bold" aria-hidden="true" />
+            {{ t('buyerXp.ride.pickUpNow') }}
+          </button>
+          <button type="button" class="buyer-ride-chip buyer-ride-chip--active" disabled>
+            <Icon icon="solar:user-bold" aria-hidden="true" />
+            {{ t('buyerXp.ride.forMe') }}
+          </button>
+        </div>
+
+        <div v-if="isParcel" class="buyer-ride-notes-wrap">
+          <label class="buyer-ride-notes-label" for="parcel-notes">{{ descriptionLabel }}</label>
+          <textarea
+            id="parcel-notes"
+            v-model="notes"
+            class="buyer-ride-notes"
+            rows="2"
+            :placeholder="descriptionPlaceholder"
+          />
+        </div>
+
+        <p v-if="stepError" class="buyer-ride-msg buyer-ride-msg--err">{{ stepError }}</p>
+
+        <button
+          type="button"
+          class="buyer-ride-cta"
+          :disabled="!hasRoute || quoting"
+          @click="onSearch"
+        >
+          {{ quoting ? t('buyerXp.ride.quoteLoading') : t('buyerXp.ride.search') }}
+        </button>
+      </section>
+
+      <!-- Options phase -->
+      <section v-else class="buyer-ride-panel__body" :aria-label="t('buyerXp.ride.stepRideTitle')">
+        <button type="button" class="buyer-ride-back" :disabled="submitting" @click="backToPlan">
+          <Icon icon="solar:arrow-left-linear" aria-hidden="true" />
+          {{ t('buyerXp.ride.stepBack') }}
+        </button>
+
+        <BuyerRideRouteSummary
+          flat
+          :pickup-title="pickupTitle"
+          :dropoff-title="dropoffTitle"
+          :pickup-address="pickup.label"
+          :dropoff-address="dropoff.label"
+          :aria-label="t('buyerXp.ride.routeSummary')"
+        />
+
+        <div v-if="!isParcel" class="buyer-ride-vehicles" role="radiogroup" :aria-label="vehicleLabel">
+          <button
+            v-for="v in vehicles"
+            :key="v.id"
+            type="button"
+            class="buyer-ride-vehicle"
+            :class="{ 'buyer-ride-vehicle--active': vehicleType === v.id }"
+            :aria-pressed="vehicleType === v.id"
+            @click="onVehicleSelect(v.id)"
+          >
+            <Icon :icon="v.icon" class="buyer-ride-vehicle__icon" aria-hidden="true" />
+            {{ v.label }}
+          </button>
+        </div>
+
+        <div v-if="quoting" class="buyer-ride-fare">
+          <span class="buyer-ride-fare__label">{{ t('buyerXp.ride.quoteLoading') }}</span>
+        </div>
+        <div v-else-if="estimatedFare != null" class="buyer-ride-fare">
           <span class="buyer-ride-fare__label">{{ fareLabel }}</span>
           <strong class="buyer-ride-fare__amount">{{ formatPrice(estimatedFare) }}</strong>
         </div>
-      </aside>
-    </div>
 
-    <div class="buyer-ride-bar buyer-ride-bar--mobile d-lg-none">
-      <button
-        v-if="currentStep > 0"
-        type="button"
-        class="buyer-ride-bar__btn buyer-ride-bar__btn--secondary"
-        :disabled="submitting"
-        @click="prevStep"
-      >
-        {{ t('buyerXp.ride.stepBack') }}
-      </button>
-      <button
-        type="button"
-        class="buyer-ride-bar__btn"
-        :disabled="primaryDisabled"
-        @click="onPrimaryAction"
-      >
-        <Icon :icon="primaryIcon" aria-hidden="true" />
-        {{ primaryLabel }}
-      </button>
+        <p v-if="!auth.isAuthenticated" class="buyer-ride-msg buyer-ride-msg--hint">
+          {{ isParcel ? t('buyerXp.parcel.signInPrompt') : t('buyerXp.ride.signInPrompt') }}
+        </p>
+        <p v-if="bookingError" class="buyer-ride-msg buyer-ride-msg--err">{{ bookingError }}</p>
+
+        <button
+          type="button"
+          class="buyer-ride-cta"
+          :disabled="primaryDisabled"
+          @click="onPrimaryAction"
+        >
+          <Icon :icon="primaryIcon" aria-hidden="true" />
+          {{ primaryLabel }}
+        </button>
+      </section>
     </div>
   </div>
 </template>
@@ -238,6 +182,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
+import { GoogleMap, Marker } from 'vue3-google-map'
 import { ridesApi } from '@/api/rides'
 import RidePlaceField from '@/components/buyer/RidePlaceField.vue'
 import BuyerRideRouteSummary from '@/components/buyer/experience/BuyerRideRouteSummary.vue'
@@ -251,12 +196,16 @@ const props = withDefaults(
   { mode: 'ride' },
 )
 
+const DSM = { lat: -6.7924, lng: 39.2083 }
+const mapsApiKey = (import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string) || ''
+
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
 const auth = useAuthStore()
 
 type PlacePin = { label: string; lat: number | null; lng: number | null; mapPlaceId: number | null }
+type Phase = 'plan' | 'options'
 
 const pickup = reactive<PlacePin>({ label: '', lat: null, lng: null, mapPlaceId: null })
 const dropoff = reactive<PlacePin>({ label: '', lat: null, lng: null, mapPlaceId: null })
@@ -267,13 +216,12 @@ const quoting = ref(false)
 const bookingError = ref('')
 const stepError = ref('')
 const estimatedFare = ref<number | null>(null)
-const currentStep = ref(0)
-const furthestStep = ref(0)
+const phase = ref<Phase>('plan')
+const mapRef = ref<{ map?: { fitBounds: (b: unknown, p?: number) => void; panTo: (c: { lat: number; lng: number }) => void; setZoom: (z: number) => void } } | null>(null)
+const mapZoom = ref(13)
 
 const isParcel = computed(() => props.mode === 'parcel')
-const lastStepIndex = computed(() => (isParcel.value ? 1 : 2))
 
-const kicker = computed(() => (isParcel.value ? t('buyerXp.parcel.overline') : t('buyerXp.ride.overline')))
 const pickupTitle = computed(() => (isParcel.value ? t('buyerXp.parcel.pickup') : t('buyerXp.ride.pickup')))
 const dropoffTitle = computed(() => (isParcel.value ? t('buyerXp.parcel.dropoff') : t('buyerXp.ride.dropoff')))
 const pickupPlaceholder = computed(() =>
@@ -297,35 +245,12 @@ const submittingLabel = computed(() =>
 )
 const submitIcon = computed(() => (isParcel.value ? 'solar:box-bold' : 'solar:scooter-bold'))
 const historyLabel = computed(() => t('buyerXp.ride.historyTitle'))
-const asideTitle = computed(() => t('buyerXp.ride.asideTitle'))
-const asideBody = computed(() => t('buyerXp.ride.asideBody'))
-
-const rideSteps = computed(() => [
-  { id: 'where', label: t('buyerXp.ride.stepWhere'), title: t('buyerXp.ride.title'), hint: t('buyerXp.ride.stepWhereHint') },
-  { id: 'ride', label: t('buyerXp.ride.stepRide'), title: t('buyerXp.ride.stepRideTitle'), hint: t('buyerXp.ride.stepRideHint') },
-  { id: 'go', label: t('buyerXp.ride.stepGo'), title: t('buyerXp.ride.stepGoTitle'), hint: t('buyerXp.ride.stepGoHint') },
-])
-
-const parcelSteps = computed(() => [
-  { id: 'where', label: t('buyerXp.ride.stepWhere'), title: t('buyerXp.parcel.title'), hint: t('buyerXp.ride.stepWhereHint') },
-  { id: 'go', label: t('buyerXp.ride.stepGo'), title: t('buyerXp.ride.stepGoTitle'), hint: t('buyerXp.ride.stepGoHint') },
-])
-
-const visibleSteps = computed(() => (isParcel.value ? parcelSteps.value : rideSteps.value))
-
-const stepTitle = computed(() => visibleSteps.value[currentStep.value]?.title ?? titleFallback.value)
-const stepHint = computed(() => visibleSteps.value[currentStep.value]?.hint ?? '')
-const titleFallback = computed(() => (isParcel.value ? t('buyerXp.parcel.title') : t('buyerXp.ride.title')))
 
 const vehicles = computed(() => [
   { id: 'boda', label: t('buyerXp.ride.boda'), icon: 'solar:scooter-bold' },
   { id: 'bajaj', label: t('buyerXp.ride.bajaj'), icon: 'solar:bus-bold' },
   { id: 'car', label: t('buyerXp.ride.car'), icon: 'solar:car-bold' },
 ])
-
-const selectedVehicleLabel = computed(
-  () => vehicles.value.find((v) => v.id === vehicleType.value)?.label ?? vehicleType.value,
-)
 
 const hasRoute = computed(
   () =>
@@ -345,25 +270,83 @@ const canBook = computed(
   () => hasRoute.value && estimatedFare.value != null && estimatedFare.value > 0,
 )
 
-const isLastStep = computed(() => currentStep.value === lastStepIndex.value)
-
 const primaryLabel = computed(() => {
   if (submitting.value) return submittingLabel.value
-  if (isLastStep.value && !auth.isAuthenticated) {
+  if (!auth.isAuthenticated) {
     return isParcel.value ? t('buyerXp.parcel.signInToSend') : t('buyerXp.ride.signInToBook')
   }
-  if (isLastStep.value) return submitLabel.value
-  return t('buyerXp.ride.stepNext')
+  return submitLabel.value
 })
 
-const primaryIcon = computed(() => (isLastStep.value ? submitIcon.value : 'solar:arrow-right-linear'))
+const primaryIcon = computed(() => submitIcon.value)
 
-const primaryDisabled = computed(() => {
-  if (submitting.value || quoting.value) return true
-  if (isLastStep.value) return !canBook.value
-  if (currentStep.value === 0) return !hasRoute.value
-  return false
+const primaryDisabled = computed(() => submitting.value || quoting.value || !canBook.value)
+
+const mapCenter = computed(() => {
+  if (pickup.lat != null && pickup.lng != null && dropoff.lat == null) {
+    return { lat: pickup.lat, lng: pickup.lng }
+  }
+  if (dropoff.lat != null && dropoff.lng != null && pickup.lat == null) {
+    return { lat: dropoff.lat, lng: dropoff.lng }
+  }
+  if (pickup.lat != null && pickup.lng != null && dropoff.lat != null && dropoff.lng != null) {
+    return {
+      lat: (pickup.lat + dropoff.lat) / 2,
+      lng: (pickup.lng + dropoff.lng) / 2,
+    }
+  }
+  return DSM
 })
+
+const pickupMarker = computed(() => {
+  if (pickup.lat == null || pickup.lng == null) return null
+  return {
+    position: { lat: pickup.lat, lng: pickup.lng },
+    title: pickup.label || 'Pickup',
+  }
+})
+
+const dropoffMarker = computed(() => {
+  if (dropoff.lat == null || dropoff.lng == null) return null
+  return {
+    position: { lat: dropoff.lat, lng: dropoff.lng },
+    title: dropoff.label || 'Dropoff',
+  }
+})
+
+function fallbackPinStyle(pin: PlacePin) {
+  const lat = pin.lat ?? DSM.lat
+  const lng = pin.lng ?? DSM.lng
+  const latSpan = 0.08
+  const lngSpan = 0.08
+  const top = ((DSM.lat + latSpan / 2 - lat) / latSpan) * 100
+  const left = ((lng - (DSM.lng - lngSpan / 2)) / lngSpan) * 100
+  return {
+    top: `${Math.min(92, Math.max(8, top))}%`,
+    left: `${Math.min(92, Math.max(8, left))}%`,
+  }
+}
+
+function fitMapToRoute() {
+  const map = mapRef.value?.map
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const g = (window as any).google
+  if (!map || !g?.maps) return
+  if (pickup.lat != null && pickup.lng != null && dropoff.lat != null && dropoff.lng != null) {
+    const bounds = new g.maps.LatLngBounds()
+    bounds.extend({ lat: pickup.lat, lng: pickup.lng })
+    bounds.extend({ lat: dropoff.lat, lng: dropoff.lng })
+    map.fitBounds(bounds, 72)
+    return
+  }
+  if (pickup.lat != null && pickup.lng != null) {
+    map.panTo({ lat: pickup.lat, lng: pickup.lng })
+    map.setZoom(14)
+  } else if (dropoff.lat != null && dropoff.lng != null) {
+    map.panTo({ lat: dropoff.lat, lng: dropoff.lng })
+    map.setZoom(14)
+  }
+}
 
 function onHistoryNav(event: MouseEvent) {
   if (auth.isAuthenticated) return
@@ -389,61 +372,13 @@ function swapRoute() {
   dropoff.lng = p.lng
   dropoff.mapPlaceId = p.mapPlaceId
   estimatedFare.value = null
+  if (phase.value === 'options') void refreshQuote()
 }
 
-function canAdvanceFrom(step: number) {
-  if (step === 0) return hasRoute.value
-  if (!isParcel.value && step === 1) return true
-  return false
-}
-
-function canNavigateToStep(index: number) {
-  if (index === currentStep.value) return true
-  if (index < currentStep.value) return true
-  if (index <= furthestStep.value) return true
-  if (index === currentStep.value + 1) return canAdvanceFrom(currentStep.value)
-  return false
-}
-
-function markStepReached(step: number) {
-  if (step > furthestStep.value) furthestStep.value = step
-}
-
-function goToStep(index: number) {
+function backToPlan() {
   stepError.value = ''
   bookingError.value = ''
-  currentStep.value = index
-}
-
-async function onStepClick(index: number) {
-  stepError.value = ''
-  bookingError.value = ''
-
-  if (index === currentStep.value) return
-
-  if (index < currentStep.value || (index <= furthestStep.value && index !== currentStep.value + 1)) {
-    goToStep(index)
-    return
-  }
-
-  if (index === currentStep.value + 1) {
-    if (!canAdvanceFrom(currentStep.value)) {
-      stepError.value = t('buyerXp.ride.routeRequired')
-      return
-    }
-    await nextStep()
-    return
-  }
-
-  if (index > currentStep.value) {
-    stepError.value = t('buyerXp.ride.completePreviousStep')
-  }
-}
-
-function prevStep() {
-  stepError.value = ''
-  bookingError.value = ''
-  if (currentStep.value > 0) currentStep.value -= 1
+  phase.value = 'plan'
 }
 
 async function refreshQuote() {
@@ -471,47 +406,28 @@ async function refreshQuote() {
   }
 }
 
-async function nextStep() {
+async function onSearch() {
   stepError.value = ''
   bookingError.value = ''
-
-  if (currentStep.value === 0) {
-    if (!hasRoute.value) {
-      stepError.value = t('buyerXp.ride.routeRequired')
-      return
-    }
-    if (isParcel.value) {
-      const ok = await refreshQuote()
-      if (!ok) {
-        stepError.value = t('buyerXp.ride.quoteUnavailable')
-        return
-      }
-      currentStep.value = 1
-      markStepReached(1)
-      return
-    }
-    currentStep.value = 1
-    markStepReached(1)
+  if (!hasRoute.value) {
+    stepError.value = t('buyerXp.ride.routeRequired')
     return
   }
-
-  if (!isParcel.value && currentStep.value === 1) {
-    const ok = await refreshQuote()
-    if (!ok) {
-      stepError.value = t('buyerXp.ride.quoteUnavailable')
-      return
-    }
-    currentStep.value = 2
-    markStepReached(2)
+  const ok = await refreshQuote()
+  if (!ok) {
+    stepError.value = t('buyerXp.ride.quoteUnavailable')
+    return
   }
+  phase.value = 'options'
+}
+
+function onVehicleSelect(id: string) {
+  vehicleType.value = id
+  void refreshQuote()
 }
 
 function onPrimaryAction() {
-  if (isLastStep.value) {
-    void submit()
-    return
-  }
-  void nextStep()
+  void submit()
 }
 
 async function submit() {
@@ -556,19 +472,25 @@ async function submit() {
 }
 
 watch(
-  () => [pickup.lat, pickup.lng, dropoff.lat, dropoff.lng, vehicleType.value] as const,
+  () => [pickup.lat, pickup.lng, dropoff.lat, dropoff.lng] as const,
   () => {
     estimatedFare.value = null
-    if (currentStep.value === lastStepIndex.value) void refreshQuote()
+    if (phase.value === 'options') {
+      phase.value = 'plan'
+    }
+    fitMapToRoute()
   },
 )
 
 watch(hasRoute, (ok) => {
   if (!ok) {
-    if (currentStep.value > 0) currentStep.value = 0
-    furthestStep.value = 0
+    phase.value = 'plan'
     estimatedFare.value = null
   }
+})
+
+watch(mapRef, (el) => {
+  if (el?.map) fitMapToRoute()
 })
 
 onMounted(() => {

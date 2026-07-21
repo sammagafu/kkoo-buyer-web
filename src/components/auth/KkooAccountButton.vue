@@ -55,7 +55,7 @@ function onClick() {
 
 const label = computed(() => {
   if (isAuthenticated.value && !props.forceSignIn) {
-    return t('auth.continueWithKkooAccount')
+    return t('auth.continueToKkoo')
   }
   return t('auth.signInWithKkooAccount')
 })

@@ -10,22 +10,6 @@
             </button>
           </div>
 
-          <router-link
-            to="/"
-            class="topbar-brand-logo d-flex align-items-center flex-shrink-0 text-decoration-none"
-            aria-label="KKOO home"
-            title="Home"
-          >
-            <img
-              class="topbar-brand-logo-img"
-              :src="topbarLogoSrc"
-              alt=""
-              width="32"
-              height="32"
-              decoding="async"
-            />
-          </router-link>
-
           <!-- App Search-->
           <form class="app-search d-none d-md-block me-auto" @submit.prevent="onSearchSubmit">
             <div class="position-relative">
@@ -246,8 +230,6 @@ function setLocale(code: LocaleCode) {
 import DropDown from "@/components/DropDown.vue";
 import { resolveAssetUrl } from '@/utils/assetUrl';
 import { buyerWebPath, adminWebPath, bizWebPath } from '@/config/cross-app-links'
-import logoLight from '@/assets/images/logo-light.svg';
-import logoDark from '@/assets/images/logo-dark.svg';
 
 const router = useRouter();
 const searchQuery = ref('');
@@ -269,8 +251,6 @@ function onSearchSubmit() {
 const useLayout = useLayoutStore();
 const auth = useAuthStore();
 
-/** KKOO mark: light SVG on light topbar, dark variant when app theme is dark (readable on topbar bg). */
-const topbarLogoSrc = computed(() => (useLayout.layout.theme === 'dark' ? logoDark : logoLight));
 const profileCompletion = useProfileCompletion();
 const { storeLink: sellerStoreLinkUrl, hasStoreLink: hasSellerStoreLink } = useSellerStoreLink();
 /** Unwrap for router-link :to (template expects RouteLocationRaw, not ComputedRef). */
@@ -452,14 +432,5 @@ html[data-bs-theme="dark"] .topbar-profile-progress-bar-wrap :deep(.progress-bar
 .topbar-user-avatar-placeholder--lg {
   width: 40px;
   height: 40px;
-}
-</style>
-
-<style>
-.topbar-brand-logo-img {
-  height: 32px;
-  width: 32px;
-  object-fit: contain;
-  display: block;
 }
 </style>

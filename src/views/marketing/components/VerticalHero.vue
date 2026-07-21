@@ -1,15 +1,15 @@
 <template>
-  <section class="vx-hero lp-section">
-    <b-container class="px-3 px-sm-4 px-lg-4">
-      <div class="vx-hero__grid">
-        <div class="vx-hero__copy">
-          <p v-if="eyebrow" class="vx-eyebrow">{{ eyebrow }}</p>
-          <h1 class="vx-title">
+  <section class="lh-hero lh-page lp-section vx-hero">
+    <div class="lh-hero__shell">
+      <div class="lh-hero__grid">
+        <div class="lh-hero__copy">
+          <p v-if="eyebrow" class="lh-hero__kicker">{{ eyebrow }}</p>
+          <h1>
             {{ title }}
-            <span v-if="titleAccent" class="vx-title-accent">{{ titleAccent }}</span>
+            <span v-if="titleAccent">{{ titleAccent }}</span>
           </h1>
-          <p v-if="lead" class="vx-lead">{{ lead }}</p>
-          <div v-if="$slots.actions" class="vx-actions">
+          <p v-if="lead" class="lh-hero__lead">{{ lead }}</p>
+          <div v-if="$slots.actions" class="lh-hero__cta">
             <slot name="actions" />
           </div>
           <p v-if="badgeLabel || badgeTitle" class="vx-proof">
@@ -21,16 +21,21 @@
           </div>
         </div>
 
-        <div class="vx-hero__visual">
-          <div class="vx-media">
-            <img v-if="image" :src="image" :alt="imageAlt || ''" class="vx-media__img" loading="lazy" />
-            <div v-else class="vx-media__placeholder" aria-hidden="true">
-              <Icon icon="solar:gallery-bold-duotone" class="vx-media__placeholder-icon" />
-            </div>
+        <div class="lh-hero__visual">
+          <img
+            v-if="image"
+            :src="image"
+            :alt="imageAlt || ''"
+            width="960"
+            height="1200"
+            loading="lazy"
+          />
+          <div v-else class="vx-media__placeholder" aria-hidden="true">
+            <Icon icon="solar:gallery-bold-duotone" class="vx-media__placeholder-icon" />
           </div>
         </div>
       </div>
-    </b-container>
+    </div>
   </section>
 </template>
 

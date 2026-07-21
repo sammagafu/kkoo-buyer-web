@@ -15,7 +15,9 @@
   padding-left: var(--lp-pill-pad-x);
   padding-right: 0;
   border-radius: 9999px;
+  font-family: var(--kkoo-font-display, 'Syne', sans-serif);
   font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: 1.2;
   text-decoration: none;
   overflow: hidden;

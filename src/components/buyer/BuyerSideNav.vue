@@ -34,6 +34,15 @@
 
     <nav class="buyer-side-nav__group">
       <p class="buyer-side-nav__label">{{ t('buyerXp.nav.yourAccount') }}</p>
+      <button
+        type="button"
+        class="buyer-side-nav__link buyer-side-nav__link--button"
+        @click="openNotifications"
+      >
+        <Icon icon="solar:bell-bold" class="buyer-side-nav__icon" />
+        <span>{{ t('buyerXp.nav.notifications') }}</span>
+        <span v-if="notificationBadge" class="buyer-side-nav__badge">{{ notificationBadge }}</span>
+      </button>
       <router-link
         v-for="item in accountLinks"
         :key="item.name"
@@ -73,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { useRoute, type RouteLocationRaw } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { Icon } from '@iconify/vue'
@@ -82,6 +91,7 @@ import { useLayoutStore } from '@/stores/layout'
 import { useAuthStore } from '@/stores/auth'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { useBuyerGreeting } from '@/composables/useBuyerGreeting'
+import { useBuyerNotifications } from '@/composables/useBuyerNotifications'
 import { resolveAssetUrl } from '@/utils/assetUrl'
 import { BUYER_DASHBOARD_ROUTE } from '@/constants/buyerDashboard'
 import { supportedLocales, setLocale, type LocaleCode } from '@/i18n'
@@ -99,6 +109,14 @@ const { isAuthenticated, displayName } = useAuthDisplay()
 const { user } = storeToRefs(auth)
 const { t, locale } = useI18n()
 const { greeting } = useBuyerGreeting()
+const { unreadCount: notificationUnreadCount } = useBuyerNotifications()
+const openNotifications = inject<() => void>('openBuyerNotifications', () => {})
+
+const notificationBadge = computed(() => {
+  const count = notificationUnreadCount.value
+  if (count <= 0) return ''
+  return count > 99 ? '99+' : String(count)
+})
 
 const logoSrc = computed(() => (layout.value.theme === 'dark' ? logoDark : logoLight))
 
@@ -197,5 +215,13 @@ function onLocaleChange(e: Event) {
   font-size: 0.72rem;
   background: rgba(var(--bs-primary-rgb), 0.06);
   color: inherit;
+}
+
+.buyer-side-nav__link--button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
 }
 </style>

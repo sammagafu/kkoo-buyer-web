@@ -12,8 +12,11 @@ export interface RestaurantMenuItem {
   discount_price?: number
   price?: number
   cover_image?: string
-  skus?: { id?: number; stock_quantity?: number }[]
+  image_url?: string
+  skus?: { id?: number; stock_quantity?: number; price_override?: number | null }[]
   description?: string
+  /** Hotel/restaurant course: starter | main | side | dessert | beverage | snack | other */
+  course_type?: string
 }
 
 export interface MenuCategory {

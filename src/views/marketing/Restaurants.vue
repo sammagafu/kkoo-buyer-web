@@ -1,17 +1,5 @@
 <template>
   <MarketingLayout>
-    <div class="context-nav">
-      <div class="context-nav-left">
-        <RouterLink :to="{ name: 'buyer.eats' }" class="context-nav-link">{{ t('restaurants.contextNav.eats') }}</RouterLink>
-        <RouterLink :to="{ name: 'buyer.marketplace' }" class="context-nav-link">{{ t('restaurants.contextNav.marketplace') }}</RouterLink>
-        <RouterLink :to="{ name: 'buyer.checkout' }" class="context-nav-link">{{ t('restaurants.contextNav.checkout') }}</RouterLink>
-      </div>
-      <div class="context-nav-right">
-        <RouterLink :to="{ name: 'buyer.favorites' }" class="context-nav-pill">{{ t('restaurants.contextNav.favorites') }}</RouterLink>
-        <RouterLink :to="{ name: 'buyer.ride' }" class="context-nav-pill">{{ t('restaurants.contextNav.ride') }}</RouterLink>
-      </div>
-    </div>
-
     <VerticalHero
       :eyebrow="t('restaurants.heroEyebrow')"
       :title="t('restaurants.heroTitle')"
@@ -23,33 +11,20 @@
       :badge-title="t('restaurants.heroBadge.title', { count: restaurants.length || t('restaurants.heroBadge.live') })"
     >
       <template #actions>
-        <RouterLink
-          :to="{ name: 'buyer.eats' }"
-          class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--lg text-decoration-none d-inline-flex align-items-center"
-        >
-          <span class="lp-btn-pill__label">{{ t('restaurants.cta.orderOnWeb') }}</span>
-          <span class="lp-btn-pill__well" aria-hidden="true">
-            <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
-          </span>
-        </RouterLink>
-        <RouterLink
-          :to="{ name: 'buyer.checkout' }"
-          class="lp-btn-pill lp-btn-pill--surface lp-btn-pill--lg text-decoration-none d-inline-flex align-items-center"
-        >
-          <span class="lp-btn-pill__label">{{ t('restaurants.cta.goToCheckout') }}</span>
-          <span class="lp-btn-pill__well" aria-hidden="true">
-            <Icon icon="solar:cart-large-2-bold" class="lp-btn-pill__icon" />
-          </span>
-        </RouterLink>
+        <LhButton as="router-link" :to="{ name: 'buyer.eats' }" variant="primary" size="lg" with-well>
+          {{ t('restaurants.cta.orderOnWeb') }}
+        </LhButton>
+        <LhButton as="router-link" :to="{ name: 'buyer.checkout' }" variant="ghost" size="lg">
+          {{ t('restaurants.cta.goToCheckout') }}
+        </LhButton>
       </template>
     </VerticalHero>
 
-    <section class="vx-section lp-section directory-surface">
-      <b-container class="px-3 px-sm-4 px-lg-4">
-        <header class="vx-section__head">
-          <p class="vx-kicker">{{ t('restaurants.sections.frontend.kicker') }}</p>
-          <h2 class="vx-section__title">{{ t('restaurants.sections.frontend.title') }}</h2>
-        </header>
+    <section class="lh-section lh-page lp-section vx-section directory-surface">
+      <header class="lh-section-head vx-section__head">
+        <p class="lh-kicker vx-kicker">{{ t('restaurants.sections.frontend.kicker') }}</p>
+        <h2 class="lh-section__title vx-section__title">{{ t('restaurants.sections.frontend.title') }}</h2>
+      </header>
 
         <p v-if="loading" class="directory-note">{{ t('restaurants.states.loading') }}</p>
         <p v-else-if="error" class="directory-note directory-note--error">{{ error }}</p>
@@ -67,7 +42,7 @@
                   {{ t('restaurants.card.prepTime', { minutes: restaurant.prep_time_minutes }) }}
                 </span>
               </div>
-              <h3 class="vx-card__title">{{ restaurant.business_name || t('restaurants.card.fallbackTitle') }}</h3>
+              <h3 class="lh-pane-card__title vx-card__title">{{ restaurant.business_name || t('restaurants.card.fallbackTitle') }}</h3>
               <p class="vx-card__copy">{{ restaurant.business_address || t('restaurants.card.fallbackCopy') }}</p>
               <div class="directory-facts">
                 <span v-if="restaurant.contact_phone">{{ restaurant.contact_phone }}</span>
@@ -83,7 +58,6 @@
             </div>
           </article>
         </div>
-      </b-container>
     </section>
 
     <VerticalCardGrid
@@ -113,6 +87,7 @@ import { Icon } from '@iconify/vue'
 import MarketingLayout from './MarketingLayout.vue'
 import VerticalHero from './components/VerticalHero.vue'
 import VerticalCardGrid from './components/VerticalCardGrid.vue'
+import LhButton from './partials/house/LhButton.vue'
 import type { VerticalCard } from './components/VerticalCardGrid.vue'
 import { superAppApi, type RestaurantListItem } from '@/api/superApp'
 import { formatApiError } from '@/utils/formatApiError'

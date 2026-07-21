@@ -172,7 +172,10 @@ async function loadHistory() {
   if (!auth.isAuthenticated) return
   try {
     const { data } = await catalogSearchApi.getHistory()
-    history.value = (data?.search_history ?? []).slice(0, 8)
+    history.value = (data?.search_history ?? [])
+      .map((term) => String(term ?? '').trim())
+      .filter((term) => term.length > 0)
+      .slice(0, 8)
   } catch {
     history.value = []
   }

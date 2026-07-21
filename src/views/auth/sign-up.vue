@@ -1,14 +1,13 @@
 <template>
   <AuthLayout>
     <AuthCard
+      portal="buyer"
       :title="t('auth.signUpTitleBuyer')"
       :subtitle="t('auth.signUpCopyBuyer')"
-      :logo-height="64"
-      wide
-      show-logo
+      :divider-label="t('auth.alreadyHaveAccount')"
     >
       <div
-        class="auth-signup-progress mb-3"
+        class="auth-signup-progress"
         role="progressbar"
         aria-valuenow="25"
         aria-valuemin="0"
@@ -24,7 +23,7 @@
       <b-form class="auth-center-form" @submit.prevent="handleSubmit" novalidate>
         <div v-if="error.length > 0" class="auth-alert auth-alert--danger">{{ error }}</div>
 
-        <AuthField :label="t('auth.phoneNumber')" icon="bi-telephone">
+        <AuthField :label="t('auth.phoneNumber')" icon="bi-telephone" icon-trailing>
           <b-form-input
             v-model="phone"
             class="auth-field__input"
@@ -37,7 +36,7 @@
         </AuthField>
 
         <div class="auth-form-grid auth-form-grid--2">
-          <AuthField :label="t('auth.firstName')" icon="bi-person">
+          <AuthField :label="t('auth.firstName')" icon="bi-person" icon-trailing>
             <b-form-input
               v-model="firstName"
               class="auth-field__input"
@@ -46,7 +45,7 @@
               autocomplete="given-name"
             />
           </AuthField>
-          <AuthField :label="t('auth.lastName')" icon="bi-person">
+          <AuthField :label="t('auth.lastName')" icon="bi-person" icon-trailing>
             <b-form-input
               v-model="lastName"
               class="auth-field__input"
@@ -68,7 +67,7 @@
         <router-link :to="{ name: 'auth.sign-in' }" class="auth-alt-btn">{{ t('auth.signIn') }}</router-link>
         <a
           :href="bizSellerRegisterUrl"
-          class="auth-alt-btn"
+          class="auth-alt-btn auth-alt-btn--accent"
           target="_blank"
           rel="noopener noreferrer"
         >{{ t('auth.registerAsSeller') }}</a>
@@ -145,23 +144,3 @@ async function handleSubmit() {
   }
 }
 </script>
-
-<style scoped>
-.auth-signup-progress__track {
-  height: 0.35rem;
-  border-radius: 999px;
-  background: rgba(92, 48, 143, 0.12);
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
-.auth-signup-progress__fill {
-  height: 100%;
-  border-radius: inherit;
-  background: var(--kkoo-secondary, #f7a829);
-}
-.auth-signup-progress__hint {
-  font-size: 0.8rem;
-  color: var(--kkoo-muted, #6a4c86);
-  text-align: center;
-}
-</style>

@@ -5,6 +5,8 @@ import fr from './locales/fr'
 import { mergeLocaleMessages } from './mergeLocaleMessages'
 import landingFr from './landingOverrides/fr'
 import landingSw from './landingOverrides/sw'
+import landingHouseEn from './landingHouse/en'
+import landingHouseSw from './landingHouse/sw'
 
 const LOCALE_KEY = 'kkoo_admin_locale'
 
@@ -71,9 +73,12 @@ export const i18n = createI18n({
   locale: initialLocale,
   fallbackLocale: 'en',
   messages: {
-    en,
+    en: mergeLocaleMessages(en, landingHouseEn),
     fr: mergeLocaleMessages(mergeLocaleMessages(en, fr), landingFr),
-    sw: mergeLocaleMessages(mergeLocaleMessages(en, sw), landingSw),
+    sw: mergeLocaleMessages(
+      mergeLocaleMessages(mergeLocaleMessages(en, sw), landingSw),
+      landingHouseSw,
+    ),
   },
 })
 

@@ -1,6 +1,6 @@
 <template>
   <AuthLayout>
-    <AuthCard title="Returning to KKOO app" subtitle="Completing sign-in…" show-logo icon="bi-phone">
+    <AuthCard title="Returning to KKOO app" subtitle="Completing sign-in…" icon="bi-phone">
       <p v-if="error" class="auth-alert auth-alert--danger">{{ error }}</p>
       <p v-else-if="openedApp" class="text-muted text-center mb-0">
         If the app did not open, tap the button below.

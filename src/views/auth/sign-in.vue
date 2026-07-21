@@ -1,21 +1,49 @@
 <template>
   <AuthLayout>
     <AuthCard
-      :title="otpSent ? t('auth.verifyTitle') : t('auth.signInWithKkooAccount')"
-      :subtitle="otpSent ? t('auth.otpPromptSent') : t('auth.kkooAccountSubtitle')"
-      show-logo
-      :icon="otpSent ? 'bi-shield-lock' : 'bi-box-arrow-in-right'"
-      :logo-height="68"
-      :otp="otpSent"
+      portal="buyer"
+      :title="sessionResume ? t('auth.continueToKkoo') : otpSent ? t('auth.verifyTitle') : t('auth.signInWithPhone')"
+      :subtitle="sessionResume ? t('auth.sessionResumeHint') : otpSent ? t('auth.otpPromptSent') : t('auth.signInSubtitle')"
+      :otp="otpSent && !sessionResume"
+      :divider-label="sessionResume ? '' : t('auth.dontHaveAccount')"
     >
-      <b-form class="auth-center-form" @submit.prevent="otpSent ? handleVerifyOtp() : handleRequestOtp()" novalidate>
+      <div v-if="sessionResume" class="auth-session-resume">
+        <div v-if="error.length > 0" class="auth-alert auth-alert--danger">{{ error }}</div>
+        <p class="auth-session-resume__as">
+          {{ t('auth.signedInAs', { name: displayName }) }}
+        </p>
+        <b-button
+          variant="primary"
+          type="button"
+          class="auth-center-card__submit w-100"
+          :disabled="redirecting"
+          @click="continueExistingSession"
+        >
+          {{ redirecting ? t('auth.redirecting') : t('auth.continueToKkoo') }}
+        </b-button>
+        <button
+          type="button"
+          class="auth-text-link auth-session-resume__switch"
+          :disabled="loading || redirecting"
+          @click="useDifferentAccount"
+        >
+          {{ t('auth.useDifferentAccount') }}
+        </button>
+      </div>
+
+      <b-form
+        v-else
+        class="auth-center-form"
+        @submit.prevent="otpSent ? handleVerifyOtp() : handleRequestOtp()"
+        novalidate
+      >
         <div v-if="route.query.reset === 'success'" class="auth-alert auth-alert--success">{{ t('auth.resetSuccess') }}</div>
         <div v-if="route.query.notAllowed === '1'" class="auth-alert auth-alert--warning">{{ t('auth.notAllowedPortal') }}</div>
         <div v-if="route.query.registered === 'seller'" class="auth-alert auth-alert--success">{{ t('auth.sellerRegistered') }}</div>
         <div v-if="successMessage" class="auth-alert auth-alert--success">{{ successMessage }}</div>
         <div v-if="error.length > 0" class="auth-alert auth-alert--danger">{{ error }}</div>
 
-        <AuthField :label="t('auth.phoneNumber')" icon="bi-telephone">
+        <AuthField :label="t('auth.phoneNumber')" icon="bi-telephone" icon-trailing>
           <b-form-input
             v-model="phone"
             class="auth-field__input"
@@ -28,7 +56,7 @@
         </AuthField>
 
         <template v-if="otpSent">
-          <AuthField :label="t('auth.otpCode')" icon="bi-key" otp>
+          <AuthField :label="t('auth.otpCode')" icon="bi-key" otp icon-trailing>
             <b-form-input
               v-model="otpCode"
               class="auth-field__input auth-field__input--otp"
@@ -60,12 +88,11 @@
         </b-button>
       </b-form>
 
-      <template #alt>
-        <router-link :to="buyerRoutes.marketplace" class="auth-alt-btn">{{ t('auth.browseWithoutSignIn') }}</router-link>
+      <template v-if="!sessionResume" #alt>
         <router-link :to="{ name: 'auth.sign-up' }" class="auth-alt-btn">{{ t('auth.signUp') }}</router-link>
         <a
           :href="bizSellerRegisterUrl"
-          class="auth-alt-btn"
+          class="auth-alt-btn auth-alt-btn--accent"
           target="_blank"
           rel="noopener noreferrer"
         >{{ t('auth.registerAsSeller') }}</a>
@@ -103,10 +130,12 @@ import { ref, computed } from 'vue'
 import { saveStoredBackupCodes } from '@/utils/backupCodesStorage'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { authApi } from '@/api'
 import { resolvePostAuthRedirect } from '@/utils/authRedirect'
-import { buyerRoutes, bizSellerRegisterUrl } from '@/config/landing-links'
+import { bizSellerRegisterUrl } from '@/config/landing-links'
+import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { toastError, toastSuccess } from '@/utils/toast'
 
 const phone = ref('')
@@ -116,6 +145,7 @@ const successMessage = ref('')
 const loading = ref(false)
 const redirecting = ref(false)
 const otpSent = ref(false)
+const forceOtp = ref(false)
 const resendCooldownSec = ref(0)
 const showBackupCodes = ref(false)
 const backupCodesList = ref<string[]>([])
@@ -123,7 +153,11 @@ const backupCodesList = ref<string[]>([])
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
+const { isAuthenticated } = storeToRefs(auth)
+const { displayName } = useAuthDisplay()
 const { t } = useI18n()
+
+const sessionResume = computed(() => isAuthenticated.value && !forceOtp.value)
 
 const submitDisabled = computed(() => {
   if (loading.value || redirecting.value) return true
@@ -150,6 +184,38 @@ function startResendCooldown(sec = 30) {
   }, 1000)
 }
 
+function postAuthDestination() {
+  return resolvePostAuthRedirect(route.query.redirectedFrom, auth.defaultRouteAfterAuth())
+}
+
+async function continueExistingSession() {
+  error.value = ''
+  redirecting.value = true
+  try {
+    await router.push(postAuthDestination())
+  } catch {
+    error.value = t('auth.couldNotContinue')
+    redirecting.value = false
+  }
+}
+
+async function useDifferentAccount() {
+  error.value = ''
+  loading.value = true
+  try {
+    await auth.clearSession()
+    forceOtp.value = true
+    otpSent.value = false
+    otpCode.value = ''
+    phone.value = ''
+    successMessage.value = ''
+  } catch {
+    error.value = t('auth.couldNotContinue')
+  } finally {
+    loading.value = false
+  }
+}
+
 async function handleRequestOtp() {
   error.value = ''
   successMessage.value = ''
@@ -173,10 +239,6 @@ async function handleRequestOtp() {
   } finally {
     loading.value = false
   }
-}
-
-function postAuthDestination() {
-  return resolvePostAuthRedirect(route.query.redirectedFrom, auth.defaultRouteAfterAuth())
 }
 
 async function handleVerifyOtp() {
@@ -233,3 +295,24 @@ function copyBackupCodes() {
   navigator.clipboard?.writeText(text).then(() => toastSuccess('Copied'))
 }
 </script>
+
+<style scoped>
+.auth-session-resume {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.auth-session-resume__as {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--bs-body-color);
+  text-align: center;
+}
+
+.auth-session-resume__switch {
+  align-self: center;
+  margin-top: 0.15rem;
+}
+</style>

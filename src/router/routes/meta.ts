@@ -1,4 +1,4 @@
-export const baseBrand = 'KKOOAPP — Shop, order, and run your business in one place'
+export const baseBrand = 'KKOOAPP — Buy. Sell. Deliver. Earn.'
 
 export function setTitle(title: string) {
   const base = 'KKOOAPP — Shop & order'

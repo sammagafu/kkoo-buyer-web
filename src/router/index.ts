@@ -47,7 +47,9 @@ router.beforeEach(async (routeTo, _routeFrom, next) => {
   }
 
   if (auth.isAuthenticated) {
-    if (routeTo.name === 'auth.sign-in' || routeTo.name === 'auth.sign-up') {
+    // Sign-up: send signed-in users into the app. Sign-in stays reachable so they can
+    // Continue to KKOO or switch accounts.
+    if (routeTo.name === 'auth.sign-up') {
       return next(auth.defaultRouteAfterAuth());
     }
   }

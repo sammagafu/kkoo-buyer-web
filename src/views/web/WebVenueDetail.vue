@@ -38,6 +38,22 @@
 
     <section class="buyer-surface" aria-label="Catalog">
       <BuyerSearchBar v-if="showSearch" v-model="search" :placeholder="config.searchPlaceholder" />
+
+      <div v-if="vertical === 'eats' && courseChips.length > 1" class="eats-course-filters" role="tablist" :aria-label="t('buyerXp.eats.title')">
+        <button
+          v-for="chip in courseChips"
+          :key="chip.id"
+          type="button"
+          role="tab"
+          class="eats-course-filters__chip"
+          :class="{ 'is-active': courseFilter === chip.id }"
+          :aria-selected="courseFilter === chip.id"
+          @click="courseFilter = chip.id"
+        >
+          {{ chip.label }}
+        </button>
+      </div>
+
       <BuyerProductGridSection
         :products="displayProducts"
         :loading="loading"
@@ -49,6 +65,24 @@
         @add="addProduct"
       />
     </section>
+
+    <div v-if="vertical === 'eats' && comboBuckets.canBuildCombo" class="eats-combo-bar">
+      <button type="button" class="eats-combo-bar__btn" @click="comboOpen = true">
+        <Icon icon="solar:bowl-bold" width="18" height="18" aria-hidden="true" />
+        {{ t('buyerXp.eats.comboCta') }}
+      </button>
+    </div>
+
+    <FoodComboSheet
+      v-if="vertical === 'eats'"
+      :open="comboOpen"
+      :mains="comboBuckets.mains"
+      :sides="comboBuckets.sides"
+      :drinks="comboBuckets.drinks"
+      :adding="adding"
+      @close="comboOpen = false"
+      @submit="addCombo"
+    />
 
     <footer v-if="showFooter" class="eats-footer-actions">
       <RouterLink v-if="fulfillmentMode === 'delivery'" :to="rideLink" class="eats-footer-actions__primary">
@@ -64,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
@@ -79,10 +113,23 @@ import { formatApiError } from '@/utils/formatApiError'
 import { useAddToCart } from '@/composables/useAddToCart'
 import { buildCheckoutLink, buildRideLink } from '@/utils/fulfillmentLinks'
 import type { VenueVertical } from '@/utils/buyerDetailLinks'
+import {
+  comboBuckets as buildComboBuckets,
+  flattenMenuWithCourses,
+  FOOD_COURSE_ORDER,
+  inferCourseType,
+  type FoodCourse,
+} from '@/utils/foodMenuUtils'
 import BuyerFulfillmentBar, { type FulfillmentModeId } from '@/components/buyer/BuyerFulfillmentBar.vue'
 import BuyerTableBookingPanel from '@/components/buyer/BuyerTableBookingPanel.vue'
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import BuyerProductGridSection, { type GridProduct } from '@/components/buyer/experience/BuyerProductGridSection.vue'
+import FoodComboSheet from '@/components/buyer/eats/FoodComboSheet.vue'
+
+type MenuGridProduct = GridProduct & {
+  course_type?: string
+  discount_price?: number
+}
 
 const props = defineProps<{ sellerId: string }>()
 const route = useRoute()
@@ -92,7 +139,7 @@ const { adding, addError, addMessage, addProduct: addProductToCart } = useAddToC
 
 const vertical = computed(() => String(route.meta.venueVertical ?? 'eats') as VenueVertical)
 
-const products = ref<GridProduct[]>([])
+const products = ref<MenuGridProduct[]>([])
 const venueName = ref('')
 const venueAddress = ref('')
 const venueMeta = ref('')
@@ -100,6 +147,8 @@ const sellerUserId = ref<number | null>(null)
 const loading = ref(false)
 const error = ref('')
 const search = ref('')
+const courseFilter = ref<'all' | FoodCourse>('all')
+const comboOpen = ref(false)
 const fulfillmentMode = ref<FulfillmentModeId>('pickup')
 const hasCartItems = ref(false)
 
@@ -165,10 +214,42 @@ const fulfillmentModes = computed(() =>
 const showFulfillment = computed(() => config.value.showFulfillment)
 const showSearch = computed(() => config.value.showSearch)
 
+const courseLabel = (course: FoodCourse) => {
+  const map: Record<FoodCourse, string> = {
+    starter: t('buyerXp.eats.courseStarter'),
+    main: t('buyerXp.eats.courseMain'),
+    side: t('buyerXp.eats.courseSide'),
+    dessert: t('buyerXp.eats.courseDessert'),
+    beverage: t('buyerXp.eats.courseBeverage'),
+    snack: t('buyerXp.eats.courseSnack'),
+    other: t('buyerXp.eats.courseOther'),
+  }
+  return map[course]
+}
+
+const courseChips = computed(() => {
+  if (vertical.value !== 'eats') return []
+  const counts = Object.fromEntries(FOOD_COURSE_ORDER.map((c) => [c, 0])) as Record<FoodCourse, number>
+  for (const p of products.value) {
+    counts[inferCourseType(p)] += 1
+  }
+  const chips: { id: 'all' | FoodCourse; label: string }[] = [{ id: 'all', label: t('buyerXp.eats.courseAll') }]
+  for (const course of FOOD_COURSE_ORDER) {
+    if (counts[course] > 0) chips.push({ id: course, label: courseLabel(course) })
+  }
+  return chips
+})
+
+const comboBuckets = computed(() => buildComboBuckets(products.value as RestaurantMenuItem[]))
+
 const displayProducts = computed(() => {
-  if (!search.value.trim()) return products.value
+  let list = products.value
+  if (vertical.value === 'eats' && courseFilter.value !== 'all') {
+    list = list.filter((p) => inferCourseType(p) === courseFilter.value)
+  }
+  if (!search.value.trim()) return list
   const q = search.value.toLowerCase()
-  return products.value.filter(
+  return list.filter(
     (p) =>
       (p.title || '').toLowerCase().includes(q) ||
       (p.description || '').toLowerCase().includes(q),
@@ -204,11 +285,14 @@ function goBack() {
   void router.push({ name: config.value.listRoute })
 }
 
-function flattenMenu(data: RestaurantMenuResponse | HotelMenuResponse): GridProduct[] {
-  const items: GridProduct[] = []
+function flattenMenu(data: RestaurantMenuResponse | HotelMenuResponse): MenuGridProduct[] {
+  if (vertical.value === 'eats') {
+    return flattenMenuWithCourses(data.categories ?? []) as MenuGridProduct[]
+  }
+  const items: MenuGridProduct[] = []
   for (const cat of data.categories ?? []) {
     for (const p of cat.products ?? []) {
-      items.push({ ...p } as GridProduct)
+      items.push({ ...p } as MenuGridProduct)
     }
   }
   return items
@@ -242,6 +326,7 @@ async function loadVenue() {
   }
   loading.value = true
   error.value = ''
+  courseFilter.value = 'all'
   try {
     if (vertical.value === 'eats') {
       const { data } = await superAppApi.getRestaurantMenu(sid)
@@ -260,8 +345,8 @@ async function loadVenue() {
         sellerUserId.value = store.user_id ?? null
       }
       const list =
-        (data as { products?: GridProduct[] })?.products ??
-        (data as { results?: GridProduct[] })?.results ??
+        (data as { products?: MenuGridProduct[] })?.products ??
+        (data as { results?: MenuGridProduct[] })?.results ??
         []
       products.value = Array.isArray(list) ? list : []
     } else {
@@ -271,7 +356,7 @@ async function loadVenue() {
         page_size: 48,
         in_stock: true,
       } as never)
-      products.value = ((data as { results?: GridProduct[] })?.results ?? []) as GridProduct[]
+      products.value = ((data as { results?: MenuGridProduct[] })?.results ?? []) as MenuGridProduct[]
     }
     if (!products.value.length) error.value = t('buyerXp.venue.noItems')
   } catch (e) {
@@ -286,6 +371,19 @@ async function addProduct(prod: GridProduct) {
   if (ok) {
     hasCartItems.value = true
     addMessage.value = t('buyerXp.common.addedToCart')
+  }
+}
+
+async function addCombo(items: RestaurantMenuItem[]) {
+  let added = 0
+  for (const item of items) {
+    const ok = await addProductToCart(item)
+    if (ok) added += 1
+  }
+  if (added > 0) {
+    hasCartItems.value = true
+    addMessage.value = t('buyerXp.eats.comboAdded')
+    comboOpen.value = false
   }
 }
 

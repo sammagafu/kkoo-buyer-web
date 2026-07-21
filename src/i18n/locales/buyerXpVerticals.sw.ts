@@ -196,6 +196,27 @@ export const buyerXpVerticalsSw = {
     addedDineIn: 'Imeongezwa. Kamilisha malipo kwa meza yako.',
     addedPickup: 'Imeongezwa. Chukua ukiwa tayari.',
     addedDelivery: 'Imeongezwa. Omba KKOO boda ukiwa tayari.',
+    comboCta: 'Tengeneza combo',
+    comboTitle: 'Tengeneza combo',
+    comboSub: 'Chagua chakula kikuu, side, na kinywaji mara moja.',
+    comboMain: 'Kikuu',
+    comboSide: 'Side',
+    comboDrink: 'Kinywaji',
+    comboRequired: 'Lazima',
+    comboOptional: 'Hiari',
+    comboTotal: 'Jumla ya combo',
+    comboAdd: 'Ongeza combo kwenye kikapu',
+    comboAdding: 'Inaongeza…',
+    comboHint: 'Kila chaguo linaongezwa kama kipengele tofauti.',
+    comboAdded: 'Combo imeongezwa kwenye kikapu.',
+    courseAll: 'Zote',
+    courseMain: 'Vikuu',
+    courseSide: 'Sides',
+    courseBeverage: 'Vinywaji',
+    courseStarter: 'Starters',
+    courseDessert: 'Vitamu',
+    courseSnack: 'Vitandamiti',
+    courseOther: 'Zaidi',
   },
   checkout: {
     title: 'Malipo',
@@ -228,6 +249,8 @@ export const buyerXpVerticalsSw = {
     fulfillmentPickup: 'Chukua kutoka kwa muuzaji',
     fulfillmentDineIn: 'Kula mahali',
     paymentRecommended: 'Inapendekezwa',
+    loyaltyPolicyNote:
+      'Pata hadi 1% ya pointi za KKOO kila unaponunua. Tumia pointi zako kwa chakula, safari, maduka na zaidi — punguzo hadi 25% kwa agizo lako.',
   },
   orders: {
     title: 'Maagizo yako',
@@ -314,6 +337,12 @@ export const buyerXpVerticalsSw = {
     estimatedFare: 'Nauli inayokadiriwa',
     requestRide: 'Omba usafiri',
     requesting: 'Inaomba…',
+    findTrip: 'Tafuta safari',
+    search: 'Tafuta',
+    pickUpNow: 'Chukua sasa',
+    forMe: 'Kwa ajili yangu',
+    tripOptions: 'Chaguo za safari',
+    mapPreviewHint: 'Onyesho la ramani — ongeza VITE_GOOGLE_MAPS_API_KEY kwa ramani hai.',
     historyTitle: 'Safari zangu',
     historyMeta: 'Historia ya safari na vifurushi na ufuatiliaji',
     historyFilterLabel: 'Chuja safari',
@@ -494,10 +523,6 @@ export const buyerXpVerticalsSw = {
   },
   wallet: {
     policyTagline:
-      'Pata hadi 1% ya pointi za KKOO kila unaponunua. Tumia pointi zako kwa chakula, safari, maduka na zaidi — punguzo hadi 25% kwa agizo lako.',
-  },
-  checkout: {
-    loyaltyPolicyNote:
       'Pata hadi 1% ya pointi za KKOO kila unaponunua. Tumia pointi zako kwa chakula, safari, maduka na zaidi — punguzo hadi 25% kwa agizo lako.',
   },
 } as const

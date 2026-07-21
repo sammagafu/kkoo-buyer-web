@@ -10,9 +10,6 @@
               <span>{{ t('partners.heroAccent') }}</span>
             </h1>
             <p class="partner-reg-lead">{{ t('partners.heroLead') }}</p>
-            <ul class="partner-reg-bullets">
-              <li v-for="item in bullets" :key="item">{{ item }}</li>
-            </ul>
           </div>
           <article class="partner-reg-card">
             <h2 class="h5 fw-bold mb-3">{{ t('partners.formTitle') }}</h2>
@@ -72,19 +69,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import MarketingLayout from '@/views/marketing/MarketingLayout.vue'
 import { partnersApi, type PartnerScope } from '@/api/partners'
 import { formatApiError } from '@/utils/formatApiError'
 
 const { t } = useI18n()
-
-const bullets = computed(() => [
-  t('partners.bullet1'),
-  t('partners.bullet2'),
-  t('partners.bullet3'),
-])
 
 const submitting = ref(false)
 const submitted = ref(false)
@@ -141,17 +132,13 @@ onMounted(loadScopes)
 
 <style scoped>
 .partner-reg-hero {
-  background:
-    radial-gradient(circle at 12% 18%, rgba(92, 48, 143, 0.12), transparent 32%),
-    radial-gradient(circle at 88% 10%, rgba(247, 168, 41, 0.12), transparent 28%);
+  padding-block: clamp(2.5rem, 6vw, 4rem);
 }
 .partner-reg-grid { display: grid; gap: 1.5rem; align-items: start; }
 @media (min-width: 992px) { .partner-reg-grid { grid-template-columns: minmax(0, 1fr) minmax(360px, 0.95fr); } }
-.partner-reg-eyebrow { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 800; font-size: 0.78rem; color: var(--kkoo-primary); }
-.partner-reg-title { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; line-height: 1.05; color: var(--buyer-ink); }
-.partner-reg-title span { color: var(--kkoo-primary); }
-.partner-reg-lead { color: var(--buyer-muted); max-width: 40rem; }
-.partner-reg-bullets { margin: 1rem 0 0; padding-left: 1.1rem; color: var(--buyer-muted); display: grid; gap: 0.35rem; }
-.partner-reg-card { border-radius: 1.25rem; padding: 1.25rem; background: var(--buyer-surface); box-shadow: 0 18px 40px var(--buyer-shadow-color); border: 1px solid var(--buyer-border); color: var(--buyer-ink); }
+.partner-reg-eyebrow { margin: 0 0 0.5rem; }
+.partner-reg-title { margin: 0; }
+.partner-reg-lead { margin: 0.75rem 0 0; }
+.partner-reg-card { padding: 1.25rem; }
 .partner-reg-success { padding: 0.5rem 0; }
 </style>

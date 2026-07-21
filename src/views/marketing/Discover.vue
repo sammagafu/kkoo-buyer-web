@@ -2,21 +2,12 @@
   <MarketingLayout>
     <section class="lp-section discover-hero">
       <b-container class="px-3 px-sm-4 px-lg-4">
-        <div class="discover-hero-grid">
-          <div>
-            <p class="discover-eyebrow">{{ t('discover.eyebrow') }}</p>
-            <h1 class="discover-title">
-              {{ t('discover.heroTitle') }}
-              <span>{{ t('discover.heroAccent') }}</span>
-            </h1>
-            <p class="discover-lead">{{ t('discover.heroLead') }}</p>
-          </div>
-          <article class="discover-hero-card">
-            <Icon icon="solar:ticket-bold" class="discover-hero-icon" aria-hidden="true" />
-            <p class="mb-1 fw-semibold">{{ t('discover.heroCardTitle') }}</p>
-            <p class="small text-muted mb-0">{{ t('discover.heroCardCopy') }}</p>
-          </article>
-        </div>
+        <p class="discover-eyebrow">{{ t('discover.eyebrow') }}</p>
+        <h1 class="discover-title">
+          {{ t('discover.heroTitle') }}
+          <span>{{ t('discover.heroAccent') }}</span>
+        </h1>
+        <p class="discover-lead">{{ t('discover.heroLead') }}</p>
       </b-container>
     </section>
 
@@ -94,6 +85,12 @@
                 <strong>{{ formatPrice(ticketClass.price, ticketClass.currency) }}</strong>
               </div>
               <p v-if="ticketClass.description" class="small text-muted mb-2">{{ ticketClass.description }}</p>
+              <p v-if="ticketClass.gift_card_amount" class="small text-success mb-2">
+                Includes {{ formatPrice(ticketClass.gift_card_amount, ticketClass.currency) }} gift card
+              </p>
+              <p v-if="ticketClass.attendance_bonus_points" class="small text-muted mb-2">
+                +{{ ticketClass.attendance_bonus_points }} points when you check in
+              </p>
               <ul v-if="ticketClass.benefits?.length" class="discover-benefits">
                 <li v-for="benefit in ticketClass.benefits" :key="benefit">
                   <Icon icon="solar:check-circle-bold" />
@@ -309,54 +306,24 @@ onMounted(async () => {
 
 <style scoped>
 .discover-hero {
-  background:
-    radial-gradient(circle at 12% 20%, rgba(247, 168, 41, 0.16), transparent 34%),
-    radial-gradient(circle at 88% 10%, rgba(92, 48, 143, 0.14), transparent 30%);
+  padding-block: clamp(2.5rem, 6vw, 4rem);
 }
-.discover-hero-grid {
-  display: grid;
-  gap: 1.5rem;
-  align-items: center;
-}
-@media (min-width: 992px) {
-  .discover-hero-grid { grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.7fr); }
-}
-.discover-eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-weight: 800;
-  font-size: 0.78rem;
-  color: var(--kkoo-primary);
-}
-.discover-title {
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 800;
-  line-height: 1.05;
-  color: var(--buyer-ink);
-}
-.discover-title span { color: var(--kkoo-primary); }
-.discover-lead { color: var(--buyer-muted); max-width: 42rem; }
-.discover-hero-card {
-  border-radius: 1.25rem;
-  padding: 1.25rem;
-  background: var(--buyer-surface);
-  border: 1px solid var(--buyer-border);
-  box-shadow: 0 18px 40px var(--buyer-shadow-color);
-}
-.discover-hero-icon { width: 2rem; height: 2rem; color: #f7a829; margin-bottom: 0.5rem; }
+.discover-eyebrow { margin: 0 0 0.5rem; }
+.discover-title { margin: 0; }
+.discover-lead { margin: 0.75rem 0 0; }
 .discover-toolbar { display: grid; gap: 1rem; margin-bottom: 1.25rem; }
 .discover-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .discover-filter {
-  border: 1px solid var(--buyer-border-strong);
-  background: var(--buyer-surface);
-  color: var(--buyer-ink);
+  border: 1px solid var(--lh-border-strong, rgba(26, 26, 26, 0.14));
+  background: var(--lh-surface, #fff);
+  color: var(--lh-text, #1a1a1a);
   border-radius: 999px;
   padding: 0.45rem 0.9rem;
   font-size: 0.88rem;
   font-weight: 600;
 }
-.discover-filter--active { background: var(--kkoo-primary); color: #fff; border-color: var(--kkoo-primary); }
-.discover-note { font-size: 0.92rem; color: var(--buyer-muted); }
+.discover-filter--active { background: var(--lh-text, #1a1a1a); color: #fff; border-color: var(--lh-text, #1a1a1a); }
+.discover-note { font-size: 0.92rem; color: var(--lh-text-muted, rgba(26, 26, 26, 0.62)); }
 .discover-note--error { color: #b42318; }
 .discover-grid { display: grid; gap: 0.85rem; }
 @media (min-width: 768px) { .discover-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

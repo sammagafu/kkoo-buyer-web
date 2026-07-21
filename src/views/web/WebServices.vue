@@ -45,27 +45,6 @@
       </div>
     </section>
 
-    <section class="buyer-surface" :aria-label="t('buyerXp.hub.accountSupport')">
-      <BuyerSectionHeader
-        :title="t('buyerXp.hub.accountSupport')"
-        :subtitle="t('buyerXp.hub.accountSupportSub')"
-      />
-      <div class="buyer-services-account" role="list">
-        <RouterLink
-          v-for="tile in accountTiles"
-          :key="tile.id"
-          :to="{ name: tile.routeName }"
-          class="buyer-services-account__chip text-decoration-none"
-          :class="toneClass(tile.tone)"
-          role="listitem"
-        >
-          <span class="buyer-services-account__icon" aria-hidden="true">
-            <Icon :icon="tile.icon" />
-          </span>
-          <span class="buyer-services-account__label">{{ tile.title }}</span>
-        </RouterLink>
-      </div>
-    </section>
   </div>
 </template>
 
@@ -81,7 +60,7 @@ import { useBuyerFeatureTiles } from '@/composables/useBuyerFeatureTiles'
 
 const { t } = useI18n()
 const router = useRouter()
-const { serviceTiles, accountTiles } = useBuyerFeatureTiles()
+const { serviceTiles } = useBuyerFeatureTiles()
 
 function toneClass(tone?: string) {
   return tone ? `buyer-service-tile--${tone}` : 'buyer-service-tile--primary'

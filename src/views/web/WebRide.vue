@@ -1,5 +1,5 @@
 <template>
-  <div class="buyer-xp buyer-xp--wide buyer-ride-page">
+  <div class="buyer-xp buyer-xp--wide buyer-ride-page buyer-ride-page--map">
     <RideBookingPanel mode="ride" />
   </div>
 </template>

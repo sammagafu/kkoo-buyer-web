@@ -1,6 +1,6 @@
 <template>
-  <div class="buyer-ride-field ride-place-field">
-    <label class="buyer-ride-field__label" :for="id">
+  <div class="buyer-ride-field ride-place-field" :class="{ 'buyer-ride-field--dense': dense }">
+    <label v-if="!dense" class="buyer-ride-field__label" :for="id">
       <span
         v-if="marker"
         class="buyer-ride-field__dot"
@@ -15,6 +15,7 @@
       class="buyer-ride-field__input"
       type="text"
       :placeholder="placeholder"
+      :aria-label="title"
       autocomplete="street-address"
       @input="onInput"
       @focus="showList = true"
@@ -50,16 +51,20 @@ type PlaceSuggestion = {
   source?: string
 }
 
-const props = defineProps<{
-  id: string
-  title: string
-  placeholder: string
-  label: string
-  lat: number | null
-  lng: number | null
-  mapPlaceId: number | null
-  marker?: 'pickup' | 'dropoff'
-}>()
+const props = withDefaults(
+  defineProps<{
+    id: string
+    title: string
+    placeholder: string
+    label: string
+    lat: number | null
+    lng: number | null
+    mapPlaceId: number | null
+    marker?: 'pickup' | 'dropoff'
+    dense?: boolean
+  }>(),
+  { dense: false },
+)
 
 const emit = defineEmits<{
   'update:label': [string]

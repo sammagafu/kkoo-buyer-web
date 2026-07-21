@@ -1,5 +1,5 @@
 <template>
-  <div class="buyer-xp buyer-xp--wide" :class="{ 'buyer-xp--mhome': isHomeMode }">
+  <div ref="xpRoot" class="buyer-xp buyer-xp--wide" :class="{ 'buyer-xp--mhome': isHomeMode }">
     <!-- Home marketplace — mobile-first entry -->
     <template v-if="isHomeMode">
       <BuyerMobileHomeHeader
@@ -9,32 +9,41 @@
         @location="promptLocation"
       />
 
-      <div class="buyer-mhome-greeting">
+      <div class="buyer-mhome-greeting buyer-reveal is-visible">
+        <p class="buyer-mhome-greeting__brand" aria-hidden="true">KKOO</p>
         <p class="buyer-mhome-greeting__line">
           {{ localizedGreeting }}, {{ displayNameResolved }}
-          <span aria-hidden="true">👋</span>
         </p>
-        <p class="buyer-mhome-greeting__prompt">{{ t('buyerXp.home.whatDoYouWant') }}</p>
       </div>
 
-      <BuyerActionTileGrid />
+      <BuyerHomeOnboardTip />
+
       <BuyerTrackOrderBar />
 
-      <BuyerHomeDiscovery :stores="stores" />
+      <BuyerHomeDiscovery :stores="stores" :loading="loadingStores" desktop-layout />
 
-      <header class="d-none d-lg-block buyer-home-hero">
-        <p class="buyer-home-hero__overline">{{ t('buyerXp.marketplace.overline') }}</p>
-        <div>
-          <p class="buyer-home-hero__greeting">{{ localizedGreeting }}</p>
-          <h1 class="buyer-home-hero__name">{{ displayNameResolved }}</h1>
-          <p class="buyer-home-hero__tagline">{{ t('buyerXp.marketplace.tagline') }}</p>
+      <div class="d-none d-lg-flex buyer-home-hero buyer-reveal is-visible">
+        <div class="buyer-home-hero__copy">
+          <p class="buyer-home-hero__eyebrow">{{ localizedGreeting }}, {{ displayNameResolved }}</p>
+          <h1 class="buyer-home-hero__title">{{ t('buyerXp.marketplace.tagline') }}</h1>
         </div>
-        <BuyerSearchBar readonly :placeholder="t('buyerXp.marketplace.searchPlaceholder')" @tap="goSearch" />
-      </header>
+        <div class="buyer-home-hero__actions">
+          <button
+            type="button"
+            class="buyer-home-hero__notify"
+            :aria-label="t('buyerXp.home.openNotifications')"
+            @click="openNotificationsPanel"
+          >
+            <Icon icon="solar:bell-bold" />
+            <span v-if="notificationUnreadCount" class="buyer-home-hero__notify-badge">{{ notificationUnreadCount > 99 ? '99+' : notificationUnreadCount }}</span>
+          </button>
+          <BuyerSearchBar readonly :placeholder="t('buyerXp.marketplace.searchPlaceholder')" @tap="goSearch" />
+        </div>
+      </div>
 
       <section
-        v-if="popularTodayProducts.length"
-        class="buyer-surface buyer-popular-today"
+        v-if="popularTodayProducts.length || loadingAllProducts"
+        class="buyer-surface buyer-popular-today buyer-reveal"
         :aria-label="t('buyerXp.home.popularToday')"
       >
         <BuyerSectionHeader
@@ -51,9 +60,21 @@
         />
       </section>
 
-      <section v-if="categories.length" class="buyer-surface buyer-surface--compact d-lg-none" :aria-label="t('buyerXp.marketplace.browseCategories')">
+      <section
+        v-else-if="!loadingAllProducts"
+        class="buyer-surface buyer-popular-today buyer-reveal"
+        :aria-label="t('buyerXp.home.popularToday')"
+      >
+        <BuyerSectionHeader :title="t('buyerXp.home.popularToday')" />
+        <p v-if="homeProductsError" class="shop-products__status shop-products__status--error">{{ homeProductsError }}</p>
+        <p v-else class="shop-products__status">{{ t('buyerXp.home.noProductsYet') }}</p>
+      </section>
+
+      <section class="buyer-surface buyer-surface--compact buyer-reveal" :aria-label="t('buyerXp.marketplace.browseCategories')">
         <BuyerSectionHeader :title="t('buyerXp.marketplace.browseCategories')" />
-        <div class="buyer-category-pills" role="tablist">
+        <p v-if="loadingCategories" class="shop-products__status">{{ t('buyerXp.common.loading') }}</p>
+        <p v-else-if="!categories.length" class="shop-products__status">{{ t('buyerXp.home.noCategories') }}</p>
+        <div v-else class="buyer-category-pills" role="tablist">
           <button
             type="button"
             class="buyer-category-pill"
@@ -76,8 +97,8 @@
       </section>
 
       <section
-        v-if="recommendedProducts.length"
-        class="buyer-surface buyer-home-products"
+        v-if="showHomeProductsSection"
+        class="buyer-surface buyer-home-products buyer-reveal"
         aria-label="Products"
       >
         <BuyerSectionHeader
@@ -87,9 +108,9 @@
           :action-to="{ name: 'buyer.search' }"
         />
         <BuyerProductGridSection
-          :products="recommendedProducts"
-          :loading="loadingProducts || loadingAllProducts"
-          :error="productError"
+          :products="homeProducts"
+          :loading="loadingAllProducts"
+          :error="homeProductsError"
           :message="addMessage"
           :add-error="addError"
           :adding="adding"
@@ -197,8 +218,8 @@ import { buildCheckoutLink, buildRideLink } from '@/utils/fulfillmentLinks'
 import { categoryDetailLink, venueDetailLink } from '@/utils/buyerDetailLinks'
 import BuyerFulfillmentBar, { type FulfillmentModeId } from '@/components/buyer/BuyerFulfillmentBar.vue'
 import BuyerMobileHomeHeader from '@/components/buyer/experience/BuyerMobileHomeHeader.vue'
-import BuyerActionTileGrid from '@/components/buyer/experience/BuyerActionTileGrid.vue'
 import BuyerTrackOrderBar from '@/components/buyer/experience/BuyerTrackOrderBar.vue'
+import BuyerHomeOnboardTip from '@/components/buyer/experience/BuyerHomeOnboardTip.vue'
 import BuyerHomeDiscovery from '@/components/buyer/experience/BuyerHomeDiscovery.vue'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerVenueCard from '@/components/buyer/experience/BuyerVenueCard.vue'
@@ -207,6 +228,7 @@ import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { useBuyerGreeting } from '@/composables/useBuyerGreeting'
 import { useBuyerLocation } from '@/composables/useBuyerLocation'
+import { useBuyerReveal } from '@/composables/useBuyerReveal'
 import { formatApiError } from '@/utils/formatApiError'
 import { useBuyerNotifications } from '@/composables/useBuyerNotifications'
 import { useI18n } from 'vue-i18n'
@@ -223,6 +245,8 @@ const openNotifications = inject<() => void>('openBuyerNotifications', () => {})
 const { displayName, isAuthenticated } = useAuthDisplay()
 const openBuyerCart = inject<() => void>('openBuyerCart', () => {})
 const { adding, addError, addMessage, addProduct: addProductToCart } = useAddToCart()
+const xpRoot = ref<HTMLElement | null>(null)
+useBuyerReveal(xpRoot)
 
 type Store = {
   seller_id?: number
@@ -231,6 +255,7 @@ type Store = {
   business_address?: string
   cover_image?: string
   logo_url?: string
+  seller_type?: string
 }
 type Product = {
   id?: number
@@ -254,9 +279,11 @@ const activeStoreId = ref<number | string | null>(null)
 const activeCategory = ref('')
 const viewMode = ref<'directory' | 'menu'>('directory')
 const loadingStores = ref(false)
+const loadingCategories = ref(false)
 const loadingProducts = ref(false)
 const loadingAllProducts = ref(false)
 const productError = ref('')
+const homeProductsError = ref('')
 const searchTerm = ref('')
 const fulfillmentMode = ref<FulfillmentModeId>('pickup')
 const hasCartItems = ref(false)
@@ -336,6 +363,16 @@ const recommendedProducts = computed(() => {
   return all.slice(5)
 })
 
+const homeProducts = computed(() => {
+  const all = displayProducts.value
+  if (all.length <= 5) return []
+  return all.slice(5)
+})
+
+const showHomeProductsSection = computed(
+  () => loadingAllProducts.value || !!homeProductsError.value || homeProducts.value.length > 0,
+)
+
 function filterProducts(list: Product[]) {
   let out = list
   if (searchTerm.value) {
@@ -404,11 +441,25 @@ function backToDirectory() {
 }
 
 async function loadHomeStores() {
+  loadingStores.value = true
   try {
-    const { data } = await superAppApi.getGroceryStores({ limit: 12 })
-    stores.value = (data?.results as Store[]) ?? []
+    const [groceryRes, restaurantRes] = await Promise.all([
+      superAppApi.getGroceryStores({ limit: 8 }).catch(() => ({ data: { results: [] } })),
+      superAppApi.getRestaurants({ limit: 8 }).catch(() => ({ data: { results: [] } })),
+    ])
+    const grocery = ((groceryRes.data?.results as Store[]) ?? []).map((store) => ({
+      ...store,
+      seller_type: store.seller_type || 'grocery',
+    }))
+    const restaurants = ((restaurantRes.data?.results as Store[]) ?? []).map((store) => ({
+      ...store,
+      seller_type: 'restaurant',
+    }))
+    stores.value = [...grocery, ...restaurants].slice(0, 12)
   } catch {
     stores.value = []
+  } finally {
+    loadingStores.value = false
   }
 }
 
@@ -474,12 +525,19 @@ async function loadProducts() {
 
 async function loadAllProducts() {
   loadingAllProducts.value = true
+  homeProductsError.value = ''
   try {
     const params: Record<string, unknown> = { page_size: 48 }
     if (activeCategory.value) params.category_slug = activeCategory.value
     if (searchTerm.value) params.search = searchTerm.value
     const { data } = await catalogPublicApi.listProducts(params as never)
     allProducts.value = (data?.results as Product[]) ?? []
+    if (!allProducts.value.length) {
+      homeProductsError.value = t('buyerXp.home.noProductsYet')
+    }
+  } catch (e) {
+    allProducts.value = []
+    homeProductsError.value = formatApiError(e, t('buyerXp.marketplace.couldNotLoadProducts'))
   } finally {
     loadingAllProducts.value = false
   }
@@ -498,11 +556,14 @@ async function loadCatalogProducts() {
 }
 
 async function loadCategories() {
+  loadingCategories.value = true
   try {
     const { data } = await catalogPublicApi.listCategories()
     categories.value = ((data?.results as Category[]) ?? []).slice(0, 12)
   } catch {
     categories.value = []
+  } finally {
+    loadingCategories.value = false
   }
 }
 

@@ -27,7 +27,7 @@ export function useKkooAccountAuth() {
 
   const accountCtaLabel = computed(() =>
     isAuthenticated.value
-      ? t('auth.continueWithKkooAccount')
+      ? t('auth.continueToKkoo')
       : t('auth.signInWithKkooAccount'),
   )
 

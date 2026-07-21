@@ -193,19 +193,11 @@ const faqs = [
   margin-bottom: 0.85rem;
 }
 
-.section-title {
-  font-size: clamp(1.8rem, 4vw, 3.2rem);
-  font-weight: 800;
-  line-height: 1.12;
-  color: var(--bs-heading-color, var(--bs-body-color));
-  margin-bottom: 1rem;
-  letter-spacing: -0.025em;
-  text-wrap: balance;
+.section-heading {
+  margin-bottom: 0;
 }
 
-.section-heading {
-  margin-bottom: 2.5rem;
-}
+/* Title sizes/layout: _lh-marketing-bridge.scss */
 
 /* ---- hero ---- */
 .vch-hero {

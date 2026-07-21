@@ -196,6 +196,27 @@ export const buyerXpVerticalsFr = {
     addedDineIn: 'Ajouté. Finalisez le paiement pour votre table.',
     addedPickup: 'Ajouté. À emporter quand c’est prêt.',
     addedDelivery: 'Ajouté. Demandez un KKOO boda quand vous êtes prêt.',
+    comboCta: 'Composer un menu',
+    comboTitle: 'Composer un menu',
+    comboSub: 'Choisissez plat, accompagnement et boisson.',
+    comboMain: 'Plat',
+    comboSide: 'Accompagnement',
+    comboDrink: 'Boisson',
+    comboRequired: 'Obligatoire',
+    comboOptional: 'Facultatif',
+    comboTotal: 'Total du menu',
+    comboAdd: 'Ajouter le menu au panier',
+    comboAdding: 'Ajout…',
+    comboHint: 'Chaque choix est ajouté comme ligne séparée.',
+    comboAdded: 'Menu ajouté au panier.',
+    courseAll: 'Tout',
+    courseMain: 'Plats',
+    courseSide: 'Accompagnements',
+    courseBeverage: 'Boissons',
+    courseStarter: 'Entrées',
+    courseDessert: 'Desserts',
+    courseSnack: 'Snacks',
+    courseOther: 'Plus',
   },
   checkout: {
     title: 'Paiement',
@@ -228,6 +249,8 @@ export const buyerXpVerticalsFr = {
     fulfillmentPickup: 'Retrait chez le vendeur',
     fulfillmentDineIn: 'Sur place',
     paymentRecommended: 'Recommandé',
+    loyaltyPolicyNote:
+      'Gagnez jusqu\'à 1 % en points KKOO sur chaque achat. Utilisez vos points sur la nourriture, les courses, les shops et plus — jusqu\'à 25 % de réduction sur votre commande.',
   },
   orders: {
     title: 'Vos commandes',
@@ -314,6 +337,12 @@ export const buyerXpVerticalsFr = {
     estimatedFare: 'Tarif estimé',
     requestRide: 'Demander une course',
     requesting: 'Demande en cours…',
+    findTrip: 'Trouver un trajet',
+    search: 'Rechercher',
+    pickUpNow: 'Départ maintenant',
+    forMe: 'Pour moi',
+    tripOptions: 'Options du trajet',
+    mapPreviewHint: 'Aperçu carte — ajoutez VITE_GOOGLE_MAPS_API_KEY pour la carte live.',
     historyTitle: 'Mes courses',
     historyMeta: 'Historique des courses et colis avec suivi',
     historyFilterLabel: 'Filtrer les trajets',
@@ -516,10 +545,6 @@ export const buyerXpVerticalsFr = {
   },
   wallet: {
     policyTagline:
-      'Gagnez jusqu\'à 1 % en points KKOO sur chaque achat. Utilisez vos points sur la nourriture, les courses, les shops et plus — jusqu\'à 25 % de réduction sur votre commande.',
-  },
-  checkout: {
-    loyaltyPolicyNote:
       'Gagnez jusqu\'à 1 % en points KKOO sur chaque achat. Utilisez vos points sur la nourriture, les courses, les shops et plus — jusqu\'à 25 % de réduction sur votre commande.',
   },
 } as const

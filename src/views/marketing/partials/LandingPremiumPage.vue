@@ -1,17 +1,17 @@
 <template>
-  <div ref="rootRef" class="lp-wrapper mk-landing mk-landing--premium">
-    <LandingHeader />
+  <div ref="rootRef" class="lp-wrapper mk-landing mk-landing--premium lh-chrome">
+    <LhHeader />
     <LandingPremiumBentoPage />
     <LandingPremiumCta />
-    <LandingFooter />
+    <LhFooter />
     <LandingMobileCtaBar />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import LandingFooter from '@/views/marketing/partials/LandingFooter.vue'
-import LandingHeader from '@/views/marketing/partials/LandingHeader.vue'
+import LhFooter from '@/views/marketing/partials/house/LhFooter.vue'
+import LhHeader from '@/views/marketing/partials/house/LhHeader.vue'
 import LandingMobileCtaBar from '@/views/marketing/partials/LandingMobileCtaBar.vue'
 import LandingPremiumBentoPage from '@/views/marketing/partials/LandingPremiumBentoPage.vue'
 import LandingPremiumCta from '@/views/marketing/partials/LandingPremiumCta.vue'

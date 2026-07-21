@@ -44,7 +44,7 @@
     </div>
     <div class="store-product-card__meta" @click="emit('open')">
       <p v-if="storeLabel" class="store-product-card__store">{{ storeLabel }}</p>
-      <h3 class="store-product-card__title">{{ title || t('buyerXp.products.productFallback') }}</h3>
+      <h3 class="store-product-card__title">{{ displayTitle }}</h3>
       <p v-if="priceLabel" class="store-product-card__price">{{ priceLabel }}</p>
       <p v-if="description" class="store-product-card__desc">{{ description }}</p>
     </div>
@@ -75,6 +75,15 @@ const props = defineProps<{
 
 const emit = defineEmits<{ add: []; open: [] }>()
 const imageError = ref(false)
+
+const displayTitle = computed(() => {
+  const raw = (props.title || '').trim()
+  const base = raw || t('buyerXp.products.productFallback')
+  if (typeof window !== 'undefined' && window.innerWidth < 576 && base.length > 120) {
+    return `${base.slice(0, 120)}…`
+  }
+  return base
+})
 
 const productIdRef = computed(() => props.productId)
 const { favorited, toggling: togglingFavorite, toggleFavorite } = useProductFavorite(productIdRef)

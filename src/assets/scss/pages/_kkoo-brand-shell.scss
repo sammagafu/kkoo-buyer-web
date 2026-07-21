@@ -37,29 +37,29 @@ html.buyer-shell-active:not([data-bs-theme='dark']):not(.theme-dark) {
   &,
   body,
   #app {
-    background-color: #f8f2ec;
-    color: #3b1a5a;
+    background-color: var(--kkoo-canvas);
+    color: var(--kkoo-ink);
   }
 
   .buyer-shopping-shell {
-    --buyer-canvas: #f8f2ec;
-    --buyer-ink: #3b1a5a;
-    --buyer-muted: #6a4c86;
-    --buyer-surface: #ffffff;
-    --buyer-card-bg: #ffffff;
-    --buyer-input-bg: #f8f2ec;
-    --buyer-chip-bg: #f1e7de;
+    --buyer-canvas: var(--kkoo-canvas);
+    --buyer-ink: var(--kkoo-ink);
+    --buyer-muted: var(--kkoo-text-muted);
+    --buyer-surface: var(--kkoo-surface);
+    --buyer-card-bg: var(--kkoo-surface);
+    --buyer-input-bg: var(--kkoo-canvas);
+    --buyer-chip-bg: var(--kkoo-surface-muted);
     --buyer-border: rgba(92, 48, 143, 0.14);
     --buyer-border-strong: rgba(92, 48, 143, 0.14);
-    --bs-body-bg: #f8f2ec;
-    --bs-body-color: #3b1a5a;
-    background-color: #f8f2ec;
-    color: #3b1a5a;
+    --bs-body-bg: var(--kkoo-canvas);
+    --bs-body-color: var(--kkoo-ink);
+    background-color: var(--kkoo-canvas);
+    color: var(--kkoo-ink);
   }
 
   .buyer-shopping-shell__main {
-    background-color: #f8f2ec;
-    color: #3b1a5a;
+    background-color: var(--kkoo-canvas);
+    color: var(--kkoo-ink);
   }
 }
 

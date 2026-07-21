@@ -7,7 +7,17 @@ export const pagesRoutes = [
         meta: {
             title: setLandingTitle('Home'),
             description:
-                'Shop and pay on the Kkoo buyers app. Run catalog, orders, delivery, and payouts on the Kkoo admin site. Escrow, tracking, rewards—one KKOO ecosystem for shoppers and teams.',
+                'KKOO — buy, sell, deliver, and earn in one trusted ecosystem. Marketplace, iShop POS, business tools, riders, referrals, and rewards for East Africa.',
+        },
+        component: () => import('@/views/marketing/LandingHousePage.vue'),
+    },
+    {
+        path: '/landing-premium',
+        name: 'pages.landing-premium',
+        meta: {
+            title: setLandingTitle('Premium'),
+            description:
+                'Shop and pay on the Kkoo buyers app. Run catalog, orders, delivery, and payouts on the Kkoo admin site.',
         },
         component: () => import('@/views/marketing/partials/LandingPremiumPage.vue'),
     },
@@ -116,6 +126,15 @@ export const pagesRoutes = [
                 "Ask questions, share feedback, and request features. The KKOO community board is where we listen and ship with you.",
         },
         component: () => import('@/views/marketing/Community.vue'),
+    },
+    {
+        path: '/get-started',
+        name: 'pages.get-started',
+        meta: {
+            title: setLandingTitle('Get started'),
+            description: 'Tell KKOO how to reach you. We’ll help you shop, sell, or deliver.',
+        },
+        component: () => import('@/views/marketing/GetStarted.vue'),
     },
     {
         path: '/discover',

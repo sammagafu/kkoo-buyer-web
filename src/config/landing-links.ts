@@ -21,6 +21,7 @@ export const buyerRoutes = {
   search: { name: 'buyer.search' },
   signIn: { name: 'auth.sign-in' },
   signUp: { name: 'auth.sign-up' },
+  getStarted: { name: 'pages.get-started' },
   sellerRegister: { name: 'auth.seller-register' },
   landing: { name: 'pages.landing' },
   business: { name: 'pages.business' },
@@ -60,6 +61,215 @@ export const landingSectionNavItems = [
   { key: 'go', sectionId: 'services', pillar: 'go' as const, labelKey: 'landing.superApp.pillarGo' },
   { key: 'sell', sectionId: 'sell-section', pillar: 'sell' as const, labelKey: 'landing.superApp.pillarSell' },
   { key: 'stories', sectionId: 'stories', labelKey: 'landing.premium.navStories' },
+] as const
+
+/** Header nav on house landing chrome — real destinations, not scroll-only labels. */
+export const houseHeaderNavItems = [
+  {
+    key: 'shop',
+    route: buyerRoutes.marketplace,
+    labelKey: 'landing.navShop',
+    activeNames: ['buyer.marketplace', 'buyer.search', 'pages.personal', 'pages.app-homepage'],
+  },
+  {
+    key: 'food',
+    route: buyerRoutes.eats,
+    labelKey: 'landing.navEats',
+    activeNames: ['buyer.eats', 'buyer.grocery', 'pages.restaurants'],
+  },
+  {
+    key: 'send',
+    route: buyerRoutes.send,
+    labelKey: 'landing.navSend',
+    activeNames: ['buyer.send', 'buyer.parcel', 'pages.courier'],
+  },
+  {
+    key: 'ride',
+    route: buyerRoutes.ride,
+    labelKey: 'landing.navRide',
+    activeNames: ['buyer.ride', 'pages.hotels'],
+  },
+  {
+    key: 'sell',
+    route: buyerRoutes.merchant,
+    labelKey: 'landing.navSell',
+    activeNames: ['pages.merchant', 'auth.seller-register'],
+  },
+  {
+    key: 'business',
+    route: buyerRoutes.business,
+    labelKey: 'landing.navBusinessTools',
+    activeNames: ['pages.business'],
+  },
+] as const
+
+/**
+ * Bolt-style mega menu sections for landing header.
+ * Left rail categories + product cards + optional promo tiles.
+ */
+export const houseMegaSections = [
+  {
+    key: 'products',
+    labelKey: 'landing.megaProducts',
+    items: [
+      {
+        key: 'shop',
+        route: buyerRoutes.marketplace,
+        labelKey: 'landing.navShop',
+        descKey: 'landing.shopVerticalMarketplaceDesc',
+        icon: 'solar:cart-large-2-bold',
+        accent: 'market',
+      },
+      {
+        key: 'eats',
+        route: buyerRoutes.eats,
+        labelKey: 'landing.navEats',
+        descKey: 'landing.shopVerticalEatsDesc',
+        icon: 'solar:cup-hot-bold',
+        accent: 'eats',
+      },
+      {
+        key: 'grocery',
+        route: buyerRoutes.grocery,
+        labelKey: 'landing.navGrocery',
+        descKey: 'landing.shopVerticalGroceryDesc',
+        icon: 'solar:bag-2-bold',
+        accent: 'grocery',
+      },
+      {
+        key: 'ride',
+        route: buyerRoutes.ride,
+        labelKey: 'landing.navRide',
+        descKey: 'landing.shopVerticalRideDesc',
+        icon: 'solar:scooter-bold',
+        accent: 'ride',
+      },
+      {
+        key: 'send',
+        route: buyerRoutes.send,
+        labelKey: 'landing.navSend',
+        descKey: 'landing.shopVerticalSendDesc',
+        icon: 'solar:box-bold',
+        accent: 'send',
+      },
+      {
+        key: 'hotels',
+        route: buyerRoutes.booking,
+        labelKey: 'landing.navBooking',
+        descKey: 'landing.shopVerticalBookingDesc',
+        icon: 'solar:bed-bold',
+        accent: 'booking',
+      },
+    ],
+    promos: [
+      {
+        key: 'ride-promo',
+        route: buyerRoutes.ride,
+        titleKey: 'landing.megaPromoRideTitle',
+        ctaKey: 'landing.megaPromoRideCta',
+        accent: 'ride',
+      },
+      {
+        key: 'food-promo',
+        route: buyerRoutes.eats,
+        titleKey: 'landing.megaPromoFoodTitle',
+        ctaKey: 'landing.megaPromoFoodCta',
+        accent: 'eats',
+      },
+    ],
+  },
+  {
+    key: 'earn',
+    labelKey: 'landing.megaEarn',
+    items: [
+      {
+        key: 'sell',
+        route: buyerRoutes.merchant,
+        labelKey: 'landing.navSell',
+        descKey: 'landing.exploreMerchantDesc',
+        icon: 'solar:shop-2-bold',
+        accent: 'merchant',
+      },
+      {
+        key: 'courier',
+        route: buyerRoutes.courier,
+        labelKey: 'landing.exploreCourier',
+        descKey: 'landing.exploreCourierDesc',
+        icon: 'solar:delivery-bold',
+        accent: 'courier',
+      },
+      {
+        key: 'share',
+        route: buyerRoutes.shareEarn,
+        labelKey: 'landing.exploreShareEarn',
+        descKey: 'landing.exploreShareEarnDesc',
+        icon: 'solar:gift-bold',
+        accent: 'share',
+      },
+      {
+        key: 'jobs',
+        route: buyerRoutes.careers,
+        labelKey: 'landing.navJobs',
+        descKey: 'landing.megaJobsDesc',
+        icon: 'solar:case-round-bold',
+        accent: 'jobs',
+      },
+      {
+        key: 'biz-portal',
+        href: bizWebPath('/seller'),
+        labelKey: 'landing.footerNavBusinessTools',
+        descKey: 'landing.exploreBizPortalDesc',
+        icon: 'solar:widget-5-bold',
+        accent: 'business',
+      },
+    ],
+  },
+  {
+    key: 'company',
+    labelKey: 'landing.megaCompany',
+    items: [
+      {
+        key: 'business',
+        route: buyerRoutes.business,
+        labelKey: 'landing.navBusinessTools',
+        descKey: 'landing.exploreBusinessDesc',
+        icon: 'solar:widget-5-bold',
+        accent: 'business',
+      },
+      {
+        key: 'community',
+        route: buyerRoutes.community,
+        labelKey: 'landing.navCommunity',
+        descKey: 'landing.exploreCommunityDesc',
+        icon: 'solar:users-group-rounded-bold',
+        accent: 'community',
+      },
+      {
+        key: 'discover',
+        route: buyerRoutes.discover,
+        labelKey: 'landing.exploreDiscover',
+        descKey: 'landing.exploreDiscoverDesc',
+        icon: 'solar:calendar-bold',
+        accent: 'discover',
+      },
+      {
+        key: 'app',
+        route: buyerRoutes.appHomepage,
+        labelKey: 'landing.exploreApp',
+        descKey: 'landing.exploreAppDesc',
+        icon: 'solar:smartphone-2-bold',
+        accent: 'app',
+      },
+      {
+        key: 'vouchers',
+        route: buyerRoutes.vouchers,
+        labelKey: 'landing.exploreVouchers',
+        descKey: 'landing.exploreVouchersDesc',
+        icon: 'solar:ticket-bold',
+        accent: 'vouchers',
+      },
+    ],
+  },
 ] as const
 
 /** Header nav — shopper + send + one clear seller entry. */

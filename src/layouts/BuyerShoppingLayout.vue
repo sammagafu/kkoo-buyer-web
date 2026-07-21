@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, provide, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, provide, ref, watch } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import BuyerSideNav from '@/components/buyer/BuyerSideNav.vue'
@@ -92,7 +92,18 @@ function toggleCart() {
 
 function toggleNotifications() {
   notifyOpen.value = !notifyOpen.value
-  if (notifyOpen.value) drawerOpen.value = false
+  if (notifyOpen.value) {
+    drawerOpen.value = false
+    if (auth.isAuthenticated) void loadUnreadCount()
+  }
+}
+
+let notificationPollTimer: ReturnType<typeof setInterval> | null = null
+
+function onVisibilityChange() {
+  if (document.visibilityState === 'visible' && auth.isAuthenticated) {
+    void loadUnreadCount()
+  }
 }
 
 provide('openBuyerNotifications', () => {
@@ -134,5 +145,14 @@ onMounted(() => {
     void loadUnreadCount()
     void loadAdvertCampaign()
   }
+  notificationPollTimer = setInterval(() => {
+    if (auth.isAuthenticated) void loadUnreadCount()
+  }, 60_000)
+  document.addEventListener('visibilitychange', onVisibilityChange)
+})
+
+onUnmounted(() => {
+  if (notificationPollTimer) clearInterval(notificationPollTimer)
+  document.removeEventListener('visibilitychange', onVisibilityChange)
 })
 </script>
