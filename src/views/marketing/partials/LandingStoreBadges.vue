@@ -8,7 +8,7 @@
       :aria-label="t('landing.storeBadgeAppleKicker') + ' ' + t('landing.storeBadgeAppleBrand')"
     >
       <span class="lp-store-badge__icon" aria-hidden="true">
-        <Icon icon="logos:apple" />
+        <Icon icon="simple-icons:apple" />
       </span>
       <span class="lp-store-badge__text">
         <span class="lp-store-badge__kicker">{{ t('landing.storeBadgeAppleKicker') }}</span>

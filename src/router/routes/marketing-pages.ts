@@ -157,6 +157,105 @@ export const pagesRoutes = [
         component: () => import('@/views/marketing/Careers.vue'),
     },
     {
+        path: '/about',
+        name: 'pages.about',
+        meta: {
+            title: setLandingTitle('About'),
+            description: 'About KKOO — mission, product, and the company behind East Africa’s trusted commerce platform.',
+        },
+        component: () => import('@/views/marketing/About.vue'),
+    },
+    {
+        path: '/safety',
+        name: 'pages.safety',
+        meta: {
+            title: setLandingTitle('Safety'),
+            description: 'KKOO safety information for buyers, riders, sellers, and escrow payments.',
+        },
+        component: () => import('@/views/marketing/Safety.vue'),
+    },
+    {
+        path: '/coverage',
+        name: 'pages.coverage',
+        meta: {
+            title: setLandingTitle('Coverage'),
+            description: 'Where KKOO operates — live cities, expanding markets, and planned coverage across East Africa.',
+        },
+        component: () => import('@/views/marketing/Coverage.vue'),
+    },
+    {
+        path: '/press',
+        name: 'pages.press',
+        meta: {
+            title: setLandingTitle('Press & brand'),
+            description: 'KKOO press contacts and brand assets for media and partners.',
+        },
+        component: () => import('@/views/marketing/Press.vue'),
+    },
+    {
+        path: '/investors',
+        name: 'pages.investors',
+        meta: {
+            title: setLandingTitle('Investors'),
+            description: 'Investor information and contact for KKOO Technologies Limited.',
+        },
+        component: () => import('@/views/marketing/Investors.vue'),
+    },
+    {
+        path: '/news',
+        name: 'pages.news',
+        meta: {
+            title: setLandingTitle('News'),
+            description: 'KKOO news and product updates.',
+        },
+        component: () => import('@/views/marketing/News.vue'),
+    },
+    {
+        path: '/support',
+        name: 'pages.support',
+        meta: {
+            title: setLandingTitle('Support'),
+            description: 'KKOO support hub for buyers, sellers, riders, and restaurants.',
+        },
+        component: () => import('@/views/marketing/SupportHub.vue'),
+    },
+    {
+        path: '/support/buyers',
+        name: 'pages.support-buyers',
+        meta: {
+            title: setLandingTitle('Buyer support'),
+            description: 'Help for shopping, orders, payments, and delivery on KKOO.',
+        },
+        component: () => import('@/views/marketing/SupportAudience.vue'),
+    },
+    {
+        path: '/support/sellers',
+        name: 'pages.support-sellers',
+        meta: {
+            title: setLandingTitle('Seller support'),
+            description: 'Help for merchants: catalog, orders, payouts, and business tools.',
+        },
+        component: () => import('@/views/marketing/SupportAudience.vue'),
+    },
+    {
+        path: '/support/riders',
+        name: 'pages.support-riders',
+        meta: {
+            title: setLandingTitle('Rider support'),
+            description: 'Help for KKOO riders and couriers: jobs, payouts, and safety.',
+        },
+        component: () => import('@/views/marketing/SupportAudience.vue'),
+    },
+    {
+        path: '/support/restaurants',
+        name: 'pages.support-restaurants',
+        meta: {
+            title: setLandingTitle('Restaurant support'),
+            description: 'Help for restaurants on KKOO: menus, orders, and delivery.',
+        },
+        component: () => import('@/views/marketing/SupportAudience.vue'),
+    },
+    {
         path: '/partners/register',
         name: 'pages.partner-register',
         meta: {

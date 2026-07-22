@@ -67,13 +67,11 @@ import {
 import { houseLogoLight } from '@/config/landing-house'
 import { useHouseReveal } from '@/composables/useHouseReveal'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const rootRef = ref<HTMLElement | null>(null)
 useHouseReveal(rootRef)
 
-const eyebrow = computed(() =>
-  locale.value === 'sw' ? 'Vilivyomo ndani' : "What's inside",
-)
+const eyebrow = computed(() => t('landingHouse.kickers.features'))
 
 const cardNodes = new Map<string, HTMLElement>()
 let observer: IntersectionObserver | null = null

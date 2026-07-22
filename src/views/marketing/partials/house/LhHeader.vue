@@ -6,14 +6,29 @@
         class="lh-brand"
         :href="isLandingPage ? '#top' : undefined"
         :to="isLandingPage ? undefined : { path: '/' }"
-        :aria-label="`${copy.brand} — top`"
+        :aria-label="`${houseCopy.brand} — top`"
         @click="onBrandClick"
       >
-        <img :src="brandLogoSrc" class="lh-brand__logo" :alt="copy.brand" width="200" height="200" />
+        <img :src="brandLogoSrc" class="lh-brand__logo" :alt="houseCopy.brand" width="200" height="200" />
       </component>
 
       <div class="lh-header__actions">
         <LhThemeToggle class="d-none d-sm-inline-flex" />
+        <label class="lh-header__lang d-none d-md-inline-flex">
+          <span class="visually-hidden">{{ t('trust.language') }}</span>
+          <select
+            :value="locale"
+            class="lh-header__lang-select"
+            @change="onLocaleChange"
+          >
+            <option v-for="loc in supportedLocales" :key="loc.code" :value="loc.code">
+              {{ loc.name }}
+            </option>
+          </select>
+        </label>
+        <RouterLink :to="buyerRoutes.support" class="lh-header__support d-none d-lg-inline">
+          {{ t('trust.navSupportHub') }}
+        </RouterLink>
         <RouterLink :to="buyerRoutes.community" class="lh-header__support d-none d-md-inline">
           {{ t('landing.navCommunity') }}
         </RouterLink>
@@ -25,12 +40,12 @@
           {{ headerAuthCta.label }}
         </LhButton>
         <LhButton as="router-link" :to="buyerRoutes.getStarted" variant="primary" with-well>
-          {{ copy.cta }}
+          {{ t('landingHouse.cta') }}
         </LhButton>
         <button
           type="button"
           class="lh-mobile-menu-btn"
-          aria-label="Open menu"
+          :aria-label="megaOpen ? t('landingHouse.a11y.closeMenu') : t('landingHouse.a11y.openMenu')"
           :aria-expanded="megaOpen"
           @click="toggleMega()"
         >
@@ -57,15 +72,20 @@ import { useI18n } from 'vue-i18n'
 import { useLandingScroll } from '@/composables/useLandingScroll'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { buyerRoutes, houseMegaSections } from '@/config/landing-links'
-import { houseCopy as copy, houseLogoDark, houseLogoLight } from '@/config/landing-house'
+import { houseCopy, houseLogoDark, houseLogoLight } from '@/config/landing-house'
+import { supportedLocales, setLocale, type LocaleCode } from '@/i18n'
 import { useLayoutStore } from '@/stores/layout'
 import LhButton from './LhButton.vue'
 import LhMegaMenu from './LhMegaMenu.vue'
 import LhThemeToggle from './LhThemeToggle.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { layout } = storeToRefs(useLayoutStore())
 const { isAuthenticated, dashboardRoute } = useAuthDisplay()
+
+function onLocaleChange(event: Event) {
+  setLocale((event.target as HTMLSelectElement).value as LocaleCode)
+}
 
 const brandLogoSrc = computed(() => (layout.value.theme === 'dark' ? houseLogoDark : houseLogoLight))
 

@@ -1,9 +1,9 @@
 <template>
   <section id="solutions" ref="rootRef" class="lh-section lh-solutions lh-page lh-reveal">
     <header class="lh-section-head lh-section-head--mega lh-section-head--center">
-      <p class="lh-kicker">{{ kicker }}</p>
-      <h2 class="lh-section__title">{{ copy.rolesIntro.title }}</h2>
-      <p class="lh-section__lead">{{ copy.rolesIntro.lead }}</p>
+      <p class="lh-kicker">{{ t('landingHouse.kickers.solutions') }}</p>
+      <h2 class="lh-section__title">{{ t('landingHouse.rolesIntro.title') }}</h2>
+      <p class="lh-section__lead">{{ t('landingHouse.rolesIntro.lead') }}</p>
     </header>
 
     <div class="lh-catalog lh-catalog--solutions">
@@ -21,12 +21,18 @@
         :style="{ '--lh-row-delay': `${index * 90}ms` }"
       >
         <div class="lh-solutions__media">
-          <img :src="role.image" :alt="role.imageAlt" width="960" height="720" loading="lazy" />
+          <img
+            :src="role.image"
+            :alt="t(`landingHouse.roles.${role.key}.imageAlt`)"
+            width="960"
+            height="720"
+            loading="lazy"
+          />
         </div>
         <div class="lh-solutions__copy">
-          <p class="lh-solutions__name">{{ role.name }}</p>
-          <h3>{{ role.title }}</h3>
-          <p class="lh-solutions__lead">{{ role.lead }}</p>
+          <p class="lh-solutions__name">{{ t(`landingHouse.roles.${role.key}.name`) }}</p>
+          <h3>{{ t(`landingHouse.roles.${role.key}.title`) }}</h3>
+          <p class="lh-solutions__lead">{{ t(`landingHouse.roles.${role.key}.lead`) }}</p>
           <div class="lh-solutions__cta">
             <LhButton
               v-if="role.link.kind === 'route'"
@@ -35,7 +41,7 @@
               :variant="index % 2 === 0 ? 'primary' : 'secondary'"
               with-well
             >
-              {{ role.cta }}
+              {{ t(`landingHouse.roles.${role.key}.cta`) }}
             </LhButton>
             <LhButton
               v-else
@@ -44,13 +50,10 @@
               :variant="index % 2 === 0 ? 'primary' : 'secondary'"
               with-well
             >
-              {{ role.cta }}
+              {{ t(`landingHouse.roles.${role.key}.cta`) }}
             </LhButton>
           </div>
         </div>
-        <span class="lh-pane-card__action" aria-hidden="true">
-          <Icon icon="solar:arrow-right-up-linear" width="18" height="18" />
-        </span>
       </li>
       </ul>
     </div>
@@ -58,15 +61,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Icon } from '@iconify/vue'
-import { houseCopy as copy, houseRoles as roles } from '@/config/landing-house'
+import { houseRoles as roles } from '@/config/landing-house'
 import { useHouseReveal } from '@/composables/useHouseReveal'
 import LhButton from './LhButton.vue'
 
-const { locale } = useI18n()
-const kicker = computed(() => (locale.value === 'sw' ? 'Suluhisho' : 'Solutions'))
+const { t } = useI18n()
 
 const rootRef = ref<HTMLElement | null>(null)
 useHouseReveal(rootRef)

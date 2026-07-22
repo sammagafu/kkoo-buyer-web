@@ -56,7 +56,7 @@
 }
 
 .buyer-section-head__title {
-  font-size: clamp(1.15rem, 2.4vw, 1.4rem);
+  font-size: clamp(1rem, 2vw, 1.25rem);
   font-weight: 700;
   letter-spacing: -0.03em;
   color: var(--kkoo-ink, var(--buyer-ink));
@@ -69,8 +69,8 @@
 
 .buyer-section-head__action {
   min-height: 2.25rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 0.75rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
   background: rgba(92, 48, 143, 0.08);
   gap: 0.35rem;
   font-size: 0.8125rem;
@@ -84,7 +84,7 @@
 
 /* —— Page toolbar / titles —— */
 .buyer-page-head__title {
-  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-size: clamp(1.15rem, 2.5vw, 1.5rem);
   font-weight: 700;
   letter-spacing: -0.035em;
 }
@@ -93,12 +93,12 @@
 .buyer-page-head__action {
   border: 1px solid var(--kkoo-border, var(--buyer-border));
   box-shadow: none;
-  border-radius: 0.85rem;
+  border-radius: 999px;
   background: var(--kkoo-surface, var(--buyer-surface));
 }
 
 .buyer-page-head__action {
-  border-radius: 0.85rem;
+  border-radius: 999px;
 }
 
 .buyer-orders-toolbar {
@@ -116,7 +116,7 @@
 }
 
 .buyer-filter-chip {
-  border-radius: 0.75rem;
+  border-radius: 999px;
   min-height: 2.25rem;
   transition:
     background 180ms var(--buyer-reveal-ease),
@@ -164,7 +164,7 @@
 
 /* —— Status —— */
 .buyer-status-pill {
-  border-radius: 0.5rem;
+  border-radius: 999px;
   font-weight: 600;
   letter-spacing: 0;
 }
@@ -206,13 +206,13 @@
 }
 
 .buyer-mhome-header__location {
-  border-radius: 0.75rem;
+  border-radius: 999px;
   background: var(--kkoo-surface, var(--buyer-surface));
   border: 1px solid var(--kkoo-border, var(--buyer-border));
 }
 
 .buyer-mhome-header__notify {
-  border-radius: 0.85rem;
+  border-radius: 999px;
   border: 1px solid var(--kkoo-border, var(--buyer-border));
 }
 
@@ -225,7 +225,7 @@
   margin: 0;
   font-family: var(--kkoo-font-primary);
   font-weight: 800;
-  font-size: clamp(1.75rem, 5vw, 2.25rem);
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
   letter-spacing: -0.05em;
   line-height: 0.95;
   color: var(--kkoo-accent);
@@ -233,7 +233,7 @@
 
 .buyer-mhome-greeting__line {
   font-family: var(--kkoo-font-display, 'Syne', sans-serif);
-  font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+  font-size: clamp(0.95rem, 2.2vw, 1.15rem);
   font-weight: 700;
   letter-spacing: -0.025em;
 }
@@ -329,7 +329,7 @@
 
 /* —— Category chips —— */
 .buyer-category-pill {
-  border-radius: 0.75rem;
+  border-radius: 999px;
   border: 1px solid var(--kkoo-border, var(--buyer-border));
   background: var(--kkoo-surface, var(--buyer-surface));
   font-weight: 600;
@@ -477,6 +477,119 @@
   border: 1px solid var(--kkoo-border, var(--buyer-border));
   box-shadow: none;
   background: var(--kkoo-surface, var(--buyer-surface));
+}
+
+/* —— Dashboard pills: always fully rounded —— */
+.buyer-shopping-shell,
+.buyer-xp {
+  .buyer-venue__chip,
+  .buyer-filter-chip,
+  .buyer-category-pill,
+  .buyer-status-pill,
+  .buyer-search-chip,
+  .buyer-ride-chip,
+  .buyer-section-head__action,
+  .buyer-page-head__action,
+  .buyer-page-head__back,
+  .buyer-mhome-header__badge,
+  .buyer-mhome-header__location,
+  .buyer-mhome-header__notify,
+  .buyer-float-action__badge,
+  .buyer-side-nav__badge,
+  .menu-filter-pill,
+  .badge,
+  .badge.rounded-pill,
+  .pill,
+  .pill--ghost {
+    border-radius: 999px !important;
+  }
+}
+
+html[data-bs-theme='dark'],
+html.theme-dark {
+  .buyer-shopping-shell,
+  .buyer-xp {
+    .buyer-section-head__action,
+    .buyer-page-head__action,
+    .buyer-page-head__back,
+    .buyer-mhome-header__notify,
+    .buyer-mhome-header__location {
+      background: var(--buyer-surface);
+      border-color: var(--buyer-border-strong);
+      color: var(--buyer-ink);
+    }
+
+    .buyer-section-head__action:hover,
+    .buyer-page-head__action:hover {
+      background: rgba(247, 168, 41, 0.16);
+      color: var(--kkoo-accent, #f7a829);
+      border-color: rgba(247, 168, 41, 0.4);
+    }
+
+    .buyer-venue__chip {
+      background: var(--buyer-chip-bg);
+      border-color: var(--buyer-border-strong);
+      color: #ede9f5;
+    }
+
+    .buyer-venue__chip--primary {
+      background: rgba(247, 168, 41, 0.18);
+      border-color: rgba(247, 168, 41, 0.45);
+      color: var(--kkoo-accent, #f7a829);
+    }
+
+    .buyer-status-pill {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ede9f5;
+    }
+
+    .buyer-status-pill--ok {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+    }
+
+    .buyer-status-pill--warn {
+      background: rgba(247, 168, 41, 0.22);
+      color: #fcd34d;
+    }
+
+    .buyer-filter-chip--active,
+    .buyer-category-pill--active {
+      background: rgba(247, 168, 41, 0.2);
+      border-color: rgba(247, 168, 41, 0.45);
+      color: var(--kkoo-accent, #f7a829);
+    }
+
+    .buyer-stat-card__value,
+    .buyer-section-head__title,
+    .form-label,
+    .buyer-detail-row strong,
+    label:not(.btn) {
+      color: var(--buyer-ink);
+    }
+
+    .btn-outline-primary,
+    .btn-outline-secondary,
+    .btn-link {
+      color: var(--kkoo-accent, #f7a829) !important;
+      border-color: rgba(247, 168, 41, 0.45);
+    }
+
+    .btn-outline-primary:hover,
+    .btn-outline-secondary:hover {
+      background: rgba(247, 168, 41, 0.18);
+      color: var(--kkoo-accent, #f7a829) !important;
+      border-color: var(--kkoo-accent, #f7a829);
+    }
+
+    .btn-primary {
+      color: #fff !important;
+    }
+
+    .btn-secondary {
+      color: #1f1b24 !important;
+    }
+  }
 }
 
 /* —— Bottom / side nav active —— */

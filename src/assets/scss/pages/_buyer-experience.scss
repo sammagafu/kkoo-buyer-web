@@ -492,6 +492,7 @@ button.buyer-search-bar {
 
 .buyer-venue__chip--primary {
   background: rgba(92, 48, 143, 0.1);
+  color: var(--kkoo-primary);
 }
 
 .buyer-page-head {
@@ -573,7 +574,7 @@ button.buyer-search-bar {
 
 .buyer-search-page__title {
   margin: 0.35rem 0 0;
-  font-size: clamp(1.35rem, 4vw, 1.65rem);
+  font-size: clamp(1.15rem, 3vw, 1.45rem);
   font-weight: 800;
   color: var(--buyer-ink);
 }
@@ -819,10 +820,10 @@ button.buyer-search-bar {
 
 .buyer-ride-panel__title {
   margin: 0;
-  font-size: 2rem;
+  font-size: clamp(1.25rem, 3.5vw, 1.65rem);
   font-weight: 700;
   letter-spacing: -0.04em;
-  line-height: 1.1;
+  line-height: 1.15;
   color: var(--buyer-ink);
 }
 
@@ -3227,7 +3228,7 @@ html.theme-dark .buyer-mhome-header__badge {
 .buyer-mhome-greeting__line {
   margin: 0;
   font-family: var(--kkoo-font-display, 'Syne', sans-serif);
-  font-size: 1.15rem;
+  font-size: clamp(0.95rem, 2.2vw, 1.1rem);
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--buyer-ink);

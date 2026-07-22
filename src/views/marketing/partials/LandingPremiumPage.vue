@@ -4,6 +4,7 @@
     <LandingPremiumBentoPage />
     <LandingPremiumCta />
     <LhFooter />
+    <LhCookieConsent />
     <LandingMobileCtaBar />
   </div>
 </template>
@@ -12,6 +13,7 @@
 import { ref } from 'vue'
 import LhFooter from '@/views/marketing/partials/house/LhFooter.vue'
 import LhHeader from '@/views/marketing/partials/house/LhHeader.vue'
+import LhCookieConsent from '@/views/marketing/partials/house/LhCookieConsent.vue'
 import LandingMobileCtaBar from '@/views/marketing/partials/LandingMobileCtaBar.vue'
 import LandingPremiumBentoPage from '@/views/marketing/partials/LandingPremiumBentoPage.vue'
 import LandingPremiumCta from '@/views/marketing/partials/LandingPremiumCta.vue'

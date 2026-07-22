@@ -10,7 +10,7 @@
       <div class="lh-mega__backdrop" @click="emit('close')" />
       <div class="lh-mega__panel">
         <div class="lh-mega__top">
-          <button type="button" class="lh-mega__close" aria-label="Close menu" @click="emit('close')">
+          <button type="button" class="lh-mega__close" :aria-label="t('landingHouse.a11y.closeMenu')" @click="emit('close')">
             <Icon icon="solar:close-circle-bold" width="28" height="28" />
           </button>
         </div>

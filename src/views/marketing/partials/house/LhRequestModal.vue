@@ -15,30 +15,30 @@
       <button
         type="button"
         class="lh-modal__close"
-        aria-label="Close"
+        :aria-label="t('landingHouse.modal.close')"
         @click="emit('close')"
       >
         <Icon icon="solar:close-circle-linear" width="20" height="20" />
       </button>
 
       <div v-if="sent" class="lh-modal__success">
-        <p class="lh-modal__eyebrow">{{ copy.modal.successEyebrow }}</p>
-        <h2 :id="titleId">{{ copy.modal.successTitle }}</h2>
-        <p class="lh-modal__hint">{{ copy.modal.successHint }}</p>
+        <p class="lh-modal__eyebrow">{{ t('landingHouse.modal.successEyebrow') }}</p>
+        <h2 :id="titleId">{{ t('landingHouse.modal.successTitle') }}</h2>
+        <p class="lh-modal__hint">{{ t('landingHouse.modal.successHint') }}</p>
         <LhButton
           as="router-link"
           :to="buyerRoutes.signUp"
           variant="primary"
           @click="emit('close')"
         >
-          {{ copy.modal.successCta }}
+          {{ t('landingHouse.modal.successCta') }}
         </LhButton>
       </div>
 
       <template v-else>
-        <p class="lh-modal__eyebrow">{{ copy.modal.eyebrow }}</p>
-        <h2 :id="titleId">{{ copy.modal.title }}</h2>
-        <p class="lh-modal__hint">{{ copy.modal.hint }}</p>
+        <p class="lh-modal__eyebrow">{{ t('landingHouse.modal.eyebrow') }}</p>
+        <h2 :id="titleId">{{ t('landingHouse.modal.title') }}</h2>
+        <p class="lh-modal__hint">{{ t('landingHouse.modal.hint') }}</p>
 
         <div class="lh-modal__progress" aria-hidden="true">
           <span />
@@ -46,41 +46,41 @@
 
         <form class="lh-modal__form" @submit.prevent="onSubmit">
           <label class="lh-field">
-            <span>Name</span>
+            <span>{{ t('landingHouse.modal.name') }}</span>
             <input
               ref="firstField"
               v-model="name"
               name="name"
               required
               autocomplete="name"
-              placeholder="Amina"
+              :placeholder="t('landingHouse.modal.namePlaceholder')"
             />
           </label>
           <label class="lh-field">
-            <span>Phone</span>
+            <span>{{ t('landingHouse.modal.phone') }}</span>
             <input
               v-model="phone"
               name="phone"
               type="tel"
               required
               autocomplete="tel"
-              placeholder="+255 …"
+              :placeholder="t('landingHouse.modal.phonePlaceholder')"
             />
           </label>
           <label class="lh-field">
-            <span>City</span>
+            <span>{{ t('landingHouse.modal.city') }}</span>
             <select v-model="region" name="region">
               <option
-                v-for="(r, i) in regions"
-                :key="r"
-                :value="r"
+                v-for="(key, i) in houseRegionKeys"
+                :key="key"
+                :value="key"
               >
-                {{ r }}{{ i === 0 ? ' · recommended' : '' }}
+                {{ t(`landingHouse.regions.${key}`) }}{{ i === 0 ? ` · ${t('landingHouse.modal.recommended')}` : '' }}
               </option>
             </select>
           </label>
           <LhButton type="submit" variant="primary" size="lg" with-arrow>
-            {{ copy.modal.submit }}
+            {{ t('landingHouse.modal.submit') }}
           </LhButton>
         </form>
       </template>
@@ -90,8 +90,9 @@
 
 <script setup lang="ts">
 import { nextTick, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
-import { houseCopy as copy, houseRegions as regions } from '@/config/landing-house'
+import { houseRegionKeys } from '@/config/landing-house'
 import { buyerRoutes } from '@/config/landing-links'
 import LhButton from './LhButton.vue'
 
@@ -103,12 +104,13 @@ const emit = defineEmits<{
   close: []
 }>()
 
+const { t } = useI18n()
 const titleId = 'lh-request-title'
 const firstField = ref<HTMLInputElement | null>(null)
 const sent = ref(false)
 const name = ref('')
 const phone = ref('')
-const region = ref<string>(regions[0])
+const region = ref<string>(houseRegionKeys[0])
 
 watch(
   () => props.open,

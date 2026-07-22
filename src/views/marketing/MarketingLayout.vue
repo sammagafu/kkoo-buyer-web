@@ -291,6 +291,7 @@
         <LhFooter />
       </slot>
     </div>
+    <LhCookieConsent />
   </div>
 </template>
 
@@ -308,6 +309,7 @@ import { useLayoutStore } from '@/stores/layout'
 import { BUYER_ACCOUNT_ROLE, useAuthStore, type AccountRole } from '@/stores/auth'
 import LhHeader from '@/views/marketing/partials/house/LhHeader.vue'
 import LhFooter from '@/views/marketing/partials/house/LhFooter.vue'
+import LhCookieConsent from '@/views/marketing/partials/house/LhCookieConsent.vue'
 import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
 import { buyerRoutes, landingAnchors, primaryNavItems, bizSellerAccountUrl, bizSellerDashboardUrl, bizCrmUrl, bizSellerRegisterUrl, adminDashboardUrl } from '@/config/landing-links'
 import logoLight from '@/assets/images/logo-light.svg'

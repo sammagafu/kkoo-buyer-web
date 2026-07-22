@@ -3,9 +3,9 @@
     <div class="lh-hero__shell">
       <div class="lh-hero__grid">
         <div class="lh-hero__copy">
-          <p class="lh-hero__kicker">{{ copy.hero.brand }}</p>
-          <h1>{{ copy.hero.title }}</h1>
-          <p class="lh-hero__lead">{{ copy.hero.lead }}</p>
+          <p class="lh-hero__kicker">{{ t('landingHouse.hero.brand') }}</p>
+          <h1>{{ t('landingHouse.hero.title') }}</h1>
+          <p class="lh-hero__lead">{{ t('landingHouse.hero.lead') }}</p>
 
           <div class="lh-hero__cta">
             <LhButton
@@ -15,7 +15,7 @@
               size="lg"
               with-well
             >
-              {{ copy.ctaPrimary }}
+              {{ t('landingHouse.ctaPrimary') }}
             </LhButton>
             <LhButton
               as="router-link"
@@ -23,7 +23,7 @@
               variant="ghost"
               size="lg"
             >
-              {{ copy.ctaSecondary }}
+              {{ t('landingHouse.ctaSecondary') }}
             </LhButton>
           </div>
 
@@ -41,7 +41,7 @@
         <div class="lh-hero__visual">
           <img
             :src="heroImage"
-            :alt="copy.hero.imageAlt"
+            :alt="t('landingHouse.hero.imageAlt')"
             width="960"
             height="1200"
             fetchpriority="high"
@@ -56,11 +56,11 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
-import { houseCopy as copy, houseHeroImage as heroImage } from '@/config/landing-house'
+import { houseHeroImage as heroImage } from '@/config/landing-house'
 import { buyerRoutes } from '@/config/landing-links'
 import LhButton from './LhButton.vue'
 
-const { tm } = useI18n()
+const { t, tm } = useI18n()
 const stats = computed(
   () => tm('landingHouse.heroStats') as Array<{ value: string; label: string }>,
 )

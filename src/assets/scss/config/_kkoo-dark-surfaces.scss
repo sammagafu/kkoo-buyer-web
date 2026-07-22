@@ -221,15 +221,36 @@ html.theme-dark {
   }
 
   .buyer-filter-chip--active {
-    background: rgba(92, 48, 143, 0.35);
-    border-color: rgba(92, 48, 143, 0.5);
-    color: var(--buyer-ink);
+    background: rgba(247, 168, 41, 0.2);
+    border-color: rgba(247, 168, 41, 0.45);
+    color: var(--kkoo-accent, #f7a829);
   }
 
   .buyer-category-pill {
     background: var(--buyer-chip-bg);
     border-color: var(--buyer-border-strong);
     color: var(--buyer-ink);
+  }
+
+  .buyer-category-pill--active {
+    background: rgba(247, 168, 41, 0.2);
+    border-color: rgba(247, 168, 41, 0.45);
+    color: var(--kkoo-accent, #f7a829);
+  }
+
+  .buyer-status-pill {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ede9f5;
+  }
+
+  .buyer-status-pill--ok {
+    background: rgba(16, 185, 129, 0.2);
+    color: #6ee7b7;
+  }
+
+  .buyer-status-pill--warn {
+    background: rgba(247, 168, 41, 0.22);
+    color: #fcd34d;
   }
 
   .buyer-venue__chip:not(.buyer-venue__chip--primary) {
@@ -239,9 +260,38 @@ html.theme-dark {
   }
 
   .buyer-venue__chip--primary {
-    background: rgba(92, 48, 143, 0.35);
-    border-color: rgba(92, 48, 143, 0.5);
-    color: #ede9f5;
+    background: rgba(247, 168, 41, 0.18);
+    border-color: rgba(247, 168, 41, 0.45);
+    color: var(--kkoo-accent, #f7a829);
+  }
+
+  .buyer-stat-card__value {
+    color: var(--kkoo-accent, #f7a829);
+  }
+
+  .form-label,
+  .buyer-shopping-shell label:not(.btn):not(.form-check-label),
+  .buyer-xp label:not(.btn):not(.form-check-label) {
+    color: var(--buyer-ink);
+  }
+
+  .buyer-shopping-shell .btn-outline-primary,
+  .buyer-xp .btn-outline-primary,
+  .buyer-shopping-shell .btn-outline-secondary,
+  .buyer-xp .btn-outline-secondary,
+  .buyer-shopping-shell .btn-link,
+  .buyer-xp .btn-link {
+    color: var(--kkoo-accent, #f7a829) !important;
+    border-color: rgba(247, 168, 41, 0.45);
+  }
+
+  .buyer-shopping-shell .btn-outline-primary:hover,
+  .buyer-xp .btn-outline-primary:hover,
+  .buyer-shopping-shell .btn-outline-secondary:hover,
+  .buyer-xp .btn-outline-secondary:hover {
+    background: rgba(247, 168, 41, 0.18);
+    color: var(--kkoo-accent, #f7a829) !important;
+    border-color: var(--kkoo-accent, #f7a829);
   }
 
   .send-main__footer {

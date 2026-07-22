@@ -2214,7 +2214,7 @@ html[data-bs-theme='dark'] .mk-landing--premium .mk-nav__link--sell:hover {
   opacity: 0;
 }
 
-// Store badges
+// Store badges — high-contrast in light & dark; glass chips on photo hero
 .mk-landing--premium .lp-store-badges {
   display: grid;
   gap: 0.65rem;
@@ -2231,26 +2231,104 @@ html[data-bs-theme='dark'] .mk-landing--premium .mk-nav__link--sell:hover {
   }
 }
 
-.mk-landing--premium .lp-store-badge {
+.mk-landing.mk-landing--premium .lp-store-badge {
   display: flex;
   align-items: center;
   gap: 0.65rem;
   padding: 0.65rem 0.85rem;
   border-radius: 0.95rem;
   text-decoration: none;
-  border: 1px solid color-mix(in srgb, var(--lp-bento-primary) 18%, transparent);
-  background: var(--lp-bento-surface);
-  color: var(--lp-bento-ink);
-  box-shadow: var(--lp-bento-shadow);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
   min-height: 52px;
+  border: 1px solid transparent;
+  background: #1a1224;
+  color: #fff;
+  box-shadow: 0 10px 28px rgba(26, 18, 36, 0.22);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 
-.mk-landing--premium .lp-store-badge:hover {
+.mk-landing.mk-landing--premium .lp-store-badge:hover {
   transform: translateY(-2px);
+  background: #2a1c3d;
+  box-shadow: 0 14px 34px rgba(26, 18, 36, 0.28);
 }
 
-.lp-hero-showcase__foreground .lp-store-badge {
+.mk-landing.mk-landing--premium .lp-store-badge__icon {
+  width: 2.1rem;
+  height: 2.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.25rem;
+  border-radius: 0.7rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.mk-landing.mk-landing--premium .lp-store-badge__icon--play {
+  color: #fff;
+}
+
+.mk-landing.mk-landing--premium .lp-store-badge__icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  display: block;
+}
+
+.mk-landing.mk-landing--premium .lp-store-badge__text {
+  display: grid;
+  line-height: 1.05;
+  text-align: left;
+}
+
+.mk-landing.mk-landing--premium .lp-store-badge__kicker {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.mk-landing.mk-landing--premium .lp-store-badge__brand {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+html[data-bs-theme='dark'] .mk-landing.mk-landing--premium .lp-store-badge {
+  background: #f5f3f7;
+  color: #1a1224;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+html[data-bs-theme='dark'] .mk-landing.mk-landing--premium .lp-store-badge:hover {
+  background: #ffffff;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.42);
+}
+
+html[data-bs-theme='dark'] .mk-landing.mk-landing--premium .lp-store-badge__icon {
+  color: #1a1224;
+  background: rgba(26, 18, 36, 0.08);
+  border-color: rgba(26, 18, 36, 0.12);
+}
+
+html[data-bs-theme='dark'] .mk-landing.mk-landing--premium .lp-store-badge__kicker {
+  color: rgba(26, 18, 36, 0.58);
+}
+
+html[data-bs-theme='dark'] .mk-landing.mk-landing--premium .lp-store-badge__brand {
+  color: #1a1224;
+}
+
+// Photo hero: frosted chips stay light-on-dark in both site themes
+.mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge,
+html[data-bs-theme='dark'] .mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge,
+html[data-bs-theme='light'] .mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge {
   border-color: var(--lp-hero-chip-border);
   background: var(--lp-hero-chip-bg);
   color: var(--lp-hero-fg);
@@ -2258,39 +2336,31 @@ html[data-bs-theme='dark'] .mk-landing--premium .mk-nav__link--sell:hover {
   backdrop-filter: blur(10px);
 }
 
-.lp-hero-showcase__foreground .lp-store-badge:hover {
-  background: rgba(255, 255, 255, 0.18);
+.mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge:hover,
+html[data-bs-theme='dark'] .mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge:hover,
+html[data-bs-theme='light'] .mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge:hover {
+  background: rgba(255, 255, 255, 0.2);
   color: var(--lp-hero-fg);
 }
 
-.lp-hero-showcase__foreground .lp-store-badge__kicker {
+.mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge__icon,
+html[data-bs-theme='dark'] .mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge__icon,
+html[data-bs-theme='light'] .mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge__icon {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge__kicker,
+html[data-bs-theme='dark'] .mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge__kicker,
+html[data-bs-theme='light'] .mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge__kicker {
   color: var(--lp-hero-fg-subtle);
 }
 
-.lp-hero-showcase__foreground .lp-store-badge__brand {
+.mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge__brand,
+html[data-bs-theme='dark'] .mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge__brand,
+html[data-bs-theme='light'] .mk-landing.mk-landing--premium .lp-hero-showcase__foreground .lp-store-badge__brand {
   color: var(--lp-hero-fg);
-}
-
-.mk-landing--premium .lp-store-badge__icon {
-  width: 2.1rem;
-  height: 2.1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-size: 1.35rem;
-}
-
-.mk-landing--premium .lp-store-badge__text {
-  display: grid;
-  line-height: 1.05;
-  text-align: left;
-}
-
-.mk-landing--premium .lp-store-badge__kicker {
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: var(--lp-bento-muted);
 }
 
 // Keep hero readable when site theme toggles — stats bar stays dark-on-light text
@@ -2298,6 +2368,7 @@ html[data-bs-theme='dark'] .lp-hero-showcase--download,
 html[data-bs-theme='light'] .lp-hero-showcase--download {
   --lp-hero-fg: #fff;
   --lp-hero-fg-muted: rgba(255, 255, 255, 0.9);
+  --lp-hero-fg-subtle: rgba(255, 255, 255, 0.78);
   --lp-hero-accent: #f7a828;
   --lp-hero-stats-bg: #1a1224;
 }
@@ -2311,11 +2382,6 @@ html[data-bs-theme='dark'] .lp-hero-showcase--download .lp-hero-showcase__stat--
 html[data-bs-theme='light'] .lp-hero-showcase--download .lp-hero-showcase__stat--featured {
   background: linear-gradient(135deg, #5d318e 0%, #3f1f66 100%);
   color: #fff;
-}
-
-.mk-landing--premium .lp-store-badge__brand {
-  font-size: 0.88rem;
-  font-weight: 800;
 }
 
 // ——— Audience sections (seller / rider / creator) ———

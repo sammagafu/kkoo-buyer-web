@@ -51,17 +51,30 @@
   display: inline-flex;
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
-  border: 1px solid var(--lp-border-color);
+  border: 1px solid transparent;
   font-size: 0.78rem;
   font-weight: 600;
   text-decoration: none;
-  color: inherit;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  color: #fff;
+  background: #1a1224;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .hp-footer__store:hover {
-  border-color: color-mix(in srgb, var(--bs-secondary) 45%, var(--lp-border-color));
-  background: color-mix(in srgb, var(--bs-secondary) 8%, transparent);
+  background: #2a1c3d;
+  border-color: transparent;
+  color: #fff;
+}
+
+html[data-bs-theme='dark'] .hp-footer__store {
+  background: #f5f3f7;
+  color: #1a1224;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+html[data-bs-theme='dark'] .hp-footer__store:hover {
+  background: #ffffff;
+  color: #1a1224;
 }
 
 .hp-footer__heading {
