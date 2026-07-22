@@ -23,6 +23,9 @@
         <p class="buyer-order-detail-hero__label">{{ t('buyerXp.common.total') }}</p>
         <p class="buyer-order-detail-hero__total">{{ formatMoney(order.final_total ?? order.total_amount) }}</p>
         <p v-if="order.created_at" class="buyer-order-detail-hero__meta">{{ formatDate(order.created_at) }}</p>
+        <p v-if="pointsEarned > 0" class="buyer-order-detail-hero__points">
+          +{{ pointsEarned }} {{ t('buyerXp.orders.pointsUnit') }} · {{ t('buyerXp.orders.pointsEarned') }}
+        </p>
       </section>
 
       <section class="buyer-detail-card">
@@ -47,6 +50,22 @@
           <div v-if="order.discount_amount" class="buyer-order-detail-row">
             <span class="buyer-order-detail-row__label">{{ t('buyerXp.orders.discount') }}</span>
             <span class="buyer-order-detail-row__value">-{{ formatMoney(order.discount_amount) }}</span>
+          </div>
+          <div
+            v-if="pointsEarned > 0"
+            class="buyer-order-detail-row buyer-order-detail-row--points"
+          >
+            <span class="buyer-order-detail-row__label">{{ t('buyerXp.orders.pointsEarned') }}</span>
+            <span class="buyer-order-detail-row__value buyer-order-detail-row__value--points">
+              +{{ pointsEarned }} {{ t('buyerXp.orders.pointsUnit') }}
+            </span>
+          </div>
+          <div
+            v-else-if="awaitingPoints"
+            class="buyer-order-detail-row"
+          >
+            <span class="buyer-order-detail-row__label">{{ t('buyerXp.orders.pointsEarned') }}</span>
+            <span class="buyer-order-detail-row__value">{{ t('buyerXp.orders.pointsPending') }}</span>
           </div>
           <div v-if="order.delivery_zone" class="buyer-order-detail-row">
             <span class="buyer-order-detail-row__label">{{ t('buyerXp.orders.zone') }}</span>
@@ -182,6 +201,19 @@ const canCancel = computed(() => {
 const canReturn = computed(() => {
   const s = String(order.value?.status ?? '').toLowerCase()
   return ['delivered', 'completed', 'shipped'].includes(s)
+})
+
+const pointsEarned = computed(() => {
+  const n = Number(order.value?.loyalty_points_earned ?? order.value?.points_earned ?? 0)
+  return Number.isFinite(n) && n > 0 ? Math.round(n) : 0
+})
+
+const awaitingPoints = computed(() => {
+  if (pointsEarned.value > 0) return false
+  const pay = String(order.value?.payment_status ?? '').toLowerCase()
+  const mode = String(order.value?.flexible_payment_mode ?? '').toLowerCase()
+  if (pay === 'paid') return false
+  return mode === 'pay_on_delivery' || mode === 'cash_plus_points' || pay === 'pending' || pay === 'partial'
 })
 
 function formatDate(v: unknown) {

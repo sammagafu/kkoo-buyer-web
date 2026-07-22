@@ -1605,9 +1605,20 @@ button.buyer-search-bar {
 
 .buyer-order-detail-hero__meta {
   margin: 0.45rem 0 0;
-  font-size: 0.82rem;
+  font-size: 0.875rem;
+  color: var(--buyer-muted, #6b7280);
+}
+
+.buyer-order-detail-hero__points {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: var(--buyer-muted);
+  color: var(--buyer-accent, #0f766e);
+}
+
+.buyer-order-detail-row__value--points {
+  font-weight: 600;
+  color: var(--buyer-accent, #0f766e);
 }
 
 .buyer-order-detail-rows {
