@@ -10,6 +10,7 @@
 
     <section class="buyer-detail-card mb-3">
       <BuyerSectionHeader :title="t('buyerXp.settings.notificationPrefs')" />
+      <p class="buyer-page-head__meta mb-2">{{ t('buyerXp.settings.whatsappChannelNote') }}</p>
       <p class="buyer-page-head__meta mb-3">{{ t('buyerXp.settings.notificationPrefsHint') }}</p>
       <label class="buyer-notify-pref">
         <span>
@@ -17,6 +18,13 @@
           <span class="buyer-page-head__meta d-block">{{ t('buyerXp.settings.saleEndingRemindersSub') }}</span>
         </span>
         <input v-model="saleEndingEnabled" type="checkbox" :disabled="prefsSaving" @change="saveSaleEndingPref" />
+      </label>
+      <label class="buyer-notify-pref mt-2">
+        <span>
+          <strong>{{ t('buyerXp.settings.whatsappMarketing') }}</strong>
+          <span class="buyer-page-head__meta d-block">{{ t('buyerXp.settings.whatsappMarketingSub') }}</span>
+        </span>
+        <input v-model="whatsappMarketingEnabled" type="checkbox" :disabled="prefsSaving" @change="saveWhatsappMarketingPref" />
       </label>
       <label class="buyer-notify-pref mt-2">
         <span>
@@ -117,6 +125,7 @@ const unreadCount = ref(0)
 const markingAll = ref(false)
 const saleEndingEnabled = ref(true)
 const promotionsEnabled = ref(true)
+const whatsappMarketingEnabled = ref(false)
 const prefsSaving = ref(false)
 const prefsError = ref('')
 const promotionSubId = ref<number | null>(null)
@@ -157,6 +166,8 @@ async function loadPreferences() {
     const settings = settingsRes.data?.results ?? []
     const saleSetting = settings.find((s) => s.notification_type === 'sale_ending')
     saleEndingEnabled.value = saleSetting ? saleSetting.enabled : true
+    const waMarketing = settings.find((s) => s.notification_type === 'whatsapp_marketing')
+    whatsappMarketingEnabled.value = waMarketing ? waMarketing.enabled : false
     const subs = prefsRes.data?.results ?? []
     const promo = subs.find((s) => s.type === 'promotion' && s.is_active !== false)
     promotionsEnabled.value = Boolean(promo)
@@ -164,6 +175,22 @@ async function loadPreferences() {
   } catch {
     saleEndingEnabled.value = true
     promotionsEnabled.value = true
+    whatsappMarketingEnabled.value = false
+  }
+}
+
+async function saveWhatsappMarketingPref() {
+  prefsSaving.value = true
+  prefsError.value = ''
+  const prev = !whatsappMarketingEnabled.value
+  try {
+    await notificationsApi.patchSetting('whatsapp_marketing', whatsappMarketingEnabled.value)
+  } catch (e: unknown) {
+    const err = e as { response?: { data?: { error?: string } }; message?: string }
+    prefsError.value = err.response?.data?.error ?? err.message ?? 'Could not save preference'
+    whatsappMarketingEnabled.value = prev
+  } finally {
+    prefsSaving.value = false
   }
 }
 

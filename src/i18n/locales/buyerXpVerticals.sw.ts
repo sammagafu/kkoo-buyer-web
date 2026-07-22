@@ -385,6 +385,7 @@ export const buyerXpVerticalsSw = {
     deliveryRequest: 'Ombi la uwasilishaji',
     deliveryRequestSub: 'Uwasilishaji wa dawa',
     medicines: 'Dawa',
+    backToHub: 'Rudi kwenye duka la dawa',
     uploadSection: 'Pakia maagizo ya daktari',
     searchPlaceholder: 'Tafuta dawa',
     rxNotesPlaceholder: 'Maelezo kwa mfamasia',

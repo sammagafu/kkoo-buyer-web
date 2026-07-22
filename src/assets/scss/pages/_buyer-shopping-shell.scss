@@ -885,6 +885,60 @@ html.theme-dark .buyer-side-nav__counter--cart {
   justify-content: center;
 }
 
+.buyer-pharmacy-store {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.buyer-pharmacy-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.buyer-pharmacy-group {
+  margin-top: 0.5rem;
+}
+
+.buyer-pharmacy-group__title {
+  margin: 0 0 0.65rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--bs-secondary-color);
+}
+
+.buyer-pharmacy-products {
+  margin-top: 0.25rem;
+}
+
+.buyer-pharmacy-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.buyer-pharmacy-upload__file {
+  width: 100%;
+  font-size: 0.85rem;
+}
+
+.buyer-pharmacy-upload__notes {
+  width: 100%;
+  border: 1px solid var(--buyer-border, rgba(var(--bs-primary-rgb), 0.12));
+  border-radius: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.88rem;
+  background: var(--buyer-surface, var(--bs-body-bg));
+  color: var(--buyer-ink, inherit);
+  resize: vertical;
+}
+
+.buyer-pharmacy-upload__submit {
+  position: static;
+  align-self: flex-start;
+}
+
 .fulfillment-action {
   display: flex;
   flex-wrap: wrap;

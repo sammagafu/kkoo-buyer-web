@@ -44,7 +44,7 @@ export const houseCopy = {
     lead: 'Escrow checkout, live tracking, and clear payouts — so buyers, sellers, and riders can move without anxiety.',
   },
   footer: {
-    title: 'Your place in KKOO',
+    title: 'Your place in Kariakoo',
     lead: 'Shop today. Sell when you are ready. Deliver when you want to earn. Run the shop on the web.',
     meta: 'East Africa · buyers · sellers · riders · teams',
   },

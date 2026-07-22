@@ -1790,10 +1790,50 @@ html[data-bs-theme='dark'] .lh-root .lh-process-card__num {
 }
 
 /* —— Footer —— */
+@mixin lh-cta-pattern-overlay {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: url('@/assets/images/auth/kkoo-pattern-tile.png');
+    background-repeat: repeat;
+    background-size: 69px 75px;
+    background-position: 0 0;
+    opacity: 0.11;
+    mix-blend-mode: soft-light;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(
+      155deg,
+      rgba(16, 6, 28, 0.84) 0%,
+      rgba(59, 26, 90, 0.52) 48%,
+      rgba(16, 6, 28, 0.8) 100%
+    );
+    pointer-events: none;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
 .lh-footer {
   padding-block: var(--lh-space-6) var(--lh-space-8);
 
   &__panel {
+    @include lh-cta-pattern-overlay;
     display: grid;
     gap: var(--lh-space-6);
     padding: var(--lh-space-6);

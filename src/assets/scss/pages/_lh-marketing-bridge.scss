@@ -299,6 +299,7 @@
   :deep(.mk-cta),
   :deep(.se-cta-shell),
   :deep(.cta-shell) {
+    @include lh-cta-pattern-overlay;
     border-radius: var(--lh-radius-shell, 2.5rem);
     border: 1px solid var(--lh-inverse-border, rgba(255, 255, 255, 0.2));
     background: var(--lh-inverse, var(--kkoo-primary-dark, #3b1a5a));

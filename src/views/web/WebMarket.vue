@@ -20,55 +20,57 @@
 
       <BuyerTrackOrderBar />
 
-      <BuyerHomeDiscovery :stores="stores" :loading="loadingStores" desktop-layout />
+      <div class="buyer-mhome-desktop-top buyer-reveal is-visible">
+        <section
+          v-if="popularTodayProducts.length || loadingAllProducts"
+          class="buyer-surface buyer-popular-today"
+          :aria-label="t('buyerXp.home.popularToday')"
+        >
+          <BuyerSectionHeader
+            :title="t('buyerXp.home.popularToday')"
+            :action-label="t('buyerXp.common.seeAll')"
+            :action-to="{ name: 'buyer.search' }"
+          />
+          <BuyerProductGridSection
+            :products="popularTodayProducts"
+            :loading="loadingAllProducts"
+            :adding="adding"
+            layout="popular-row"
+            @add="addProduct"
+          />
+        </section>
 
-      <div class="d-none d-lg-flex buyer-home-hero buyer-reveal is-visible">
-        <div class="buyer-home-hero__copy">
-          <p class="buyer-home-hero__eyebrow">{{ localizedGreeting }}, {{ displayNameResolved }}</p>
-          <h1 class="buyer-home-hero__title">{{ t('buyerXp.marketplace.tagline') }}</h1>
-        </div>
-        <div class="buyer-home-hero__actions">
-          <button
-            type="button"
-            class="buyer-home-hero__notify"
-            :aria-label="t('buyerXp.home.openNotifications')"
-            @click="openNotificationsPanel"
-          >
-            <Icon icon="solar:bell-bold" />
-            <span v-if="notificationUnreadCount" class="buyer-home-hero__notify-badge">{{ notificationUnreadCount > 99 ? '99+' : notificationUnreadCount }}</span>
-          </button>
-          <BuyerSearchBar readonly :placeholder="t('buyerXp.marketplace.searchPlaceholder')" @tap="goSearch" />
+        <section
+          v-else-if="!loadingAllProducts"
+          class="buyer-surface buyer-popular-today"
+          :aria-label="t('buyerXp.home.popularToday')"
+        >
+          <BuyerSectionHeader :title="t('buyerXp.home.popularToday')" />
+          <p v-if="homeProductsError" class="shop-products__status shop-products__status--error">{{ homeProductsError }}</p>
+          <p v-else class="shop-products__status">{{ t('buyerXp.home.noProductsYet') }}</p>
+        </section>
+
+        <div class="d-none d-lg-flex buyer-home-hero buyer-home-hero--aside">
+          <div class="buyer-home-hero__copy">
+            <p class="buyer-home-hero__eyebrow">{{ localizedGreeting }}, {{ displayNameResolved }}</p>
+            <h1 class="buyer-home-hero__title">{{ t('buyerXp.marketplace.tagline') }}</h1>
+          </div>
+          <div class="buyer-home-hero__actions">
+            <button
+              type="button"
+              class="buyer-home-hero__notify"
+              :aria-label="t('buyerXp.home.openNotifications')"
+              @click="openNotificationsPanel"
+            >
+              <Icon icon="solar:bell-bold" />
+              <span v-if="notificationUnreadCount" class="buyer-home-hero__notify-badge">{{ notificationUnreadCount > 99 ? '99+' : notificationUnreadCount }}</span>
+            </button>
+            <BuyerSearchBar readonly :placeholder="t('buyerXp.marketplace.searchPlaceholder')" @tap="goSearch" />
+          </div>
         </div>
       </div>
 
-      <section
-        v-if="popularTodayProducts.length || loadingAllProducts"
-        class="buyer-surface buyer-popular-today buyer-reveal"
-        :aria-label="t('buyerXp.home.popularToday')"
-      >
-        <BuyerSectionHeader
-          :title="t('buyerXp.home.popularToday')"
-          :action-label="t('buyerXp.common.seeAll')"
-          :action-to="{ name: 'buyer.search' }"
-        />
-        <BuyerProductGridSection
-          :products="popularTodayProducts"
-          :loading="loadingAllProducts"
-          :adding="adding"
-          layout="popular-row"
-          @add="addProduct"
-        />
-      </section>
-
-      <section
-        v-else-if="!loadingAllProducts"
-        class="buyer-surface buyer-popular-today buyer-reveal"
-        :aria-label="t('buyerXp.home.popularToday')"
-      >
-        <BuyerSectionHeader :title="t('buyerXp.home.popularToday')" />
-        <p v-if="homeProductsError" class="shop-products__status shop-products__status--error">{{ homeProductsError }}</p>
-        <p v-else class="shop-products__status">{{ t('buyerXp.home.noProductsYet') }}</p>
-      </section>
+      <BuyerHomeDiscovery :stores="stores" :loading="loadingStores" desktop-layout />
 
       <section class="buyer-surface buyer-surface--compact buyer-reveal" :aria-label="t('buyerXp.marketplace.browseCategories')">
         <BuyerSectionHeader :title="t('buyerXp.marketplace.browseCategories')" />

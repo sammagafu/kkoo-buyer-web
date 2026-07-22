@@ -1,184 +1,198 @@
 <template>
-  <div class="buyer-xp buyer-xp--wide">
-    <header class="buyer-page-head">
-      <h1 class="buyer-page-head__title">{{ t('buyerXp.pharmacy.title') }}</h1>
-      <p class="buyer-page-head__meta">{{ t('buyerXp.pharmacy.meta') }}</p>
-    </header>
+  <div class="buyer-xp buyer-xp--wide buyer-xp--pharmacy">
+    <template v-if="viewMode === 'hub'">
+      <header class="buyer-page-head">
+        <h1 class="buyer-page-head__title">{{ t('buyerXp.pharmacy.title') }}</h1>
+        <p class="buyer-page-head__meta">{{ t('buyerXp.pharmacy.meta') }}</p>
+      </header>
 
-    <section class="buyer-surface">
-      <BuyerSectionHeader :title="t('buyerXp.pharmacy.healthServices')" :overline="t('buyerXp.pharmacy.overline')" />
-      <div class="buyer-hub-list">
-        <BuyerHubCard
-          :title="t('buyerXp.pharmacy.shopMedicines')"
-          :subtitle="t('buyerXp.pharmacy.shopMedicinesSub')"
-          icon="solar:health-bold"
-          tone="teal"
-          @click="viewMode = 'store'"
-        />
-        <BuyerHubCard
-          :title="t('buyerXp.pharmacy.reminders')"
-          :subtitle="t('buyerXp.pharmacy.remindersSub')"
-          icon="solar:alarm-bold"
-          tone="teal"
-          :to="{ name: 'buyer.pharmacy.reminders' }"
-        />
-        <BuyerHubCard
-          :title="t('buyerXp.pharmacy.uploadRx')"
-          :subtitle="t('buyerXp.pharmacy.uploadRxSub')"
-          icon="solar:document-add-bold"
-          tone="primary"
-          @click="showUpload = true"
-        />
-        <BuyerHubCard
-          :title="t('buyerXp.pharmacy.deliveryRequest')"
-          :subtitle="t('buyerXp.pharmacy.deliveryRequestSub')"
-          icon="solar:delivery-bold"
-          tone="orange"
-          :to="{ name: 'buyer.send', query: { category: 'pharmacy' } }"
-        />
-      </div>
-    </section>
-
-    <section v-if="viewMode === 'store'" class="buyer-surface" :aria-label="t('buyerXp.pharmacy.medicines')">
-      <div class="buyer-page-head__row mb-2">
-        <BuyerSectionHeader :title="t('buyerXp.pharmacy.medicines')" />
-        <button type="button" class="buyer-page-head__back" @click="viewMode = 'hub'">
-          <Icon icon="solar:close-circle-linear" />
-        </button>
-      </div>
-
-      <BuyerFulfillmentBar
-        v-model="fulfillmentMode"
-        :label="t('buyerXp.pharmacy.fulfillmentLabel')"
-        :hint="fulfillmentHint"
-        :modes="fulfillmentModes"
-      />
-
-      <div v-if="isLocalPickup" class="buyer-pharmacy-local-banner">
-        <Icon icon="solar:shop-bold" aria-hidden="true" />
-        <div>
-          <strong>{{ t('buyerXp.pharmacy.localCartTitle') }}</strong>
-          <p>{{ t('buyerXp.pharmacy.localCartBody') }}</p>
-        </div>
-      </div>
-
-      <BuyerSearchBar v-model="search" :placeholder="t('buyerXp.pharmacy.searchPlaceholder')" />
-
-      <div v-if="categoryOptions.length" class="buyer-pharmacy-filters mt-2">
-        <button
-          type="button"
-          class="buyer-venue__chip"
-          :class="{ 'buyer-venue__chip--primary': activeCategory === 'all' }"
-          @click="activeCategory = 'all'; activeSubcategory = 'all'"
-        >
-          All categories
-        </button>
-        <button
-          v-for="c in categoryOptions"
-          :key="c.slug"
-          type="button"
-          class="buyer-venue__chip"
-          :class="{ 'buyer-venue__chip--primary': activeCategory === c.slug }"
-          @click="activeCategory = c.slug; activeSubcategory = 'all'"
-        >
-          {{ c.name }}
-        </button>
-      </div>
-      <div v-if="subcategoryOptions.length" class="buyer-pharmacy-filters mt-1">
-        <button
-          type="button"
-          class="buyer-venue__chip"
-          :class="{ 'buyer-venue__chip--primary': activeSubcategory === 'all' }"
-          @click="activeSubcategory = 'all'"
-        >
-          All subcategories
-        </button>
-        <button
-          v-for="c in subcategoryOptions"
-          :key="c.slug"
-          type="button"
-          class="buyer-venue__chip"
-          :class="{ 'buyer-venue__chip--primary': activeSubcategory === c.slug }"
-          @click="activeSubcategory = c.slug"
-        >
-          {{ c.name }}
-        </button>
-      </div>
-      <div class="buyer-pharmacy-filters mt-1">
-        <button
-          v-for="age in ageOptions"
-          :key="age.value"
-          type="button"
-          class="buyer-venue__chip"
-          :class="{ 'buyer-venue__chip--primary': activeAge === age.value }"
-          @click="activeAge = age.value"
-        >
-          {{ age.label }}
-        </button>
-      </div>
-      <div v-if="requirementOptions.length" class="buyer-pharmacy-filters mt-1">
-        <button
-          type="button"
-          class="buyer-venue__chip"
-          :class="{ 'buyer-venue__chip--primary': activeRequirement === 'all' }"
-          @click="activeRequirement = 'all'"
-        >
-          All needs
-        </button>
-        <button
-          v-for="req in requirementOptions"
-          :key="req"
-          type="button"
-          class="buyer-venue__chip"
-          :class="{ 'buyer-venue__chip--primary': activeRequirement === req }"
-          @click="activeRequirement = req"
-        >
-          {{ req.replaceAll('_', ' ') }}
-        </button>
-      </div>
-
-      <template v-if="groupedProducts.length">
-        <div v-for="group in groupedProducts" :key="group.title" class="mt-3">
-          <h3 class="buyer-page-head__meta" style="font-weight:700;margin-bottom:0.5rem">{{ group.title }}</h3>
-          <BuyerProductGridSection
-            :products="group.products"
-            :loading="false"
-            :error="''"
-            :adding="adding"
-            :add-error="addError"
-            @add="(p) => addProduct(p)"
+      <section class="buyer-surface">
+        <BuyerSectionHeader :title="t('buyerXp.pharmacy.healthServices')" :overline="t('buyerXp.pharmacy.overline')" />
+        <div class="buyer-hub-list buyer-hub-list--grid">
+          <BuyerHubCard
+            :title="t('buyerXp.pharmacy.shopMedicines')"
+            :subtitle="t('buyerXp.pharmacy.shopMedicinesSub')"
+            icon="solar:health-bold"
+            tone="teal"
+            @click="viewMode = 'store'"
+          />
+          <BuyerHubCard
+            :title="t('buyerXp.pharmacy.reminders')"
+            :subtitle="t('buyerXp.pharmacy.remindersSub')"
+            icon="solar:alarm-bold"
+            tone="teal"
+            :to="{ name: 'buyer.pharmacy.reminders' }"
+          />
+          <BuyerHubCard
+            :title="t('buyerXp.pharmacy.uploadRx')"
+            :subtitle="t('buyerXp.pharmacy.uploadRxSub')"
+            icon="solar:document-add-bold"
+            tone="primary"
+            @click="showUpload = true"
+          />
+          <BuyerHubCard
+            :title="t('buyerXp.pharmacy.deliveryRequest')"
+            :subtitle="t('buyerXp.pharmacy.deliveryRequestSub')"
+            icon="solar:delivery-bold"
+            tone="orange"
+            :to="{ name: 'buyer.send', query: { category: 'pharmacy' } }"
           />
         </div>
-      </template>
-      <BuyerProductGridSection
-        v-else
-        class="mt-3"
-        :products="filteredProducts"
-        :loading="loading"
-        :error="error"
-        :adding="adding"
-        :add-error="addError"
-        @add="(p) => addProduct(p)"
-      />
+      </section>
 
-      <p v-if="addMessage" class="buyer-xp-toast buyer-xp-toast--ok mt-2">{{ addMessage }}</p>
+      <section v-if="showUpload" class="buyer-surface buyer-pharmacy-upload">
+        <BuyerSectionHeader :title="t('buyerXp.pharmacy.uploadSection')" />
+        <input type="file" accept="image/*,.pdf" class="buyer-pharmacy-upload__file" @change="onFile" />
+        <textarea
+          v-model="rxNotes"
+          class="buyer-pharmacy-upload__notes"
+          rows="2"
+          :placeholder="t('buyerXp.pharmacy.rxNotesPlaceholder')"
+        />
+        <button type="button" class="buyer-ride-bar__btn buyer-pharmacy-upload__submit" :disabled="uploading" @click="uploadRx">
+          {{ uploading ? t('buyerXp.common.uploading') : t('buyerXp.common.upload') }}
+        </button>
+        <p v-if="uploadMsg" class="buyer-xp-toast buyer-xp-toast--ok mt-2">{{ uploadMsg }}</p>
+      </section>
+    </template>
 
-      <div v-if="itemCount > 0" class="buyer-pharmacy-checkout-row">
-        <RouterLink :to="checkoutLink" class="buyer-venue__chip buyer-venue__chip--primary buyer-venue__chip--lg">
-          {{ isLocalPickup ? t('buyerXp.pharmacy.checkoutPickup') : t('buyerXp.pharmacy.checkoutDelivery') }}
-        </RouterLink>
-      </div>
-    </section>
+    <template v-else>
+      <header class="buyer-page-head">
+        <div class="buyer-page-head__row">
+          <button type="button" class="buyer-page-head__back" :aria-label="t('buyerXp.pharmacy.backToHub')" @click="viewMode = 'hub'">
+            <Icon icon="solar:arrow-left-linear" />
+          </button>
+          <div>
+            <h1 class="buyer-page-head__title">{{ t('buyerXp.pharmacy.medicines') }}</h1>
+            <p class="buyer-page-head__meta">{{ t('buyerXp.pharmacy.shopMedicinesSub') }}</p>
+          </div>
+        </div>
+      </header>
 
-    <div v-if="showUpload" class="buyer-detail-card mt-3">
-      <BuyerSectionHeader :title="t('buyerXp.pharmacy.uploadSection')" />
-      <input type="file" accept="image/*,.pdf" @change="onFile" />
-      <textarea v-model="rxNotes" class="mt-2" rows="2" :placeholder="t('buyerXp.pharmacy.rxNotesPlaceholder')" style="width:100%;border-radius:0.75rem;padding:0.65rem" />
-      <button type="button" class="buyer-ride-bar__btn mt-2" style="position:static" :disabled="uploading" @click="uploadRx">
-        {{ uploading ? t('buyerXp.common.uploading') : t('buyerXp.common.upload') }}
-      </button>
-      <p v-if="uploadMsg" class="buyer-xp-toast buyer-xp-toast--ok mt-2">{{ uploadMsg }}</p>
-    </div>
+      <section class="buyer-surface buyer-pharmacy-store" :aria-label="t('buyerXp.pharmacy.medicines')">
+        <BuyerFulfillmentBar
+          v-model="fulfillmentMode"
+          :label="t('buyerXp.pharmacy.fulfillmentLabel')"
+          :hint="fulfillmentHint"
+          :modes="fulfillmentModes"
+        />
+
+        <div v-if="isLocalPickup" class="buyer-pharmacy-local-banner">
+          <Icon icon="solar:shop-bold" aria-hidden="true" />
+          <div>
+            <strong>{{ t('buyerXp.pharmacy.localCartTitle') }}</strong>
+            <p>{{ t('buyerXp.pharmacy.localCartBody') }}</p>
+          </div>
+        </div>
+
+        <BuyerSearchBar v-model="search" :placeholder="t('buyerXp.pharmacy.searchPlaceholder')" />
+
+        <div v-if="categoryOptions.length" class="buyer-pharmacy-filters">
+          <button
+            type="button"
+            class="buyer-venue__chip"
+            :class="{ 'buyer-venue__chip--primary': activeCategory === 'all' }"
+            @click="activeCategory = 'all'; activeSubcategory = 'all'"
+          >
+            All categories
+          </button>
+          <button
+            v-for="c in categoryOptions"
+            :key="c.slug"
+            type="button"
+            class="buyer-venue__chip"
+            :class="{ 'buyer-venue__chip--primary': activeCategory === c.slug }"
+            @click="activeCategory = c.slug; activeSubcategory = 'all'"
+          >
+            {{ c.name }}
+          </button>
+        </div>
+        <div v-if="subcategoryOptions.length" class="buyer-pharmacy-filters">
+          <button
+            type="button"
+            class="buyer-venue__chip"
+            :class="{ 'buyer-venue__chip--primary': activeSubcategory === 'all' }"
+            @click="activeSubcategory = 'all'"
+          >
+            All subcategories
+          </button>
+          <button
+            v-for="c in subcategoryOptions"
+            :key="c.slug"
+            type="button"
+            class="buyer-venue__chip"
+            :class="{ 'buyer-venue__chip--primary': activeSubcategory === c.slug }"
+            @click="activeSubcategory = c.slug"
+          >
+            {{ c.name }}
+          </button>
+        </div>
+        <div class="buyer-pharmacy-filters">
+          <button
+            v-for="age in ageOptions"
+            :key="age.value"
+            type="button"
+            class="buyer-venue__chip"
+            :class="{ 'buyer-venue__chip--primary': activeAge === age.value }"
+            @click="activeAge = age.value"
+          >
+            {{ age.label }}
+          </button>
+        </div>
+        <div v-if="requirementOptions.length" class="buyer-pharmacy-filters">
+          <button
+            type="button"
+            class="buyer-venue__chip"
+            :class="{ 'buyer-venue__chip--primary': activeRequirement === 'all' }"
+            @click="activeRequirement = 'all'"
+          >
+            All needs
+          </button>
+          <button
+            v-for="req in requirementOptions"
+            :key="req"
+            type="button"
+            class="buyer-venue__chip"
+            :class="{ 'buyer-venue__chip--primary': activeRequirement === req }"
+            @click="activeRequirement = req"
+          >
+            {{ formatRequirement(req) }}
+          </button>
+        </div>
+
+        <template v-if="groupedProducts.length">
+          <div v-for="group in groupedProducts" :key="group.title" class="buyer-pharmacy-group">
+            <h3 class="buyer-pharmacy-group__title">{{ group.title }}</h3>
+            <BuyerProductGridSection
+              :products="group.products"
+              :loading="false"
+              :error="''"
+              :adding="adding"
+              :add-error="addError"
+              @add="(p) => addProduct(p)"
+            />
+          </div>
+        </template>
+        <BuyerProductGridSection
+          v-else
+          class="buyer-pharmacy-products"
+          :products="filteredProducts"
+          :loading="loading"
+          :error="error"
+          :adding="adding"
+          :add-error="addError"
+          @add="(p) => addProduct(p)"
+        />
+
+        <p v-if="addMessage" class="buyer-xp-toast buyer-xp-toast--ok mt-2">{{ addMessage }}</p>
+
+        <div v-if="itemCount > 0" class="buyer-pharmacy-checkout-row">
+          <RouterLink :to="checkoutLink" class="buyer-venue__chip buyer-venue__chip--primary buyer-venue__chip--lg">
+            {{ isLocalPickup ? t('buyerXp.pharmacy.checkoutPickup') : t('buyerXp.pharmacy.checkoutDelivery') }}
+          </RouterLink>
+        </div>
+      </section>
+    </template>
   </div>
 </template>
 
@@ -246,6 +260,10 @@ const ageOptions = [
   { value: 'elderly', label: 'Elderly' },
 ]
 
+function formatRequirement(value: string) {
+  return value.replace(/_/g, ' ')
+}
+
 const pharmacyRoot = computed(() => {
   const roots = pharmacyTree.value
   return roots.find((c) => c.slug === PHARMACY_SLUG) ?? roots[0] ?? null
@@ -302,7 +320,7 @@ const filteredProducts = computed(() => {
 const requirementOptions = computed(() => {
   const tags = new Set<string>()
   for (const p of products.value as Array<{ patient_requirements?: string[] }>) {
-    for (const t of p.patient_requirements || []) tags.add(String(t).toLowerCase())
+    for (const tag of p.patient_requirements || []) tags.add(String(tag).toLowerCase())
   }
   return [...tags].sort()
 })
@@ -316,7 +334,7 @@ const groupedProducts = computed(() => {
   }
   return [...map.entries()]
     .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([title, products]) => ({ title, products }))
+    .map(([title, groupProducts]) => ({ title, products: groupProducts }))
 })
 
 async function loadProducts() {
@@ -375,11 +393,3 @@ watch(viewMode, (mode) => {
   if (mode === 'store') void loadProducts()
 })
 </script>
-
-<style scoped>
-.buyer-pharmacy-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-</style>

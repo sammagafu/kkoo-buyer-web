@@ -385,6 +385,7 @@ export const buyerXpVerticalsFr = {
     deliveryRequest: 'Demande de livraison',
     deliveryRequestSub: 'Livraison de médicaments',
     medicines: 'Médicaments',
+    backToHub: 'Retour à la pharmacie',
     uploadSection: 'Envoyer une ordonnance',
     searchPlaceholder: 'Rechercher des médicaments',
     rxNotesPlaceholder: 'Notes pour le pharmacien',
