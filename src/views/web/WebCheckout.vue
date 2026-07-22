@@ -107,6 +107,16 @@
         </b-form-group>
       </div>
 
+      <div v-if="hasPreorderItems" class="webcheckout-block">
+        <b-alert variant="warning" show class="mb-0">
+          <p class="mb-1 fw-semibold">{{ t('buyerXp.checkout.preorderTitle') }}</p>
+          <p class="mb-2 small">{{ t('buyerXp.checkout.preorderHint') }}</p>
+          <b-form-group :label="t('buyerXp.checkout.scheduledFor')" class="mb-0">
+            <b-form-input v-model="scheduledFor" type="date" :disabled="!isAuthenticated" />
+          </b-form-group>
+        </b-alert>
+      </div>
+
       <div class="webcheckout-block">
         <h2 class="webcheckout-block__title mb-3">{{ t('buyerXp.checkout.payment') }}</h2>
         <p v-if="paymentMethodsLoading" class="text-muted small mb-2">{{ t('buyerXp.checkout.loadingPayments') }}</p>
@@ -215,10 +225,15 @@ const loyaltyBalance = ref(0)
 const maxLoyaltyPoints = ref(0)
 const loyaltyLoading = ref(false)
 const showExtras = ref(false)
+const scheduledFor = ref('')
 
 const isAuthenticated = computed(() => auth.isAuthenticated)
 
 const needsRx = computed(() => cartItems.value.some((i) => i.requiresPrescription))
+const hasPreorderItems = computed(() => cartItems.value.some((i) => i.isPreorder))
+const checkoutChannel = computed<'marketplace' | 'microsite'>(() =>
+  route.path.toLowerCase().includes('/store/') ? 'microsite' : 'marketplace',
+)
 
 const loyaltyPointsAvailable = computed(
   () => isAuthenticated.value && loyaltyBalance.value >= 100 && maxLoyaltyPoints.value >= 100,
@@ -468,6 +483,10 @@ async function placeOrder() {
     const payload: Parameters<typeof ordersUserApi.create>[0] = {
       payment_method: paymentMethod.value,
       idempotency_key: crypto.randomUUID(),
+      channel: checkoutChannel.value,
+    }
+    if (scheduledFor.value.trim()) {
+      payload.scheduled_for = scheduledFor.value.trim()
     }
 
     if (selectedAddressId.value) {

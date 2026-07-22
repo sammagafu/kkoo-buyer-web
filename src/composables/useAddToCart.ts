@@ -14,6 +14,8 @@ export type CartableProduct = {
   image_url?: string
   media?: Array<{ file?: string }>
   requires_prescription?: boolean
+  allow_preorder?: boolean
+  purchase_mode?: string
   skus?: Array<{ id?: number; price_override?: number | null }>
 }
 
@@ -40,7 +42,11 @@ export function useAddToCart() {
   const addError = ref('')
   const addMessage = ref('')
 
-  async function addProduct(prod: CartableProduct, quantity = 1): Promise<boolean> {
+  async function addProduct(
+    prod: CartableProduct,
+    quantity = 1,
+    opts?: { channel?: 'marketplace' | 'microsite' },
+  ): Promise<boolean> {
     addError.value = ''
     addMessage.value = ''
     const productId = Number(prod.id)
@@ -60,6 +66,7 @@ export function useAddToCart() {
         imageUrl: resolveImage(prod),
         requiresPrescription: prod.requires_prescription,
         quantity,
+        channel: opts?.channel ?? 'marketplace',
       })
       if (!ok) {
         addError.value = t('buyerXp.common.couldNotAdd')
@@ -67,8 +74,11 @@ export function useAddToCart() {
       }
       await refreshBuyerCart()
       openBuyerCart()
+      const isPreorder = prod.purchase_mode === 'preorder' || prod.allow_preorder
       addMessage.value = auth.isAuthenticated
-        ? t('buyerXp.common.addedToCartShort')
+        ? isPreorder
+          ? t('buyerXp.cart.preorderAdded')
+          : t('buyerXp.common.addedToCartShort')
         : t('buyerXp.cart.guestAdded')
       return true
     } catch (e) {

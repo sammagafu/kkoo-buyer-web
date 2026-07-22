@@ -83,6 +83,7 @@ export const buyerXpVerticals = {
     guestBannerBody: 'Sign in at checkout to pay and sync your cart across devices.',
     checkoutSignIn: 'Sign in to checkout',
     guestAdded: 'Added — saved on this device until you sign in.',
+    preorderAdded: 'Pre-order added to cart.',
   },
   features: {
     service: {
@@ -341,6 +342,9 @@ export const buyerXpVerticals = {
     fulfillmentPickup: 'Pick up from seller',
     fulfillmentDineIn: 'Dine in at venue',
     paymentRecommended: 'Recommended',
+    preorderTitle: 'Pre-order items in cart',
+    preorderHint: 'Some items are out of stock and will ship when available. Optionally set a preferred date.',
+    scheduledFor: 'Preferred delivery / ready date',
   },
   orders: {
     title: 'Your orders',

@@ -802,7 +802,8 @@ async function addToCart(item: MenuItem) {
     discount_price: typeof item.discount_price === 'number' ? item.discount_price : undefined,
     primary_media_url: String(item.primary_media_url ?? item.image_url ?? ''),
     skus: item.skus,
-  })
+    allow_preorder: Boolean((item as { allow_preorder?: boolean }).allow_preorder),
+  }, 1, { channel: 'microsite' })
 }
 
 async function addToCartFromDetail() {

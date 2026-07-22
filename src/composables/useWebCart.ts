@@ -33,6 +33,7 @@ type CartApiItem = {
   sku?: CartSku
   product?: CartProduct
   unavailable?: boolean
+  is_preorder?: boolean
 }
 
 export type WebCartItem = {
@@ -45,6 +46,7 @@ export type WebCartItem = {
   total_price?: number
   unavailable?: boolean
   requiresPrescription?: boolean
+  isPreorder?: boolean
   product?: { title?: string; price?: number; base_price?: number; image_url?: string }
   sku?: CartSku
 }
@@ -78,6 +80,7 @@ function normalizeCartItem(raw: CartApiItem): WebCartItem {
     total_price: raw.total_price,
     unavailable: raw.unavailable,
     requiresPrescription: product?.requires_prescription,
+    isPreorder: Boolean(raw.is_preorder),
     sku: raw.sku,
     product: product
       ? {
@@ -145,6 +148,8 @@ export type AddToCartInput = {
   imageUrl?: string
   requiresPrescription?: boolean
   quantity?: number
+  /** marketplace (default) | microsite — must match product channel flags */
+  channel?: 'marketplace' | 'microsite'
 }
 
 export function useWebCart() {
@@ -234,10 +239,11 @@ export function useWebCart() {
       return true
     }
     try {
+      const channel = input.channel ?? 'marketplace'
       if (input.skuId && input.skuId > 0) {
-        await cartApi.add({ sku_id: input.skuId, quantity: input.quantity ?? 1 })
+        await cartApi.add({ sku_id: input.skuId, quantity: input.quantity ?? 1, channel })
       } else {
-        await cartApi.add({ product_id: input.productId, quantity: input.quantity ?? 1 })
+        await cartApi.add({ product_id: input.productId, quantity: input.quantity ?? 1, channel })
       }
       await loadCart()
       return true

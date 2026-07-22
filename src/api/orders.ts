@@ -24,6 +24,10 @@ export const ordersUserApi = {
     delivery_delicate?: boolean
     /** Bolt-like ride/delivery fee (number) */
     delivery_fee?: number
+    /** marketplace | microsite — validates product channel flags */
+    channel?: 'marketplace' | 'microsite'
+    /** ISO date or RFC3339 for preorder / scheduled delivery */
+    scheduled_for?: string
   }) {
     return client.post('/orders/create/', data)
   },

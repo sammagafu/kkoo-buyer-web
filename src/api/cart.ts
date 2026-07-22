@@ -30,7 +30,9 @@ export const cartApi = {
     return client.get<CartApiResponse>('/cart/')
   },
   add(
-    skuOrPayload: number | { sku_id?: number; product_id?: number; quantity?: number },
+    skuOrPayload:
+      | number
+      | { sku_id?: number; product_id?: number; quantity?: number; channel?: string },
     quantity = 1,
   ) {
     if (typeof skuOrPayload === 'number') {
