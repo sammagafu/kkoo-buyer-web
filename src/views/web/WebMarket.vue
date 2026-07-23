@@ -14,6 +14,11 @@
         @dismiss="dismissCarousel"
       />
 
+      <BuyerCampaignStrip
+        :campaigns="stripCampaigns"
+        @dismiss="dismissStrip"
+      />
+
       <div class="buyer-mhome-greeting buyer-reveal is-visible">
         <p class="buyer-mhome-greeting__brand" aria-hidden="true">KKOO</p>
         <p class="buyer-mhome-greeting__line">
@@ -233,6 +238,7 @@ import BuyerVenueCard from '@/components/buyer/experience/BuyerVenueCard.vue'
 import BuyerProductGridSection from '@/components/buyer/experience/BuyerProductGridSection.vue'
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import BuyerCampaignCarousel from '@/components/buyer/BuyerCampaignCarousel.vue'
+import BuyerCampaignStrip from '@/components/buyer/BuyerCampaignStrip.vue'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { useBuyerGreeting } from '@/composables/useBuyerGreeting'
 import { useBuyerLocation } from '@/composables/useBuyerLocation'
@@ -254,7 +260,7 @@ const { unreadCount: notificationUnreadCount } = useBuyerNotifications()
 const openNotifications = inject<() => void>('openBuyerNotifications', () => {})
 const { displayName, isAuthenticated } = useAuthDisplay()
 const auth = useAuthStore()
-const { carouselCampaigns, loadCarouselCampaigns, dismissCarousel } = useBuyerCampaigns()
+const { carouselCampaigns, stripCampaigns, loadHomeCampaigns, dismissCarousel, dismissStrip } = useBuyerCampaigns()
 const openBuyerCart = inject<() => void>('openBuyerCart', () => {})
 const { adding, addError, addMessage, addProduct: addProductToCart } = useAddToCart()
 const xpRoot = ref<HTMLElement | null>(null)
@@ -616,7 +622,7 @@ onMounted(() => {
     void loadCategories()
     void loadAllProducts()
     void loadHomeStores()
-    void loadCarouselCampaigns()
+    void loadHomeCampaigns()
   } else {
     void loadStores()
   }
@@ -625,7 +631,7 @@ onMounted(() => {
 watch(
   () => auth.isAuthenticated,
   () => {
-    if (isHomeMode.value) void loadCarouselCampaigns()
+    if (isHomeMode.value) void loadHomeCampaigns()
   },
 )
 </script>

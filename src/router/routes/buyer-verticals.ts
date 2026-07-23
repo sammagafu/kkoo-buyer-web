@@ -213,6 +213,12 @@ export const buyerVerticalRoutes = [
     props: true,
   },
   {
+    path: '/invite',
+    name: 'buyer.invite',
+    meta: { title: setTitle('Invite') },
+    component: () => import('@/views/web/WebInvite.vue'),
+  },
+  {
     path: '/referral',
     name: 'buyer.referral',
     meta: { title: setTitle('Refer friends'), ...authShell },

@@ -126,6 +126,7 @@ import { formatApiError } from '@/utils/formatApiError'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerProductGridSection, { type GridProduct } from '@/components/buyer/experience/BuyerProductGridSection.vue'
 import { useProductShareEarn } from '@/composables/useProductShareEarn'
+import { setPendingShareCode } from '@/composables/usePendingShareCode'
 import { useProductFavorite } from '@/composables/useProductFavorite'
 import { useAddToCart } from '@/composables/useAddToCart'
 
@@ -199,6 +200,8 @@ async function load() {
   loading.value = true
   error.value = ''
   try {
+    const shareRef = String(route.query.ref ?? '').trim()
+    if (shareRef) setPendingShareCode(shareRef)
     const slug = props.slug || (route.name === 'buyer.product.slug' ? String(route.params.slug ?? '') : '')
     const pid = props.id || (route.name === 'buyer.product' ? String(route.params.id ?? '') : '')
     let data: Product

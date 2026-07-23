@@ -126,7 +126,7 @@
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import AuthCard from '@/components/auth/AuthCard.vue'
 import AuthField from '@/components/auth/AuthField.vue'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { saveStoredBackupCodes } from '@/utils/backupCodesStorage'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -137,6 +137,10 @@ import { resolvePostAuthRedirect } from '@/utils/authRedirect'
 import { bizSellerRegisterUrl } from '@/config/landing-links'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { toastError, toastSuccess } from '@/utils/toast'
+import {
+  applyPendingReferralCode,
+  captureReferralRefFromQuery,
+} from '@/composables/applyPendingReferral'
 
 const phone = ref('')
 const otpCode = ref('')
@@ -188,10 +192,20 @@ function postAuthDestination() {
   return resolvePostAuthRedirect(route.query.redirectedFrom, auth.defaultRouteAfterAuth())
 }
 
+async function applyReferralAfterAuth() {
+  captureReferralRefFromQuery(route.query.ref)
+  await applyPendingReferralCode({ keepOnFailure: true })
+}
+
+onMounted(() => {
+  captureReferralRefFromQuery(route.query.ref)
+})
+
 async function continueExistingSession() {
   error.value = ''
   redirecting.value = true
   try {
+    await applyReferralAfterAuth()
     await router.push(postAuthDestination())
   } catch {
     error.value = t('auth.couldNotContinue')
@@ -260,6 +274,7 @@ async function handleVerifyOtp() {
     }
     redirecting.value = true
     toastSuccess(t('auth.signInSuccess'))
+    await applyReferralAfterAuth()
     await router.push(postAuthDestination())
   } catch (e: unknown) {
     const msg = String((e as Error)?.message || '')
@@ -283,6 +298,7 @@ async function continueAfterBackupCodes() {
   redirecting.value = true
   try {
     toastSuccess(t('auth.signInSuccess'))
+    await applyReferralAfterAuth()
     await router.push(postAuthDestination())
   } catch {
     toastError('Could not continue. Try signing in again.')

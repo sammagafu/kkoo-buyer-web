@@ -52,12 +52,19 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import { referralApi } from '@/api/referral'
 import { formatApiError } from '@/utils/formatApiError'
 import { formatBuyerMoney } from '@/utils/buyerFormat'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
+import {
+  applyPendingReferralCode,
+  captureReferralRefFromQuery,
+} from '@/composables/applyPendingReferral'
+import { peekPendingReferralCode } from '@/composables/usePendingReferralCode'
 
 const { t } = useI18n()
+const route = useRoute()
 const code = ref('')
 const stats = ref<Record<string, unknown> | null>(null)
 const loading = ref(false)
@@ -110,5 +117,27 @@ async function apply() {
   }
 }
 
-onMounted(load)
+onMounted(async () => {
+  const fromQuery = captureReferralRefFromQuery(route.query.ref)
+  applyCode.value = fromQuery || peekPendingReferralCode() || ''
+  await load()
+  if (applyCode.value.trim()) {
+    applying.value = true
+    applyMsg.value = ''
+    const result = await applyPendingReferralCode({
+      code: applyCode.value.trim(),
+      keepOnFailure: true,
+    })
+    if (result.ok) {
+      applyMsg.value = result.message || t('buyerXp.referral.codeApplied')
+      applyOk.value = true
+      applyCode.value = ''
+      await load()
+    } else if (result.code) {
+      applyMsg.value = t('buyerXp.common.couldNotLoad')
+      applyOk.value = false
+    }
+    applying.value = false
+  }
+})
 </script>

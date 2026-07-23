@@ -78,12 +78,28 @@ export function campaignCtaRoute(campaign?: BuyerCampaign | null): RouteLocation
   return null
 }
 
+function dedupeCampaigns(rows: BuyerCampaign[]) {
+  const seenIds = new Set<number>()
+  const seenKeys = new Set<string>()
+  return rows.filter((c) => {
+    if (!c?.id || seenIds.has(c.id)) return false
+    seenIds.add(c.id)
+    const key = [c.action_type || '', c.product_id || '', c.cta_route || '', c.title || ''].join('|')
+    if (seenKeys.has(key)) return false
+    seenKeys.add(key)
+    return true
+  })
+}
+
 export function useBuyerCampaigns() {
   const auth = useAuthStore()
   const modalCampaign = ref<BuyerCampaign | null>(null)
   const carouselCampaigns = ref<BuyerCampaign[]>([])
+  /** Landscape strip below hero (`promo_banner`, 1920×786). */
+  const stripCampaigns = ref<BuyerCampaign[]>([])
   const loadingModal = ref(false)
   const loadingCarousel = ref(false)
+  const loadingStrip = ref(false)
 
   function trackImpression(id?: number) {
     // Impression/dismiss need JWT; posting as a guest forces a sign-in redirect.
@@ -108,27 +124,15 @@ export function useBuyerCampaigns() {
   async function loadCarouselCampaigns() {
     loadingCarousel.value = true
     try {
-      // Match app home: home_hero banner + promo_carousel strip.
+      // Full-screen marketplace carousel: home_hero + promo_carousel (1080×1350).
       const [hero, carousel] = await Promise.all([
         campaignsUserApi.getActive({ placement: 'home_hero', channel: 'web_banner' }).catch(() => ({ data: { results: [] as BuyerCampaign[] } })),
         campaignsUserApi.getActive({ placement: 'promo_carousel', channel: 'web_banner' }).catch(() => ({ data: { results: [] as BuyerCampaign[] } })),
       ])
-      const merged = [...(hero.data.results ?? []), ...(carousel.data.results ?? [])]
-      const seenIds = new Set<number>()
-      const seenKeys = new Set<string>()
-      carouselCampaigns.value = merged.filter((c) => {
-        if (!c?.id || seenIds.has(c.id)) return false
-        seenIds.add(c.id)
-        const key = [
-          c.action_type || '',
-          c.product_id || '',
-          c.cta_route || '',
-          c.title || '',
-        ].join('|')
-        if (seenKeys.has(key)) return false
-        seenKeys.add(key)
-        return true
-      })
+      carouselCampaigns.value = dedupeCampaigns([
+        ...(hero.data.results ?? []),
+        ...(carousel.data.results ?? []),
+      ])
       for (const camp of carouselCampaigns.value) {
         trackImpression(camp.id)
       }
@@ -137,6 +141,29 @@ export function useBuyerCampaigns() {
     } finally {
       loadingCarousel.value = false
     }
+  }
+
+  async function loadStripCampaigns() {
+    loadingStrip.value = true
+    try {
+      const { data } = await campaignsUserApi.getActive({
+        placement: 'promo_banner',
+        channel: 'web_banner',
+      })
+      stripCampaigns.value = dedupeCampaigns(data.results ?? [])
+      for (const camp of stripCampaigns.value) {
+        trackImpression(camp.id)
+      }
+    } catch {
+      stripCampaigns.value = []
+    } finally {
+      loadingStrip.value = false
+    }
+  }
+
+  /** Load full-screen carousel + landscape strip under hero. */
+  async function loadHomeCampaigns() {
+    await Promise.all([loadCarouselCampaigns(), loadStripCampaigns()])
   }
 
   async function dismissModal() {
@@ -151,8 +178,7 @@ export function useBuyerCampaigns() {
     }
   }
 
-  async function dismissCarousel(camp: BuyerCampaign) {
-    carouselCampaigns.value = carouselCampaigns.value.filter((c) => c.id !== camp.id)
+  async function dismissCampaign(camp: BuyerCampaign) {
     if (camp.id && auth.isAuthenticated) {
       try {
         await campaignsUserApi.dismiss(camp.id)
@@ -162,16 +188,31 @@ export function useBuyerCampaigns() {
     }
   }
 
+  async function dismissCarousel(camp: BuyerCampaign) {
+    carouselCampaigns.value = carouselCampaigns.value.filter((c) => c.id !== camp.id)
+    await dismissCampaign(camp)
+  }
+
+  async function dismissStrip(camp: BuyerCampaign) {
+    stripCampaigns.value = stripCampaigns.value.filter((c) => c.id !== camp.id)
+    await dismissCampaign(camp)
+  }
+
   return {
     modalCampaign,
     carouselCampaigns,
+    stripCampaigns,
     loadingModal,
     loadingCarousel,
+    loadingStrip,
     loadModalCampaign: loadAdvertCampaign,
     loadAdvertCampaign,
     loadCarouselCampaigns,
+    loadStripCampaigns,
+    loadHomeCampaigns,
     dismissModal,
     dismissCarousel,
+    dismissStrip,
     campaignImageUrl,
     campaignProductThumbs,
     campaignCtaRoute,

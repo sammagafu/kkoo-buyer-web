@@ -50,6 +50,7 @@ declare module 'vue' {
     BuyerBottomNav: typeof import('./src/components/buyer/BuyerBottomNav.vue')['default']
     BuyerCampaignCarousel: typeof import('./src/components/buyer/BuyerCampaignCarousel.vue')['default']
     BuyerCampaignModal: typeof import('./src/components/buyer/BuyerCampaignModal.vue')['default']
+    BuyerCampaignStrip: typeof import('./src/components/buyer/BuyerCampaignStrip.vue')['default']
     BuyerCartDrawer: typeof import('./src/components/buyer/BuyerCartDrawer.vue')['default']
     BuyerCartSidebar: typeof import('./src/components/buyer/BuyerCartSidebar.vue')['default']
     BuyerEmptyState: typeof import('./src/components/buyer/experience/BuyerEmptyState.vue')['default']

@@ -196,6 +196,7 @@ import type { PaymentMethodRow } from '@/api/payments'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 import { useWebCart } from '@/composables/useWebCart'
+import { takePendingShareCode } from '@/composables/usePendingShareCode'
 import { formatApiError } from '@/utils/formatApiError'
 import type { AddressPayload } from '@/api/addresses'
 
@@ -451,6 +452,10 @@ async function onRxFile(ev: Event) {
   try {
     const formData = new FormData()
     formData.append('file', file)
+    const rxSellerId = cartItems.value.find((i) => i.requiresPrescription)?.seller_id
+    if (rxSellerId != null && Number(rxSellerId) > 0) {
+      formData.append('seller_id', String(rxSellerId))
+    }
     const { data } = await pharmacyApi.uploadPrescription(formData)
     if (data?.id) prescriptionIds.value = [...prescriptionIds.value, data.id]
   } catch (e: unknown) {
@@ -510,6 +515,10 @@ async function placeOrder() {
     }
     if (prescriptionIds.value.length) {
       payload.prescription_ids = [...prescriptionIds.value]
+    }
+    const shareCode = takePendingShareCode()
+    if (shareCode) {
+      payload.share_code = shareCode
     }
 
     const { data: order } = await ordersUserApi.create(payload)

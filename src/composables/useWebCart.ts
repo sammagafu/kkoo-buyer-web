@@ -17,6 +17,7 @@ type CartProduct = {
   image_url?: string
   media?: Array<{ file?: string }>
   requires_prescription?: boolean
+  seller_id?: number | null
 }
 
 type CartSku = {
@@ -47,6 +48,8 @@ export type WebCartItem = {
   unavailable?: boolean
   requiresPrescription?: boolean
   isPreorder?: boolean
+  /** Product owner (seller user id) from API `product.seller_id`. */
+  seller_id?: number | null
   product?: { title?: string; price?: number; base_price?: number; image_url?: string }
   sku?: CartSku
 }
@@ -81,6 +84,7 @@ function normalizeCartItem(raw: CartApiItem): WebCartItem {
     unavailable: raw.unavailable,
     requiresPrescription: product?.requires_prescription,
     isPreorder: Boolean(raw.is_preorder),
+    seller_id: product?.seller_id ?? null,
     sku: raw.sku,
     product: product
       ? {

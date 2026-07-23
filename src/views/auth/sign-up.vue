@@ -81,7 +81,7 @@ import AuthLayout from '@/layouts/AuthLayout.vue'
 import AuthCard from '@/components/auth/AuthCard.vue'
 import AuthField from '@/components/auth/AuthField.vue'
 import AuthTermsCheck from '@/components/auth/AuthTermsCheck.vue'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { authApi } from '@/api'
@@ -90,6 +90,10 @@ import type { User } from '@/types/auth'
 import { formatApiError } from '@/utils/formatApiError'
 import { resolvePostAuthRedirect } from '@/utils/authRedirect'
 import { bizSellerRegisterUrl } from '@/config/landing-links'
+import {
+  applyPendingReferralCode,
+  captureReferralRefFromQuery,
+} from '@/composables/applyPendingReferral'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -102,6 +106,10 @@ const lastName = ref('')
 const acceptTerms = ref(false)
 const error = ref('')
 const loading = ref(false)
+
+onMounted(() => {
+  captureReferralRefFromQuery(route.query.ref)
+})
 
 async function handleSubmit() {
   error.value = ''
@@ -116,6 +124,8 @@ async function handleSubmit() {
 
   loading.value = true
   try {
+    captureReferralRefFromQuery(route.query.ref)
+
     const { data } = await authApi.registerBuyer({
       phone_number: phone.value.trim(),
       first_name: firstName.value.trim() || undefined,
@@ -128,6 +138,8 @@ async function handleSubmit() {
     })
 
     auth.setActiveAccountRole(BUYER_ACCOUNT_ROLE)
+
+    await applyPendingReferralCode({ keepOnFailure: true })
 
     await router.push(
       resolvePostAuthRedirect(route.query.redirectedFrom, auth.defaultRouteAfterAuth()),
