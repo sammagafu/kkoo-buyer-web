@@ -42,6 +42,16 @@
   padding: 0;
 }
 
+.buyer-xp--mhome .buyer-home-products {
+  padding-top: 0.15rem;
+}
+
+.buyer-xp--mhome .buyer-home-products .buyer-section-head,
+.buyer-xp--mhome .buyer-surface--compact .buyer-section-head {
+  margin-bottom: 0.9rem;
+  padding-inline: 0.1rem;
+}
+
 /* —— Section titles —— */
 .buyer-section-head {
   align-items: center;
@@ -424,22 +434,20 @@
   }
 }
 
-/* —— Product cards —— */
+/* —— Product tiles —— */
 .buyer-shopping-shell .store-product-card {
-  border: 1px solid var(--kkoo-border, rgba(31, 27, 36, 0.1));
-  background: var(--kkoo-surface, #fff);
+  border: 0;
+  background: transparent;
   box-shadow: none;
-  border-radius: 1rem;
-  transition:
-    transform 220ms var(--buyer-reveal-ease),
-    box-shadow 220ms var(--buyer-reveal-ease),
-    border-color 220ms var(--buyer-reveal-ease);
+  border-radius: 0.75rem;
+  transition: opacity 220ms var(--buyer-reveal-ease);
 }
 
 .buyer-shopping-shell .store-product-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(92, 48, 143, 0.22);
-  box-shadow: var(--kkoo-shadow-soft);
+  transform: none;
+  border-color: transparent;
+  box-shadow: none;
+  opacity: 0.96;
 }
 
 .buyer-shopping-shell .store-product-card__price {
@@ -450,6 +458,7 @@
 
 .buyer-shopping-shell .store-product-card__image-wrap {
   background: var(--kkoo-canvas);
+  border-radius: 0.75rem;
 }
 
 /* —— Tables (orders / lists) —— */

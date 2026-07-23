@@ -8,7 +8,7 @@
         v-for="prod in products"
         :key="productKey(prod)"
         :title="prod.title"
-        :description="prod.description"
+        :description="layout === 'popular-row' ? undefined : prod.description"
         :price-label="formatPrice(prod.price ?? prod.base_price)"
         :image-url="productImage(prod)"
         :store-label="showStoreLabel ? prod.store_name : undefined"

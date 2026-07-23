@@ -367,18 +367,18 @@ const displayProducts = computed(() => {
   return list.slice(0, 24)
 })
 
-const popularTodayProducts = computed(() => displayProducts.value.slice(0, 10))
+const popularTodayProducts = computed(() => displayProducts.value.slice(0, 6))
 
 const recommendedProducts = computed(() => {
   const all = displayProducts.value
-  if (all.length <= 5) return []
-  return all.slice(5)
+  if (all.length <= 6) return []
+  return all.slice(6)
 })
 
 const homeProducts = computed(() => {
   const all = displayProducts.value
-  if (all.length <= 5) return []
-  return all.slice(5)
+  if (all.length <= 6) return []
+  return all.slice(6)
 })
 
 const showHomeProductsSection = computed(

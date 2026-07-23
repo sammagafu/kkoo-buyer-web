@@ -176,6 +176,10 @@ onBeforeUnmount(() => {
 <style scoped>
 .buyer-promo-fs {
   --buyer-promo-fs-radius: 0;
+  /* Text stays light over photo in both themes; veil provides contrast */
+  --buyer-promo-fs-ink: #ffffff;
+  --buyer-promo-fs-ink-muted: rgba(255, 255, 255, 0.92);
+  --buyer-promo-fs-accent: #f7c948;
   position: relative;
   /* Break out of main padding for true full-bleed in the shopping shell */
   width: calc(100% + 2.2rem);
@@ -185,7 +189,7 @@ onBeforeUnmount(() => {
   border-radius: var(--buyer-promo-fs-radius);
   overflow: hidden;
   background: #100c14;
-  color: #fff;
+  color: var(--buyer-promo-fs-ink);
   min-height: min(100dvh, 56rem);
   height: min(100dvh, 56rem);
 }
@@ -255,7 +259,8 @@ onBeforeUnmount(() => {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(16, 12, 20, 0.15) 0%, rgba(16, 12, 20, 0.2) 40%, rgba(16, 12, 20, 0.88) 100%);
+    linear-gradient(180deg, rgba(8, 6, 12, 0.28) 0%, rgba(8, 6, 12, 0.18) 36%, rgba(8, 6, 12, 0.55) 62%, rgba(8, 6, 12, 0.92) 100%),
+    linear-gradient(90deg, rgba(8, 6, 12, 0.35) 0%, transparent 42%);
   pointer-events: none;
 }
 
@@ -289,6 +294,20 @@ onBeforeUnmount(() => {
   gap: 0.55rem;
   padding: 1.5rem 1.25rem max(5.5rem, calc(env(safe-area-inset-bottom) + 4.5rem));
   max-width: 40rem;
+  color: var(--buyer-promo-fs-ink);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.buyer-promo-fs__copy::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: -2.5rem;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 0%, rgba(8, 6, 12, 0.55) 42%, rgba(8, 6, 12, 0.78) 100%);
 }
 
 @media (min-width: 992px) {
@@ -305,7 +324,7 @@ onBeforeUnmount(() => {
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: #f7c948;
+  color: var(--buyer-promo-fs-accent);
 }
 
 .buyer-promo-fs__badge {
@@ -375,21 +394,22 @@ onBeforeUnmount(() => {
   line-height: 1.08;
   letter-spacing: -0.02em;
   text-wrap: balance;
+  color: var(--buyer-promo-fs-ink);
 }
 
 .buyer-promo-fs__meta {
   margin: 0;
   font-size: clamp(0.95rem, 2.4vw, 1.15rem);
   line-height: 1.45;
-  opacity: 0.92;
   max-width: 32rem;
+  color: var(--buyer-promo-fs-ink-muted);
 }
 
 .buyer-promo-fs__stock {
   margin: 0.15rem 0 0;
   font-size: 0.95rem;
   font-weight: 800;
-  color: #f7c948;
+  color: var(--buyer-promo-fs-accent);
 }
 
 .buyer-promo-fs__cta {

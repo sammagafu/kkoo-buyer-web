@@ -565,6 +565,7 @@ export const buyerXpVerticals = {
     emptyMessage: 'Book a hotel stay or restaurant table — they will show up here.',
   },
   ride: {
+    brand: 'KKooApp Ride',
     overline: 'KKOO Move',
     title: 'Where to?',
     tagline: 'Boda, bajaj, or car — see your fare before you book.',
@@ -626,6 +627,7 @@ export const buyerXpVerticals = {
     to: 'To',
     fare: 'Fare',
     cancelRide: 'Cancel ride',
+    activeRideBlock: 'Finish or cancel your current ride before booking another.',
     empty: 'No rides yet.',
     pickupLabel: 'Pickup',
     dropoffLabel: 'Drop-off',
@@ -675,6 +677,7 @@ export const buyerXpVerticals = {
     couldNotApprove: 'Could not approve',
   },
   parcel: {
+    brand: 'KKooApp',
     overline: 'KKOO Parcel',
     title: 'Send a parcel',
     pickup: 'Pick up from',

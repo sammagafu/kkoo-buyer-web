@@ -6,6 +6,53 @@ html[data-bs-theme='dark'] body.authentication-bg {
   background: #0a0610;
 }
 
+body.authentication-bg {
+  .btn,
+  button:not(.btn-close),
+  .auth-alt-btn,
+  .auth-center-card__submit,
+  .auth-role-toggle__btn,
+  .lp-btn-pill,
+  .kkoo-signin-btn,
+  .kkoo-account-btn {
+    font-family: var(--kkoo-font-display, 'Syne', sans-serif);
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .auth-center-card__title {
+    font-family: var(--kkoo-font-display, 'Syne', sans-serif);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@media (max-width: 860px) {
+  body.authentication-bg {
+    .auth-center-card__title {
+      font-size: clamp(1.55rem, 5.2vw + 0.65rem, 1.9rem);
+      line-height: 1.12;
+      letter-spacing: -0.025em;
+    }
+
+    .btn,
+    .auth-alt-btn,
+    .auth-center-card__submit,
+    .auth-role-toggle__btn {
+      font-size: 1.02rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      min-height: 2.95rem;
+    }
+
+    .auth-center-card__submit {
+      min-height: 3.15rem;
+      font-size: 1.05rem;
+    }
+  }
+}
+
 .auth-shell--house {
   display: flex;
   flex-direction: column;
@@ -284,6 +331,7 @@ html[data-bs-theme='dark'] body.authentication-bg {
   border: 1px solid var(--kkoo-border-strong);
   background: var(--kkoo-surface);
   color: var(--kkoo-ink);
+  font-family: var(--kkoo-font-display, 'Syne', sans-serif);
   font-size: 0.875rem;
   font-weight: 600;
   text-decoration: none;

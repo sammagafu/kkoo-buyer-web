@@ -161,6 +161,9 @@ const isActiveTrip = computed(() => {
 
 const canCancel = computed(() => {
   const s = String(rideStatus.value).toLowerCase().replace(/-/g, '_')
+  const as = String(tracking.value?.assignment_status ?? '').toLowerCase().replace(/-/g, '_')
+  if (as === 'picked_up' || as === 'delivered') return false
+  if (['picked_up', 'in_progress', 'delivered', 'completed'].includes(s)) return false
   return [
     'pending',
     'searching',

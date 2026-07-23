@@ -28,7 +28,9 @@
     <div class="buyer-ride-panel" :class="{ 'buyer-ride-panel--options': phase === 'options' }">
       <header class="buyer-ride-panel__head">
         <div class="buyer-ride-panel__brand">
-          <span class="buyer-ride-panel__logo" aria-hidden="true">KKOO</span>
+          <span class="buyer-ride-panel__logo" aria-hidden="true">{{
+            isParcel ? t('buyerXp.parcel.brand') : t('buyerXp.ride.brand')
+          }}</span>
           <span class="buyer-ride-panel__mode">{{ isParcel ? t('buyerXp.parcel.overline') : t('buyerXp.ride.overline') }}</span>
         </div>
         <RouterLink
@@ -493,10 +495,25 @@ watch(mapRef, (el) => {
   if (el?.map) fitMapToRoute()
 })
 
-onMounted(() => {
+onMounted(async () => {
   const p = String(route.query.pickup ?? '').trim()
   const d = String(route.query.dropoff ?? '').trim()
   if (p) pickup.label = p
   if (d) dropoff.label = d
+  try {
+    const { data } = await ridesApi.listRides()
+    const rows = Array.isArray(data) ? data : (data as { results?: unknown[] })?.results ?? []
+    const closed = new Set(['delivered', 'completed', 'cancelled', 'canceled', 'failed'])
+    const active = (rows as Array<Record<string, unknown>>).find((r) => {
+      const s = String(r.status ?? '').toLowerCase().replace(/-/g, '_')
+      return !closed.has(s)
+    })
+    if (active?.id != null) {
+      stepError.value = t('buyerXp.ride.activeRideBlock')
+      await router.replace({ name: 'buyer.ride.detail', params: { id: String(active.id) } })
+    }
+  } catch {
+    /* ignore — booking still available if list fails */
+  }
 })
 </script>

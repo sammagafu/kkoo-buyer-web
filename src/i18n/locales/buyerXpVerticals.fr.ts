@@ -297,6 +297,7 @@ export const buyerXpVerticalsFr = {
     viewOrder: 'Voir la commande',
   },
   ride: {
+    brand: 'KKooApp Ride',
     overline: 'KKOO Move',
     title: 'Où allez-vous ?',
     tagline: 'Moto, bajaj ou voiture — voyez le tarif avant de réserver.',
@@ -358,6 +359,7 @@ export const buyerXpVerticalsFr = {
     to: 'À',
     fare: 'Tarif',
     cancelRide: 'Annuler la course',
+    activeRideBlock: 'Terminez ou annulez votre course actuelle avant d’en réserver une autre.',
     empty: 'Aucune course pour l’instant.',
     pickupLabel: 'Prise en charge',
     dropoffLabel: 'Destination',
@@ -492,6 +494,7 @@ export const buyerXpVerticalsFr = {
     heroBody: 'Ajoutez des articles de différentes boutiques. Un coursier KKOO achète pour vous — vous approuvez une seule fois avant la livraison.',
   },
   parcel: {
+    brand: 'KKooApp',
     overline: 'KKOO Colis',
     title: 'Envoyer un colis',
     pickup: 'Ramasser à',

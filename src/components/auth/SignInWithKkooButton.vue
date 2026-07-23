@@ -66,7 +66,7 @@ function onClick(e: MouseEvent) {
   border-radius: 0.75rem;
   background: var(--kkoo-btn-bg);
   color: var(--kkoo-btn-fg);
-  font-family: inherit;
+  font-family: var(--kkoo-font-display, 'Syne', sans-serif);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;

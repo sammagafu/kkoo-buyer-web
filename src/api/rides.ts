@@ -60,6 +60,17 @@ export const ridesApi = {
       cancel_reason: data?.cancel_reason ?? data?.reason ?? 'Cancelled by passenger',
     })
   },
+  updateDropoff(
+    id: number | string,
+    data: {
+      dropoff_address: string
+      dropoff_lat: number
+      dropoff_lng: number
+      dropoff_map_place_id?: number
+    },
+  ) {
+    return client.patch(`/logistics/passenger/rides/${id}/dropoff/`, data)
+  },
   getRideTracking(id: number | string) {
     return client.get(`/logistics/passenger/rides/${id}/tracking/`)
   },

@@ -1,12 +1,18 @@
 // Flutter-aligned buyer experience — home, eats, groceries, search, ride
 
 .buyer-shopping-shell__main {
-  padding: 0.75rem 1rem 1.5rem;
+  padding: 0.85rem 1.1rem 1.75rem;
 }
 
 @media (min-width: 768px) {
   .buyer-shopping-shell__main {
-    padding: 1rem 1.5rem 2rem;
+    padding: 1.15rem 1.65rem 2.25rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .buyer-shopping-shell__main {
+    padding: 1.35rem 1.85rem 2.5rem;
   }
 }
 
@@ -291,9 +297,10 @@ button.buyer-search-bar {
 
 .buyer-category-pills {
   display: flex;
-  gap: 0.45rem;
+  gap: 0.55rem;
   overflow-x: auto;
-  padding-bottom: 0.15rem;
+  padding: 0.1rem 0.1rem 0.35rem;
+  margin-inline: -0.1rem;
   scrollbar-width: none;
 }
 
@@ -679,7 +686,7 @@ button.buyer-search-bar {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: #e8e4ef;
+  background: var(--buyer-canvas);
 }
 
 .buyer-ride-map {
@@ -690,8 +697,12 @@ button.buyer-search-bar {
 .buyer-ride-map--fallback {
   position: relative;
   overflow: hidden;
-  background:
-    linear-gradient(160deg, #efeaf6 0%, #e2dceb 45%, #d5cfe0 100%);
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--kkoo-primary) 14%, var(--buyer-canvas)) 0%,
+    color-mix(in srgb, var(--kkoo-primary) 6%, var(--buyer-canvas)) 45%,
+    var(--buyer-canvas) 100%
+  );
 }
 
 .buyer-ride-map__fallback-grid {
@@ -699,8 +710,8 @@ button.buyer-search-bar {
   inset: 0;
   opacity: 0.45;
   background-image:
-    linear-gradient(rgba(92, 48, 143, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(92, 48, 143, 0.08) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--kkoo-primary) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--kkoo-primary) 12%, transparent) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
@@ -717,12 +728,12 @@ button.buyer-search-bar {
   width: 100%;
   height: 100%;
   border: 2px solid #fff;
-  box-shadow: 0 2px 8px rgba(16, 12, 20, 0.25);
+  box-shadow: 0 2px 8px var(--buyer-shadow-color, rgba(16, 12, 20, 0.25));
 }
 
 .buyer-ride-map__pin--pickup span {
   border-radius: 2px;
-  background: var(--buyer-ink, #1a1224);
+  background: var(--kkoo-ink, #1a1224);
 }
 
 .buyer-ride-map__pin--dropoff span {
@@ -738,7 +749,8 @@ button.buyer-search-bar {
   margin: 0;
   padding: 0.55rem 0.75rem;
   border-radius: 0.65rem;
-  background: rgba(255, 255, 255, 0.88);
+  background: color-mix(in srgb, var(--buyer-surface) 92%, transparent);
+  border: 1px solid var(--buyer-border);
   font-size: 0.75rem;
   color: var(--buyer-muted);
   z-index: 3;
@@ -752,7 +764,9 @@ button.buyer-search-bar {
   padding: 1rem 1.1rem 1.15rem;
   border-radius: 0.75rem;
   background: var(--buyer-surface, #fff);
-  box-shadow: 0 8px 28px rgba(16, 12, 20, 0.14);
+  border: 1px solid var(--buyer-border-strong);
+  box-shadow: 0 8px 28px var(--buyer-shadow-color, rgba(16, 12, 20, 0.14));
+  color: var(--buyer-ink);
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
@@ -786,10 +800,11 @@ button.buyer-search-bar {
 }
 
 .buyer-ride-panel__logo {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   font-weight: 800;
   letter-spacing: -0.03em;
   color: var(--kkoo-primary);
+  white-space: nowrap;
 }
 
 .buyer-ride-panel__mode {
@@ -863,7 +878,7 @@ button.buyer-search-bar {
   flex: 1 1 auto;
   width: 0;
   margin: 0.35rem 0;
-  border-left: 2px dotted rgba(16, 12, 20, 0.35);
+  border-left: 2px dotted color-mix(in srgb, var(--buyer-ink) 35%, transparent);
 }
 
 .buyer-ride-route__fields {
@@ -880,17 +895,22 @@ button.buyer-search-bar {
 
 .buyer-ride-field--dense .buyer-ride-field__input {
   border: none;
-  background: #f3f3f3;
+  background: var(--buyer-input-bg, #f3f3f3);
+  color: var(--buyer-ink);
   border-radius: 0.5rem;
   padding: 0.85rem 0.9rem;
   font-size: 0.95rem;
   font-weight: 500;
 }
 
+.buyer-ride-field--dense .buyer-ride-field__input::placeholder {
+  color: var(--buyer-search-placeholder);
+}
+
 .buyer-ride-field--dense .buyer-ride-field__input:focus {
   outline: 2px solid color-mix(in srgb, var(--kkoo-primary) 45%, transparent);
   outline-offset: 0;
-  background: #fff;
+  background: var(--buyer-surface, #fff);
 }
 
 .buyer-ride-field__label {
@@ -914,7 +934,7 @@ button.buyer-search-bar {
 
 .buyer-ride-field__dot--pickup {
   border-radius: 2px;
-  background: var(--buyer-ink, #1a1224);
+  background: var(--kkoo-ink, #1a1224);
 }
 
 .buyer-ride-field__dot--dropoff {
@@ -947,7 +967,7 @@ button.buyer-search-bar {
 }
 
 .buyer-ride-field__hint--warn {
-  color: #b45309;
+  color: var(--kkoo-accent, #b45309);
 }
 
 .ride-place-field__list {
@@ -1004,13 +1024,23 @@ button.buyer-search-bar {
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
-  border: none;
-  background: #f3f3f3;
+  border: 1px solid var(--buyer-border-strong);
+  background: var(--buyer-input-bg, #f3f3f3);
   font: inherit;
   font-size: 0.92rem;
   color: var(--buyer-ink);
   resize: vertical;
   min-height: 3.5rem;
+}
+
+.buyer-ride-notes::placeholder {
+  color: var(--buyer-search-placeholder);
+}
+
+.buyer-ride-notes:focus {
+  outline: 2px solid color-mix(in srgb, var(--kkoo-primary) 45%, transparent);
+  outline-offset: 0;
+  background: var(--buyer-surface);
 }
 
 .buyer-ride-swap {
@@ -1049,8 +1079,8 @@ button.buyer-search-bar {
   min-height: 2.5rem;
   padding: 0.45rem 0.85rem;
   border-radius: 999px;
-  border: none;
-  background: #f3f3f3;
+  border: 1px solid var(--buyer-border-strong);
+  background: var(--buyer-chip-bg, #f3f3f3);
   color: var(--buyer-ink);
   font-size: 0.84rem;
   font-weight: 600;
@@ -1062,7 +1092,9 @@ button.buyer-search-bar {
 }
 
 .buyer-ride-chip--active {
-  background: #f3f3f3;
+  background: color-mix(in srgb, var(--kkoo-primary) 14%, var(--buyer-chip-bg, #f3f3f3));
+  border-color: color-mix(in srgb, var(--kkoo-primary) 40%, var(--buyer-border));
+  color: var(--buyer-ink);
 }
 
 .buyer-ride-cta {
@@ -1075,8 +1107,8 @@ button.buyer-search-bar {
   padding: 0.85rem 1.1rem;
   border: none;
   border-radius: 0.5rem;
-  background: var(--buyer-ink, #1a1224);
-  color: #fff;
+  background: var(--kkoo-ink, #1a1224);
+  color: var(--kkoo-primary-fg, #fff);
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
@@ -1125,7 +1157,8 @@ button.buyer-search-bar {
   padding: 0.75rem 0.35rem;
   border-radius: 0.75rem;
   border: 2px solid transparent;
-  background: #f3f3f3;
+  background: var(--buyer-chip-bg, #f3f3f3);
+  box-shadow: none;
   cursor: pointer;
   font-size: 0.76rem;
   font-weight: 700;
@@ -1134,7 +1167,7 @@ button.buyer-search-bar {
 
 .buyer-ride-vehicle--active {
   border-color: var(--kkoo-primary);
-  background: color-mix(in srgb, var(--kkoo-primary) 10%, #fff);
+  background: color-mix(in srgb, var(--kkoo-primary) 14%, var(--buyer-surface));
   color: var(--buyer-ink);
 }
 
@@ -1155,6 +1188,8 @@ button.buyer-search-bar {
   border: 1px solid var(--buyer-border);
   padding: 0.85rem 1rem;
   border-radius: 1rem;
+  background: transparent;
+  box-shadow: none;
 }
 
 .buyer-ride-fare__label {
@@ -1890,11 +1925,11 @@ button.buyer-search-bar {
   padding: 0.95rem 1.25rem;
   border: none;
   border-radius: 999px;
-  background: #f7a829;
-  color: var(--buyer-ink);
+  background: var(--kkoo-accent, #f7a829);
+  color: var(--kkoo-ink, #1a1224);
   font-size: 0.95rem;
   font-weight: 800;
-  box-shadow: 0 12px 28px rgba(247, 168, 41, 0.45);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--kkoo-accent, #f7a829) 45%, transparent);
   cursor: pointer;
 }
 
@@ -1915,6 +1950,21 @@ button.buyer-search-bar {
 
 .buyer-ride-msg--err {
   color: #dc2626;
+}
+
+html[data-bs-theme='dark'] .buyer-ride-msg--ok,
+html.theme-dark .buyer-ride-msg--ok {
+  color: #2dd4bf;
+}
+
+html[data-bs-theme='dark'] .buyer-ride-msg--err,
+html.theme-dark .buyer-ride-msg--err {
+  color: #f87171;
+}
+
+html[data-bs-theme='dark'] .buyer-ride-field__hint--warn,
+html.theme-dark .buyer-ride-field__hint--warn {
+  color: var(--kkoo-accent, #f7a829);
 }
 
 .buyer-ride-msg--hint {
@@ -3117,16 +3167,17 @@ button.buyer-search-bar {
 }
 
 .buyer-xp--mhome {
-  gap: 1rem;
+  gap: 1.35rem;
   width: 100%;
   max-width: min(100%, 28rem);
   margin-inline: auto;
-  padding-bottom: 0.5rem;
+  padding-bottom: 1.25rem;
 }
 
 @media (min-width: 576px) and (max-width: 991.98px) {
   .buyer-xp--mhome {
     max-width: min(100%, 40rem);
+    gap: 1.5rem;
   }
 }
 
@@ -3134,6 +3185,8 @@ button.buyer-search-bar {
   .buyer-xp--mhome {
     max-width: none;
     margin-inline: 0;
+    gap: 1.75rem;
+    padding-bottom: 1.5rem;
   }
 }
 
@@ -3141,8 +3194,8 @@ button.buyer-search-bar {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.5rem;
-  margin: -0.25rem 0 0.25rem;
+  gap: 0.65rem;
+  margin: 0 0 0.15rem;
 }
 
 .buyer-mhome-header__brand {
@@ -3235,9 +3288,14 @@ html.theme-dark .buyer-mhome-header__badge {
 }
 
 .buyer-mhome-greeting__prompt {
-  margin: 0.35rem 0 0;
+  margin: 0.4rem 0 0;
   font-size: 0.9rem;
   color: var(--buyer-muted);
+}
+
+.buyer-mhome-greeting {
+  margin: 0;
+  padding: 0.15rem 0 0.1rem;
 }
 
 .buyer-action-grid {
@@ -3334,26 +3392,33 @@ html.theme-dark .buyer-mhome-header__badge {
 }
 
 .buyer-popular-today {
-  margin-top: 0.15rem;
+  margin-top: 0;
+  min-width: 0;
+}
+
+.buyer-popular-today .buyer-section-head {
+  margin-bottom: 0.85rem;
+  padding-inline: 0.1rem;
 }
 
 .buyer-mhome-desktop-top {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .buyer-discovery {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.85rem;
 }
 
 .buyer-discovery__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0.65rem;
+  padding-inline: 0.1rem;
 }
 
 .buyer-discovery__title {
@@ -3372,9 +3437,10 @@ html.theme-dark .buyer-mhome-header__badge {
 
 .buyer-discovery__scroll {
   display: flex;
-  gap: 0.65rem;
+  gap: 0.85rem;
   overflow-x: auto;
-  padding-bottom: 0.25rem;
+  padding: 0.1rem 0.15rem 0.4rem;
+  margin-inline: -0.15rem;
   scrollbar-width: none;
 }
 
@@ -3510,28 +3576,33 @@ html.theme-dark .buyer-mhome-header__badge {
 
   .buyer-mhome-desktop-top {
     display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(16rem, 22rem);
+    grid-template-columns: minmax(0, 1fr);
     align-items: start;
-    gap: 1.5rem 2rem;
-    margin-bottom: 0.25rem;
-  }
-
-  .buyer-mhome-desktop-top .buyer-popular-today {
-    margin-top: 0;
-    order: 1;
+    gap: 1.75rem;
+    margin-bottom: 0.15rem;
   }
 
   .buyer-mhome-desktop-top .buyer-home-hero--aside {
-    order: 2;
+    order: 1;
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem 2rem;
     margin-bottom: 0;
+    padding-bottom: 0.15rem;
+  }
+
+  .buyer-mhome-desktop-top .buyer-popular-today {
+    order: 2;
+    margin-top: 0;
+    grid-column: 1 / -1;
   }
 
   .buyer-mhome-desktop-top .buyer-home-hero__actions {
     justify-content: stretch;
+    flex: 0 1 22rem;
+    max-width: 28rem;
   }
 
   .buyer-mhome-desktop-top .buyer-home-hero__actions .buyer-search-bar {
@@ -3539,8 +3610,9 @@ html.theme-dark .buyer-mhome-header__badge {
     min-width: 0;
   }
 
-  .buyer-mhome-desktop-top .shop-product-grid--popular-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .buyer-mhome-desktop-top .buyer-home-hero__copy {
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .buyer-home-hero {

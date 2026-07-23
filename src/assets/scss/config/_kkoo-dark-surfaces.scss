@@ -127,8 +127,6 @@ html.theme-dark {
   .buyer-search-chip,
   .buyer-ride-hero,
   .buyer-ride-card,
-  .buyer-ride-vehicle,
-  .buyer-ride-fare,
   .send-main__auth,
   .booking-hotel-card,
   .booking-room-card,
@@ -150,12 +148,18 @@ html.theme-dark {
   .discover-ticket-card,
   .discover-mine-card,
   .partner-reg-card,
-  .shop-product-card,
-  .store-product-card {
+  .shop-product-card {
     background: var(--buyer-card-bg, var(--buyer-surface));
     border-color: var(--buyer-card-border, var(--buyer-border));
     color: var(--buyer-ink);
     box-shadow: var(--buyer-card-shadow, 0 10px 28px var(--buyer-shadow-color));
+  }
+
+  .store-product-card {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    color: var(--buyer-ink);
   }
 
   // Pillars & tiles — glass on dark canvas (landing style)
@@ -200,6 +204,8 @@ html.theme-dark {
   .buyer-ride-field input,
   .buyer-ride-field textarea,
   .buyer-ride-field select,
+  .buyer-ride-field--dense .buyer-ride-field__input,
+  .buyer-ride-notes,
   .ride-place-field__list,
   .buyer-orders-toolbar select,
   .form-select,
@@ -209,6 +215,13 @@ html.theme-dark {
     color: var(--buyer-ink);
   }
 
+  .buyer-ride-field--dense .buyer-ride-field__input:focus,
+  .buyer-ride-notes:focus {
+    background: var(--buyer-surface);
+  }
+
+  .buyer-ride-field--dense .buyer-ride-field__input::placeholder,
+  .buyer-ride-notes::placeholder,
   .form-control::placeholder {
     color: var(--buyer-search-placeholder);
   }
@@ -583,6 +596,60 @@ html.theme-dark {
   .buyer-ride-bar {
     background: var(--buyer-surface);
     border-color: var(--buyer-border);
+  }
+
+  .buyer-ride-panel {
+    background: var(--buyer-surface);
+    border-color: var(--buyer-border-strong);
+    box-shadow: 0 12px 32px var(--buyer-shadow-color);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-ride-chip {
+    background: var(--buyer-chip-bg);
+    border-color: var(--buyer-border-strong);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-ride-chip--active {
+    background: color-mix(in srgb, var(--kkoo-primary) 18%, var(--buyer-chip-bg));
+    border-color: color-mix(in srgb, var(--kkoo-primary) 45%, var(--buyer-border));
+  }
+
+  .buyer-ride-vehicle {
+    background: var(--buyer-chip-bg);
+    color: var(--buyer-muted);
+    box-shadow: none;
+  }
+
+  .buyer-ride-vehicle--active {
+    background: color-mix(in srgb, var(--kkoo-primary) 18%, var(--buyer-surface));
+    border-color: var(--kkoo-primary);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-ride-fare,
+  .buyer-ride-fare--aside {
+    background: transparent;
+    box-shadow: none;
+    border-color: var(--buyer-border);
+  }
+
+  .buyer-ride-cta {
+    background: var(--kkoo-ink, #1a1224);
+    color: var(--kkoo-primary-fg, #fff);
+  }
+
+  .buyer-ride-swap {
+    background: var(--buyer-surface);
+    border-color: var(--buyer-border-strong);
+    color: var(--buyer-ink);
+  }
+
+  .buyer-ride-trip-card {
+    background: var(--buyer-surface);
+    border-color: var(--buyer-border);
+    color: var(--buyer-ink);
   }
 
   // Web app download page
