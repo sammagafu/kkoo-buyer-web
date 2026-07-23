@@ -67,11 +67,11 @@
           </div>
         </div>
 
-        <div v-if="skuOptions.length > 1" class="buyer-ride-field mt-3">
+        <div v-if="showSkuOptions" class="buyer-ride-field mt-3">
           <label>{{ t('buyerXp.product.option') }}</label>
           <select v-model="selectedSkuId">
             <option v-for="sku in skuOptions" :key="sku.id" :value="sku.id">
-              {{ sku.label || `SKU #${sku.id}` }}
+              {{ formatSkuLabel(sku) }}
             </option>
           </select>
         </div>
@@ -129,6 +129,7 @@ import { useProductShareEarn } from '@/composables/useProductShareEarn'
 import { setPendingShareCode } from '@/composables/usePendingShareCode'
 import { useProductFavorite } from '@/composables/useProductFavorite'
 import { useAddToCart } from '@/composables/useAddToCart'
+import { formatSkuLabel, skuHasVariantDisplay } from '@/utils/skuDisplay'
 
 const props = defineProps<{ id?: string; slug?: string }>()
 const route = useRoute()
@@ -144,7 +145,13 @@ type Product = GridProduct & {
 }
 
 type ReviewRow = { rating?: number; title?: string; comment?: string }
-type SkuRow = { id?: number; label?: string; name?: string }
+type SkuRow = {
+  id?: number
+  label?: string
+  name?: string
+  sku_code?: string
+  variant_attributes?: unknown
+}
 
 const product = ref<Product | null>(null)
 const reviews = ref<ReviewRow[]>([])
@@ -190,6 +197,10 @@ const skuOptions = computed(() => {
   const skus = (product.value?.skus ?? []) as SkuRow[]
   return skus.filter((s) => s.id != null)
 })
+/** Only show the option picker when variants have real label/value pairs. */
+const showSkuOptions = computed(
+  () => skuOptions.value.length > 1 && skuOptions.value.some((s) => skuHasVariantDisplay(s)),
+)
 
 function formatPrice(v?: number | null) {
   if (v == null) return '—'
