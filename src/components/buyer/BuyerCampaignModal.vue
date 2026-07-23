@@ -8,6 +8,9 @@
           </button>
 
           <div class="buyer-promo-modal__content">
+            <p v-if="badgeText" class="buyer-promo-modal__badge" :data-badge="campaign.badge || campaign.action_type || 'promo'">
+              {{ badgeText }}
+            </p>
             <h2 class="buyer-promo-modal__title">{{ campaign.title }}</h2>
 
             <div v-if="imageUrl" class="buyer-promo-modal__media">
@@ -20,6 +23,13 @@
             </p>
 
             <p v-if="campaign.subtitle" class="buyer-promo-modal__meta">{{ campaign.subtitle }}</p>
+
+            <p
+              v-if="campaign.action_type === 'preorder' && campaign.remaining_stock != null"
+              class="buyer-promo-modal__stock"
+            >
+              {{ formatRemaining(campaign.remaining_stock) }}
+            </p>
 
             <div class="buyer-promo-modal__actions">
               <component
@@ -66,6 +76,35 @@ const imageUrl = computed(() => campaignImageUrl(props.campaign))
 const ctaTarget = computed(() => campaignCtaRoute(props.campaign))
 const ctaIsExternal = computed(() => typeof ctaTarget.value === 'string')
 
+const BADGE_FALLBACK: Record<string, string> = {
+  preorder: 'Preorder',
+  limited: 'Limited offer',
+  limited_offer: 'Limited offer',
+  flash: 'Flash',
+  new: 'New item',
+  new_item: 'New item',
+  trending: 'Trending',
+  gift: 'Gift',
+  sale: 'Sale',
+  hot: 'Hot',
+  exclusive: 'Exclusive',
+  clearance: 'Clearance',
+}
+
+const badgeText = computed(() => {
+  const camp = props.campaign
+  if (!camp) return ''
+  const labeled = String(camp.badge_label ?? '').trim()
+  if (labeled) return labeled
+  const key = String(camp.badge ?? camp.action_type ?? '').trim().toLowerCase()
+  if (!key) return ''
+  return BADGE_FALLBACK[key] ?? key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+})
+
+function formatRemaining(n: number) {
+  return `${new Intl.NumberFormat().format(n)} left`
+}
+
 function onDismiss() {
   emit('dismiss')
 }
@@ -103,6 +142,38 @@ function onDismiss() {
   height: 100%;
   padding: 2.35rem 1.25rem 1.35rem;
   text-align: center;
+}
+
+.buyer-promo-modal__badge {
+  display: inline-flex;
+  margin: 0 0 0.65rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--kkoo-primary, #6b2fd6) 14%, #fff);
+  color: var(--kkoo-primary, #6b2fd6);
+}
+
+.buyer-promo-modal__badge[data-badge='flash'],
+.buyer-promo-modal__badge[data-badge='hot'] {
+  background: #fff1e6;
+  color: #c2410c;
+}
+
+.buyer-promo-modal__badge[data-badge='limited'],
+.buyer-promo-modal__badge[data-badge='limited_offer'] {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.buyer-promo-modal__badge[data-badge='new'],
+.buyer-promo-modal__badge[data-badge='new_item'],
+.buyer-promo-modal__badge[data-badge='trending'] {
+  background: #ecfdf5;
+  color: #0f766e;
 }
 
 .buyer-promo-modal__close {
@@ -168,6 +239,16 @@ function onDismiss() {
   line-height: 1.5;
   color: #5c534c;
   white-space: pre-line;
+}
+
+.buyer-promo-modal__stock {
+  margin: 0 0 0.85rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(247, 168, 41, 0.16);
+  color: #c47a00;
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
 .buyer-promo-modal__actions {

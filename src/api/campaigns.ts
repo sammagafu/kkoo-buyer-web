@@ -21,6 +21,14 @@ export type BuyerCampaign = {
   cta_label?: string
   cta_route?: string
   cta_external_url?: string
+  action_type?: string
+  product_id?: number
+  product_slug?: string
+  product_title?: string
+  badge?: string
+  badge_label?: string
+  remaining_stock?: number
+  preorder_requires_stock?: boolean
   creative_type?: 'inapp_advert' | 'promo_banner' | string
   image_width?: number
   image_height?: number

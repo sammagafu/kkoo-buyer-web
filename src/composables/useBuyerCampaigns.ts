@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 import { campaignsUserApi, type BuyerCampaign } from '@/api/campaigns'
+import { useAuthStore } from '@/stores/auth'
 import { resolveAssetUrl } from '@/utils/assetUrl'
 
 const ROUTE_MAP: Record<string, RouteLocationRaw> = {
@@ -40,10 +41,17 @@ export function campaignCtaRoute(campaign?: BuyerCampaign | null): RouteLocation
     if (ROUTE_MAP[raw]) return ROUTE_MAP[raw]
     const flashMatch = raw.match(/^\/flash-sales\/([^/]+)\/?$/)
     if (flashMatch) return { name: 'buyer.flash-sale', params: { slug: flashMatch[1] } }
+    const productSlug = raw.match(/^\/product\/s\/([^/?#]+)\/?$/)
+    if (productSlug) return { name: 'buyer.product.slug', params: { slug: productSlug[1] } }
+    const productId = raw.match(/^\/product\/(\d+)\/?$/)
+    if (productId) return { name: 'buyer.product', params: { id: productId[1] } }
     if (raw.startsWith('/')) return raw
     if (raw.includes('.')) return { name: raw }
     return { path: raw.startsWith('/') ? raw : `/${raw}` }
   }
+  const productSlug = String(campaign.product_slug ?? '').trim()
+  if (productSlug) return { name: 'buyer.product.slug', params: { slug: productSlug } }
+  if (campaign.product_id) return { name: 'buyer.product', params: { id: String(campaign.product_id) } }
   const flashSlug = String(campaign.flash_sale_slug ?? '').trim()
   if (flashSlug) return { name: 'buyer.flash-sale', params: { slug: flashSlug } }
   const promoSlug = String(campaign.promotion_slug ?? '').trim()
@@ -52,10 +60,17 @@ export function campaignCtaRoute(campaign?: BuyerCampaign | null): RouteLocation
 }
 
 export function useBuyerCampaigns() {
+  const auth = useAuthStore()
   const modalCampaign = ref<BuyerCampaign | null>(null)
   const carouselCampaigns = ref<BuyerCampaign[]>([])
   const loadingModal = ref(false)
   const loadingCarousel = ref(false)
+
+  function trackImpression(id?: number) {
+    // Impression/dismiss need JWT; posting as a guest forces a sign-in redirect.
+    if (!id || !auth.isAuthenticated) return
+    void campaignsUserApi.recordImpression(id).catch(() => {})
+  }
 
   async function loadAdvertCampaign() {
     loadingModal.value = true
@@ -63,9 +78,7 @@ export function useBuyerCampaigns() {
       const { data } = await campaignsUserApi.getActive({ placement: 'inapp_advert', channel: 'web_advert' })
       const results = data.results ?? []
       modalCampaign.value = results[0] ?? null
-      if (modalCampaign.value?.id) {
-        void campaignsUserApi.recordImpression(modalCampaign.value.id)
-      }
+      trackImpression(modalCampaign.value?.id)
     } catch {
       modalCampaign.value = null
     } finally {
@@ -76,10 +89,29 @@ export function useBuyerCampaigns() {
   async function loadCarouselCampaigns() {
     loadingCarousel.value = true
     try {
-      const { data } = await campaignsUserApi.getActive({ placement: 'promo_carousel', channel: 'web_banner' })
-      carouselCampaigns.value = data.results ?? []
+      // Match app home: home_hero banner + promo_carousel strip.
+      const [hero, carousel] = await Promise.all([
+        campaignsUserApi.getActive({ placement: 'home_hero', channel: 'web_banner' }).catch(() => ({ data: { results: [] as BuyerCampaign[] } })),
+        campaignsUserApi.getActive({ placement: 'promo_carousel', channel: 'web_banner' }).catch(() => ({ data: { results: [] as BuyerCampaign[] } })),
+      ])
+      const merged = [...(hero.data.results ?? []), ...(carousel.data.results ?? [])]
+      const seenIds = new Set<number>()
+      const seenKeys = new Set<string>()
+      carouselCampaigns.value = merged.filter((c) => {
+        if (!c?.id || seenIds.has(c.id)) return false
+        seenIds.add(c.id)
+        const key = [
+          c.action_type || '',
+          c.product_id || '',
+          c.cta_route || '',
+          c.title || '',
+        ].join('|')
+        if (seenKeys.has(key)) return false
+        seenKeys.add(key)
+        return true
+      })
       for (const camp of carouselCampaigns.value) {
-        if (camp.id) void campaignsUserApi.recordImpression(camp.id)
+        trackImpression(camp.id)
       }
     } catch {
       carouselCampaigns.value = []
@@ -91,7 +123,7 @@ export function useBuyerCampaigns() {
   async function dismissModal() {
     const camp = modalCampaign.value
     modalCampaign.value = null
-    if (camp?.id) {
+    if (camp?.id && auth.isAuthenticated) {
       try {
         await campaignsUserApi.dismiss(camp.id)
       } catch {
@@ -102,7 +134,7 @@ export function useBuyerCampaigns() {
 
   async function dismissCarousel(camp: BuyerCampaign) {
     carouselCampaigns.value = carouselCampaigns.value.filter((c) => c.id !== camp.id)
-    if (camp.id) {
+    if (camp.id && auth.isAuthenticated) {
       try {
         await campaignsUserApi.dismiss(camp.id)
       } catch {

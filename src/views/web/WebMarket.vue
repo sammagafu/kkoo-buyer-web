@@ -9,6 +9,11 @@
         @location="promptLocation"
       />
 
+      <BuyerCampaignCarousel
+        :campaigns="carouselCampaigns"
+        @dismiss="dismissCarousel"
+      />
+
       <div class="buyer-mhome-greeting buyer-reveal is-visible">
         <p class="buyer-mhome-greeting__brand" aria-hidden="true">KKOO</p>
         <p class="buyer-mhome-greeting__line">
@@ -227,10 +232,13 @@ import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader
 import BuyerVenueCard from '@/components/buyer/experience/BuyerVenueCard.vue'
 import BuyerProductGridSection from '@/components/buyer/experience/BuyerProductGridSection.vue'
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
+import BuyerCampaignCarousel from '@/components/buyer/BuyerCampaignCarousel.vue'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { useBuyerGreeting } from '@/composables/useBuyerGreeting'
 import { useBuyerLocation } from '@/composables/useBuyerLocation'
 import { useBuyerReveal } from '@/composables/useBuyerReveal'
+import { useBuyerCampaigns } from '@/composables/useBuyerCampaigns'
+import { useAuthStore } from '@/stores/auth'
 import { formatApiError } from '@/utils/formatApiError'
 import { useBuyerNotifications } from '@/composables/useBuyerNotifications'
 import { useI18n } from 'vue-i18n'
@@ -245,6 +253,8 @@ const { areaLabel, setAreaLabel } = useBuyerLocation()
 const { unreadCount: notificationUnreadCount } = useBuyerNotifications()
 const openNotifications = inject<() => void>('openBuyerNotifications', () => {})
 const { displayName, isAuthenticated } = useAuthDisplay()
+const auth = useAuthStore()
+const { carouselCampaigns, loadCarouselCampaigns, dismissCarousel } = useBuyerCampaigns()
 const openBuyerCart = inject<() => void>('openBuyerCart', () => {})
 const { adding, addError, addMessage, addProduct: addProductToCart } = useAddToCart()
 const xpRoot = ref<HTMLElement | null>(null)
@@ -357,7 +367,7 @@ const displayProducts = computed(() => {
   return list.slice(0, 24)
 })
 
-const popularTodayProducts = computed(() => displayProducts.value.slice(0, 5))
+const popularTodayProducts = computed(() => displayProducts.value.slice(0, 10))
 
 const recommendedProducts = computed(() => {
   const all = displayProducts.value
@@ -606,8 +616,16 @@ onMounted(() => {
     void loadCategories()
     void loadAllProducts()
     void loadHomeStores()
+    void loadCarouselCampaigns()
   } else {
     void loadStores()
   }
 })
+
+watch(
+  () => auth.isAuthenticated,
+  () => {
+    if (isHomeMode.value) void loadCarouselCampaigns()
+  },
+)
 </script>
