@@ -44,14 +44,16 @@
             <Icon icon="solar:gift-bold" />
             {{ camp.gift_label || 'Gift inside' }}
           </p>
+          <div
+            v-if="isPreorderCampaign(camp) && daysLeft(camp) != null"
+            class="buyer-promo-fs__countdown"
+            :aria-label="`${daysLeft(camp)} days left`"
+          >
+            <span class="buyer-promo-fs__countdown-days">{{ daysLeft(camp) }}</span>
+            <span class="buyer-promo-fs__countdown-label">{{ daysLeft(camp) === 1 ? 'day left' : 'days left' }}</span>
+          </div>
           <h2 class="buyer-promo-fs__title">{{ camp.title }}</h2>
           <p v-if="camp.subtitle" class="buyer-promo-fs__meta">{{ camp.subtitle }}</p>
-          <p
-            v-if="camp.action_type === 'preorder' && camp.remaining_stock != null"
-            class="buyer-promo-fs__stock"
-          >
-            {{ formatRemaining(camp.remaining_stock) }}
-          </p>
           <div
             v-if="slideProducts(camp).length"
             class="buyer-promo-fs__products"
@@ -105,6 +107,7 @@ import type { RouteLocationRaw } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import type { BuyerCampaign } from '@/api/campaigns'
 import { campaignCtaRoute, campaignImageUrl, campaignProductThumbs } from '@/composables/useBuyerCampaigns'
+import { daysUntil, isPreorderCampaign } from '@/utils/preorderCountdown'
 
 const props = defineProps<{
   campaigns: BuyerCampaign[]
@@ -117,7 +120,9 @@ const emit = defineEmits<{
 const rootEl = ref<HTMLElement | null>(null)
 const trackEl = ref<HTMLElement | null>(null)
 const activeIndex = ref(0)
+const nowMs = ref(Date.now())
 let autoTimer: ReturnType<typeof setInterval> | null = null
+let tickTimer: ReturnType<typeof setInterval> | null = null
 
 function isExternal(camp: BuyerCampaign) {
   return typeof campaignCtaRoute(camp) === 'string'
@@ -132,8 +137,8 @@ function slideProducts(camp: BuyerCampaign) {
   return campaignProductThumbs(camp)
 }
 
-function formatRemaining(n: number) {
-  return `${new Intl.NumberFormat().format(n)} left`
+function daysLeft(camp: BuyerCampaign) {
+  return daysUntil(camp.end_at, nowMs.value)
 }
 
 const BADGE_FALLBACK: Record<string, string> = {
@@ -185,6 +190,9 @@ function restartAuto() {
 
 onMounted(() => {
   restartAuto()
+  tickTimer = setInterval(() => {
+    nowMs.value = Date.now()
+  }, 60_000)
 })
 
 watch(
@@ -194,6 +202,7 @@ watch(
 
 onBeforeUnmount(() => {
   if (autoTimer) clearInterval(autoTimer)
+  if (tickTimer) clearInterval(tickTimer)
 })
 </script>
 
@@ -429,11 +438,31 @@ onBeforeUnmount(() => {
   color: var(--buyer-promo-fs-ink-muted);
 }
 
-.buyer-promo-fs__stock {
-  margin: 0.15rem 0 0;
-  font-size: 0.95rem;
-  font-weight: 800;
+.buyer-promo-fs__countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+  margin: 0.15rem 0 0.35rem;
+  line-height: 1;
+}
+
+.buyer-promo-fs__countdown-days {
+  font-size: clamp(4.5rem, 22vw, 9rem);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 0.88;
   color: var(--buyer-promo-fs-accent);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+  font-variant-numeric: tabular-nums;
+}
+
+.buyer-promo-fs__countdown-label {
+  font-size: clamp(0.85rem, 2.4vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--buyer-promo-fs-ink-muted);
 }
 
 .buyer-promo-fs__products {

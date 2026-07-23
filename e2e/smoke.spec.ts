@@ -62,6 +62,7 @@ test.describe('P0 smokes', () => {
                 badge: 'preorder',
                 badge_label: 'Preorder',
                 remaining_stock: 100,
+                end_at: '2099-12-31T00:00:00Z',
                 image_url: '',
                 cta_label: 'Preorder',
                 cta_route: '/product/s/smoke-product',

@@ -24,12 +24,14 @@
 
             <p v-if="campaign.subtitle" class="buyer-promo-modal__meta">{{ campaign.subtitle }}</p>
 
-            <p
-              v-if="campaign.action_type === 'preorder' && campaign.remaining_stock != null"
-              class="buyer-promo-modal__stock"
+            <div
+              v-if="showCountdown"
+              class="buyer-promo-modal__countdown"
+              :aria-label="`${countdownDays} days left`"
             >
-              {{ formatRemaining(campaign.remaining_stock) }}
-            </p>
+              <span class="buyer-promo-modal__countdown-days">{{ countdownDays }}</span>
+              <span class="buyer-promo-modal__countdown-label">{{ countdownDays === 1 ? 'day left' : 'days left' }}</span>
+            </div>
 
             <div class="buyer-promo-modal__actions">
               <component
@@ -58,11 +60,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import type { BuyerCampaign } from '@/api/campaigns'
 import { campaignCtaRoute, campaignImageUrl } from '@/composables/useBuyerCampaigns'
+import { daysUntil, isPreorderCampaign } from '@/utils/preorderCountdown'
 
 const props = defineProps<{
   campaign: BuyerCampaign | null
@@ -71,6 +74,9 @@ const props = defineProps<{
 const emit = defineEmits<{
   dismiss: []
 }>()
+
+const nowMs = ref(Date.now())
+let tickTimer: ReturnType<typeof setInterval> | null = null
 
 const imageUrl = computed(() => campaignImageUrl(props.campaign))
 const ctaTarget = computed(() => campaignCtaRoute(props.campaign))
@@ -101,13 +107,24 @@ const badgeText = computed(() => {
   return BADGE_FALLBACK[key] ?? key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 })
 
-function formatRemaining(n: number) {
-  return `${new Intl.NumberFormat().format(n)} left`
-}
+const countdownDays = computed(() => daysUntil(props.campaign?.end_at, nowMs.value))
+const showCountdown = computed(
+  () => isPreorderCampaign(props.campaign) && countdownDays.value != null,
+)
 
 function onDismiss() {
   emit('dismiss')
 }
+
+onMounted(() => {
+  tickTimer = setInterval(() => {
+    nowMs.value = Date.now()
+  }, 60_000)
+})
+
+onBeforeUnmount(() => {
+  if (tickTimer) clearInterval(tickTimer)
+})
 </script>
 
 <style scoped>
@@ -241,14 +258,30 @@ function onDismiss() {
   white-space: pre-line;
 }
 
-.buyer-promo-modal__stock {
-  margin: 0 0 0.85rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  background: rgba(247, 168, 41, 0.16);
+.buyer-promo-modal__countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  margin: 0 0 1rem;
+  line-height: 1;
+}
+
+.buyer-promo-modal__countdown-days {
+  font-size: clamp(3.5rem, 14vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
   color: #c47a00;
-  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.buyer-promo-modal__countdown-label {
+  font-size: 0.78rem;
   font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a7a68;
 }
 
 .buyer-promo-modal__actions {

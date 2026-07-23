@@ -46,14 +46,16 @@
             {{ badgeText(camp) }}
           </p>
           <div class="buyer-promo-strip__text">
+            <div
+              v-if="isPreorderCampaign(camp) && daysLeft(camp) != null"
+              class="buyer-promo-strip__countdown"
+              :aria-label="`${daysLeft(camp)} days left`"
+            >
+              <span class="buyer-promo-strip__countdown-days">{{ daysLeft(camp) }}</span>
+              <span class="buyer-promo-strip__countdown-label">{{ daysLeft(camp) === 1 ? 'day left' : 'days left' }}</span>
+            </div>
             <h2 class="buyer-promo-strip__title">{{ camp.title }}</h2>
             <p v-if="camp.subtitle" class="buyer-promo-strip__meta">{{ camp.subtitle }}</p>
-            <p
-              v-if="camp.action_type === 'preorder' && camp.remaining_stock != null"
-              class="buyer-promo-strip__stock"
-            >
-              {{ formatRemaining(camp.remaining_stock) }}
-            </p>
           </div>
           <component
             :is="isExternal(camp) ? 'a' : 'router-link'"
@@ -93,6 +95,7 @@ import type { RouteLocationRaw } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import type { BuyerCampaign } from '@/api/campaigns'
 import { campaignCtaRoute, campaignImageUrl } from '@/composables/useBuyerCampaigns'
+import { daysUntil, isPreorderCampaign } from '@/utils/preorderCountdown'
 
 const props = defineProps<{
   campaigns: BuyerCampaign[]
@@ -104,7 +107,9 @@ const emit = defineEmits<{
 
 const trackEl = ref<HTMLElement | null>(null)
 const activeIndex = ref(0)
+const nowMs = ref(Date.now())
 let autoTimer: ReturnType<typeof setInterval> | null = null
+let tickTimer: ReturnType<typeof setInterval> | null = null
 
 const BADGE_LABELS: Record<string, string> = {
   preorder: 'Preorder',
@@ -125,8 +130,8 @@ function badgeText(camp: BuyerCampaign) {
   return BADGE_LABELS[key] || ''
 }
 
-function formatRemaining(n: number) {
-  return `${Number(n).toLocaleString()} left`
+function daysLeft(camp: BuyerCampaign) {
+  return daysUntil(camp.end_at, nowMs.value)
 }
 
 function isExternal(camp: BuyerCampaign) {
@@ -164,8 +169,16 @@ function startAuto() {
   }, 5500)
 }
 
-onMounted(startAuto)
-onBeforeUnmount(stopAuto)
+onMounted(() => {
+  startAuto()
+  tickTimer = setInterval(() => {
+    nowMs.value = Date.now()
+  }, 60_000)
+})
+onBeforeUnmount(() => {
+  stopAuto()
+  if (tickTimer) clearInterval(tickTimer)
+})
 watch(
   () => props.campaigns.length,
   () => {
@@ -303,16 +316,35 @@ watch(
   text-wrap: balance;
 }
 
-.buyer-promo-strip__meta,
-.buyer-promo-strip__stock {
+.buyer-promo-strip__countdown {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin: 0 0 0.2rem;
+  line-height: 1;
+}
+
+.buyer-promo-strip__countdown-days {
+  font-size: clamp(2.75rem, 9vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: #f7c948;
+  font-variant-numeric: tabular-nums;
+}
+
+.buyer-promo-strip__countdown-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.buyer-promo-strip__meta {
   margin: 0.15rem 0 0;
   font-size: 0.82rem;
   color: rgba(255, 255, 255, 0.9);
-}
-
-.buyer-promo-strip__stock {
-  font-weight: 600;
-  color: #f7c948;
 }
 
 .buyer-promo-strip__cta {
