@@ -29,7 +29,26 @@ const ROUTE_MAP: Record<string, RouteLocationRaw> = {
 }
 
 export function campaignImageUrl(campaign?: BuyerCampaign | null) {
-  return resolveAssetUrl(campaign?.image_url) ?? ''
+  if (!campaign) return ''
+  const direct = resolveAssetUrl(campaign.image_url)
+  if (direct) return direct
+  const productImage = resolveAssetUrl(campaign.product_image)
+  if (productImage) return productImage
+  const firstCover = campaign.products?.find((p) => p.cover_image)?.cover_image
+  return resolveAssetUrl(firstCover) ?? ''
+}
+
+export function campaignProductThumbs(campaign?: BuyerCampaign | null) {
+  if (!campaign?.products?.length) return []
+  return campaign.products
+    .map((p) => ({
+      id: p.id,
+      title: p.title || '',
+      slug: p.slug || '',
+      image: resolveAssetUrl(p.cover_image) ?? '',
+    }))
+    .filter((p) => p.id && p.image)
+    .slice(0, 6)
 }
 
 export function campaignCtaRoute(campaign?: BuyerCampaign | null): RouteLocationRaw | null {
@@ -154,6 +173,7 @@ export function useBuyerCampaigns() {
     dismissModal,
     dismissCarousel,
     campaignImageUrl,
+    campaignProductThumbs,
     campaignCtaRoute,
   }
 }

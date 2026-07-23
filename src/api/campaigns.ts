@@ -3,6 +3,13 @@
  */
 import client from './client'
 
+export type BuyerCampaignProduct = {
+  id: number
+  title?: string
+  slug?: string
+  cover_image?: string
+}
+
 export type BuyerCampaign = {
   id: number
   title: string
@@ -25,6 +32,8 @@ export type BuyerCampaign = {
   product_id?: number
   product_slug?: string
   product_title?: string
+  product_image?: string
+  products?: BuyerCampaignProduct[]
   badge?: string
   badge_label?: string
   remaining_stock?: number

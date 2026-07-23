@@ -52,6 +52,21 @@
           >
             {{ formatRemaining(camp.remaining_stock) }}
           </p>
+          <div
+            v-if="slideProducts(camp).length"
+            class="buyer-promo-fs__products"
+            aria-label="Campaign products"
+          >
+            <RouterLink
+              v-for="prod in slideProducts(camp)"
+              :key="prod.id"
+              class="buyer-promo-fs__product"
+              :to="productThumbTo(prod)"
+              :title="prod.title || undefined"
+            >
+              <img :src="prod.image" :alt="prod.title || 'Product'" loading="lazy" decoding="async" />
+            </RouterLink>
+          </div>
           <component
             :is="isExternal(camp) ? 'a' : 'router-link'"
             v-if="campaignCtaRoute(camp)"
@@ -89,7 +104,7 @@ import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import type { BuyerCampaign } from '@/api/campaigns'
-import { campaignCtaRoute, campaignImageUrl } from '@/composables/useBuyerCampaigns'
+import { campaignCtaRoute, campaignImageUrl, campaignProductThumbs } from '@/composables/useBuyerCampaigns'
 
 const props = defineProps<{
   campaigns: BuyerCampaign[]
@@ -106,6 +121,15 @@ let autoTimer: ReturnType<typeof setInterval> | null = null
 
 function isExternal(camp: BuyerCampaign) {
   return typeof campaignCtaRoute(camp) === 'string'
+}
+
+function productThumbTo(prod: { id: number; slug: string }): RouteLocationRaw {
+  if (prod.slug) return { name: 'buyer.product.slug', params: { slug: prod.slug } }
+  return { name: 'buyer.product', params: { id: String(prod.id) } }
+}
+
+function slideProducts(camp: BuyerCampaign) {
+  return campaignProductThumbs(camp)
 }
 
 function formatRemaining(n: number) {
@@ -410,6 +434,39 @@ onBeforeUnmount(() => {
   font-size: 0.95rem;
   font-weight: 800;
   color: var(--buyer-promo-fs-accent);
+}
+
+.buyer-promo-fs__products {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.55rem;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 0.15rem 0.1rem 0.25rem;
+  margin-top: 0.15rem;
+  scrollbar-width: none;
+}
+
+.buyer-promo-fs__products::-webkit-scrollbar {
+  display: none;
+}
+
+.buyer-promo-fs__product {
+  flex: 0 0 auto;
+  width: 3.35rem;
+  height: 3.35rem;
+  border-radius: 0.7rem;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.buyer-promo-fs__product img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .buyer-promo-fs__cta {
