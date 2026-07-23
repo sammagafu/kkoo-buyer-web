@@ -2940,6 +2940,7 @@ export default {
       notFound: 'No products found.',
       productFallback: 'Product',
       add: 'Add',
+      preorder: 'Preorder',
     },
     pillars: {
       buy: { label: 'Buy', subtitle: 'Marketplace' },

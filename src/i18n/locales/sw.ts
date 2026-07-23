@@ -2191,6 +2191,7 @@ export default {
       notFound: 'Hakuna bidhaa zilizopatikana.',
       productFallback: 'Bidhaa',
       add: 'Ongeza',
+      preorder: 'Agiza mapema',
     },
     pillars: {
       buy: { label: 'Nunua', subtitle: 'Soko' },

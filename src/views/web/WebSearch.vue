@@ -83,6 +83,8 @@
           :product-slug="prod.slug"
           :disabled="!prod.skus?.length"
           :adding="addingId === prod.id"
+          :allow-preorder="Boolean(prod.allow_preorder)"
+          :purchase-mode="prod.purchase_mode"
           @add="addProduct(prod)"
           @open="openProduct(prod)"
         />
@@ -124,6 +126,8 @@ type Product = {
   cover_image?: string
   image_url?: string
   skus?: { id?: number }[]
+  allow_preorder?: boolean
+  purchase_mode?: string
 }
 
 type SuggestItem = { label: string; type: string }

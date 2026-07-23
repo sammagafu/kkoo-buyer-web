@@ -80,6 +80,8 @@
           :product-slug="item.slug"
           :disabled="!item.skus?.length"
           :adding="adding"
+          :allow-preorder="Boolean(item.allow_preorder)"
+          :purchase-mode="item.purchase_mode"
           @add="addToCart(item)"
           @open="openProduct(item)"
         />

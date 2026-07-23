@@ -17,6 +17,8 @@ export interface RestaurantMenuItem {
   description?: string
   /** Hotel/restaurant course: starter | main | side | dessert | beverage | snack | other */
   course_type?: string
+  allow_preorder?: boolean
+  purchase_mode?: string
 }
 
 export interface MenuCategory {

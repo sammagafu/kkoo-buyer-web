@@ -14,7 +14,10 @@
           <Icon icon="solar:gallery-minimalistic-bold-duotone" class="store-product-card__placeholder-icon" />
         </div>
         <div class="store-product-card__veil" aria-hidden="true" />
-        <span v-if="categoryLabel" class="store-product-card__category">{{ categoryLabel }}</span>
+        <div class="store-product-card__badges">
+          <span v-if="showPreorderBadge" class="store-product-card__preorder">{{ t('buyerXp.products.preorder') }}</span>
+          <span v-if="categoryLabel" class="store-product-card__category">{{ categoryLabel }}</span>
+        </div>
         <div v-if="productId" class="store-product-card__actions-top" @click.stop>
           <button
             type="button"
@@ -71,10 +74,17 @@ const props = defineProps<{
   disabled?: boolean
   adding?: boolean
   showShareEarn?: boolean
+  allowPreorder?: boolean
+  purchaseMode?: string
 }>()
 
 const emit = defineEmits<{ add: []; open: [] }>()
 const imageError = ref(false)
+
+const showPreorderBadge = computed(() => {
+  const mode = (props.purchaseMode || '').trim().toLowerCase()
+  return mode === 'preorder' || Boolean(props.allowPreorder)
+})
 
 const displayTitle = computed(() => {
   const raw = (props.title || '').trim()

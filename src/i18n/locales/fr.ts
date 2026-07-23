@@ -2123,6 +2123,7 @@ export default {
       notFound: 'Aucun produit trouvé.',
       productFallback: 'Produit',
       add: 'Ajouter',
+      preorder: 'Précommande',
     },
     pillars: {
       buy: { label: 'Acheter', subtitle: 'Marketplace' },

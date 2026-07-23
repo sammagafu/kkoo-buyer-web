@@ -16,6 +16,8 @@
         :product-slug="prod.slug"
         :disabled="!prod.skus?.length"
         :adding="adding"
+        :allow-preorder="Boolean(prod.allow_preorder)"
+        :purchase-mode="prod.purchase_mode"
         @add="$emit('add', prod)"
         @open="openProduct(prod)"
       />
@@ -46,6 +48,8 @@ export type GridProduct = {
   skus?: { id?: number }[]
   store_name?: string
   store_id?: number | string
+  allow_preorder?: boolean
+  purchase_mode?: string
 }
 
 defineProps<{
