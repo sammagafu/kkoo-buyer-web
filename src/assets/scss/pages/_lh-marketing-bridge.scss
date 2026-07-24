@@ -479,7 +479,7 @@
     font-size: clamp(1.75rem, 3.2vw, var(--lh-type-h1, 2.618rem));
     font-weight: 700;
     letter-spacing: -0.03em;
-    max-width: 14ch;
+    max-width: 28ch;
     color: var(--lh-text, #1a1a1a);
     margin-bottom: 0.75rem;
   }
@@ -488,7 +488,7 @@
     font-family: var(--lh-font-display, var(--kkoo-font-display));
     font-size: clamp(1.25rem, 2vw, var(--lh-type-h2, 1.618rem));
     font-weight: 700;
-    max-width: 18ch;
+    max-width: 36ch;
     margin-top: 2rem;
     margin-bottom: 0.75rem;
     color: var(--lh-text, #1a1a1a);
