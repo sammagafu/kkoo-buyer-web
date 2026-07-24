@@ -80,15 +80,15 @@
   --lh-text-xl: 1.5rem;
   --lh-text-2xl: 2rem;
 
-  --lh-space-1: 0.25rem;
-  --lh-space-2: 0.5rem;
-  --lh-space-3: 0.75rem;
-  --lh-space-4: 1rem;
-  --lh-space-5: 1.5rem;
-  --lh-space-6: 2rem;
-  --lh-space-7: 3rem;
-  --lh-space-8: 4rem;
-  --lh-space-9: 6rem;
+  --lh-space-1: 0.35rem;
+  --lh-space-2: 0.65rem;
+  --lh-space-3: 1rem;
+  --lh-space-4: 1.25rem;
+  --lh-space-5: 1.75rem;
+  --lh-space-6: 2.5rem;
+  --lh-space-7: 3.5rem;
+  --lh-space-8: 5rem;
+  --lh-space-9: 7.5rem;
 
   --lh-radius-sm: 0.75rem;
   --lh-radius-md: 1rem;
@@ -105,7 +105,7 @@
   --lh-duration-fast: var(--kkoo-duration-fast);
   --lh-duration-med: var(--kkoo-duration-med);
 
-  --lh-page-pad: clamp(1rem, 3vw, 1.75rem);
+  --lh-page-pad: clamp(1.25rem, 4vw, 2.25rem);
   --lh-content-max: 72rem;
 }
 
@@ -245,9 +245,15 @@ html[data-bs-theme='dark'] .lh-chrome {
   padding-block: var(--lh-space-8);
 }
 
+@media (min-width: 768px) {
+  .lh-section {
+    padding-block: var(--lh-space-9);
+  }
+}
+
 .lh-section-head {
-  margin-bottom: var(--lh-space-6);
-  max-width: 40rem;
+  margin-bottom: var(--lh-space-7);
+  max-width: 42rem;
 }
 
 .lh-section__title {
@@ -257,11 +263,11 @@ html[data-bs-theme='dark'] .lh-chrome {
 }
 
 .lh-section__lead {
-  margin-top: var(--lh-space-3);
+  margin-top: var(--lh-space-4);
   color: var(--lh-text-muted);
   font-size: var(--lh-text-lg);
-  line-height: 1.5;
-  max-width: 42ch;
+  line-height: 1.7;
+  max-width: 46ch;
 }
 
 .lh-reveal {

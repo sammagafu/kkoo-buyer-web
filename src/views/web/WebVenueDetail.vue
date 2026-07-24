@@ -366,8 +366,8 @@ async function loadVenue() {
   }
 }
 
-async function addProduct(prod: GridProduct) {
-  const ok = await addProductToCart(prod)
+async function addProduct(prod: GridProduct, quantity = 1) {
+  const ok = await addProductToCart(prod, quantity)
   if (ok) {
     hasCartItems.value = true
     addMessage.value = t('buyerXp.common.addedToCart')

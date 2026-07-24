@@ -52,17 +52,17 @@
 }
 
 .mk-landing .mk-flow > * + * {
-  margin-top: var(--mk-space-2);
+  margin-top: var(--mk-space-3);
 }
 
 .mk-landing .mk-flow--tight > * + * {
-  margin-top: var(--mk-space-1);
+  margin-top: var(--mk-space-2);
 }
 
 .mk-shell {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 clamp(1.25rem, 4vw, 2rem);
 }
 
 .mk-card {
@@ -511,11 +511,11 @@ html[data-bs-theme='dark'] {
 
 .mk-section {
   min-height: 70vh;
-  padding: var(--mk-space-6) 0;
+  padding: calc(var(--mk-space-6) + var(--mk-space-2)) 0;
 }
 
 .mk-section--airy {
-  padding: calc(var(--mk-space-6) + var(--mk-space-3)) 0;
+  padding: calc(var(--mk-space-6) + var(--mk-space-4)) 0;
 }
 
 .mk-prose {
@@ -598,8 +598,9 @@ html[data-bs-theme='dark'] .mk-divider {
 
 .mk-section__desc {
   color: var(--mk-muted);
-  margin: 0.6rem 0 0;
+  margin: 1rem 0 0;
   max-width: 52rem;
+  line-height: 1.7;
 }
 
 .mk-grid-3 {

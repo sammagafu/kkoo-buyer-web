@@ -169,7 +169,7 @@
               :error="''"
               :adding="adding"
               :add-error="addError"
-              @add="(p) => addProduct(p)"
+              @add="(p, qty) => addProduct(p, qty)"
             />
           </div>
         </template>
@@ -181,7 +181,7 @@
           :error="error"
           :adding="adding"
           :add-error="addError"
-          @add="(p) => addProduct(p)"
+          @add="(p, qty) => addProduct(p, qty)"
         />
 
         <p v-if="addMessage" class="buyer-xp-toast buyer-xp-toast--ok mt-2">{{ addMessage }}</p>

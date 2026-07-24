@@ -286,8 +286,8 @@ async function addToCart() {
   )
 }
 
-async function addRelated(prod: GridProduct) {
-  await addProductToCart(prod)
+async function addRelated(prod: GridProduct, quantity = 1) {
+  await addProductToCart(prod, quantity)
 }
 
 watch(() => [route.params.id, route.params.slug], () => void load())

@@ -1,9 +1,9 @@
 <template>
-  <article class="buyer-venue">
+  <article class="buyer-venue buyer-venue--row">
     <component
       :is="detailTo ? RouterLink : 'button'"
       v-bind="detailTo ? { to: detailTo } : { type: 'button' }"
-      class="buyer-venue__tap"
+      class="buyer-venue__tap buyer-venue__tap--row"
       @click="onMainClick"
     >
       <div class="buyer-venue__hero" :class="`buyer-venue__hero--${kind}`">
@@ -20,19 +20,21 @@
         </div>
       </div>
       <div class="buyer-venue__body">
-        <strong class="buyer-venue__name">{{ name }}</strong>
-        <span v-if="address" class="buyer-venue__addr">{{ address }}</span>
-        <span v-if="meta" class="buyer-venue__meta">{{ meta }}</span>
+        <div class="buyer-venue__copy">
+          <strong class="buyer-venue__name">{{ name }}</strong>
+          <span v-if="address" class="buyer-venue__addr">{{ address }}</span>
+          <span v-if="meta" class="buyer-venue__meta">{{ meta }}</span>
+        </div>
       </div>
     </component>
-    <div class="buyer-venue__actions">
+    <div class="buyer-venue__actions buyer-venue__actions--row">
       <component
         :is="detailTo ? RouterLink : 'button'"
         v-bind="detailTo ? { to: detailTo } : { type: 'button' }"
         class="buyer-venue__chip buyer-venue__chip--primary"
         @click="onViewClick"
       >
-        View
+        View store
       </component>
       <RouterLink v-if="sendTo" :to="sendTo" class="buyer-venue__chip">Send me</RouterLink>
       <RouterLink v-if="rideTo" :to="rideTo" class="buyer-venue__chip">Ride</RouterLink>

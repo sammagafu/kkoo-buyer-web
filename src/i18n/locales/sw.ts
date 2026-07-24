@@ -2190,7 +2190,7 @@ export default {
       loading: 'Inapakia…',
       notFound: 'Hakuna bidhaa zilizopatikana.',
       productFallback: 'Bidhaa',
-      add: 'Ongeza',
+      add: 'Ongeza kwenye kikapu',
       preorder: 'Agiza mapema',
     },
     pillars: {

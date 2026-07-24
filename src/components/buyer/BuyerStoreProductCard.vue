@@ -1,6 +1,6 @@
 <template>
-  <article class="store-product-card">
-    <div class="store-product-card__visual" @click="emit('open')">
+  <article class="store-product-card store-product-card--row">
+    <button type="button" class="store-product-card__visual" @click="emit('open')">
       <div class="store-product-card__image-wrap">
         <img
           v-if="imageUrl && !imageError"
@@ -13,43 +13,63 @@
         <div v-else class="store-product-card__image store-product-card__placeholder" aria-hidden="true">
           <Icon icon="solar:gallery-minimalistic-bold-duotone" class="store-product-card__placeholder-icon" />
         </div>
-        <div class="store-product-card__veil" aria-hidden="true" />
         <div class="store-product-card__badges">
           <span v-if="showPreorderBadge" class="store-product-card__preorder">{{ t('buyerXp.products.preorder') }}</span>
           <span v-if="categoryLabel" class="store-product-card__category">{{ categoryLabel }}</span>
         </div>
-        <div v-if="productId" class="store-product-card__actions-top" @click.stop>
+      </div>
+    </button>
+    <div class="store-product-card__body">
+      <div class="store-product-card__head" @click="emit('open')">
+        <div class="store-product-card__copy">
+          <p v-if="storeLabel" class="store-product-card__store">{{ storeLabel }}</p>
+          <h3 class="store-product-card__title">{{ displayTitle }}</h3>
+          <p v-if="description" class="store-product-card__desc">{{ description }}</p>
+        </div>
+        <p v-if="priceLabel" class="store-product-card__price">{{ priceLabel }}</p>
+      </div>
+      <div class="store-product-card__actions" @click.stop>
+        <div class="store-product-card__qty" role="group" :aria-label="`Quantity for ${displayTitle}`">
           <button
+            type="button"
+            class="store-product-card__qty-btn"
+            aria-label="Decrease quantity"
+            @click="bumpQty(-1)"
+          >
+            −
+          </button>
+          <span class="store-product-card__qty-value">{{ quantity }}</span>
+          <button
+            type="button"
+            class="store-product-card__qty-btn"
+            aria-label="Increase quantity"
+            @click="bumpQty(1)"
+          >
+            +
+          </button>
+        </div>
+        <div class="store-product-card__actions-end">
+          <button
+            v-if="productId"
             type="button"
             class="store-product-card__favorite"
             :class="{ 'store-product-card__favorite--active': favorited }"
             :disabled="togglingFavorite"
             :aria-label="favorited ? t('buyerXp.product.removeFavorite') : t('buyerXp.product.saveFavorite')"
-            :title="favorited ? t('buyerXp.product.removeFavorite') : t('buyerXp.product.saveFavorite')"
             @click="toggleFavorite"
           >
             <Icon :icon="favorited ? 'solar:heart-bold' : 'solar:heart-linear'" aria-hidden="true" />
           </button>
-        </div>
-        <div class="store-product-card__actions-bottom" @click.stop>
           <button
             type="button"
-            class="store-product-card__add"
+            class="store-product-card__add-btn"
             :disabled="disabled || adding"
-            :aria-label="t('buyerXp.products.add')"
-            :title="t('buyerXp.products.add')"
-            @click="emit('add')"
+            @click="emit('add', quantity)"
           >
-            <Icon icon="solar:bag-heart-bold" aria-hidden="true" />
+            {{ t('buyerXp.products.add') }}
           </button>
         </div>
       </div>
-    </div>
-    <div class="store-product-card__meta" @click="emit('open')">
-      <p v-if="storeLabel" class="store-product-card__store">{{ storeLabel }}</p>
-      <h3 class="store-product-card__title">{{ displayTitle }}</h3>
-      <p v-if="priceLabel" class="store-product-card__price">{{ priceLabel }}</p>
-      <p v-if="description" class="store-product-card__desc">{{ description }}</p>
     </div>
   </article>
 </template>
@@ -78,8 +98,9 @@ const props = defineProps<{
   purchaseMode?: string
 }>()
 
-const emit = defineEmits<{ add: []; open: [] }>()
+const emit = defineEmits<{ add: [quantity: number]; open: [] }>()
 const imageError = ref(false)
+const quantity = ref(1)
 
 const showPreorderBadge = computed(() => {
   const mode = (props.purchaseMode || '').trim().toLowerCase()
@@ -97,4 +118,8 @@ const displayTitle = computed(() => {
 
 const productIdRef = computed(() => props.productId)
 const { favorited, toggling: togglingFavorite, toggleFavorite } = useProductFavorite(productIdRef)
+
+function bumpQty(delta: number) {
+  quantity.value = Math.max(1, Math.min(99, quantity.value + delta))
+}
 </script>

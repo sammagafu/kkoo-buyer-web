@@ -2939,7 +2939,7 @@ export default {
       loading: 'Loading…',
       notFound: 'No products found.',
       productFallback: 'Product',
-      add: 'Add',
+      add: 'Add to Cart',
       preorder: 'Preorder',
     },
     pillars: {

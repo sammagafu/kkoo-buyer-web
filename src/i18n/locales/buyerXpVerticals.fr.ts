@@ -233,6 +233,8 @@ export const buyerXpVerticalsFr = {
     payment: 'Paiement',
     cardOnDelivery: 'Carte à la livraison',
     cashOnDelivery: 'Espèces à la livraison',
+    loadingPayments: 'Chargement des modes de paiement…',
+    noPaymentMethods: 'Aucun mode de paiement disponible pour votre zone. Réessayez plus tard.',
     cartSummary: 'Panier : {count} articles · {total}',
     itemsCount: '{count} articles',
     checkoutProgressLabel: 'Étapes de commande',

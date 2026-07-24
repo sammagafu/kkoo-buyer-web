@@ -585,14 +585,14 @@ async function loadCategories() {
   }
 }
 
-async function addProduct(prod: Product) {
+async function addProduct(prod: Product, quantity = 1) {
   addMessage.value = ''
   const skuId = prod.skus?.[0]?.id
   if (!skuId && !prod.id) {
     addError.value = t('buyerXp.marketplace.unavailable')
     return
   }
-  const ok = await addProductToCart(prod)
+  const ok = await addProductToCart(prod, quantity)
   if (ok) {
     hasCartItems.value = true
     if (props.fulfillment && fulfillmentMode.value === 'delivery') {

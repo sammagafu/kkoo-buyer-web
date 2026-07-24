@@ -173,43 +173,7 @@
               </button>
             </div>
             <div class="menu-layout-controls">
-              <span class="menu-layout-label">Layout</span>
-              <div class="btn-group btn-group-sm" role="group" aria-label="Layout">
-                <button
-                  type="button"
-                  class="btn"
-                  :class="layoutMode === 'grid' ? 'btn-primary' : 'btn-outline-secondary'"
-                  title="Grid"
-                  @click="layoutMode = 'grid'"
-                >
-                  <Icon icon="solar:widget-4-bold" />
-                </button>
-                <button
-                  type="button"
-                  class="btn"
-                  :class="layoutMode === 'rows' ? 'btn-primary' : 'btn-outline-secondary'"
-                  title="List"
-                  @click="layoutMode = 'rows'"
-                >
-                  <Icon icon="solar:list-bold" />
-                </button>
-              </div>
-              <template v-if="layoutMode === 'grid'">
-                <span class="menu-cols-label">Columns</span>
-                <div class="btn-group btn-group-sm" role="group" aria-label="Columns">
-                  <button
-                    v-for="n in gridColOptions"
-                    :key="n"
-                    type="button"
-                    class="btn"
-                    :class="gridCols === n ? 'btn-primary' : 'btn-outline-secondary'"
-                    :title="`${n} columns`"
-                    @click="gridCols = n"
-                  >
-                    {{ n }}
-                  </button>
-                </div>
-              </template>
+              <span class="menu-layout-label">Menu</span>
             </div>
           </div>
 
@@ -300,22 +264,15 @@
             </template>
           </p>
 
-          <!-- Product vitrine -->
-          <div
-            class="menu-cards"
-            :class="[
-              layoutMode === 'grid' ? 'menu-cards--grid' : 'menu-cards--rows',
-              layoutMode === 'grid' && `menu-cards--cols-${gridCols}`
-            ]"
-          >
+          <!-- Product list — image left · name/details/price · qty + Add to cart -->
+          <div class="menu-cards menu-cards--rows">
             <article
               v-for="(item, i) in searchFilteredItems"
               :key="item.id ?? i"
-              class="menu-card"
-              :class="{ 'menu-card--row': layoutMode === 'rows' }"
+              class="menu-card menu-card--row"
               :style="{ '--card-i': i }"
             >
-              <div class="menu-card-visual" @click="openProductDetail(item)">
+              <button type="button" class="menu-card-visual" @click="openProductDetail(item)">
                 <div class="menu-card-image-wrap">
                   <img
                     v-if="item.cover_image && !cardImageErrors[itemKey(item, i)]"
@@ -328,44 +285,48 @@
                   <div v-else class="menu-card-image menu-card-image-placeholder">
                     <Icon icon="solar:gallery-minimalistic-bold-duotone" class="menu-card-placeholder-icon" />
                   </div>
-                  <div class="menu-card-image-veil" aria-hidden="true" />
                   <span v-if="itemRequiresRx(item)" class="menu-card-rx-badge">Rx</span>
-                  <span v-if="item.categoryName || item.category_name" class="menu-card-category">
-                    {{ item.categoryName || item.category_name }}
-                  </span>
-                  <span v-if="item.price != null" class="menu-card-price-tag">{{ formatPrice(item.price) }}</span>
-                  <div v-if="layoutMode === 'grid'" class="menu-card-quick" @click.stop>
-                    <button type="button" class="menu-card-quick-btn" title="Add to cart" @click="addToCart(item)">
-                      <Icon icon="solar:bag-heart-bold" />
-                      <span>Add to cart</span>
+                </div>
+              </button>
+              <div class="menu-card-body">
+                <div class="menu-card-head" @click="openProductDetail(item)">
+                  <h3 class="menu-card-title">{{ item.title || 'Item' }}</h3>
+                  <span v-if="item.price != null" class="menu-card-price-inline">{{ formatPrice(item.price) }}</span>
+                </div>
+                <p v-if="item.description" class="menu-card-desc" @click="openProductDetail(item)">
+                  {{ item.description }}
+                </p>
+                <p v-else-if="item.categoryName || item.category_name" class="menu-card-desc" @click="openProductDetail(item)">
+                  {{ item.categoryName || item.category_name }}
+                </p>
+                <div class="menu-card-actions" @click.stop>
+                  <div class="menu-card-qty" role="group" :aria-label="`Quantity for ${item.title || 'item'}`">
+                    <button
+                      type="button"
+                      class="menu-card-qty-btn"
+                      :aria-label="`Decrease quantity`"
+                      @click="bumpQty(item, -1)"
+                    >
+                      −
+                    </button>
+                    <span class="menu-card-qty-value">{{ qtyFor(item) }}</span>
+                    <button
+                      type="button"
+                      class="menu-card-qty-btn"
+                      :aria-label="`Increase quantity`"
+                      @click="bumpQty(item, 1)"
+                    >
+                      +
                     </button>
                   </div>
-                </div>
-              </div>
-              <div class="menu-card-meta">
-                <div class="menu-card-meta-top">
-                  <div class="menu-card-meta-copy" @click="openProductDetail(item)">
-                    <div v-if="itemRating(item)" class="menu-card-rating" aria-label="Rating">
-                      <Icon
-                        v-for="star in 5"
-                        :key="star"
-                        icon="solar:star-bold"
-                        class="menu-card-star"
-                        :class="{ filled: star <= itemRating(item) }"
-                      />
-                    </div>
-                    <h3 class="menu-card-title">{{ item.title || 'Item' }}</h3>
-                    <p v-if="item.description" class="menu-card-desc">{{ item.description }}</p>
-                  </div>
-                  <div v-if="layoutMode === 'rows'" class="menu-card-row-aside" @click.stop>
-                    <span v-if="item.price != null" class="menu-card-price-inline">{{ formatPrice(item.price) }}</span>
-                    <div class="menu-card-row-actions">
-                      <button type="button" class="menu-card-quick-btn menu-card-quick-btn--row" title="Add to cart" @click="addToCart(item)">
-                        <Icon icon="solar:bag-heart-bold" />
-                        <span>Add to cart</span>
-                      </button>
-                    </div>
-                  </div>
+                  <button
+                    type="button"
+                    class="menu-card-add-btn"
+                    :disabled="adding"
+                    @click="addToCartWithQty(item)"
+                  >
+                    Add to Cart
+                  </button>
                 </div>
               </div>
             </article>
@@ -408,58 +369,36 @@
         </section>
 
         <!-- CTA -->
-        <div class="text-center py-4">
-          <p class="microsite-cta-desc small mb-2">Checkout on KKOO — escrow-protected until delivery is confirmed.</p>
-          <div class="d-flex flex-wrap gap-2 justify-content-center">
-            <RouterLink :to="{ name: 'web.checkout' }" class="btn btn-primary btn-lg">
-              Open web checkout
-            </RouterLink>
+        <div class="microsite-checkout-bar">
+          <div class="microsite-checkout-bar__copy">
+            <p class="microsite-checkout-bar__title mb-0">Ready to order?</p>
+            <p class="microsite-checkout-bar__hint mb-0">
+              Checkout on KKOO — escrow-protected until delivery is confirmed.
+              Guests can add items now; sign in at checkout.
+            </p>
           </div>
-          <p v-if="addMessage" class="text-success small mt-2 mb-0 text-center">{{ addMessage }}</p>
-          <p v-if="addError" class="text-danger small mt-2 mb-0 text-center">{{ addError }}</p>
+          <RouterLink :to="{ name: 'buyer.checkout' }" class="btn btn-primary btn-lg microsite-checkout-bar__cta">
+            Checkout{{ cartItemCount > 0 ? ` (${cartItemCount})` : '' }}
+          </RouterLink>
+          <p v-if="addMessage" class="text-success small mt-2 mb-0 w-100 text-center">{{ addMessage }}</p>
+          <p v-if="addError" class="text-danger small mt-2 mb-0 w-100 text-center">{{ addError }}</p>
         </div>
       </div>
 
-      <!-- Microsite footer: powered by + app buttons -->
       <footer class="microsite-footer">
         <div class="container microsite-footer__inner">
           <div class="microsite-footer__brand">
             <p class="microsite-footer-tagline mb-2">
-              One ecosystem — shop, pay with escrow, and track delivery on KKOO.
+              Shop, pay with escrow, and track delivery on KKOO.
             </p>
             <p class="microsite-footer-powered mb-0">
               © {{ new Date().getFullYear() }} {{ store.business_name || 'Store' }} · Storefront on
               <strong class="microsite-footer-brand">KKOO</strong>
             </p>
-            <span class="microsite-footer-version" title="Storefront v1.0">v1.0</span>
           </div>
-          <div class="microsite-footer-apps">
-            <span class="microsite-footer-apps-label">Get the apps</span>
-            <a
-              :href="appLinks.marketplace.googlePlay"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="microsite-footer-btn"
-            >
-              KKOO for shoppers
-            </a>
-            <a
-              :href="appLinks.eats.googlePlay"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="microsite-footer-btn"
-            >
-              KKOO Eats
-            </a>
-            <a
-              :href="appLinks.rides.googlePlay"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="microsite-footer-btn microsite-footer-btn--soft"
-            >
-              KKOO Rides
-            </a>
-          </div>
+          <RouterLink :to="{ name: 'buyer.checkout' }" class="btn btn-outline-primary">
+            Go to checkout
+          </RouterLink>
         </div>
       </footer>
 
@@ -504,8 +443,13 @@
                 <p v-else class="microsite-detail-desc text-muted">Add this item to your cart to continue.</p>
                 <div class="microsite-detail-price" v-if="selectedProduct.price != null">{{ formatPrice(selectedProduct.price) }}</div>
                 <div class="microsite-detail-actions">
-                  <button type="button" class="menu-card-btn menu-card-btn-order" @click="addToCartFromDetail">
-                    Add to cart
+                  <div class="menu-card-qty" role="group" :aria-label="`Quantity for ${selectedProduct.title || 'item'}`">
+                    <button type="button" class="menu-card-qty-btn" aria-label="Decrease quantity" @click="bumpQty(selectedProduct, -1)">−</button>
+                    <span class="menu-card-qty-value">{{ qtyFor(selectedProduct) }}</span>
+                    <button type="button" class="menu-card-qty-btn" aria-label="Increase quantity" @click="bumpQty(selectedProduct, 1)">+</button>
+                  </div>
+                  <button type="button" class="menu-card-btn menu-card-btn-order" :disabled="adding" @click="addToCartFromDetail">
+                    Add to Cart
                   </button>
                   <button type="button" class="menu-card-btn menu-card-btn-view" @click="selectedProduct = null">Close</button>
                 </div>
@@ -524,8 +468,8 @@ import { useRoute, RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { getStorePublic, type StorePromocode, type StorePublicPayload, type StorePublicProduct } from '@/api/store'
 import { useAddToCart } from '@/composables/useAddToCart'
+import { useWebCart } from '@/composables/useWebCart'
 import { resolveAssetUrl } from '@/utils/assetUrl'
-import { appLinks } from '@/config/app-links'
 
 /** Menu item with optional category for filtering (restaurant = from category; grocery = from product). */
 interface MenuItem extends StorePublicProduct {
@@ -540,6 +484,7 @@ interface MenuItem extends StorePublicProduct {
 
 const route = useRoute()
 const { adding, addMessage, addError, addProduct: addProductToCart } = useAddToCart()
+const { itemCount: cartItemCount, loadCart } = useWebCart()
 const slugOrId = computed(() => (route.params.slugOrId as string) || '')
 const loading = ref(true)
 const error = ref('')
@@ -551,13 +496,16 @@ const categorySearch = ref('')
 const showCategoryPicker = ref(false)
 const sortBy = ref<'default' | 'name' | 'price_asc' | 'price_desc'>('default')
 const priceBand = ref<'all' | 'under_10k' | '10k_50k' | 'over_50k'>('all')
-const layoutMode = ref<'grid' | 'rows'>('grid')
-const gridColOptions = [2, 3, 4] as const
-const gridCols = ref<(typeof gridColOptions)[number]>(4)
 const cardImageErrors = ref<Record<string, boolean>>({})
 const selectedProduct = ref<MenuItem | null>(null)
 const detailImageError = ref(false)
 const copyMessage = ref('')
+/** Per-product quantity before add-to-cart (list row steppers). */
+const rowQty = ref<Record<string, number>>({})
+
+onMounted(() => {
+  void loadCart()
+})
 
 const MICROSITE_THEME_KEY = 'kkoo_microsite_theme'
 function getInitialMicrositeTheme(): 'light' | 'dark' {
@@ -789,7 +737,21 @@ function openProductDetail(item: MenuItem): void {
   selectedProduct.value = item
 }
 
-async function addToCart(item: MenuItem) {
+function qtyKey(item: MenuItem): string {
+  return item.id != null ? String(item.id) : `t-${item.title ?? 'x'}`
+}
+
+function qtyFor(item: MenuItem): number {
+  return rowQty.value[qtyKey(item)] ?? 1
+}
+
+function bumpQty(item: MenuItem, delta: number): void {
+  const key = qtyKey(item)
+  const next = Math.max(1, Math.min(99, qtyFor(item) + delta))
+  rowQty.value = { ...rowQty.value, [key]: next }
+}
+
+async function addToCart(item: MenuItem, quantity = 1) {
   const productId = Number(item.id)
   if (!productId) {
     addError.value = 'No product available for this item.'
@@ -800,16 +762,20 @@ async function addToCart(item: MenuItem) {
     title: item.title,
     base_price: Number(item.base_price ?? item.price) || undefined,
     discount_price: typeof item.discount_price === 'number' ? item.discount_price : undefined,
-    primary_media_url: String(item.primary_media_url ?? item.image_url ?? ''),
+    primary_media_url: String(item.primary_media_url ?? item.image_url ?? item.cover_image ?? ''),
     skus: item.skus,
     allow_preorder: Boolean((item as { allow_preorder?: boolean }).allow_preorder),
-  }, 1, { channel: 'microsite' })
+  }, quantity, { channel: 'microsite' })
+}
+
+async function addToCartWithQty(item: MenuItem) {
+  await addToCart(item, qtyFor(item))
 }
 
 async function addToCartFromDetail() {
   const item = selectedProduct.value
   if (!item) return
-  await addToCart(item)
+  await addToCart(item, qtyFor(item))
   selectedProduct.value = null
 }
 
@@ -1401,145 +1367,259 @@ onMounted(load)
   height: 1.1rem;
 }
 
-/* Product vitrine grid */
+/* Product list — horizontal cards (image left · copy · actions) */
 .menu-cards {
   display: grid;
-  gap: clamp(1rem, 2.5vw, 1.65rem);
-}
-.menu-cards--grid.menu-cards--cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-.menu-cards--grid.menu-cards--cols-3 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-@media (min-width: 768px) {
-  .menu-cards--grid.menu-cards--cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-.menu-cards--grid.menu-cards--cols-4 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-@media (min-width: 992px) {
-  .menu-cards--grid.menu-cards--cols-4 {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
+  gap: 0.85rem;
 }
 .menu-cards--rows {
   grid-template-columns: 1fr;
-  gap: 0.85rem;
 }
 
-/* Row layout — image left · copy center · actions right */
+.menu-card {
+  background: var(--microsite-surface, #fff);
+  border: 1px solid var(--microsite-border, rgba(0, 0, 0, 0.06));
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 24px rgba(31, 27, 36, 0.06);
+  overflow: hidden;
+  animation: menu-card-in 0.35s ease both;
+  animation-delay: calc(var(--card-i, 0) * 30ms);
+}
+
+@keyframes menu-card-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
 .menu-card--row {
   display: grid;
-  grid-template-columns: 5.5rem minmax(0, 1fr) auto;
-  grid-template-rows: auto;
-  align-items: center;
-  gap: 0 1rem;
-  padding: 0.65rem 1rem 0.65rem 0.65rem;
-  min-height: 5.5rem;
-}
-.menu-card--row .menu-card-visual {
-  grid-column: 1;
-  grid-row: 1;
-  border-radius: 0.85rem;
-  align-self: center;
-}
-.menu-card--row .menu-card-image-wrap {
-  aspect-ratio: 1;
-  width: 5.5rem;
-  height: 5.5rem;
-  min-height: 0;
-}
-.menu-card--row .menu-card-image {
-  object-fit: cover;
-}
-.menu-card--row .menu-card-meta {
-  display: contents;
-}
-.menu-card--row .menu-card-meta-top {
-  display: contents;
-}
-.menu-card--row .menu-card-meta-copy {
-  grid-column: 2;
-  grid-row: 1;
-  padding: 0.15rem 0;
-  min-width: 0;
-}
-.menu-card--row .menu-card-row-aside {
-  grid-column: 3;
-  grid-row: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 0.45rem;
-  flex-shrink: 0;
-}
-.menu-card--row .menu-card-price-tag {
-  display: none;
-}
-.menu-card--row .menu-card-quick {
-  display: none;
-}
-.menu-card--row .menu-card-desc {
-  -webkit-line-clamp: 2;
-  margin-bottom: 0;
-}
-.menu-card--row .menu-card-title {
-  margin-bottom: 0.2rem;
-}
-.menu-card--row .menu-card-row-actions {
-  flex-wrap: nowrap;
-}
-.menu-card--row .menu-card-quick-btn--row {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.45rem 0.75rem;
-  border-radius: 999px;
-  border: none;
-  font-size: 0.78rem;
-  font-weight: 700;
-  cursor: pointer;
-  text-decoration: none;
-  white-space: nowrap;
-  background: color-mix(in srgb, var(--microsite-primary, #5C308F) 92%, #000 8%);
-  color: #fff;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.menu-card--row .menu-card-quick-btn--row:hover {
-  transform: translateY(-1px);
-  color: #fff;
-}
-@media (max-width: 767px) {
-  .menu-card--row {
-    grid-template-columns: 4.75rem minmax(0, 1fr);
-    grid-template-rows: auto auto;
-    gap: 0.65rem 0.75rem;
-    padding: 0.65rem;
-  }
-  .menu-card--row .menu-card-image-wrap {
-    width: 4.75rem;
-    height: 4.75rem;
-  }
-  .menu-card--row .menu-card-meta-copy {
-    grid-column: 2;
-    grid-row: 1;
-  }
-  .menu-card--row .menu-card-row-aside {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding-top: 0.15rem;
-    border-top: 1px solid color-mix(in srgb, var(--microsite-primary, #5C308F) 12%, transparent);
-  }
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: stretch;
+  padding: 0.75rem;
+  min-height: 7.5rem;
 }
 
+.menu-card-visual {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  border-radius: 1rem;
+  overflow: hidden;
+  align-self: stretch;
+}
+
+.menu-card--row .menu-card-image-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 6.5rem;
+  aspect-ratio: 1;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--microsite-primary, #5c308f) 8%, #fff);
+}
+
+.menu-card--row .menu-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.menu-card-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: color-mix(in srgb, var(--microsite-primary, #5c308f) 40%, transparent);
+}
+
+.menu-card-placeholder-icon {
+  font-size: 2rem;
+}
+
+.menu-card-rx-badge {
+  position: absolute;
+  top: 0.4rem;
+  left: 0.4rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(180, 83, 9, 0.92);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.menu-card-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0.15rem 0.25rem 0.15rem 0;
+  gap: 0.35rem;
+}
+
+.menu-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.menu-card-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--microsite-text, #1f1b24);
+}
+
+.menu-card-price-inline {
+  flex-shrink: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--microsite-text, #1f1b24);
+}
+
+.menu-card-desc {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--microsite-text-muted, #6b7280);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.menu-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 0.35rem;
+}
+
+.menu-card-qty {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.menu-card-qty-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  border: none;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 1.1rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.menu-card-qty-btn:hover {
+  background: #333;
+}
+
+.menu-card-qty-value {
+  min-width: 1.25rem;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--microsite-text, #1f1b24);
+}
+
+.menu-card-add-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  background: var(--microsite-primary, #5c308f);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.menu-card-add-btn:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.menu-card-add-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.microsite-checkout-bar {
+  position: sticky;
+  bottom: 0.75rem;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 2rem 0 1rem;
+  padding: 1.25rem 1.35rem;
+  border-radius: 1.25rem;
+  background: color-mix(in srgb, var(--microsite-surface, #fff) 94%, transparent);
+  border: 1px solid var(--microsite-border, rgba(0, 0, 0, 0.08));
+  box-shadow: 0 10px 28px rgba(31, 27, 36, 0.12);
+  backdrop-filter: blur(10px);
+}
+
+.microsite-checkout-bar__title {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--microsite-text, #1f1b24);
+}
+
+.microsite-checkout-bar__hint {
+  font-size: 0.85rem;
+  color: var(--microsite-text-muted, #6b7280);
+  max-width: 36rem;
+}
+
+.microsite-checkout-bar__cta {
+  border-radius: 999px;
+  padding-inline: 1.5rem;
+}
+
+.microsite-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.microsite-footer-apps {
+  display: none !important;
+}
+
+@media (max-width: 576px) {
+  .menu-card--row {
+    grid-template-columns: 5.75rem minmax(0, 1fr);
+    gap: 0.65rem;
+    padding: 0.65rem;
+  }
+  .menu-card-title,
+  .menu-card-price-inline {
+    font-size: 0.95rem;
+  }
+  .menu-card-add-btn {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.8rem;
+  }
+}
 /* Menu section (Tasty Foods style) */
 .menu-section-header .menu-breadcrumb {
   font-size: 0.8rem;
@@ -2160,8 +2240,9 @@ onMounted(load)
 }
 .microsite-detail-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.65rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 .microsite-detail-actions .menu-card-btn {
   display: inline-flex;

@@ -2122,7 +2122,7 @@ export default {
       loading: 'Chargement…',
       notFound: 'Aucun produit trouvé.',
       productFallback: 'Produit',
-      add: 'Ajouter',
+      add: 'Ajouter au panier',
       preorder: 'Précommande',
     },
     pillars: {

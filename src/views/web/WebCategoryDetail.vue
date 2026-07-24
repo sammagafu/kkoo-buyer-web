@@ -82,8 +82,8 @@ async function load() {
   }
 }
 
-async function addProduct(prod: GridProduct) {
-  await addProductToCart(prod)
+async function addProduct(prod: GridProduct, quantity = 1) {
+  await addProductToCart(prod, quantity)
 }
 
 onMounted(load)

@@ -139,9 +139,9 @@ async function apply() {
   }
 }
 
-async function onAdd(prod: GridProduct) {
+async function onAdd(prod: GridProduct, quantity = 1) {
   error.value = ''
-  await addProductToCart(prod)
+  await addProductToCart(prod, quantity)
 }
 
 onMounted(load)

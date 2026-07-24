@@ -82,7 +82,7 @@
           :adding="adding"
           :allow-preorder="Boolean(item.allow_preorder)"
           :purchase-mode="item.purchase_mode"
-          @add="addToCart(item)"
+          @add="(qty) => addToCart(item, qty)"
           @open="openProduct(item)"
         />
       </div>
@@ -296,7 +296,7 @@ function menuItemImage(item: RestaurantMenuItem) {
   return resolveAssetUrl(item.cover_image) ?? null
 }
 
-async function addToCart(item: RestaurantMenuItem) {
+async function addToCart(item: RestaurantMenuItem, quantity = 1) {
   const skuId = item.skus?.[0]?.id
   if (!skuId && !item.id) {
     addError.value = t('buyerXp.common.unavailable')
@@ -308,7 +308,7 @@ async function addToCart(item: RestaurantMenuItem) {
     base_price: item.base_price ?? item.price,
     skus: item.skus,
     primary_media_url: item.cover_image,
-  })
+  }, quantity)
   if (!ok) return
   hasCartItems.value = true
   if (fulfillmentMode.value === 'delivery') {

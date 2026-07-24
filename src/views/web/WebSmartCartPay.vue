@@ -43,10 +43,18 @@
         <p v-if="walletBalance != null" class="small text-muted mb-3">
           Wallet balance: <strong>{{ formatMoney(walletBalance) }}</strong>
         </p>
-        <b-form-group label="Payment method" class="mb-3">
+        <p v-if="paymentMethodsLoading" class="text-muted small mb-3">Loading payment methods…</p>
+        <b-form-group v-else-if="paymentOptions.length" label="Payment method" class="mb-3">
           <b-form-select v-model="paymentMethod" :options="paymentOptions" />
         </b-form-group>
-        <b-button variant="primary" size="lg" class="w-100" :disabled="paying" @click="pay">
+        <p v-else class="text-muted small mb-3">No allowed payment methods available right now.</p>
+        <b-button
+          variant="primary"
+          size="lg"
+          class="w-100"
+          :disabled="paying || !paymentMethod"
+          @click="pay"
+        >
           {{ paying ? 'Processing…' : `Pay ${formatMoney(session.subtotal)}` }}
         </b-button>
         <p v-if="payError" class="text-danger small mt-2 mb-0">{{ payError }}</p>
@@ -59,10 +67,13 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
+import { paymentsApi } from '@/api/payments'
 import { getPublicSmartCart, paySmartCart, type SmartCartSession } from '@/api/smartCart'
 import { getWalletBalance } from '@/api/wallet'
 import { useAuthStore } from '@/stores/auth'
 import { formatApiError } from '@/utils/formatApiError'
+
+const SMART_CART_ONLINE = new Set(['selcom', 'mobile_money', 'mpesa'])
 
 const route = useRoute()
 const auth = useAuthStore()
@@ -78,21 +89,54 @@ const loadError = ref('')
 const paying = ref(false)
 const payError = ref('')
 const walletBalance = ref<number | null>(null)
-const paymentMethod = ref('wallet')
+const paymentMethod = ref('')
+const paymentOptions = ref<{ value: string; text: string }[]>([])
+const paymentMethodsLoading = ref(false)
 let pollTimer: ReturnType<typeof setInterval> | null = null
-
-const paymentOptions = [
-  { value: 'wallet', text: 'KKOO Wallet' },
-  { value: 'selcom', text: 'Mobile money (Selcom)' },
-]
 
 const paid = computed(() => session.value?.status === 'paid' || route.query.paid === '1')
 const expired = computed(() => session.value?.status === 'expired')
 
 function formatMoney(val: number) {
-  return new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(
-    val || 0
-  )
+  const currency = (session.value?.currency_code || 'TZS').toUpperCase()
+  try {
+    return new Intl.NumberFormat('en-TZ', {
+      style: 'currency',
+      currency,
+      maximumFractionDigits: 0,
+    }).format(val || 0)
+  } catch {
+    return `${currency} ${Math.round(val || 0).toLocaleString()}`
+  }
+}
+
+async function loadPaymentMethods() {
+  paymentMethodsLoading.value = true
+  try {
+    const options: { value: string; text: string }[] = [
+      { value: 'wallet', text: 'KKOO Wallet' },
+    ]
+    const { data } = await paymentsApi.listMethods()
+    for (const m of data?.results ?? []) {
+      if (m.is_enabled === false) continue
+      const code = String(m.code || '').toLowerCase()
+      const provider = String(m.provider || '').toLowerCase()
+      let payCode = ''
+      if (SMART_CART_ONLINE.has(code)) payCode = code
+      else if (SMART_CART_ONLINE.has(provider)) payCode = provider
+      if (!payCode || options.some((o) => o.value === payCode)) continue
+      options.push({ value: payCode, text: m.label || payCode })
+    }
+    paymentOptions.value = options
+    if (!options.some((o) => o.value === paymentMethod.value)) {
+      paymentMethod.value = options[0]?.value ?? ''
+    }
+  } catch {
+    paymentOptions.value = [{ value: 'wallet', text: 'KKOO Wallet' }]
+    paymentMethod.value = 'wallet'
+  } finally {
+    paymentMethodsLoading.value = false
+  }
 }
 
 async function loadCart() {
@@ -122,7 +166,7 @@ async function loadWallet() {
 }
 
 async function pay() {
-  if (!session.value || !token.value) return
+  if (!session.value || !token.value || !paymentMethod.value) return
   paying.value = true
   payError.value = ''
   try {
@@ -144,13 +188,15 @@ async function pay() {
   }
 }
 
-watch(isAuthenticated, () => {
-  void loadWallet()
+watch(isAuthenticated, async () => {
+  await loadWallet()
+  await loadPaymentMethods()
 })
 
 onMounted(async () => {
   await loadCart()
   await loadWallet()
+  if (isAuthenticated.value) await loadPaymentMethods()
   pollTimer = setInterval(loadCart, 3000)
 })
 

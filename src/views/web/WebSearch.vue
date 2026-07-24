@@ -85,7 +85,7 @@
           :adding="addingId === prod.id"
           :allow-preorder="Boolean(prod.allow_preorder)"
           :purchase-mode="prod.purchase_mode"
-          @add="addProduct(prod)"
+          @add="(qty) => addProduct(prod, qty)"
           @open="openProduct(prod)"
         />
       </div>
@@ -253,11 +253,11 @@ function openProduct(prod: Product) {
   void router.push(productDetailLink(prod.id))
 }
 
-async function addProduct(prod: Product) {
+async function addProduct(prod: Product, quantity = 1) {
   if (!prod.id) return
   addingId.value = prod.id
   try {
-    await addProductToCart(prod)
+    await addProductToCart(prod, quantity)
   } finally {
     addingId.value = null
   }

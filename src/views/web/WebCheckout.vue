@@ -120,6 +120,9 @@
       <div class="webcheckout-block">
         <h2 class="webcheckout-block__title mb-3">{{ t('buyerXp.checkout.payment') }}</h2>
         <p v-if="paymentMethodsLoading" class="text-muted small mb-2">{{ t('buyerXp.checkout.loadingPayments') }}</p>
+        <p v-else-if="paymentSelectOptions.length === 0" class="text-muted small mb-2">
+          {{ t('buyerXp.checkout.noPaymentMethods') }}
+        </p>
         <b-form-select
           v-else
           id="payment"
@@ -217,7 +220,7 @@ const addresses = ref<AddressPayload[]>([])
 const selectedAddressId = ref<number | null>(null)
 const deliveryLocationText = ref('')
 const partySize = ref(2)
-const paymentMethod = ref('selcom')
+const paymentMethod = ref('')
 const paymentMethods = ref<PaymentMethodRow[]>([])
 const prescriptionIds = ref<number[]>([])
 const giftVoucherCode = ref('')
@@ -412,17 +415,11 @@ async function loadPaymentMethods() {
   paymentMethodsLoading.value = true
   try {
     const { data } = await paymentsApi.listMethods({ country_code: 'TZ' })
-    const rows = (data?.results ?? []).filter((m) => m.is_enabled !== false)
-    paymentMethods.value = rows.length
-      ? rows
-      : [
-          { code: 'selcom', label: 'Pay online (M-Pesa / Card)', kind: 'online', provider: 'selcom', is_enabled: true },
-          { code: 'pay_on_delivery', label: t('buyerXp.checkout.payOnDelivery'), kind: 'offline', is_enabled: true },
-          { code: 'cash', label: t('buyerXp.checkout.cashOnDelivery'), kind: 'offline', is_enabled: true },
-        ]
+    // Only methods the backend marks enabled — never invent a local list.
+    paymentMethods.value = (data?.results ?? []).filter((m) => m.is_enabled !== false && !!m.code)
     const preferred =
-      paymentMethods.value.find((m) => m.code === 'selcom' && m.is_enabled !== false) ??
-      paymentMethods.value.find((m) => (m.provider === 'selcom' || m.kind === 'online') && m.is_enabled !== false) ??
+      paymentMethods.value.find((m) => m.code === 'selcom') ??
+      paymentMethods.value.find((m) => m.provider === 'selcom' || m.kind === 'online') ??
       paymentMethods.value[0]
     if (preferred?.code) {
       paymentMethods.value = [
@@ -430,14 +427,12 @@ async function loadPaymentMethods() {
         ...paymentMethods.value.filter((m) => m.code !== preferred.code),
       ]
       paymentMethod.value = preferred.code
+    } else {
+      paymentMethod.value = ''
     }
   } catch {
-    paymentMethods.value = [
-      { code: 'selcom', label: 'Pay online (M-Pesa / Card)', kind: 'online', provider: 'selcom', is_enabled: true },
-      { code: 'pay_on_delivery', label: t('buyerXp.checkout.payOnDelivery'), kind: 'offline', is_enabled: true },
-      { code: 'cash', label: t('buyerXp.checkout.cashOnDelivery'), kind: 'offline', is_enabled: true },
-    ]
-    paymentMethod.value = 'selcom'
+    paymentMethods.value = []
+    paymentMethod.value = ''
   } finally {
     paymentMethodsLoading.value = false
   }

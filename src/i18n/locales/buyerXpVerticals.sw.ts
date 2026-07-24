@@ -233,6 +233,8 @@ export const buyerXpVerticalsSw = {
     payment: 'Malipo',
     cardOnDelivery: 'Kadi wakati wa uwasilishaji',
     cashOnDelivery: 'Taslimu wakati wa uwasilishaji',
+    loadingPayments: 'Inapakia njia za malipo…',
+    noPaymentMethods: 'Hakuna njia za malipo kwa eneo lako. Jaribu tena baadaye.',
     cartSummary: 'Kikapu: bidhaa {count} · {total}',
     itemsCount: 'Bidhaa {count}',
     checkoutProgressLabel: 'Hatua za malipo',

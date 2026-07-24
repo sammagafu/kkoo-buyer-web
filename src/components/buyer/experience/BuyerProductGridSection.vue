@@ -18,7 +18,7 @@
         :adding="adding"
         :allow-preorder="Boolean(prod.allow_preorder)"
         :purchase-mode="prod.purchase_mode"
-        @add="$emit('add', prod)"
+        @add="(qty) => $emit('add', prod, qty)"
         @open="openProduct(prod)"
       />
     </div>
@@ -63,7 +63,7 @@ defineProps<{
   layout?: 'default' | 'popular-row'
 }>()
 
-defineEmits<{ add: [product: GridProduct] }>()
+defineEmits<{ add: [product: GridProduct, quantity?: number] }>()
 
 function productKey(prod: GridProduct) {
   return String(prod.id ?? `${prod.store_id}-${prod.title}`)

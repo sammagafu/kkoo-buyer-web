@@ -316,6 +316,7 @@ export const buyerXpVerticals = {
     cardOnDelivery: 'Card on delivery',
     cashOnDelivery: 'Cash on delivery',
     loadingPayments: 'Loading payment methods…',
+    noPaymentMethods: 'No payment methods available for your area. Try again later.',
     rxRequired: 'Prescription required',
     rxHint: 'Your cart includes prescription medicines. Upload a valid prescription before placing the order.',
     uploadRx: 'Upload prescription',
