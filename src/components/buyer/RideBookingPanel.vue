@@ -459,7 +459,7 @@ async function submit() {
     })
     const id = (data as { id?: number })?.id
     if (id) {
-      await router.push({ name: 'buyer.ride.detail', params: { id: String(id) } })
+      await router.push({ name: 'buyer.ride.detail', params: { id: String(id) }, query: { booked: '1' } })
     }
   } catch (e: unknown) {
     if (isAuthSessionError(e)) return

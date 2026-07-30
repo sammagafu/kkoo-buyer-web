@@ -1,5 +1,5 @@
 <template>
-  <div class="lh-footer__panel mk-cta-panel">
+  <div class="lh-cta__panel mk-cta-panel">
     <div>
       <p v-if="kicker" class="lh-kicker">{{ kicker }}</p>
       <h2 class="lh-section__title">{{ title }}</h2>

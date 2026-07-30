@@ -60,7 +60,7 @@ export const buyerVerticalRoutes = [
   {
     path: '/send',
     name: 'buyer.send',
-    meta: { title: setTitle('Send — Shop for me'), ...buyerShell },
+    meta: { title: setTitle('Send me'), ...buyerShell },
     component: () => import('@/views/web/WebSend.vue'),
   },
   {

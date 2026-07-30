@@ -19,13 +19,29 @@
     <p v-else-if="error" class="buyer-xp-toast buyer-xp-toast--err">{{ error }}</p>
 
     <template v-else-if="order">
-      <section class="buyer-order-detail-hero">
-        <p class="buyer-order-detail-hero__label">{{ t('buyerXp.common.total') }}</p>
-        <p class="buyer-order-detail-hero__total">{{ formatMoney(order.final_total ?? order.total_amount) }}</p>
-        <p v-if="order.created_at" class="buyer-order-detail-hero__meta">{{ formatDate(order.created_at) }}</p>
-        <p v-if="pointsEarned > 0" class="buyer-order-detail-hero__points">
-          +{{ pointsEarned }} {{ t('buyerXp.orders.pointsUnit') }} · {{ t('buyerXp.orders.pointsEarned') }}
-        </p>
+      <section v-if="justPlaced" class="buyer-just-placed">
+        <p class="buyer-just-placed__title">{{ t('buyerXp.orders.justPlacedTitle') }}</p>
+        <p class="buyer-just-placed__body">{{ t('buyerXp.orders.justPlacedBody') }}</p>
+        <BuyerPostSuccessTrust channel="buy" :subject-id="id" />
+      </section>
+
+      <section class="buyer-order-receipt-ticket" aria-label="Order receipt">
+        <p class="buyer-order-receipt-ticket__total">{{ formatMoney(order.final_total ?? order.total_amount) }}</p>
+        <p v-if="order.created_at" class="buyer-order-receipt-ticket__meta">{{ formatDate(order.created_at) }}</p>
+        <div class="buyer-order-receipt-ticket__rows">
+          <div class="buyer-order-receipt-ticket__row">
+            <span class="buyer-order-receipt-ticket__row-label">{{ t('buyerXp.common.orderNumberLabel') }}</span>
+            <span class="buyer-order-receipt-ticket__row-value">{{ order.order_number || id }}</span>
+          </div>
+          <div v-if="order.payment_method" class="buyer-order-receipt-ticket__row">
+            <span class="buyer-order-receipt-ticket__row-label">{{ t('buyerXp.common.payment') }}</span>
+            <span class="buyer-order-receipt-ticket__row-value">{{ order.payment_method }}</span>
+          </div>
+          <div v-if="pointsEarned > 0" class="buyer-order-receipt-ticket__row">
+            <span class="buyer-order-receipt-ticket__row-label">{{ t('buyerXp.orders.pointsEarned') }}</span>
+            <span class="buyer-order-receipt-ticket__row-value">+{{ pointsEarned }} {{ t('buyerXp.orders.pointsUnit') }}</span>
+          </div>
+        </div>
       </section>
 
       <section class="buyer-detail-card">
@@ -83,8 +99,20 @@
         <article v-for="(so, i) in subOrders" :key="i" class="buyer-order-subcard">
           <div class="buyer-order-detail-row">
             <strong class="buyer-order-detail-row__value">{{ subOrderLabel(so) }}</strong>
-            <span class="buyer-status-pill buyer-status-pill--warn">{{ formatOrderStatus(so.status) }}</span>
+            <span
+              v-if="normalizeStoreStatus(so.status) === 'cancelled'"
+              class="buyer-status-pill buyer-status-pill--danger"
+            >
+              {{ t('buyerXp.orders.progressCancelled') }}
+            </span>
+            <span v-else :class="orderStatusPillClass(so.status)">{{ formatOrderStatus(so.status) }}</span>
           </div>
+          <BuyerOrderProgress
+            v-if="normalizeStoreStatus(so.status) !== 'cancelled'"
+            class="buyer-order-subcard__progress"
+            :steps="stepsForSubOrder(so)"
+            :aria-label="subOrderLabel(so)"
+          />
           <div v-if="so.seller_notes" class="buyer-order-detail-row buyer-order-detail-row--stack">
             <span class="buyer-order-detail-row__label">{{ t('buyerXp.orders.storeNote') }}</span>
             <span class="buyer-order-detail-row__value">{{ so.seller_notes }}</span>
@@ -94,6 +122,11 @@
             <span class="buyer-order-detail-row__value">{{ formatDate(so.estimated_ready_at) }}</span>
           </div>
         </article>
+      </section>
+
+      <section v-else-if="order" class="buyer-detail-card">
+        <BuyerSectionHeader :title="t('buyerXp.orders.storeProgress')" />
+        <BuyerOrderProgress :steps="parentProgressSteps" :aria-label="t('buyerXp.orders.storeProgress')" />
       </section>
 
       <section v-if="tracking" class="buyer-detail-card buyer-order-detail-tracking">
@@ -118,10 +151,16 @@
 
       <section v-if="items.length" class="buyer-detail-card">
         <BuyerSectionHeader :title="t('buyerXp.orders.items')" />
-        <div class="buyer-order-detail-rows">
-          <div v-for="(item, i) in items" :key="i" class="buyer-order-detail-row">
-            <span class="buyer-order-detail-row__label">{{ itemLabel(item) }}</span>
-            <span class="buyer-order-detail-row__value">{{ formatMoney(item.total_price ?? item.line_total ?? item.unit_price) }}</span>
+        <div class="buyer-order-item-cards">
+          <div v-for="(item, i) in items" :key="i" class="buyer-order-item-card">
+            <div class="buyer-order-item-card__thumb" aria-hidden="true">
+              <Icon icon="solar:bag-check-bold" />
+            </div>
+            <div class="buyer-order-item-card__info">
+              <p class="buyer-order-item-card__title">{{ item.product_title ?? item.title ?? item.name ?? t('buyerXp.common.itemFallback') }}</p>
+              <span class="buyer-order-item-card__qty">x{{ item.quantity ?? 1 }}</span>
+            </div>
+            <p class="buyer-order-item-card__price">{{ formatMoney(item.total_price ?? item.line_total ?? item.unit_price) }}</p>
           </div>
         </div>
       </section>
@@ -136,6 +175,7 @@
           :to="{ name: 'buyer.returns', query: { order_id: id } }"
         />
         <BuyerHubCard
+          v-if="!justPlaced"
           :title="t('buyerXp.orders.openDispute')"
           :subtitle="t('buyerXp.orders.openDisputeSub')"
           icon="solar:shield-warning-bold"
@@ -163,15 +203,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import { ordersUserApi, logisticsBuyerApi } from '@/api'
 import { formatApiError } from '@/utils/formatApiError'
 import { formatOrderStatus, orderStatusPillClass } from '@/utils/buyerFormat'
+import { normalizeStoreStatus, storeProgressStates, type StoreProgressKey } from '@/utils/orderProgress'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerHubCard from '@/components/buyer/experience/BuyerHubCard.vue'
+import BuyerPostSuccessTrust from '@/components/buyer/experience/BuyerPostSuccessTrust.vue'
+import BuyerOrderProgress from '@/components/buyer/BuyerOrderProgress.vue'
 
 const props = defineProps<{ id: string }>()
 const route = useRoute()
@@ -181,12 +224,38 @@ const { t } = useI18n()
 type OrderRow = Record<string, unknown>
 type SubOrderRow = Record<string, unknown>
 
+const justPlaced = computed(() => String(route.query.placed ?? '') === '1')
+
 const order = ref<OrderRow | null>(null)
 const subOrders = ref<SubOrderRow[]>([])
 const tracking = ref<Record<string, unknown> | null>(null)
 const loading = ref(false)
 const error = ref('')
 const cancelling = ref(false)
+let pollTimer: ReturnType<typeof setInterval> | null = null
+
+const progressLabels = computed(() => {
+  const keys: StoreProgressKey[] = ['pending', 'confirmed', 'preparing', 'ready', 'shipped', 'delivered']
+  const map = {} as Record<StoreProgressKey, string>
+  const labelKey: Record<StoreProgressKey, string> = {
+    pending: 'buyerXp.orders.progressPlaced',
+    confirmed: 'buyerXp.orders.progressAccepted',
+    preparing: 'buyerXp.orders.progressPreparing',
+    ready: 'buyerXp.orders.progressReady',
+    shipped: 'buyerXp.orders.progressOut',
+    delivered: 'buyerXp.orders.progressDelivered',
+  }
+  for (const k of keys) map[k] = t(labelKey[k])
+  return map
+})
+
+const parentProgressSteps = computed(() =>
+  storeProgressStates(order.value?.status, progressLabels.value),
+)
+
+function stepsForSubOrder(so: SubOrderRow) {
+  return storeProgressStates(so.status, progressLabels.value)
+}
 
 const items = computed(() => {
   const raw = order.value?.items ?? order.value?.order_items
@@ -235,14 +304,30 @@ function itemLabel(item: Record<string, unknown>) {
 }
 
 function subOrderLabel(so: SubOrderRow) {
+  const name = typeof so.business_name === 'string' ? so.business_name.trim() : ''
+  if (name) return name
   const channel = so.channel ? String(so.channel) : 'Store'
   const sid = so.seller_id != null ? `#${so.seller_id}` : ''
   return `${channel}${sid ? ` ${sid}` : ''}`
 }
 
-async function load() {
-  loading.value = true
-  error.value = ''
+function shouldPoll(): boolean {
+  const parent = normalizeStoreStatus(order.value?.status)
+  if (['delivered', 'cancelled', 'completed'].includes(parent)) return false
+  if (subOrders.value.length) {
+    return subOrders.value.some((so) => {
+      const s = normalizeStoreStatus(so.status)
+      return s !== 'delivered' && s !== 'cancelled'
+    })
+  }
+  return true
+}
+
+async function load(silent = false) {
+  if (!silent) {
+    loading.value = true
+    error.value = ''
+  }
   const orderId = Number(props.id || route.params.id)
   try {
     const { data } = await ordersUserApi.get(orderId)
@@ -252,18 +337,33 @@ async function load() {
       const list = subRes.data?.sub_orders
       subOrders.value = Array.isArray(list) ? (list as SubOrderRow[]) : []
     } catch {
-      subOrders.value = []
+      if (!silent) subOrders.value = []
     }
     try {
       const tr = await logisticsBuyerApi.getTracking(orderId)
       tracking.value = (tr.data ?? {}) as Record<string, unknown>
     } catch {
-      tracking.value = null
+      if (!silent) tracking.value = null
     }
   } catch (e) {
-    error.value = formatApiError(e, t('buyerXp.orders.couldNotLoad'))
+    if (!silent) error.value = formatApiError(e, t('buyerXp.orders.couldNotLoad'))
   } finally {
-    loading.value = false
+    if (!silent) loading.value = false
+  }
+}
+
+function startPolling() {
+  stopPolling()
+  pollTimer = setInterval(() => {
+    if (shouldPoll()) void load(true)
+    else stopPolling()
+  }, 12000)
+}
+
+function stopPolling() {
+  if (pollTimer) {
+    clearInterval(pollTimer)
+    pollTimer = null
   }
 }
 
@@ -280,5 +380,64 @@ async function cancelOrder() {
   }
 }
 
-onMounted(load)
+onMounted(async () => {
+  await load()
+  if (shouldPoll()) startPolling()
+})
+onUnmounted(stopPolling)
 </script>
+
+<style scoped>
+.buyer-order-item-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.buyer-order-item-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--buyer-border, #e5e7eb);
+  border-radius: 16px;
+  background: var(--buyer-card-bg, #fff);
+}
+.buyer-order-item-card__thumb {
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--buyer-muted-bg, #f3f3f3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: var(--buyer-text-muted, #9ca3af);
+}
+.buyer-order-item-card__info {
+  flex: 1;
+  min-width: 0;
+}
+.buyer-order-item-card__title {
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0;
+}
+.buyer-order-item-card__qty {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--buyer-primary-light, rgba(37, 99, 235, 0.1));
+  color: var(--buyer-primary, #2563eb);
+}
+.buyer-order-item-card__price {
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0;
+  white-space: nowrap;
+  align-self: center;
+}
+</style>

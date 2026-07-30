@@ -28,25 +28,30 @@
       </div>
     </div>
     <ul v-if="cartItems.length" class="buyer-cart-sidebar__list">
-      <li v-for="item in cartItems" :key="itemKey(item)" class="buyer-cart-sidebar__item">
-        <div class="buyer-cart-sidebar__thumb" aria-hidden="true">
-          <Icon icon="solar:box-bold-duotone" />
-        </div>
-        <div class="buyer-cart-sidebar__item-body">
-          <p class="buyer-cart-sidebar__item-title">{{ item.product?.title || t('buyerXp.cart.itemFallback') }}</p>
-          <p class="buyer-cart-sidebar__item-price">
-            {{ formatLinePrice(item) }}
-          </p>
-          <div class="buyer-cart-sidebar__qty">
-            <button type="button" :disabled="item.quantity <= 1" @click="updateQuantity(item, item.quantity - 1)">−</button>
-            <span>{{ item.quantity }}</span>
-            <button type="button" @click="updateQuantity(item, item.quantity + 1)">+</button>
+      <template v-for="(group, gi) in sellerGroups" :key="group.sellerId ?? `g-${gi}`">
+        <li class="buyer-cart-sidebar__shop-head" aria-hidden="false">
+          <span>{{ shopLabel(group.sellerId) }}</span>
+        </li>
+        <li v-for="item in group.items" :key="itemKey(item)" class="buyer-cart-sidebar__item">
+          <div class="buyer-cart-sidebar__thumb" aria-hidden="true">
+            <Icon icon="solar:box-bold-duotone" />
           </div>
-        </div>
-        <button type="button" class="buyer-cart-sidebar__remove" :aria-label="t('buyerXp.cart.remove')" @click="removeItem(item)">
-          <Icon icon="solar:trash-bin-minimalistic-linear" />
-        </button>
-      </li>
+          <div class="buyer-cart-sidebar__item-body">
+            <p class="buyer-cart-sidebar__item-title">{{ item.product?.title || t('buyerXp.cart.itemFallback') }}</p>
+            <p class="buyer-cart-sidebar__item-price">
+              {{ formatLinePrice(item) }}
+            </p>
+            <div class="buyer-cart-sidebar__qty">
+              <button type="button" :disabled="item.quantity <= 1" @click="updateQuantity(item, item.quantity - 1)">−</button>
+              <span>{{ item.quantity }}</span>
+              <button type="button" @click="updateQuantity(item, item.quantity + 1)">+</button>
+            </div>
+          </div>
+          <button type="button" class="buyer-cart-sidebar__remove" :aria-label="t('buyerXp.cart.remove')" @click="removeItem(item)">
+            <Icon icon="solar:trash-bin-minimalistic-linear" />
+          </button>
+        </li>
+      </template>
     </ul>
 
     <div class="buyer-cart-sidebar__summary">
@@ -96,6 +101,7 @@ const { fulfillmentMode } = useInShopFulfillment()
 
 const {
   cartItems,
+  sellerGroups,
   loading,
   error,
   itemCount,
@@ -107,6 +113,11 @@ const {
   itemKey,
   formatPrice,
 } = useWebCart()
+
+function shopLabel(sellerId: number | null) {
+  if (sellerId == null || sellerId <= 0) return t('buyerXp.cart.shopUnknown')
+  return t('buyerXp.cart.shopLabel', { id: sellerId })
+}
 
 const checkoutTo = computed(() => {
   if (isGuestCart.value) {

@@ -359,9 +359,38 @@ html:not([data-bs-theme='dark']) body {
 }
 
 // ============================================================================
-// DISPLAY TYPOGRAPHY — Syne for h1–h3, brand, large numbers
-// Body, labels, and h4–h6 stay on Poppins (--kkoo-font-primary).
+// DISPLAY TYPOGRAPHY — Poppins for all titles
 // ============================================================================
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+.display-1,
+.display-2,
+.display-3,
+.display-4,
+.display-5,
+.display-6,
+.dashboard-heading,
+.stat-card-value,
+.kkoo-display,
+.topbar-brand-title,
+.auth-center-card__title,
+.page-title,
+.section-title,
+[class*='__title'],
+[class*='-title']:not([class*='subtitle']):not([class*='-title-row']):not([class*='-title-block']) {
+  font-family: 'Poppins', var(--kkoo-font-primary, #{$kkoo-font-primary}) !important;
+}
 
 h1,
 h2,
@@ -380,7 +409,6 @@ h3,
 .kkoo-display,
 .topbar-brand-title,
 .auth-center-card__title {
-  font-family: var(--kkoo-font-display, #{$kkoo-font-display});
   letter-spacing: -0.02em;
 }
 
@@ -388,7 +416,7 @@ h3,
   letter-spacing: 0.04em;
 }
 
-// Commerce product cards — name + price always Poppins (never Syne)
+// Commerce product cards — name + price always Poppins
 .shop-product-card__title,
 .shop-product-card__price,
 .store-product-card__title,
@@ -396,7 +424,7 @@ h3,
 .menu-card-title,
 .menu-card-price-tag,
 .menu-card-price-inline {
-  font-family: var(--kkoo-font-primary, #{$kkoo-font-primary}) !important;
+  font-family: 'Poppins', var(--kkoo-font-primary, #{$kkoo-font-primary}) !important;
   letter-spacing: normal;
 }
 

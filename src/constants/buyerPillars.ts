@@ -45,7 +45,7 @@ export const BUYER_PILLARS: BuyerPillar[] = [
   {
     id: 'send',
     label: 'Send me',
-    subtitle: 'Shop for you',
+    subtitle: 'Send a rider to shop',
     icon: 'solar:bag-heart-bold',
     routeName: 'buyer.send',
     tone: 'pink',

@@ -3,10 +3,11 @@
     <p v-if="loading" class="shop-products__status">{{ t('buyerXp.products.loading') }}</p>
     <p v-else-if="error" class="shop-products__status shop-products__status--error">{{ error }}</p>
     <p v-else-if="!products.length" class="shop-products__status">{{ t('buyerXp.products.notFound') }}</p>
-    <div v-else class="shop-product-grid" :class="{ 'shop-product-grid--popular-row': layout === 'popular-row' }">
+    <div v-else class="shop-product-grid" :class="{ 'shop-product-grid--popular-row': layout === 'popular-row', 'shop-product-grid--list': cardLayout === 'list' }">
       <BuyerStoreProductCard
         v-for="prod in products"
         :key="productKey(prod)"
+        :layout="cardLayout"
         :title="prod.title"
         :description="layout === 'popular-row' ? undefined : prod.description"
         :price-label="formatPrice(prod.price ?? prod.base_price)"
@@ -18,6 +19,8 @@
         :adding="adding"
         :allow-preorder="Boolean(prod.allow_preorder)"
         :purchase-mode="prod.purchase_mode"
+        :rating="productRating(prod)"
+        :review-count="productReviewCount(prod)"
         @add="(qty) => $emit('add', prod, qty)"
         @open="openProduct(prod)"
       />
@@ -50,18 +53,25 @@ export type GridProduct = {
   store_id?: number | string
   allow_preorder?: boolean
   purchase_mode?: string
+  rating?: number
+  average_rating?: number
+  review_count?: number
 }
 
-defineProps<{
-  products: GridProduct[]
-  loading?: boolean
-  error?: string
-  message?: string
-  addError?: string
-  adding?: boolean
-  showStoreLabel?: boolean
-  layout?: 'default' | 'popular-row'
-}>()
+withDefaults(
+  defineProps<{
+    products: GridProduct[]
+    loading?: boolean
+    error?: string
+    message?: string
+    addError?: string
+    adding?: boolean
+    showStoreLabel?: boolean
+    layout?: 'default' | 'popular-row'
+    cardLayout?: 'grid' | 'list'
+  }>(),
+  { cardLayout: 'grid' },
+)
 
 defineEmits<{ add: [product: GridProduct, quantity?: number] }>()
 
@@ -72,6 +82,16 @@ function productKey(prod: GridProduct) {
 function formatPrice(val?: number | null) {
   if (val == null) return '—'
   return new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(val)
+}
+
+function productRating(prod: GridProduct) {
+  const raw = prod.rating ?? prod.average_rating
+  return raw != null && Number(raw) > 0 ? Number(raw) : null
+}
+
+function productReviewCount(prod: GridProduct) {
+  const raw = prod.review_count
+  return raw != null && Number(raw) > 0 ? Number(raw) : null
 }
 
 function productImage(prod: GridProduct) {

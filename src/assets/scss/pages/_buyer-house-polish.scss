@@ -29,9 +29,9 @@
   }
 }
 
-/* —— Surfaces: less card soup —— */
+/* —— Surfaces: flat on home, but keep readable section insets —— */
 .buyer-xp--mhome .buyer-surface {
-  padding: 0;
+  padding: var(--buyer-section-pad-y) var(--buyer-section-pad-x);
   border: 0;
   background: transparent;
   box-shadow: none;
@@ -39,23 +39,18 @@
 }
 
 .buyer-xp--mhome .buyer-surface--compact {
-  padding: 0;
-}
-
-.buyer-xp--mhome .buyer-home-products {
-  padding-top: 0.15rem;
+  padding: calc(var(--buyer-section-pad-y) * 0.85) var(--buyer-section-pad-x);
 }
 
 .buyer-xp--mhome .buyer-home-products .buyer-section-head,
 .buyer-xp--mhome .buyer-surface--compact .buyer-section-head {
-  margin-bottom: 0.9rem;
-  padding-inline: 0.1rem;
+  margin-bottom: var(--buyer-section-gap);
 }
 
 /* —— Section titles —— */
 .buyer-section-head {
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--buyer-section-gap);
 }
 
 .buyer-section-head__overline {
@@ -242,7 +237,7 @@
 }
 
 .buyer-mhome-greeting__line {
-  font-family: var(--kkoo-font-display, 'Syne', sans-serif);
+  font-family: var(--kkoo-font-display, 'Poppins', sans-serif);
   font-size: clamp(0.95rem, 2.2vw, 1.15rem);
   font-weight: 700;
   letter-spacing: -0.025em;
@@ -443,11 +438,15 @@
   transition: opacity 220ms var(--buyer-reveal-ease);
 }
 
-.buyer-shopping-shell .store-product-card:hover {
+.buyer-shopping-shell .store-product-card:not(.store-product-card--featured):hover {
   transform: none;
   border-color: transparent;
   box-shadow: none;
   opacity: 0.96;
+}
+
+.buyer-shopping-shell .store-product-card--featured .store-product-card__price {
+  color: var(--featured-card-ink, var(--kkoo-ink));
 }
 
 .buyer-shopping-shell .store-product-card__price {

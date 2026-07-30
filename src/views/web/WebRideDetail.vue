@@ -19,6 +19,12 @@
     <p v-else-if="error" class="buyer-xp-toast buyer-xp-toast--err">{{ error }}</p>
 
     <template v-else-if="ride">
+      <section v-if="justBooked" class="buyer-just-placed">
+        <p class="buyer-just-placed__title">{{ t('buyerXp.ride.justBookedTitle') }}</p>
+        <p class="buyer-just-placed__body">{{ t('buyerXp.ride.justBookedBody') }}</p>
+        <BuyerPostSuccessTrust channel="move" :subject-id="id" />
+      </section>
+
       <section class="buyer-ride-detail-hero">
         <p class="buyer-ride-detail-hero__label">{{ t('buyerXp.ride.fare') }}</p>
         <p class="buyer-ride-detail-hero__fare">{{ formatMoney(ride.fare ?? ride.fare_amount ?? ride.estimated_fare) }}</p>
@@ -83,6 +89,8 @@
           {{ t('buyerXp.ride.historyTitle') }}
         </RouterLink>
       </div>
+
+      <BuyerPostSuccessTrust v-if="!justBooked" channel="move" :subject-id="id" />
     </template>
   </div>
 </template>
@@ -97,6 +105,7 @@ import { formatApiError } from '@/utils/formatApiError'
 import { formatRideStatus, rideStatusPillClass } from '@/utils/buyerFormat'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerRideRouteSummary from '@/components/buyer/experience/BuyerRideRouteSummary.vue'
+import BuyerPostSuccessTrust from '@/components/buyer/experience/BuyerPostSuccessTrust.vue'
 
 const props = defineProps<{ id: string }>()
 const route = useRoute()
@@ -112,6 +121,8 @@ const loading = ref(false)
 const error = ref('')
 const cancelling = ref(false)
 let pollTimer: ReturnType<typeof setInterval> | undefined
+
+const justBooked = computed(() => String(route.query.booked ?? '') === '1')
 
 const rideStatus = computed(() => tracking.value?.status ?? ride.value?.status ?? '')
 

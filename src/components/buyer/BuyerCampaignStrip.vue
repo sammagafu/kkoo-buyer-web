@@ -90,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import type { BuyerCampaign } from '@/api/campaigns'
@@ -99,6 +99,7 @@ import { daysUntil, isPreorderCampaign } from '@/utils/preorderCountdown'
 
 const props = defineProps<{
   campaigns: BuyerCampaign[]
+  trackImpression?: (id?: number) => void
 }>()
 
 const emit = defineEmits<{
@@ -138,6 +139,11 @@ function isExternal(camp: BuyerCampaign) {
   return Boolean(String(camp.cta_external_url ?? '').trim())
 }
 
+function recordActiveImpression() {
+  const camp = props.campaigns[activeIndex.value]
+  props.trackImpression?.(camp?.id)
+}
+
 function goTo(index: number) {
   const el = trackEl.value
   if (!el) return
@@ -170,6 +176,7 @@ function startAuto() {
 }
 
 onMounted(() => {
+  void nextTick(recordActiveImpression)
   startAuto()
   tickTimer = setInterval(() => {
     nowMs.value = Date.now()
@@ -183,9 +190,13 @@ watch(
   () => props.campaigns.length,
   () => {
     activeIndex.value = 0
+    void nextTick(recordActiveImpression)
     startAuto()
   },
 )
+watch(activeIndex, () => {
+  recordActiveImpression()
+})
 </script>
 
 <style scoped>

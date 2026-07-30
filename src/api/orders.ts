@@ -28,6 +28,13 @@ export const ordersUserApi = {
     channel?: 'marketplace' | 'microsite'
     /** ISO date or RFC3339 for preorder / scheduled delivery */
     scheduled_for?: string
+    /** One entry per shop in a multi-seller cart */
+    seller_configs?: Array<{
+      seller_id: number
+      fulfillment_type?: string
+      delivery_fee?: number
+      notes?: string
+    }>
   }) {
     return client.post('/orders/create/', data)
   },

@@ -85,6 +85,8 @@
           :adding="addingId === prod.id"
           :allow-preorder="Boolean(prod.allow_preorder)"
           :purchase-mode="prod.purchase_mode"
+          :rating="productRating(prod)"
+          :review-count="productReviewCount(prod)"
           @add="(qty) => addProduct(prod, qty)"
           @open="openProduct(prod)"
         />
@@ -128,6 +130,9 @@ type Product = {
   skus?: { id?: number }[]
   allow_preorder?: boolean
   purchase_mode?: string
+  rating?: number
+  average_rating?: number
+  review_count?: number
 }
 
 type SuggestItem = { label: string; type: string }
@@ -161,6 +166,16 @@ function formatPrice(val?: number | null) {
 
 function productImage(prod: Product) {
   return resolveAssetUrl(prod.cover_image ?? prod.image_url) ?? null
+}
+
+function productRating(prod: Product) {
+  const raw = prod.rating ?? prod.average_rating
+  return raw != null && Number(raw) > 0 ? Number(raw) : null
+}
+
+function productReviewCount(prod: Product) {
+  const raw = prod.review_count
+  return raw != null && Number(raw) > 0 ? Number(raw) : null
 }
 
 async function loadPopular() {

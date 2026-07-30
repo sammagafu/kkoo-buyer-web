@@ -39,7 +39,7 @@
         >
           {{ headerAuthCta.label }}
         </LhButton>
-        <LhButton as="router-link" :to="buyerRoutes.getStarted" variant="primary" with-well>
+        <LhButton as="router-link" :to="buyerRoutes.getStarted" variant="primary" with-arrow>
           {{ t('landingHouse.cta') }}
         </LhButton>
         <button

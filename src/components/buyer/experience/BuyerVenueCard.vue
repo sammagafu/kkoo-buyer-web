@@ -1,9 +1,10 @@
 <template>
-  <article class="buyer-venue buyer-venue--row">
+  <article class="buyer-venue" :class="layout === 'grid' ? 'buyer-venue--grid' : 'buyer-venue--row'">
     <component
       :is="detailTo ? RouterLink : 'button'"
       v-bind="detailTo ? { to: detailTo } : { type: 'button' }"
-      class="buyer-venue__tap buyer-venue__tap--row"
+      class="buyer-venue__tap"
+      :class="layout === 'grid' ? 'buyer-venue__tap--grid' : 'buyer-venue__tap--row'"
       @click="onMainClick"
     >
       <div class="buyer-venue__hero" :class="`buyer-venue__hero--${kind}`">
@@ -27,17 +28,17 @@
         </div>
       </div>
     </component>
-    <div class="buyer-venue__actions buyer-venue__actions--row">
+    <div class="buyer-venue__actions" :class="layout === 'grid' ? 'buyer-venue__actions--grid' : 'buyer-venue__actions--row'">
       <component
         :is="detailTo ? RouterLink : 'button'"
         v-bind="detailTo ? { to: detailTo } : { type: 'button' }"
         class="buyer-venue__chip buyer-venue__chip--primary"
         @click="onViewClick"
       >
-        View store
+        {{ t('buyerXp.common.viewStore') }}
       </component>
-      <RouterLink v-if="sendTo" :to="sendTo" class="buyer-venue__chip">Send me</RouterLink>
-      <RouterLink v-if="rideTo" :to="rideTo" class="buyer-venue__chip">Ride</RouterLink>
+      <RouterLink v-if="sendTo" :to="sendTo" class="buyer-venue__chip">{{ t('buyerXp.common.sendMe') }}</RouterLink>
+      <RouterLink v-if="rideTo" :to="rideTo" class="buyer-venue__chip">{{ t('buyerXp.common.ride') }}</RouterLink>
     </div>
   </article>
 </template>
@@ -46,6 +47,9 @@
 import { ref } from 'vue'
 import { RouterLink, type RouteLocationRaw } from 'vue-router'
 import { Icon } from '@iconify/vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 withDefaults(
   defineProps<{
@@ -54,14 +58,16 @@ withDefaults(
     meta?: string
     icon?: string
     imageUrl?: string | null
-    kind?: 'restaurant' | 'grocery' | 'store'
+    kind?: 'restaurant' | 'grocery' | 'store' | 'hotel'
     sendTo?: RouteLocationRaw
     rideTo?: RouteLocationRaw
     detailTo?: RouteLocationRaw
+    layout?: 'grid' | 'list'
   }>(),
   {
     icon: 'solar:shop-bold',
     kind: 'store',
+    layout: 'grid',
   },
 )
 

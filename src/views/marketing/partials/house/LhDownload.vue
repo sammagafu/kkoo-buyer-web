@@ -1,6 +1,6 @@
 <template>
   <section id="download" ref="rootRef" class="lh-section lh-download lh-page lh-reveal">
-    <header class="lh-section-head lh-section-head--center">
+    <header class="lh-section-head lh-section-head--premium">
       <p class="lh-kicker">{{ t('trust.downloadKicker') }}</p>
       <h2 class="lh-section__title">{{ t('trust.downloadTitle') }}</h2>
       <p class="lh-section__lead">{{ t('trust.downloadLead') }}</p>
@@ -54,9 +54,15 @@
       </div>
       <div class="lh-download__device" aria-hidden="true">
         <div class="lh-download__phone">
-          <span class="lh-download__phone-notch" />
-          <p class="lh-download__phone-brand">{{ houseCopy.brand }}</p>
-          <p class="lh-download__phone-tag">{{ t(activeTab.titleKey) }}</p>
+          <img
+            class="lh-download__phone-screen"
+            :src="phoneScreen"
+            alt=""
+            width="463"
+            height="925"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
       </div>
     </div>
@@ -68,8 +74,8 @@ import { computed, ref } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
 import { appLinks } from '@/config/app-links'
-import { houseCopy } from '@/config/landing-house'
 import { useHouseReveal } from '@/composables/useHouseReveal'
+import phoneScreen from '@/assets/landing/download-phone-apps.png'
 
 const { t } = useI18n()
 const rootRef = ref<HTMLElement | null>(null)

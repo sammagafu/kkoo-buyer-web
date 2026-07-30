@@ -7,6 +7,7 @@ export type GuestCartLine = {
   unitPrice: number
   imageUrl?: string
   requiresPrescription?: boolean
+  sellerId?: number | null
 }
 
 const STORAGE_KEY = 'kkoo_guest_cart_v1'

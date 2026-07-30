@@ -209,7 +209,7 @@ async function load() {
   try {
     const { data } = await discoveryApi.nearby({ lat, lng, radius_km: 8 })
     restaurants.value = (data?.restaurants ?? []) as Record<string, unknown>[]
-    groceries.value = (data?.grocery_stores ?? []) as Record<string, unknown>[]
+    groceries.value = (data?.shops ?? data?.grocery_stores ?? []) as Record<string, unknown>[]
     hotels.value = (data?.hotels ?? []) as Record<string, unknown>[]
   } catch (e) {
     error.value = formatApiError(e, t('buyerXp.nearby.couldNotLoad'))

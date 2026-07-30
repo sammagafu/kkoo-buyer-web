@@ -147,7 +147,7 @@
   :deep(.courier-quick-card h3),
   :deep(.directory-card h3),
   :deep(.cm-thread__title),
-  :deep(.lh-mega__card-title),
+  :deep(.lh-mega__link-title),
   :deep(.careers-card h3),
   :deep(.discover-card h3),
   :deep(.feature-card h3),
@@ -619,7 +619,7 @@
   :deep(.lh-btn),
   :deep(.lp-btn-pill),
   :deep(.kkoo-account-btn) {
-    font-family: var(--lh-font-display, 'Syne', sans-serif);
+    font-family: var(--lh-font-display, 'Poppins', sans-serif);
     letter-spacing: -0.01em;
   }
 
@@ -636,15 +636,15 @@
 
   :deep(.careers-filter),
   :deep(.discover-filter) {
-    font-family: var(--lh-font-display, 'Syne', sans-serif);
+    font-family: var(--lh-font-display, 'Poppins', sans-serif);
     letter-spacing: -0.01em;
   }
 
-  /* Slim marketing heroes — Syne + readable ink */
+  /* Slim marketing heroes — Poppins + readable ink */
   :deep(.careers-eyebrow),
   :deep(.discover-eyebrow),
   :deep(.partner-reg-eyebrow) {
-    font-family: var(--lh-font-display, 'Syne', sans-serif);
+    font-family: var(--lh-font-display, 'Poppins', sans-serif);
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -655,7 +655,7 @@
   :deep(.careers-title),
   :deep(.discover-title),
   :deep(.partner-reg-title) {
-    font-family: var(--lh-font-display, 'Syne', sans-serif);
+    font-family: var(--lh-font-display, 'Poppins', sans-serif);
     font-size: clamp(1.75rem, 3.2vw, var(--lh-type-h1, 2.618rem));
     font-weight: 700;
     line-height: 1.1;

@@ -1,40 +1,45 @@
 <template>
   <section id="buy" ref="rootRef" class="lh-section lh-services lh-page lh-reveal">
-    <header class="lh-section-head lh-section-head--mega">
+    <header class="lh-section-head lh-section-head--premium">
       <p class="lh-kicker">{{ t('landingHouse.kickers.buy') }}</p>
       <h2 class="lh-section__title">{{ t('landingHouse.buy.title') }}</h2>
       <p class="lh-section__lead">{{ t('landingHouse.buy.lead') }}</p>
     </header>
 
-    <div class="lh-catalog">
-      <ul class="lh-catalog__grid" role="list">
-        <li v-for="item in services" :key="item.key">
-          <router-link :to="item.to" class="lh-catalog__card">
+    <ul class="lh-services__grid" role="list">
+      <li v-for="item in services" :key="item.key">
+        <router-link :to="item.to" class="lh-service-tile">
+          <div class="lh-service-tile__media">
             <img
               :src="item.src"
               :alt="t(`landingHouse.services.${item.key}.title`)"
               width="640"
-              height="480"
+              height="420"
               loading="lazy"
             />
-            <div class="lh-catalog__overlay">
-              <h3>{{ t(`landingHouse.services.${item.key}.title`) }}</h3>
-              <p>{{ t(`landingHouse.services.${item.key}.action`) }}</p>
-            </div>
-            <span class="lh-pane-card__action" aria-hidden="true">
-              <Icon icon="solar:arrow-right-up-linear" width="18" height="18" />
+          </div>
+          <div class="lh-service-tile__body">
+            <h3 class="lh-service-tile__title">
+              {{ t(`landingHouse.services.${item.key}.title`) }}
+            </h3>
+            <p class="lh-service-tile__detail">
+              {{ t(`landingHouse.services.${item.key}.detail`) }}
+            </p>
+            <span class="lh-service-tile__cta">
+              {{ t(`landingHouse.services.${item.key}.cta`) }}
+              <Icon icon="solar:arrow-right-linear" width="15" height="15" aria-hidden="true" />
             </span>
-          </router-link>
-        </li>
-      </ul>
-    </div>
+          </div>
+        </router-link>
+      </li>
+    </ul>
 
-    <div class="lh-catalog__footer">
+    <div class="lh-services__footer">
       <LhButton
         as="router-link"
         :to="buyerRoutes.marketplace"
         variant="primary"
-        with-well
+        with-arrow
       >
         {{ t('landingHouse.ctaCatalog') }}
       </LhButton>

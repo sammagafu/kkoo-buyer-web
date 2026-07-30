@@ -660,7 +660,7 @@ function formatRelativeTime(value: string) {
 
 .cm-kicker {
   margin: 0 0 0.5rem;
-  font-family: var(--lh-font-display, 'Syne', sans-serif);
+  font-family: var(--lh-font-display, 'Poppins', sans-serif);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -670,7 +670,7 @@ function formatRelativeTime(value: string) {
 
 .cm-title {
   margin: 0;
-  font-family: var(--lh-font-display, 'Syne', sans-serif);
+  font-family: var(--lh-font-display, 'Poppins', sans-serif);
   font-size: clamp(1.75rem, 3.2vw, 2.618rem);
   font-weight: 700;
   line-height: 1.1;
@@ -736,7 +736,7 @@ function formatRelativeTime(value: string) {
 }
 
 .cm-pulse__item strong {
-  font-family: var(--lh-font-display, 'Syne', sans-serif);
+  font-family: var(--lh-font-display, 'Poppins', sans-serif);
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -773,7 +773,7 @@ function formatRelativeTime(value: string) {
 .cm-section-title,
 .cm-thread__title {
   margin: 0;
-  font-family: var(--lh-font-display, 'Syne', sans-serif);
+  font-family: var(--lh-font-display, 'Poppins', sans-serif);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--lh-text, #1a1a1a);

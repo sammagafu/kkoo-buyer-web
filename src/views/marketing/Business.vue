@@ -74,7 +74,7 @@
         <LhButton as="a" :href="bizSellerDashboardUrl" variant="on-dark" size="lg" with-well>
           {{ t('businessPage.hero.ctaRegister') }}
         </LhButton>
-        <LhButton as="router-link" :to="buyerRoutes.merchant" variant="ghost" size="lg" class="lh-footer__ghost">
+        <LhButton as="router-link" :to="buyerRoutes.merchant" variant="ghost" size="lg" class="lh-cta__ghost">
           {{ t('landing.navSell') }}
         </LhButton>
       </MkCtaPanel>

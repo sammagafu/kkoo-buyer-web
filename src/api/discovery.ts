@@ -5,7 +5,7 @@ export const discoveryApi = {
     return client.get<{
       restaurants?: Record<string, unknown>[]
       hotels?: Record<string, unknown>[]
-      grocery_stores?: Record<string, unknown>[]
+      shops?: Record<string, unknown>[]
     }>('/discover/nearby/', { params })
   },
   hotelsNearby(params: { lat: number; lng: number }) {

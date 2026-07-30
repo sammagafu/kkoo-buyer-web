@@ -51,7 +51,7 @@ export default {
       'Rendre le commerce quotidien fiable : l’argent est retenu jusqu’à confirmation de livraison, paiements clairs pour les marchands, travail équitable pour les livreurs.',
     aboutWhatTitle: 'Ce que nous construisons',
     aboutWhatBody:
-      'Une super-app pour acheter et envoyer, des outils marchands avec iShop POS, et un réseau de livreurs — identité, paiements et fidélité partagés.',
+      'Une super-app pour acheter et envoyer, des outils marchands avec KkooApp POS, et un réseau de livreurs — identité, paiements et fidélité partagés.',
     aboutWhyTitle: 'Pourquoi c’est important',
     aboutWhyBody:
       'Les marchés est-africains regorgent d’énergie mais manquent d’infrastructure partagée. KKOO est cette couche — des étals de Kariakoo jusqu’à votre porte.',
@@ -144,7 +144,7 @@ export default {
         a1: 'Inscrivez-vous sur KKOO Business, complétez le profil et publiez produits ou menu.',
         q2: 'Quand suis-je payé ?',
         a2: 'Après confirmation de livraison par l’acheteur (ou selon la politique), les paiements suivent votre calendrier dans les outils Business.',
-        q3: 'Qu’est-ce que iShop POS ?',
+        q3: 'Qu’est-ce que KkooApp POS ?',
         a3: 'Une caisse en magasin synchronisée avec votre catalogue, stock et CRM en ligne.',
         q4: 'Où obtenir de l’aide ?',
         a4: 'Utilisez les canaux d’aide Business, la Community pour le feedback, ou info@kkooapp.co.tz.',

@@ -43,34 +43,35 @@
     <p v-else-if="error" class="buyer-xp-toast buyer-xp-toast--err">{{ error }}</p>
 
     <section v-else-if="displayItems.length" class="buyer-orders-list">
-      <article v-for="order in displayItems" :key="String(order.id)" class="buyer-order-card">
-        <RouterLink :to="orderLink(order)" class="buyer-order-card__main">
-          <div class="buyer-order-card__head">
-            <div class="buyer-order-card__title-block">
-              <div class="buyer-order-card__icon" aria-hidden="true">
-                <Icon icon="solar:bag-check-bold" />
-              </div>
-              <div>
-                <p class="buyer-order-card__id">#{{ order.order_number || order.id }}</p>
-                <p v-if="order.created_at" class="buyer-order-card__when">{{ formatWhen(order.created_at) }}</p>
-              </div>
+      <article v-for="order in displayItems" :key="String(order.id)" class="buyer-order-card-v2">
+        <RouterLink :to="orderLink(order)" class="buyer-order-card-v2__link">
+          <div class="buyer-order-card-v2__body">
+            <div class="buyer-order-card-v2__thumb" aria-hidden="true">
+              <Icon icon="solar:bag-check-bold" />
             </div>
-            <span :class="orderStatusPillClass(order.status)">{{ formatOrderStatus(order.status) }}</span>
+            <div class="buyer-order-card-v2__info">
+              <div class="buyer-order-card-v2__info-top">
+                <p class="buyer-order-card-v2__title">{{ firstItemName(order) }}</p>
+                <span v-if="firstItemQty(order) > 0" class="buyer-order-card-v2__qty">x{{ firstItemQty(order) }}</span>
+              </div>
+              <p v-if="firstItemVariant(order)" class="buyer-order-card-v2__variant">{{ firstItemVariant(order) }}</p>
+              <p v-else-if="orderSummary(order)" class="buyer-order-card-v2__variant">{{ orderSummary(order) }}</p>
+              <p class="buyer-order-card-v2__price">{{ formatBuyerMoney(firstItemPrice(order)) }}</p>
+            </div>
           </div>
-
-          <div v-if="orderSummary(order)" class="buyer-order-card__summary">
-            {{ orderSummary(order) }}
-          </div>
-
-          <div class="buyer-order-card__foot">
-            <div class="buyer-order-card__total">
-              <span class="buyer-order-card__total-label">{{ t('buyerXp.common.total') }}</span>
+          <div class="buyer-order-card-v2__foot">
+            <div class="buyer-order-card-v2__total">
+              <span class="buyer-order-card-v2__total-label">{{ t('buyerXp.common.estimateTotal') }}</span>
               <strong>{{ formatBuyerMoney(order.final_total ?? order.total_amount) }}</strong>
             </div>
-            <span class="buyer-order-card__cta">
-              {{ t('buyerXp.orders.viewOrder') }}
-              <Icon icon="solar:alt-arrow-right-linear" aria-hidden="true" />
-            </span>
+            <div class="buyer-order-card-v2__actions">
+              <span class="buyer-order-card-v2__status" :class="orderStatusButtonClass(order.status)">
+                {{ formatOrderStatus(order.status) }}
+              </span>
+              <span class="buyer-order-card-v2__icon-btn" aria-hidden="true">
+                <Icon icon="solar:sale-bold" />
+              </span>
+            </div>
           </div>
         </RouterLink>
       </article>
@@ -101,7 +102,6 @@ import { formatApiError } from '@/utils/formatApiError'
 import {
   formatBuyerMoney,
   formatOrderStatus,
-  orderStatusPillClass,
 } from '@/utils/buyerFormat'
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
@@ -133,12 +133,6 @@ function normalizeList(data: unknown): OrderRow[] {
   return (obj?.results ?? []) as OrderRow[]
 }
 
-function formatWhen(value: unknown) {
-  const date = new Date(String(value))
-  if (Number.isNaN(date.getTime())) return ''
-  return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(date)
-}
-
 function orderItemCount(order: OrderRow) {
   const raw = order.items ?? order.order_items
   if (Array.isArray(raw)) return raw.length
@@ -148,12 +142,63 @@ function orderItemCount(order: OrderRow) {
 
 function orderSummary(order: OrderRow) {
   const count = orderItemCount(order)
-  if (count > 0) return t('buyerXp.orders.itemCount', { count })
-  const fulfillment = String(order.fulfillment_type ?? '').trim()
-  if (fulfillment) return fulfillment.replace(/_/g, ' ')
-  const vertical = String(order.vertical ?? order.channel ?? '').trim()
-  if (vertical) return vertical.replace(/_/g, ' ')
+  if (count > 1) return t('buyerXp.orders.itemCount', { count })
   return ''
+}
+
+function firstItemName(order: OrderRow) {
+  const raw = order.items ?? order.order_items
+  if (Array.isArray(raw) && raw.length > 0) {
+    const it = raw[0] as Record<string, unknown>
+    return String(it.product_title ?? it.title ?? it.name ?? `#${order.order_number || order.id}`)
+  }
+  return `#${order.order_number || order.id}`
+}
+
+function firstItemQty(order: OrderRow) {
+  const raw = order.items ?? order.order_items
+  if (Array.isArray(raw) && raw.length > 0) {
+    const n = Number((raw[0] as Record<string, unknown>).quantity ?? 1)
+    return Number.isFinite(n) ? n : 1
+  }
+  return 0
+}
+
+function firstItemVariant(order: OrderRow) {
+  const raw = order.items ?? order.order_items
+  if (!Array.isArray(raw) || !raw.length) return ''
+  const it = raw[0] as Record<string, unknown>
+  const attrs = it.variant_attributes ?? it.variant_label ?? it.sku_label
+  if (typeof attrs === 'string' && attrs.trim()) {
+    try {
+      const parsed = JSON.parse(attrs) as Record<string, string>
+      const parts = Object.entries(parsed).map(([k, v]) => `${k}: ${v}`)
+      if (parts.length) return parts.join(' · ')
+    } catch {
+      return attrs.trim()
+    }
+  }
+  if (attrs && typeof attrs === 'object') {
+    const parts = Object.entries(attrs as Record<string, string>).map(([k, v]) => `${k}: ${v}`)
+    if (parts.length) return parts.join(' · ')
+  }
+  return ''
+}
+
+function firstItemPrice(order: OrderRow) {
+  const raw = order.items ?? order.order_items
+  if (Array.isArray(raw) && raw.length > 0) {
+    const it = raw[0] as Record<string, unknown>
+    return it.unit_price ?? it.total_price ?? it.line_total ?? order.total_amount ?? 0
+  }
+  return order.total_amount ?? 0
+}
+
+function orderStatusButtonClass(status: unknown) {
+  const s = String(status ?? '').toLowerCase()
+  if (['delivered', 'completed'].includes(s)) return 'buyer-order-card-v2__status--filled'
+  if (s === 'cancelled') return 'buyer-order-card-v2__status--muted'
+  return 'buyer-order-card-v2__status--outline'
 }
 
 function orderLink(order: OrderRow): RouteLocationRaw {

@@ -7,7 +7,7 @@ export const pagesRoutes = [
         meta: {
             title: setLandingTitle('Home'),
             description:
-                'KKOO — buy, sell, deliver, and earn in one trusted ecosystem. Marketplace, iShop POS, business tools, riders, referrals, and rewards for East Africa.',
+                'KKOO — buy, sell, deliver, and earn in one trusted ecosystem. Marketplace, KkooApp POS, business tools, riders, referrals, and rewards for East Africa.',
         },
         component: () => import('@/views/marketing/LandingHousePage.vue'),
     },
@@ -147,12 +147,24 @@ export const pagesRoutes = [
         component: () => import('@/views/marketing/Discover.vue'),
     },
     {
+        path: '/mchongo',
+        name: 'pages.mchongo',
+        meta: {
+            title: setLandingTitle('Hustle'),
+            description:
+                'Find work and gigs on KkooApp — field jobs, contracts, and ways to earn. Apply online.',
+            careersSurface: 'hustle',
+        },
+        component: () => import('@/views/marketing/Careers.vue'),
+    },
+    {
         path: '/careers',
         name: 'pages.careers',
         meta: {
             title: setLandingTitle('Careers'),
             description:
-                'Join the KKOO team. Browse open roles across engineering, operations, growth, and support — apply with your resume online.',
+                'Join the KkooApp team. Browse open roles across engineering, operations, growth, and support — apply with your resume online.',
+            careersSurface: 'company',
         },
         component: () => import('@/views/marketing/Careers.vue'),
     },

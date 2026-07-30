@@ -45,13 +45,13 @@
               <div class="directory-facts">
                 <span v-if="hotel.contact_phone">{{ hotel.contact_phone }}</span>
               </div>
-              <RouterLink
+              <a
                 v-if="storeSlug(hotel)"
-                :to="`/store/${encodeURIComponent(storeSlug(hotel)!)}`"
+                :href="storePublicUrl(String(storeSlug(hotel)!))"
                 class="vx-card__cta"
               >
                 {{ t('hotels.directory.viewMicrosite') }}
-              </RouterLink>
+              </a>
             </div>
           </article>
         </div>
@@ -78,7 +78,6 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
 
@@ -89,6 +88,7 @@ import LhButton from './partials/house/LhButton.vue'
 import type { VerticalCard } from './components/VerticalCardGrid.vue'
 import { superAppApi, type HotelListItem } from '@/api/superApp'
 import { formatApiError } from '@/utils/formatApiError'
+import { storePublicUrl } from '@/utils/storePublicUrl'
 import hotelPlaceholder from '@/assets/images/landing/placeholders/hotel-hero-placeholder.svg'
 
 const { t } = useI18n()
@@ -150,6 +150,7 @@ onMounted(async () => {
 .directory-grid {
   display: grid;
   gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 @media (min-width: 768px) {

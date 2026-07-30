@@ -470,6 +470,7 @@ import { getStorePublic, type StorePromocode, type StorePublicPayload, type Stor
 import { useAddToCart } from '@/composables/useAddToCart'
 import { useWebCart } from '@/composables/useWebCart'
 import { resolveAssetUrl } from '@/utils/assetUrl'
+import { storeSlugFromHostname } from '@/utils/storePublicUrl'
 
 /** Menu item with optional category for filtering (restaurant = from category; grocery = from product). */
 interface MenuItem extends StorePublicProduct {
@@ -485,7 +486,9 @@ interface MenuItem extends StorePublicProduct {
 const route = useRoute()
 const { adding, addMessage, addError, addProduct: addProductToCart } = useAddToCart()
 const { itemCount: cartItemCount, loadCart } = useWebCart()
-const slugOrId = computed(() => (route.params.slugOrId as string) || '')
+const slugOrId = computed(
+  () => storeSlugFromHostname() || (route.params.slugOrId as string) || '',
+)
 const loading = ref(true)
 const error = ref('')
 const logoError = ref(false)

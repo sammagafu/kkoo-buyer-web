@@ -101,10 +101,31 @@ export function useBuyerCampaigns() {
   const loadingCarousel = ref(false)
   const loadingStrip = ref(false)
 
+  const impressedIds = new Set<number>()
+
   function trackImpression(id?: number) {
     // Impression/dismiss need JWT; posting as a guest forces a sign-in redirect.
-    if (!id || !auth.isAuthenticated) return
-    void campaignsUserApi.recordImpression(id).catch(() => {})
+    if (!id || !auth.isAuthenticated || impressedIds.has(id)) return
+    impressedIds.add(id)
+    void campaignsUserApi.recordImpression(id).catch(() => {
+      impressedIds.delete(id)
+    })
+  }
+
+  async function fetchActiveCampaigns(placement: string, channel = 'web_banner') {
+    try {
+      const { data } = await campaignsUserApi.getActive({ placement, channel, limit: 0 })
+      const rows = data.results ?? []
+      if (rows.length || !channel) return rows
+    } catch {
+      // fall through to unfiltered channel retry
+    }
+    try {
+      const { data } = await campaignsUserApi.getActive({ placement, limit: 0 })
+      return data.results ?? []
+    } catch {
+      return []
+    }
   }
 
   async function loadAdvertCampaign() {
@@ -126,16 +147,10 @@ export function useBuyerCampaigns() {
     try {
       // Full-screen marketplace carousel: home_hero + promo_carousel (1080×1350).
       const [hero, carousel] = await Promise.all([
-        campaignsUserApi.getActive({ placement: 'home_hero', channel: 'web_banner' }).catch(() => ({ data: { results: [] as BuyerCampaign[] } })),
-        campaignsUserApi.getActive({ placement: 'promo_carousel', channel: 'web_banner' }).catch(() => ({ data: { results: [] as BuyerCampaign[] } })),
+        fetchActiveCampaigns('home_hero'),
+        fetchActiveCampaigns('promo_carousel'),
       ])
-      carouselCampaigns.value = dedupeCampaigns([
-        ...(hero.data.results ?? []),
-        ...(carousel.data.results ?? []),
-      ])
-      for (const camp of carouselCampaigns.value) {
-        trackImpression(camp.id)
-      }
+      carouselCampaigns.value = dedupeCampaigns([...hero, ...carousel])
     } catch {
       carouselCampaigns.value = []
     } finally {
@@ -146,14 +161,7 @@ export function useBuyerCampaigns() {
   async function loadStripCampaigns() {
     loadingStrip.value = true
     try {
-      const { data } = await campaignsUserApi.getActive({
-        placement: 'promo_banner',
-        channel: 'web_banner',
-      })
-      stripCampaigns.value = dedupeCampaigns(data.results ?? [])
-      for (const camp of stripCampaigns.value) {
-        trackImpression(camp.id)
-      }
+      stripCampaigns.value = dedupeCampaigns(await fetchActiveCampaigns('promo_banner'))
     } catch {
       stripCampaigns.value = []
     } finally {
@@ -213,6 +221,7 @@ export function useBuyerCampaigns() {
     dismissModal,
     dismissCarousel,
     dismissStrip,
+    trackImpression,
     campaignImageUrl,
     campaignProductThumbs,
     campaignCtaRoute,

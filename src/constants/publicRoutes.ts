@@ -15,6 +15,7 @@ export const PUBLIC_APP_PATH_PREFIXES = [
   '/courier',
   '/community',
   '/discover',
+  '/mchongo',
   '/careers',
   '/about',
   '/safety',

@@ -15,13 +15,13 @@ body.authentication-bg {
   .lp-btn-pill,
   .kkoo-signin-btn,
   .kkoo-account-btn {
-    font-family: var(--kkoo-font-display, 'Syne', sans-serif);
+    font-family: var(--kkoo-font-display, 'Poppins', sans-serif);
     letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
   }
 
   .auth-center-card__title {
-    font-family: var(--kkoo-font-display, 'Syne', sans-serif);
+    font-family: var(--kkoo-font-display, 'Poppins', sans-serif);
     font-weight: 800;
     letter-spacing: -0.02em;
     -webkit-font-smoothing: antialiased;
@@ -331,7 +331,7 @@ body.authentication-bg {
   border: 1px solid var(--kkoo-border-strong);
   background: var(--kkoo-surface);
   color: var(--kkoo-ink);
-  font-family: var(--kkoo-font-display, 'Syne', sans-serif);
+  font-family: var(--kkoo-font-display, 'Poppins', sans-serif);
   font-size: 0.875rem;
   font-weight: 600;
   text-decoration: none;

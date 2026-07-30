@@ -11,11 +11,13 @@
 
       <BuyerCampaignCarousel
         :campaigns="carouselCampaigns"
+        :track-impression="trackImpression"
         @dismiss="dismissCarousel"
       />
 
       <BuyerCampaignStrip
         :campaigns="stripCampaigns"
+        :track-impression="trackImpression"
         @dismiss="dismissStrip"
       />
 
@@ -135,6 +137,7 @@
     <template v-else>
       <header v-if="viewMode === 'directory'" class="buyer-page-head">
         <h1 class="buyer-page-head__title">{{ compact ? t('buyerXp.marketplace.groceries') : t('buyerXp.marketplace.shop') }}</h1>
+        <p v-if="compact" class="buyer-page-head__meta">{{ t('buyerXp.marketplace.groceryMeta') }}</p>
         <BuyerSearchBar
           v-model="searchTerm"
           :placeholder="compact ? t('buyerXp.marketplace.searchGroceryStores') : t('buyerXp.marketplace.searchProducts')"
@@ -156,14 +159,14 @@
       </header>
 
       <BuyerFulfillmentBar
-        v-if="fulfillment"
+        v-if="fulfillment && viewMode === 'menu'"
         v-model="fulfillmentMode"
         :modes="groceryFulfillmentModes"
         :label="t('buyerXp.marketplace.fulfillmentLabel')"
         :hint="fulfillmentHint"
       />
 
-      <div v-if="fulfillment && fulfillmentMode === 'delivery' && activeStoreRecord" class="fulfillment-action">
+      <div v-if="fulfillment && viewMode === 'menu' && fulfillmentMode === 'delivery' && activeStoreRecord" class="fulfillment-action">
         <Icon icon="solar:scooter-bold" class="fulfillment-action__icon" aria-hidden="true" />
         <div class="fulfillment-action__copy">
           <p class="fulfillment-action__title">{{ t('buyerXp.marketplace.riderDeliveryTitle') }}</p>
@@ -176,6 +179,7 @@
 
       <section v-if="viewMode === 'directory'" class="buyer-venue-list" aria-label="Grocery stores">
         <p v-if="loadingStores" class="shop-products__status">{{ t('buyerXp.marketplace.loadingStores') }}</p>
+        <p v-else-if="storeLoadError" class="shop-products__status shop-products__status--error">{{ storeLoadError }}</p>
         <p v-else-if="!filteredStores.length" class="shop-products__status">{{ t('buyerXp.marketplace.noStores') }}</p>
         <BuyerVenueCard
           v-for="store in filteredStores"
@@ -187,8 +191,7 @@
           icon="solar:cart-large-2-bold"
           :send-to="sendLinkForStore(store)"
           :ride-to="rideLinkForStore(store)"
-          :detail-to="venueDetailLink('grocery', store.seller_id ?? store.user_id ?? '')"
-          @view="openStore(store)"
+          :detail-to="groceryDetailLink(store)"
         />
       </section>
 
@@ -260,7 +263,7 @@ const { unreadCount: notificationUnreadCount } = useBuyerNotifications()
 const openNotifications = inject<() => void>('openBuyerNotifications', () => {})
 const { displayName, isAuthenticated } = useAuthDisplay()
 const auth = useAuthStore()
-const { carouselCampaigns, stripCampaigns, loadHomeCampaigns, dismissCarousel, dismissStrip } = useBuyerCampaigns()
+const { carouselCampaigns, stripCampaigns, loadHomeCampaigns, dismissCarousel, dismissStrip, trackImpression } = useBuyerCampaigns()
 const openBuyerCart = inject<() => void>('openBuyerCart', () => {})
 const { adding, addError, addMessage, addProduct: addProductToCart } = useAddToCart()
 const xpRoot = ref<HTMLElement | null>(null)
@@ -297,6 +300,7 @@ const activeStoreId = ref<number | string | null>(null)
 const activeCategory = ref('')
 const viewMode = ref<'directory' | 'menu'>('directory')
 const loadingStores = ref(false)
+const storeLoadError = ref('')
 const loadingCategories = ref(false)
 const loadingProducts = ref(false)
 const loadingAllProducts = ref(false)
@@ -340,9 +344,14 @@ const fulfillmentHint = computed(() =>
     : t('buyerXp.marketplace.fulfillmentPickupHint'),
 )
 
-const activeStoreRecord = computed(() =>
-  stores.value.find((s) => s.seller_id === activeStoreId.value) ?? stores.value[0] ?? null,
-)
+const activeStoreRecord = computed(() => {
+  if (activeStoreId.value == null) return null
+  return (
+    stores.value.find(
+      (s) => s.seller_id === activeStoreId.value || s.user_id === activeStoreId.value,
+    ) ?? null
+  )
+})
 
 const rideLink = computed(() =>
   buildRideLink({
@@ -481,8 +490,15 @@ async function loadHomeStores() {
   }
 }
 
+function groceryDetailLink(store: Store) {
+  const id = store.seller_id ?? store.user_id
+  if (id == null || id === '') return undefined
+  return venueDetailLink('grocery', String(id))
+}
+
 async function loadStores() {
   loadingStores.value = true
+  storeLoadError.value = ''
   try {
     const { data } = await superAppApi.getGroceryStores({ limit: 24 })
     stores.value = (data?.results as Store[]) ?? []
@@ -492,7 +508,12 @@ async function loadStores() {
       await loadAllProducts()
     }
   } catch {
-    if (!isHomeMode.value) await loadCatalogProducts()
+    stores.value = []
+    if (props.fulfillment) {
+      storeLoadError.value = t('buyerXp.common.couldNotLoad')
+    } else if (!isHomeMode.value) {
+      await loadCatalogProducts()
+    }
   } finally {
     loadingStores.value = false
   }

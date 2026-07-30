@@ -189,7 +189,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
 import { addressesApi, ordersUserApi, cartApi, paymentsApi } from '@/api'
@@ -198,7 +198,7 @@ import { pharmacyApi } from '@/api/pharmacy'
 import type { PaymentMethodRow } from '@/api/payments'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
-import { useWebCart } from '@/composables/useWebCart'
+import { useWebCart, buildSellerConfigs } from '@/composables/useWebCart'
 import { takePendingShareCode } from '@/composables/usePendingShareCode'
 import { formatApiError } from '@/utils/formatApiError'
 import type { AddressPayload } from '@/api/addresses'
@@ -207,6 +207,7 @@ type FulfillmentType = 'delivery' | 'pickup' | 'dine_in' | ''
 
 const auth = useAuthStore()
 const route = useRoute()
+const router = useRouter()
 const { t } = useI18n()
 const { itemCount, formattedTotal, loadCart, cartItems } = useWebCart()
 
@@ -235,9 +236,23 @@ const isAuthenticated = computed(() => auth.isAuthenticated)
 
 const needsRx = computed(() => cartItems.value.some((i) => i.requiresPrescription))
 const hasPreorderItems = computed(() => cartItems.value.some((i) => i.isPreorder))
-const checkoutChannel = computed<'marketplace' | 'microsite'>(() =>
-  route.path.toLowerCase().includes('/store/') ? 'microsite' : 'marketplace',
-)
+const checkoutChannel = computed<'marketplace' | 'microsite'>(() => {
+  if (route.path.toLowerCase().includes('/store/')) return 'microsite'
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname.toLowerCase()
+    if (
+      host.endsWith('.kkooapp.co.tz') &&
+      host !== 'www.kkooapp.co.tz' &&
+      host !== 'api.kkooapp.co.tz' &&
+      host !== 'biz.kkooapp.co.tz' &&
+      host !== 'admin.kkooapp.co.tz' &&
+      host !== 'app.kkooapp.co.tz'
+    ) {
+      return 'microsite'
+    }
+  }
+  return 'marketplace'
+})
 
 const loyaltyPointsAvailable = computed(
   () => isAuthenticated.value && loyaltyBalance.value >= 100 && maxLoyaltyPoints.value >= 100,
@@ -516,7 +531,19 @@ async function placeOrder() {
       payload.share_code = shareCode
     }
 
+    const sellerConfigs = buildSellerConfigs(cartItems.value, {
+      fulfillmentType: fulfillmentType.value || undefined,
+    })
+    if (sellerConfigs.length) {
+      payload.seller_configs = sellerConfigs
+      const feeSum = sellerConfigs.reduce((s, c) => s + (Number(c.delivery_fee) || 0), 0)
+      if (feeSum > 0) payload.delivery_fee = feeSum
+    }
+
     const { data: order } = await ordersUserApi.create(payload)
+    const orderId =
+      (order as { id?: number })?.id ??
+      (order as { order_id?: number })?.order_id
 
     const method = selectedPaymentMethod.value
     if (method?.kind === 'online' && method.is_enabled !== false) {
@@ -534,18 +561,25 @@ async function placeOrder() {
           orderMessage.value = t('buyerXp.checkout.orderPlaced') + ' Online payment could not start — pay on delivery if offered.'
           await cartApi.clear()
           await loadCart()
+          if (orderId != null) {
+            await router.push({ name: 'buyer.order', params: { id: String(orderId) }, query: { placed: '1' } })
+          }
           return
         }
       }
     }
 
-    orderMessage.value = t('buyerXp.checkout.orderPlaced')
     prescriptionIds.value = []
     giftVoucherCode.value = ''
     useLoyaltyPoints.value = false
     await cartApi.clear()
     await loadCart()
     deliveryLocationText.value = ''
+    if (orderId != null) {
+      await router.push({ name: 'buyer.order', params: { id: String(orderId) }, query: { placed: '1' } })
+      return
+    }
+    orderMessage.value = t('buyerXp.checkout.orderPlaced')
   } catch (e: unknown) {
     orderError.value = formatApiError(e, t('buyerXp.checkout.couldNotPlace'))
   } finally {

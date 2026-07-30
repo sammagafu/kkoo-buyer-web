@@ -29,17 +29,14 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { adminWebPath, bizWebPath } from '@/config/cross-app-links'
+import { storePublicUrl } from '@/utils/storePublicUrl'
 
 const route = useRoute()
 const auth = useAuthStore()
 
 const slugOrId = computed(() => route.params.slugOrId as string)
 
-const storeUrl = computed(() => {
-  const base = typeof window !== 'undefined' ? window.location.origin : ''
-  const basePath = (import.meta.env.BASE_URL || '/').replace(/\/$/, '')
-  return `${base}${basePath}store/${encodeURIComponent(slugOrId.value)}`
-})
+const storeUrl = computed(() => storePublicUrl(slugOrId.value))
 
 const backTo = computed(() => {
   if (auth.isSeller) return bizWebPath('/seller/profile')

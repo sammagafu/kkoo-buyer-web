@@ -4,7 +4,7 @@
  */
 
 export const companyLegal = {
-  brand: 'KKOO',
+  brand: 'KkooApp',
   /** Registered operating company — update when formal entity name is confirmed. */
   legalEntity: 'KKOO Technologies Limited',
   jurisdiction: 'United Republic of Tanzania',

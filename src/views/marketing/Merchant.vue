@@ -59,7 +59,7 @@
           href="mailto:info@kkooapp.co.tz?subject=KKOO%20Merchant%20Partnership"
           variant="ghost"
           size="lg"
-          class="lh-footer__ghost"
+          class="lh-cta__ghost"
         >
           {{ t('merchant.cta.partnerships') }}
         </LhButton>

@@ -33,8 +33,8 @@ $kkoo-bg-lighter: #f1f5f9;
 // TYPOGRAPHY
 // ============================================================================
 
-// Font Family — Syne (display) + Poppins (UI/body)
-$kkoo-font-display: "Syne", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+// Font Family — Poppins only
+$kkoo-font-display: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 $kkoo-font-primary: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 $kkoo-font-secondary: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
@@ -230,6 +230,15 @@ $kkoo-badge-border-accent: rgba(247, 168, 41, 0.35);
   --kkoo-font-display: #{$kkoo-font-display};
   --kkoo-font-primary: #{$kkoo-font-primary};
   --kkoo-font-secondary: #{$kkoo-font-secondary};
+
+  // Buyer commerce type scale (rem — respects browser text size)
+  --buyer-type-badge: clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
+  --buyer-type-caption: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
+  --buyer-type-meta: clamp(0.8125rem, 0.8rem + 0.15vw, 0.9375rem);
+  --buyer-type-body: clamp(0.875rem, 0.84rem + 0.2vw, 1rem);
+  --buyer-type-title: clamp(0.9375rem, 0.9rem + 0.25vw, 1.0625rem);
+  --buyer-type-price: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  --buyer-type-chip: clamp(0.75rem, 0.72rem + 0.12vw, 0.8125rem);
   
   // Spacing (φ scale)
   --kkoo-phi: #{$kkoo-phi};
@@ -300,6 +309,14 @@ $kkoo-badge-border-accent: rgba(247, 168, 41, 0.35);
   --buyer-card-border: var(--buyer-border);
   --buyer-card-shadow: 0 4px 16px var(--buyer-shadow-color);
 
+  // Section rhythm — readable insets on mobile and desktop
+  --buyer-page-inset-x: 1rem;
+  --buyer-page-inset-top: 0.75rem;
+  --buyer-page-inset-bottom: 1.25rem;
+  --buyer-section-pad-x: 1rem;
+  --buyer-section-pad-y: 1.25rem;
+  --buyer-section-gap: 1rem;
+
   // Shared surfaces (admin-style panels in buyer web)
   --kkoo-panel-bg: #{$kkoo-surface};
   --kkoo-panel-muted: #{$kkoo-surface-muted};
@@ -307,6 +324,25 @@ $kkoo-badge-border-accent: rgba(247, 168, 41, 0.35);
   --kkoo-panel-ink: #{$kkoo-primary-dark};
   --kkoo-panel-sub: #{$kkoo-text-muted};
   --kkoo-accent-tint: #fff7e8;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --buyer-page-inset-x: 1.25rem;
+    --buyer-page-inset-top: 1rem;
+    --buyer-page-inset-bottom: 1.35rem;
+    --buyer-section-pad-x: 1.25rem;
+    --buyer-section-pad-y: 1.5rem;
+    --buyer-section-gap: 1.15rem;
+  }
+}
+
+@media (min-width: 992px) {
+  :root {
+    --buyer-page-inset-x: 1.5rem;
+    --buyer-section-pad-x: 1.5rem;
+    --buyer-section-pad-y: 1.65rem;
+  }
 }
 
 html[data-bs-theme='dark'],

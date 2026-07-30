@@ -102,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import type { BuyerCampaign } from '@/api/campaigns'
@@ -111,6 +111,7 @@ import { daysUntil, isPreorderCampaign } from '@/utils/preorderCountdown'
 
 const props = defineProps<{
   campaigns: BuyerCampaign[]
+  trackImpression?: (id?: number) => void
 }>()
 
 const emit = defineEmits<{
@@ -167,7 +168,7 @@ function badgeText(camp: BuyerCampaign) {
 function goTo(index: number) {
   const track = trackEl.value
   if (!track) return
-  const width = track.clientWidth
+  const width = track.clientWidth || 1
   track.scrollTo({ left: width * index, behavior: 'smooth' })
   activeIndex.value = index
   restartAuto()
@@ -175,8 +176,14 @@ function goTo(index: number) {
 
 function onScroll() {
   const track = trackEl.value
-  if (!track || !track.clientWidth) return
-  activeIndex.value = Math.round(track.scrollLeft / track.clientWidth)
+  if (!track) return
+  const width = track.clientWidth || 1
+  activeIndex.value = Math.round(track.scrollLeft / width)
+}
+
+function recordActiveImpression() {
+  const camp = props.campaigns[activeIndex.value]
+  props.trackImpression?.(camp?.id)
 }
 
 function restartAuto() {
@@ -189,6 +196,10 @@ function restartAuto() {
 }
 
 onMounted(() => {
+  void nextTick(() => {
+    goTo(0)
+    recordActiveImpression()
+  })
   restartAuto()
   tickTimer = setInterval(() => {
     nowMs.value = Date.now()
@@ -197,8 +208,19 @@ onMounted(() => {
 
 watch(
   () => props.campaigns.length,
-  () => restartAuto(),
+  () => {
+    activeIndex.value = 0
+    void nextTick(() => {
+      goTo(0)
+      recordActiveImpression()
+    })
+    restartAuto()
+  },
 )
+
+watch(activeIndex, () => {
+  recordActiveImpression()
+})
 
 onBeforeUnmount(() => {
   if (autoTimer) clearInterval(autoTimer)
@@ -214,7 +236,6 @@ onBeforeUnmount(() => {
   --buyer-promo-fs-ink-muted: rgba(255, 255, 255, 0.92);
   --buyer-promo-fs-accent: #f7c948;
   position: relative;
-  /* Break out of main padding for true full-bleed in the shopping shell */
   width: calc(100% + 2.2rem);
   margin-left: -1.1rem;
   margin-right: -1.1rem;
@@ -223,8 +244,16 @@ onBeforeUnmount(() => {
   overflow: hidden;
   background: #100c14;
   color: var(--buyer-promo-fs-ink);
-  min-height: min(100dvh, 56rem);
-  height: min(100dvh, 56rem);
+  aspect-ratio: 1080 / 1350;
+  max-height: min(78dvh, 42rem);
+  min-height: 16rem;
+}
+
+:global(.buyer-xp--mhome) > .buyer-promo-fs {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  max-height: min(68dvh, 34rem);
 }
 
 @media (min-width: 768px) {
@@ -241,8 +270,11 @@ onBeforeUnmount(() => {
     margin-left: -1.85rem;
     margin-right: -1.85rem;
     --buyer-promo-fs-radius: 1.25rem;
-    min-height: min(78dvh, 42rem);
-    height: min(78dvh, 42rem);
+    max-height: min(72dvh, 42rem);
+  }
+
+  :global(.buyer-xp--mhome) > .buyer-promo-fs {
+    max-height: min(62dvh, 38rem);
   }
 }
 
@@ -250,9 +282,12 @@ onBeforeUnmount(() => {
   display: flex;
   height: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   scrollbar-width: none;
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
 }
 
 .buyer-promo-fs__track::-webkit-scrollbar {

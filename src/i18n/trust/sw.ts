@@ -51,7 +51,7 @@ export default {
       'Kufanya biashara ya kila siku iwe ya kuaminika: pesa inashikiliwa hadi uwasilishaji uthibitishwe, malipo wazi kwa wauzaji, na kazi ya haki kwa riders.',
     aboutWhatTitle: 'Tunachojenga',
     aboutWhatBody:
-      'Super-app ya kununua na kutuma, zana za wauzaji na iShop POS, na mtandao wa riders — utambulisho, malipo, na loyalty pamoja.',
+      'Super-app ya kununua na kutuma, zana za wauzaji na KkooApp POS, na mtandao wa riders — utambulisho, malipo, na loyalty pamoja.',
     aboutWhyTitle: 'Kwa nini ni muhimu',
     aboutWhyBody:
       'Masoko ya Afrika Mashariki yana nguvu lakini yanakosa miundombinu ya pamoja. KKOO ndiyo tabaka hilo — kutoka maduka ya Kariakoo hadi mlangoni kwako.',
@@ -143,7 +143,7 @@ export default {
         a1: 'Jisajili kwenye KKOO Business, kamilisha wasifu, na chapisha bidhaa au menyu.',
         q2: 'Ninalipwa lini?',
         a2: 'Baada ya mnunuzi kuthibitisha uwasilishaji (au agizo kukamilika kulingana na sera), malipo hufuata ratiba yako katika zana za Biashara.',
-        q3: 'iShop POS ni nini?',
+        q3: 'KkooApp POS ni nini?',
         a3: 'Checkout ya dukani inayolingana na katalogi, stoo, na CRM yako ya mtandaoni.',
         q4: 'Nipate msaada wapi?',
         a4: 'Tumia njia za msaada za zana za Biashara, Community kwa maoni, au barua pepe info@kkooapp.co.tz.',

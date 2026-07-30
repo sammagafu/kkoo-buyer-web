@@ -164,6 +164,7 @@
           <Icon icon="solar:check-circle-bold" class="send-success-modal__icon" aria-hidden="true" />
           <h2>{{ t('buyerXp.send.requestSent') }}</h2>
           <p>{{ t('buyerXp.send.requestSentBody') }}</p>
+          <BuyerPostSuccessTrust channel="send" />
           <div class="send-success-modal__actions">
             <button type="button" class="send-success-modal__primary" @click="successModal = false">{{ t('buyerXp.common.done') }}</button>
           </div>
@@ -192,6 +193,7 @@ import {
 import BuyForMeDeliverySection from '@/components/buyer/send/BuyForMeDeliverySection.vue'
 import BuyForMeItemEditor from '@/components/buyer/send/BuyForMeItemEditor.vue'
 import BuyForMeTotalStrip from '@/components/buyer/send/BuyForMeTotalStrip.vue'
+import BuyerPostSuccessTrust from '@/components/buyer/experience/BuyerPostSuccessTrust.vue'
 import BuyForMeProductPicker from '@/components/buyer/send/BuyForMeProductPicker.vue'
 import { useBuyForMePricingConfig } from '@/composables/useBuyForMePricingConfig'
 

@@ -48,13 +48,13 @@
                 <span v-if="restaurant.contact_phone">{{ restaurant.contact_phone }}</span>
                 <span v-if="restaurant.average_rating">{{ t('restaurants.card.rating', { rating: restaurant.average_rating }) }}</span>
               </div>
-              <RouterLink
+              <a
                 v-if="storeSlug(restaurant)"
-                :to="`/store/${encodeURIComponent(storeSlug(restaurant)!)}`"
+                :href="storePublicUrl(String(storeSlug(restaurant)!))"
                 class="vx-card__cta"
               >
                 {{ t('restaurants.card.viewMicrosite') }}
-              </RouterLink>
+              </a>
             </div>
           </article>
         </div>
@@ -81,7 +81,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
 
 import MarketingLayout from './MarketingLayout.vue'
@@ -91,6 +90,7 @@ import LhButton from './partials/house/LhButton.vue'
 import type { VerticalCard } from './components/VerticalCardGrid.vue'
 import { superAppApi, type RestaurantListItem } from '@/api/superApp'
 import { formatApiError } from '@/utils/formatApiError'
+import { storePublicUrl } from '@/utils/storePublicUrl'
 import restaurantPlaceholder from '@/assets/images/landing/placeholders/restaurant-hero-placeholder.svg'
 
 const { t } = useI18n()
@@ -166,6 +166,7 @@ onMounted(async () => {
 .directory-grid {
   display: grid;
   gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 @media (min-width: 768px) {

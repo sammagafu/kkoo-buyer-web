@@ -9,10 +9,11 @@ export const disputesUserApi = {
     return client.get(`/disputes/${id}/`)
   },
   create(data: {
-    subject_type: 'order' | 'rider_payment'
-    subject_id: number
+    order_id: number
     reason: string
-    description?: string
+    description: string
+    assignment_id?: number
+    payout_id?: number
   }) {
     return client.post('/disputes/', data)
   },

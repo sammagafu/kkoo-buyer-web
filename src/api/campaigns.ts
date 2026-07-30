@@ -48,7 +48,7 @@ export type BuyerCampaign = {
 }
 
 export const campaignsUserApi = {
-  getActive(params: { placement: string; app?: string; channel?: string }) {
+  getActive(params: { placement: string; app?: string; channel?: string; limit?: number }) {
     return client.get<{ results: BuyerCampaign[]; placement: string }>('/campaigns/active/', {
       params: { app: 'marketplace', ...params },
     })

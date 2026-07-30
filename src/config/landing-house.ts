@@ -5,22 +5,36 @@ import shopImage from '@/assets/landing/services/shop.jpg'
 import foodImage from '@/assets/landing/services/food.jpg'
 import groceriesImage from '@/assets/landing/services/groceries.jpg'
 import rideImage from '@/assets/landing/services/ride.jpg'
+import hotelImage from '@/assets/images/landing/placeholders/hotel-hero-placeholder.svg'
 import { buyerRoutes, bizSellerDashboardUrl, bizCrmUrl } from '@/config/landing-links'
 import { bizWebPath } from '@/config/cross-app-links'
 
 /** Non-translatable brand / contact constants. Copy lives in i18n `landingHouse.*`. */
 export const houseCopy = {
-  brand: 'kkooApp',
+  brand: 'KkooApp',
   phone: '+255 700 000 000',
   phoneHref: 'tel:+255700000000',
 } as const
 
+/** Full buyer verticals shown on the homepage catalog. */
 export const houseServices = [
+  {
+    key: 'shop',
+    src: shopImage,
+    to: buyerRoutes.marketplace,
+    icon: 'solar:cart-large-2-bold',
+  },
   {
     key: 'food',
     src: foodImage,
-    to: buyerRoutes.restaurants,
+    to: buyerRoutes.eats,
     icon: 'solar:cup-hot-bold',
+  },
+  {
+    key: 'restaurants',
+    src: foodImage,
+    to: buyerRoutes.restaurants,
+    icon: 'solar:chef-hat-bold',
   },
   {
     key: 'grocery',
@@ -29,16 +43,40 @@ export const houseServices = [
     icon: 'solar:bag-2-bold',
   },
   {
-    key: 'shop',
-    src: shopImage,
-    to: buyerRoutes.marketplace,
-    icon: 'solar:cart-large-2-bold',
+    key: 'ride',
+    src: rideImage,
+    to: buyerRoutes.ride,
+    icon: 'solar:scooter-bold',
+  },
+  {
+    key: 'hotels',
+    src: hotelImage,
+    to: buyerRoutes.booking,
+    icon: 'solar:bed-bold',
+  },
+  {
+    key: 'pharmacy',
+    src: groceriesImage,
+    to: buyerRoutes.pharmacy,
+    icon: 'solar:health-bold',
   },
   {
     key: 'send',
     src: rideImage,
     to: buyerRoutes.send,
-    icon: 'solar:box-bold',
+    icon: 'solar:bag-heart-bold',
+  },
+  {
+    key: 'discovery',
+    src: shopImage,
+    to: buyerRoutes.discover,
+    icon: 'solar:compass-bold',
+  },
+  {
+    key: 'hustle',
+    src: rideImage,
+    to: buyerRoutes.hustle,
+    icon: 'solar:bolt-bold',
   },
 ] as const
 

@@ -106,6 +106,7 @@ function guestLineToWebItem(line: GuestCartLine): WebCartItem {
     quantity: line.quantity,
     total_price: line.unitPrice * line.quantity,
     requiresPrescription: line.requiresPrescription,
+    seller_id: line.sellerId ?? null,
     product: {
       title: line.title,
       price: line.unitPrice,
@@ -134,6 +135,7 @@ function persistGuestFromState() {
       unitPrice: i.product?.price ?? i.product?.base_price ?? 0,
       imageUrl: i.product?.image_url,
       requiresPrescription: i.requiresPrescription,
+      sellerId: i.seller_id ?? null,
     }))
   writeGuestCart(lines)
   isGuestCart.value = lines.length > 0
@@ -152,8 +154,55 @@ export type AddToCartInput = {
   imageUrl?: string
   requiresPrescription?: boolean
   quantity?: number
+  sellerId?: number | null
   /** marketplace (default) | microsite — must match product channel flags */
   channel?: 'marketplace' | 'microsite'
+}
+
+export type CartSellerGroup = {
+  sellerId: number | null
+  items: WebCartItem[]
+}
+
+export function groupCartBySeller(items: WebCartItem[]): CartSellerGroup[] {
+  const map = new Map<string, CartSellerGroup>()
+  for (const item of items) {
+    const sid = item.seller_id != null && Number(item.seller_id) > 0 ? Number(item.seller_id) : null
+    const key = sid != null ? String(sid) : 'unknown'
+    const existing = map.get(key)
+    if (existing) existing.items.push(item)
+    else map.set(key, { sellerId: sid, items: [item] })
+  }
+  return Array.from(map.values())
+}
+
+export function buildSellerConfigs(
+  items: WebCartItem[],
+  opts?: { fulfillmentType?: string; deliveryFeeTotal?: number; notes?: string },
+): Array<{ seller_id: number; fulfillment_type?: string; delivery_fee?: number; notes?: string }> {
+  const groups = groupCartBySeller(items).filter((g) => g.sellerId != null && g.sellerId > 0)
+  if (!groups.length) return []
+  const ft = opts?.fulfillmentType?.trim() || undefined
+  const needsDelivery = !ft || ft === 'delivery'
+  const totalFee = needsDelivery && (opts?.deliveryFeeTotal ?? 0) > 0 ? Number(opts!.deliveryFeeTotal) : 0
+  const perFee = groups.length > 0 && totalFee > 0 ? Math.round((totalFee / groups.length) * 100) / 100 : 0
+  let allocated = 0
+  return groups.map((g, i) => {
+    let fee = 0
+    if (perFee > 0) {
+      if (i === groups.length - 1) fee = Math.round((totalFee - allocated) * 100) / 100
+      else {
+        fee = perFee
+        allocated += perFee
+      }
+    }
+    return {
+      seller_id: g.sellerId!,
+      ...(ft ? { fulfillment_type: ft } : {}),
+      ...(fee > 0 ? { delivery_fee: fee } : {}),
+      ...(opts?.notes ? { notes: opts.notes } : {}),
+    }
+  })
 }
 
 export function useWebCart() {
@@ -223,6 +272,7 @@ export function useWebCart() {
         quantity: qty,
         total_price: input.unitPrice * qty,
         requiresPrescription: input.requiresPrescription,
+        seller_id: input.sellerId ?? null,
         product: {
           title: input.title,
           price: input.unitPrice,
@@ -311,8 +361,11 @@ export function useWebCart() {
     return String(item.id ?? item.item_id ?? item.guestId ?? Math.random())
   }
 
+  const sellerGroups = computed(() => groupCartBySeller(cartItems.value))
+
   return {
     cartItems,
+    sellerGroups,
     loading,
     error,
     itemCount,

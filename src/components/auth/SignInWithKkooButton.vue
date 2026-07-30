@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 /**
- * AllAuth-style “Sign in with KKOO” control for partner sites / pop-ups.
+ * AllAuth-style “Sign in with KkooApp” control for partner sites / pop-ups.
  * Use as a button that starts OAuth, or as a link to your authorize URL.
  */
 withDefaults(
@@ -37,7 +37,7 @@ withDefaults(
     disabled?: boolean
   }>(),
   {
-    label: 'Sign in with KKOO',
+    label: 'Sign in with KkooApp',
     size: 'md',
     block: true,
     tag: 'button',
@@ -66,7 +66,7 @@ function onClick(e: MouseEvent) {
   border-radius: 0.75rem;
   background: var(--kkoo-btn-bg);
   color: var(--kkoo-btn-fg);
-  font-family: var(--kkoo-font-display, 'Syne', sans-serif);
+  font-family: var(--kkoo-font-display, 'Poppins', sans-serif);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
