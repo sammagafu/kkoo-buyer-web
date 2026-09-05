@@ -29,6 +29,7 @@ describe('importCatalogProducts', () => {
   it('uses seller endpoint for seller-only session', async () => {
     const store = useAuthStore()
     store.setUser({ id: 1, roles: ['seller'] } as User)
+    store.setActiveAccountRole(ROLES.SELLER)
     expect(catalogImportUsesSellerFromToken()).toBe(true)
 
     const f = new File([''], 'p.csv')

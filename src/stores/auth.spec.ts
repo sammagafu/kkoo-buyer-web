@@ -17,6 +17,8 @@ describe('auth store', () => {
       const user: User = { id: 1, email: 'a@b.com', roles: ['admin'] }
       store.setUser(user)
       expect(store.role).toBe(ROLES.ADMIN)
+      // Buyer web defaults to buyer account; switch to panel role to activate panel mode.
+      store.setActiveAccountRole(ROLES.ADMIN)
       expect(store.isPanelUser).toBe(true)
       expect(store.isAdmin).toBe(true)
     })
@@ -25,6 +27,7 @@ describe('auth store', () => {
       const store = useAuthStore()
       store.setUser({ id: 1, is_superuser: true } as User)
       expect(store.role).toBe(ROLES.ADMIN)
+      store.setActiveAccountRole(ROLES.ADMIN)
       expect(store.isPanelUser).toBe(true)
     })
 
@@ -32,6 +35,7 @@ describe('auth store', () => {
       const store = useAuthStore()
       store.setUser({ id: 1, roles: ['staff'] } as User)
       expect(store.role).toBe(ROLES.STAFF)
+      store.setActiveAccountRole(ROLES.STAFF)
       expect(store.isPanelUser).toBe(true)
     })
 
@@ -39,6 +43,7 @@ describe('auth store', () => {
       const store = useAuthStore()
       store.setUser({ id: 1, roles: ['seller'] } as User)
       expect(store.role).toBe(ROLES.SELLER)
+      store.setActiveAccountRole(ROLES.SELLER)
       expect(store.isPanelUser).toBe(true)
     })
 

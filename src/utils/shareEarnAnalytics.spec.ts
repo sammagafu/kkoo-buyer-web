@@ -22,15 +22,18 @@ describe('shareEarnAnalytics', () => {
   })
 
   it('groups monthly buckets for the last six months', () => {
+    const now = new Date()
+    const key = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+    const day = `${key}-15`
     const buckets = groupShareEarnByMonth(
-      [{ created_at: '2026-06-15', commission_amount: 2500 }],
-      [{ transaction_type: 'referral_bonus', amount: 50, is_credit: true, created_at: '2026-06-10' }],
+      [{ created_at: day, commission_amount: 2500 }],
+      [{ transaction_type: 'referral_bonus', amount: 50, is_credit: true, created_at: `${key}-10` }],
       3,
     )
     expect(buckets).toHaveLength(3)
-    const june = buckets.find((b) => b.month.endsWith('-06'))
-    expect(june?.shareCommission).toBe(2500)
-    expect(june?.referralPoints).toBe(50)
+    const current = buckets.find((b) => b.month === key)
+    expect(current?.shareCommission).toBe(2500)
+    expect(current?.referralPoints).toBe(50)
   })
 
   it('merges sales and reward transactions into activity feed', () => {
