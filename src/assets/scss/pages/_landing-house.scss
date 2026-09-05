@@ -1915,7 +1915,7 @@ html[data-bs-theme='dark'] .lh-mega {
 
 @media (min-width: 1200px) {
   .lh-services__grid {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -2332,10 +2332,26 @@ html[data-bs-theme='dark'] .lh-root .lh-process-card__num {
   }
 
   &__tagline {
-    margin: 0 0 var(--lh-space-4);
+    margin: 0 0 var(--lh-space-3);
     font-size: var(--lh-text-sm);
     line-height: 1.45;
     color: var(--lh-text-muted);
+  }
+
+  &__phone {
+    display: inline-block;
+    margin: 0 0 var(--lh-space-4);
+    font-size: var(--lh-text-sm);
+    font-weight: 600;
+    color: var(--lh-text);
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--lh-accent, #5c308f);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
   }
 
   &__meta {

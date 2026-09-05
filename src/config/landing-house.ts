@@ -5,15 +5,20 @@ import shopImage from '@/assets/landing/services/shop.jpg'
 import foodImage from '@/assets/landing/services/food.jpg'
 import groceriesImage from '@/assets/landing/services/groceries.jpg'
 import rideImage from '@/assets/landing/services/ride.jpg'
-import hotelImage from '@/assets/images/landing/placeholders/hotel-hero-placeholder.svg'
+import restaurantsImage from '@/assets/landing/services/restaurants.jpg'
+import hotelsImage from '@/assets/landing/services/hotels.jpg'
+import pharmacyImage from '@/assets/landing/services/pharmacy.jpg'
+import sendImage from '@/assets/landing/services/send.jpg'
+import discoveryImage from '@/assets/landing/services/discovery.jpg'
+import hustleImage from '@/assets/landing/services/hustle.jpg'
 import { buyerRoutes, bizSellerDashboardUrl, bizCrmUrl } from '@/config/landing-links'
 import { bizWebPath } from '@/config/cross-app-links'
 
 /** Non-translatable brand / contact constants. Copy lives in i18n `landingHouse.*`. */
 export const houseCopy = {
   brand: 'KkooApp',
-  phone: '+255 700 000 000',
-  phoneHref: 'tel:+255700000000',
+  phone: '+255 788 419 991',
+  phoneHref: 'tel:+255788419991',
 } as const
 
 /** Full buyer verticals shown on the homepage catalog. */
@@ -32,7 +37,7 @@ export const houseServices = [
   },
   {
     key: 'restaurants',
-    src: foodImage,
+    src: restaurantsImage,
     to: buyerRoutes.restaurants,
     icon: 'solar:chef-hat-bold',
   },
@@ -50,31 +55,31 @@ export const houseServices = [
   },
   {
     key: 'hotels',
-    src: hotelImage,
+    src: hotelsImage,
     to: buyerRoutes.booking,
     icon: 'solar:bed-bold',
   },
   {
     key: 'pharmacy',
-    src: groceriesImage,
+    src: pharmacyImage,
     to: buyerRoutes.pharmacy,
     icon: 'solar:health-bold',
   },
   {
     key: 'send',
-    src: rideImage,
+    src: sendImage,
     to: buyerRoutes.send,
     icon: 'solar:bag-heart-bold',
   },
   {
     key: 'discovery',
-    src: shopImage,
+    src: discoveryImage,
     to: buyerRoutes.discover,
     icon: 'solar:compass-bold',
   },
   {
     key: 'hustle',
-    src: rideImage,
+    src: hustleImage,
     to: buyerRoutes.hustle,
     icon: 'solar:bolt-bold',
   },
