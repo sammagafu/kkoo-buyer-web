@@ -39,6 +39,26 @@ jobs:
     needs: [build, e2e]
     runs-on: ubuntu-latest
     steps:
+      - name: Verify deploy secrets
+        run: |
+          missing=0
+          if [ -z "${{ secrets.DO_HOST }}" ]; then
+            echo "::error::DO_HOST secret is not set. Add it under Settings → Secrets and variables → Actions."
+            missing=1
+          fi
+          if [ -z "${{ secrets.DO_USER }}" ]; then
+            echo "::error::DO_USER secret is not set."
+            missing=1
+          fi
+          if [ -z "${{ secrets.DO_SSH_KEY }}" ]; then
+            echo "::error::DO_SSH_KEY secret is not set."
+            missing=1
+          fi
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+          echo "Deploy secrets present."
+
       - name: SSH pull and rebuild buyer container
         uses: appleboy/ssh-action@v1.2.0
         with:
