@@ -48,6 +48,9 @@ jobs:
             echo "Buyer source:  $BUYER_DIR"
             echo "Compose root:  $COMPOSE_DIR"
 
+            # github.com:22 often times out on DO — use SSH over 443
+            export GIT_SSH_COMMAND='ssh -o Hostname=ssh.github.com -o Port=443 -o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes'
+
             cd "$BUYER_DIR"
             git fetch origin
             git checkout main
