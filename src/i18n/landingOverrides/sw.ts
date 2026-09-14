@@ -15,8 +15,8 @@ export default {
     heroAccentWord: '',
     heroTitleAccent: 'Pande mbili. Mfumo mmoja unaoaminika.',
     heroSubtitle:
-      'KKOO ni mahali wanunuzi wanunua kwa ulinzi na wauzaji wanendesha biashara bila vurugu.',
-    heroTrust1: 'Ulinzi wa escrow',
+      'KkooApp ni mahali wanunuzi wanunua kwa ulinzi na wauzaji wanendesha biashara bila vurugu.',
+    heroTrust1: 'Dhamana ya saa 24',
     heroTrust2: 'Ufuatiliaji wa GPS moja kwa moja',
     heroTrust3: 'Dhamana ya kurejeshewa pesa',
     heroTrust4: 'M-Pesa, Airtel Money, Tigo Pesa',
@@ -25,39 +25,39 @@ export default {
     whatsInsideHeadline: 'Nunua. Uza.',
     verticalsTitleAccent: 'Imelindwa.',
     verticalsSub:
-      'Programu ya wanunuzi KKOO kwa ununuzi uliohakikishwa. KKOO kwa wauzaji: duka, usafirishaji, malipo na CRM. Tabaka moja la uaminifu pande zote mbili.',
+      'Programu ya wanunuzi KkooApp kwa ununuzi uliohakikishwa. KkooApp kwa wauzaji: duka, usafirishaji, malipo na CRM. Tabaka moja la uaminifu pande zote mbili.',
     verticalBuyersTag: 'Programu ya wanunuzi',
-    verticalBuyersTitle: 'Programu ya wanunuzi KKOO',
+    verticalBuyersTitle: 'Programu ya wanunuzi KkooApp',
     verticalBuyersDesc:
       'Bidhaa, chakula, mboga — malipo moja, dhamana ya usafirishaji, zawadi kwa kila agizo.',
     verticalBuyersContext:
-      'Lipa escrow, fuatilia usafirishaji moja kwa moja, na fungua mgogoro ndani ya programu ikiwa kuna tatizo.',
+      'Lipa kwa usalama, fuatilia usafirishaji moja kwa moja, na fungua mgogoro ndani ya programu ikiwa kuna tatizo.',
     verticalSellersTag: 'Kituo cha wauzaji',
-    verticalSellersTitle: 'KKOO kwa wauzaji',
+    verticalSellersTitle: 'KkooApp kwa wauzaji',
     verticalSellersDesc:
       'Endesha biashara kwenye simu — duka, mtandao wa usafirishaji, takwimu na malipo ndani ya masaa 48.',
     verticalSellersContext:
       'Orodhesha bidhaa, timiza maagizo, na lipwa kwa ratiba wazi — uaminifu unavyokua.',
-    onboarding6Title: 'Uko tayari kuuza kwenye KKOO?',
+    onboarding6Title: 'Uko tayari kuuza kwenye KkooApp?',
     onboarding6Desc:
       'Hatua tano zilizoongozwa, kisha duka lako linafunguliwa — ukaguzi wa haraka, viwango wazi, msaada mwezi wako wa kwanza.',
-    onboarding6Cta: 'Anza kuuza kwenye KKOO',
-    onboarding6CtaSecondary: 'Pakua KKOO — bure',
+    onboarding6Cta: 'Anza kuuza kwenye KkooApp',
+    onboarding6CtaSecondary: 'Pakua KkooApp — bure',
     onboardingStatSteps: 'hatua zilizoongozwa',
     onboardingStatReview: 'ukaguzi wa kawaida',
-    onboardingCta: 'Anza kuuza kwenye KKOO',
+    onboardingCta: 'Anza kuuza kwenye KkooApp',
     influencerLabel: 'SHIRIKI NA UIPATE',
-    influencerHeadline1: 'Pendekeza KKOO.',
+    influencerHeadline1: 'Pendekeza KkooApp.',
     influencerHeadline2: 'Lipwa wanaponunua.',
     influencerBody:
-      'Shiriki bidhaa au kiungo chako kutoka programu ya wanunuzi. Mtu anapojiunga au kununua kupitia wewe, KKOO inafuatilia—unaona mapato kwenye programu na unalipwa kwa ratiba tunayochapisha.',
+      'Shiriki bidhaa au kiungo chako kutoka programu ya wanunuzi. Mtu anapojiunga au kununua kupitia wewe, KkooApp inafuatilia—unaona mapato kwenye programu na unalipwa kwa ratiba tunayochapisha.',
     influencerHowLabel: 'Jinsi inavyofanya kazi',
     influencerNote:
       'M-Pesa, Airtel Money, Tigo Pesa au benki. Viwango vya kamisheni vinachapishwa wazi—hakuna chochote kilichofichwa.',
     influencerStep1Title: 'Shiriki kiungo chako',
     influencerStep1Desc:
       'Kutoka programu hadi WhatsApp, Hadithi, au wasifu. Mguso mmoja—bila copy-paste nyingi.',
-    influencerStep2Title: 'KKOO inafuatilia kila agizo',
+    influencerStep2Title: 'KkooApp inafuatilia kila agizo',
     influencerStep2Desc:
       'Usajili na ununuzi hubaki kwako. Hakuna karatasi wala kumfuatilia mtu kwa uthibitisho.',
     influencerStep3Title: 'Toa pesa kwa njia ya ndani',
@@ -77,13 +77,13 @@ export default {
       'M-Pesa, Airtel Money, Tigo Pesa au benki—kwa tarehe za malipo tunazochapisha.',
     influencerPerksAria: 'Faida za programu ya shiriki na uipate',
     influencerCta: 'Pata kiungo chako kwenye programu',
-    sellerTiersLabel: 'Viwango vya muuzaji kwenye KKOO',
+    sellerTiersLabel: 'Viwango vya muuzaji kwenye KkooApp',
     sellerTiersSub:
       'Kiwango chako kinaonyesha jinsi unavyouza na kutoa — fungua uaminifu, kuonekana, na manufaa zaidi unavyokua.',
     sellerTier1Level: 'Kiwango 1',
     sellerTier1Name: 'Uzinduzi',
     sellerTier1Desc:
-      'Duka lako limefunguliwa. Orodhesha bidhaa, pokea maagizo, na lipwa kupitia escrow ya KKOO.',
+      'Duka lako limefunguliwa. Orodhesha bidhaa, pokea maagizo, na lipwa kupitia KkooApp.',
     sellerTier2Level: 'Kiwango 2',
     sellerTier2Name: 'Imethibitishwa',
     sellerTier2Desc:
@@ -100,11 +100,11 @@ export default {
     ifYouShopHeadline1: 'Nunua kwa ujasiri',
     ifYouShopHeadline2: 'kutoka malipo hadi kufikishwa.',
     ifYouShopBody:
-      'Lipa KKOO kwa escrow, ufuatiliaji wa moja kwa moja na msaada wa migogoro. Pesa yako salama hadi agizo lifike kama lilivyoelezwa — ndipo muuzaji analipwa.',
-    ifYouShopCta: 'Pakua KKOO — ni bure',
+      'Lipa KkooApp kwa dhamana ya saa 24, ufuatiliaji wa moja kwa moja na msaada wa migogoro. Agizo likiwa si sahihi au lisipofika, una saa 24 kudai kurudishiwa pesa.',
+    ifYouShopCta: 'Pakua KkooApp — ni bure',
     buyerFeature1Title: 'Pesa yako salama hadi ifike',
     buyerFeature1Desc:
-      'Ukilipa KKOO, pesa yako ienda escrow — si kwa muuzaji. Inabaki hapo hadi agizo lifike sawa. Unathibitisha. Ndipo muuzaji analipwa.',
+      'Ukilipa KkooApp, una saa 24 tangu kufikishwa kudai kurudishiwa pesa iwapo agizo si sahihi. Duka ndilo linalobeba gharama.',
     buyerFeature2Title: 'Fuatilia agizo lako moja kwa moja',
     buyerFeature2Desc:
       'GPS kila sekunde 30 kutoka kuchukuliwa hadi mlangoni. Picha wakati wa kufikisha. Huulizi tena "agizo liko wapi?" — unaiona skrini.',
@@ -128,7 +128,7 @@ export default {
     ifYouSellCta: 'Anza kuuza sasa',
     sellerFeature1Title: 'Duka lako wazi masaa 24',
     sellerFeature1Desc:
-      'Daima linapatikana kwa wanunuzi wote KKOO. Beji iliyothibitishwa, picha, bei — wateja wanakupata hata ulipolala.',
+      'Daima linapatikana kwa wanunuzi wote KkooApp. Beji iliyothibitishwa, picha, bei — wateja wanakupata hata ulipolala.',
     sellerFeature2Title: 'Lipwa ndani ya masaa 48. Kila wakati.',
     sellerFeature2Desc:
       'Usafirishaji umethibitishwa — malipo kwenye pesa ya simu ndani ya masaa 48. Hakuna kukimbiza wateja wala hesabu za mwisho.',
@@ -143,7 +143,7 @@ export default {
       'Viwango vinavyosasishwa kwa kila agizo. Tahadhari kabla ya kuisha. Usithibitishe kile huna.',
     sellerFeature6Title: 'Promosheni zinazofikia wanunuzi',
     sellerFeature6Desc:
-      'Mauzo ya haraka, vifurushi na ofa za uaminifu — kwa wanunuzi KKOO karibu nawe wanaotafuta kununua.',
+      'Mauzo ya haraka, vifurushi na ofa za uaminifu — kwa wanunuzi KkooApp karibu nawe wanaotafuta kununua.',
     ifYouRideLabel: 'ULINZI WA MNUNUZI',
     ifYouRideHeadline1: 'Uaminifu si hisia.',
     ifYouRideHeadline2: 'Ni muundo.',
@@ -152,7 +152,7 @@ export default {
     buyerProtection1Title: 'Biashara zilizothibitishwa tu',
     buyerProtection1Desc:
       'Kila muuzaji amethibitishwa. Starter → Verified → Trusted → Elite — kila beji inastahiliwa kwa miezi ya utendaji halisi.',
-    buyerProtection2Title: 'Escrow — pesa yako, udhibiti wako',
+    buyerProtection2Title: 'Dhamana — pesa yako, udhibiti wako',
     buyerProtection2Desc:
       'Malipo yanakamatwa agizo likitumwa. Yanatolewa kwa muuzaji tu baada ya kuthibitisha kufikishwa.',
     buyerProtection3Title: 'Dhamana ya usafirishaji',
@@ -160,9 +160,9 @@ export default {
       'Kuchelewa? Mkopo wa moja kwa moja. Bidhaa mbaya? Badiliko siku hiyo hiyo. Uharibifu? Marejesho kamili.',
     buyerProtection4Title: 'Utatuzi wa migogoro masaa 24',
     buyerProtection4Desc:
-      'Mwanachama wa timu KKOO anachunguza kesi yako ndani ya masaa. Migogoro ngumu ndani ya masaa 24, kila wakati.',
-    featuresTitle: 'Wanunuzi wanaposhinda KKOO,',
-    featuresTitleAccent: 'wauzaji wanashinda KKOO.',
+      'Mwanachama wa timu KkooApp anachunguza kesi yako ndani ya masaa. Migogoro ngumu ndani ya masaa 24, kila wakati.',
+    featuresTitle: 'Wanunuzi wanaposhinda KkooApp,',
+    featuresTitleAccent: 'wauzaji wanashinda KkooApp.',
     featuresSub:
       'Malipo, uaminifu na zawadi ni sawa pande zote. Kila muamala unajenga ufuatao — si programu nyingine tena.',
     ecosystemCard1Title: 'Kwa wanunuzi',
@@ -173,24 +173,24 @@ export default {
       'Uaminifu wa mnunuzi ni mapato yako — bila matangazo. Kuwa pale wanaporudi.',
     ecosystemCard3Title: 'Matokeo',
     ecosystemCard3Desc:
-      'Kwenye programu nyingi, kila muamala ni peke yake. KKOO, kila muamala unaleta ufuatao.',
+      'Kwenye programu nyingi, kila muamala ni peke yake. KkooApp, kila muamala unaleta ufuatao.',
     onboardingHeadline1: 'Tangaza',
     onboardingHeadline2: 'papo hapo.',
     onboardingHeadlineAccent: 'Mwongozo wazi — hatua rahisi, ukaguzi wa haraka.',
     onboarding1Title: 'Ukaguzi wa ombi',
-    onboarding1Desc: 'Kitambulisho na picha za bidhaa. KKOO inajibu ndani ya masaa machache.',
+    onboarding1Desc: 'Kitambulisho na picha za bidhaa. KkooApp inajibu ndani ya masaa machache.',
     onboarding2Title: 'Mwelekeo wa jukwaa',
     onboarding2Desc: 'Utambulisho wa dashibodi, kamisheni, malipo na viwango vya ubora.',
     onboarding3Title: 'Katalogi',
-    onboarding3Desc: 'Pakia bidhaa za kwanza. KKOO inakagua kila orodha — tunasema nini kubadilisha.',
+    onboarding3Desc: 'Pakia bidhaa za kwanza. KkooApp inakagua kila orodha — tunasema nini kubadilisha.',
     onboarding4Title: 'Agizo la majaribio',
-    onboarding4Desc: 'Agizo halisi la KKOO. Unalitimiza. Muda, ufungashaji, mkabala — yote yanathibitishwa.',
+    onboarding4Desc: 'Agizo halisi la KkooApp. Unalitimiza. Muda, ufungashaji, mkabala — yote yanathibitishwa.',
     onboarding5Title: 'Tangaza',
-    onboarding5Desc: 'Duka wazi kwa wanunuzi KKOO. Meneja wa mafanikio kwa siku 30.',
+    onboarding5Desc: 'Duka wazi kwa wanunuzi KkooApp. Meneja wa mafanikio kwa siku 30.',
     movementHeadline1: 'Unapata haswa',
-    movementHeadline2: 'ulichoagiza. Au KKOO inarekebisha.',
+    movementHeadline2: 'ulichoagiza. Au KkooApp inarekebisha.',
     movementBody:
-      'Kwa wanunuzi: pesa imelindwa hadi uthibitisho wa kufikishwa. Kwa wauzaji: maagizo yanatimizwa, malipo yamehakikishwa. Escrow, GPS, picha, viwango, migogoro masaa 24 — miundombinu, si ahadi.',
+      'Kwa wanunuzi: pesa imelindwa hadi uthibitisho wa kufikishwa. Kwa wauzaji: maagizo yanatimizwa, malipo yamehakikishwa. money-back guarantee, GPS, picha, viwango, migogoro masaa 24 — miundombinu, si ahadi.',
     testimonialsLabel: 'SAUTI ZA WANUNUZI',
     testimonialsHeadline1: 'Walichosema agizo',
     testimonialsHeadline2: 'lilipofika kweli.',
@@ -198,7 +198,7 @@ export default {
     testimonial1Name: 'Amina M.',
     testimonial1Role: 'Kinondoni · mnunuzi wa mara kwa mara',
     testimonial1Text:
-      'Kabla ya KKOO nilimpigia muuzaji baada ya kila agizo. Sasa naona dereva kwenye ramani kutoka jikoni. Sina wasiwasi tena.',
+      'Kabla ya KkooApp nilimpigia muuzaji baada ya kila agizo. Sasa naona dereva kwenye ramani kutoka jikoni. Sina wasiwasi tena.',
     testimonial2Name: 'Daniel K.',
     testimonial2Role: 'Kariakoo · mfanyakazi huru',
     testimonial2Text:
@@ -209,8 +209,8 @@ export default {
       'Maagizo ya pamoja, bei bora, pointi kila wakati. Desemba nilipata mwezi wa usafirishaji bure — pesa halisi.',
     sellerTestimonialsLabel: 'SAUTI ZA WAUZAJI',
     sellerTestimonialsHeadline1: 'Kilichobadilika walipojiunga',
-    sellerTestimonialsHeadline2: 'na KKOO.',
-    sellerTestimonialsCallout: 'Biashara yako inaendesha tayari. KKOO inampa miundombinu inayostahili.',
+    sellerTestimonialsHeadline2: 'na KkooApp.',
+    sellerTestimonialsCallout: 'Biashara yako inaendesha tayari. KkooApp inampa miundombinu inayostahili.',
     testimonial4Name: 'Hassan K.',
     testimonial4Role: 'Vifaa vya umeme Kariakoo · Muuzaji verified',
     testimonial4Text:
@@ -228,31 +228,31 @@ export default {
     footerTaglineSub:
       'Kwa wanunuzi: pesa salama hadi agizo lifike. Kwa wauzaji: mapato yaliyolindwa, wateja waaminifu, shughuli zenye mpangilio.',
     downloadSectionPill: 'Pata programu',
-    downloadSectionHeadline: 'Pata KKOO unapohitaji.',
+    downloadSectionHeadline: 'Pata KkooApp unapohitaji.',
     downloadSectionSub:
-      'Wanunuzi wanunua kwenye programu. Wauzaji wanaendesha duka kwenye desktop au kivinjari. Uaminifu, ufuatiliaji, na escrow vile vile.',
+      'Wanunuzi wanunua kwenye programu. Wauzaji wanaendesha duka kwenye desktop au kivinjari. Uaminifu, ufuatiliaji, na dhamana ya saa 24 vile vile.',
     downloadBuyersDesc:
-      'Nunua, fuatilia usafirishaji, lipa kwa escrow, na pata zawadi—iOS au Android.',
+      'Nunua, fuatilia usafirishaji, lipa kwa dhamana ya saa 24, na pata zawadi—iOS au Android.',
     downloadSellersDesc:
       'Orodhesha bidhaa, timiza maagizo, na lipwa kwa ratiba—sakinisha Kkoo Business kwa Windows au Mac, au tumia dashibodi ya wavuti.',
     downloadSellersNote: 'Unapendelea kivinjari? Ingia kutoka simu au kompyuta—hakuna usakinishaji.',
     downloadSellersCta: 'Fungua dashibodi ya muuzaji',
     downloadAvailableOn: 'Inapatikana kwenye',
-    downloadWhisper1: 'Usakinishaji mmoja. Escrow kwa kila order.',
+    downloadWhisper1: 'Usakinishaji mmoja. Dhamana ya saa 24 kwa kila agizo.',
     downloadWhisper2: 'Wauzaji wanalipwa kwa ratiba—wanunuzi wanapata uthibitisho.',
     downloadWhisper3: 'Kidokezo: gonga kidonge cha “Pata programu” mara nne.',
     downloadWhisper4: 'Simu mfukoni. Dashibodi mezani.',
     downloadWhisper5: 'Ununuzi · Usafirishaji · Biashara — uaminifu mmoja.',
     downloadLaneBuyers: 'Ninanunua',
     downloadLaneSellers: 'Ninauza',
-    downloadLaneA11y: 'Chagua njia yako ya KKOO',
+    downloadLaneA11y: 'Chagua njia yako ya KkooApp',
     downloadPillA11y: 'Pata programu — gonga mara nne kwa mshangao',
     downloadBridgeLabel: 'Uaminifu mmoja',
     downloadBurstTitle: 'Tayari unapohitaji',
     downloadBurstMessage: 'Chagua njia—duka au kikapu, bonyeza moja tu.',
     finalHeadline1: 'Programu moja.',
     finalHeadline2: 'Nunua. Kula. Safiri.',
-    finalBody: 'Pakua KKOO. Agizo lako la kwanza linalindwa tangu unapolipa.',
+    finalBody: 'Pakua KkooApp. Agizo lako la kwanza linalindwa tangu unapolipa.',
     finalMicrocopy: 'Bure kupakua. Bure kujiunga. Imejengwa kwa uaminifu.',
     rewardsCta: 'Nunua kwa ujasiri',
   },

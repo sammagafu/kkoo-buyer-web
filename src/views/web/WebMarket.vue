@@ -204,6 +204,7 @@
           :add-error="addError"
           :adding="adding"
           :show-store-label="!compact"
+          columns="four"
           @add="addProduct"
         />
       </section>

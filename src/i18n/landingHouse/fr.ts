@@ -26,19 +26,19 @@ export default {
       brand: 'KkooApp',
       title: 'Acheter. Vendre. Livrer. Gagner.',
       lead:
-        'Une plateforme de commerce de confiance pour acheteurs, marchands, livreurs et équipes — avec séquestre, suivi en direct et récompenses.',
-      assurance: 'Paiements sous séquestre · Suivi en direct · Un seul compte',
+        'Une plateforme de commerce pour acheteurs, marchands, livreurs et équipes — avec une garantie de remboursement sous 24 heures, suivi en direct et récompenses.',
+      assurance: 'Garantie de remboursement 24 h · Suivi en direct · Un seul compte',
       imageAlt: 'Commerce KkooApp pour acheteurs, vendeurs et livreurs',
     },
     heroStats: [
-      { value: 'Escrow', label: 'Paiements sûrs' },
+      { value: '24h', label: 'Garantie remboursement' },
       { value: 'GPS', label: 'Suivi en direct' },
       { value: '1 App', label: 'Acheter et envoyer' },
     ],
     buy: {
-      title: 'Commerce du quotidien',
+      title: 'Tout ce que vous achetez dans une journée',
       lead:
-        'Boutique, repas, restaurants, courses, trajets, séjours, pharmacie, Envoyez-moi, Découvrir et Missions — un compte, une même protection.',
+        'Boutique, repas, courses, trajets, séjours, pharmacie et plus — un compte, la même protection sur chaque commande.',
     },
     services: {
       shop: {
@@ -145,19 +145,24 @@ export default {
     },
     trust: {
       title: 'La confiance est le produit',
-      lead: 'Paiement séquestre, suivi en direct et paiements clairs — pour que acheteurs, vendeurs et livreurs avancent sans anxiété.',
+      lead:
+        'Une garantie de remboursement sous 24 heures, un suivi en direct et des paiements clairs — pour que acheteurs, vendeurs et livreurs avancent sans anxiété.',
       items: {
         escrow: {
-          title: 'Paiement séquestre',
-          text: 'Vendeurs et livreurs sont payés après acceptation par l’acheteur.',
+          title: 'Garantie de remboursement 24 h',
+          text: "Si votre commande n'arrive pas, ou n'est pas ce que vous avez commandé, dites-le-nous dans les 24 heures suivant la livraison et nous vous remboursons. La boutique en assume le coût — c'est dans chaque accord vendeur.",
         },
         tracking: {
           title: 'Suivi en direct',
-          text: 'Commandes et colis avancent en temps réel — pour tous ceux qui suivent.',
+          text: 'Commandes et colis avancent en temps réel — tout le monde voit la même chose.',
         },
         ecosystem: {
           title: 'Un seul écosystème',
           text: 'Acheteurs, vendeurs, POS, outils business et livreurs partagent le même KkooApp.',
+        },
+        registered: {
+          title: 'Enregistrée et responsable',
+          text: 'KkooApp Innovation Limited est enregistrée en Tanzanie, BRELA n° 209048183.',
         },
       },
     },
@@ -194,8 +199,8 @@ export default {
       lead: 'Pas seulement une boutique — protection, livraison, outils business et récompenses au même endroit.',
       items: {
         escrow: {
-          title: 'L’argent reste en sécurité',
-          text: 'Payez avec M-Pesa ou carte. Nous le retenons jusqu’à confirmation de livraison.',
+          title: 'Remboursement sous 24 heures',
+          text: 'Payez avec M-Pesa, Airtel Money, Mixx by Yas ou carte. Si votre commande est incorrecte ou n’arrive pas, vous avez 24 heures pour demander un remboursement intégral.',
         },
         tracking: {
           title: 'Suivi en direct',

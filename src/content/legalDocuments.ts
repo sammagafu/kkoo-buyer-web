@@ -73,7 +73,7 @@ export const legalDocuments = {
           },
           {
             type: 'p',
-            text: `Escrow, tracking, ratings, disputes, and support tools help build trust between parties. They do not make us the manufacturer, retailer, insurer, or employer of every participant on the platform.`,
+            text: `Money-back guarantees, tracking, ratings, disputes, and support tools help build trust between parties. They do not make us the manufacturer, retailer, insurer, or employer of every participant on the platform.`,
           },
         ],
       },
@@ -85,7 +85,7 @@ export const legalDocuments = {
             items: [
               'Prices, fees, taxes, delivery charges, and promotions are shown at checkout before you confirm. Currency and local payment methods may vary by market.',
               'By placing an order or booking a ride/delivery, you authorise payment using your selected method (mobile money, card, wallet, or other available options).',
-              'Where escrow or pay-on-delivery flows apply, release of funds follows the rules shown in the app and our Refund Policy.',
+              'Where money-back or pay-on-delivery flows apply, refunds and settlement follow the rules shown in the app and our Refund Policy.',
               'Promotions, vouchers, loyalty points, and referral rewards are subject to their own programme rules and may be changed or withdrawn.',
               'You are responsible for any customs duties, import fees, or third-party charges that apply to an order.',
             ],

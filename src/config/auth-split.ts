@@ -22,31 +22,31 @@ export type AuthSplitContent = {
 
 export const authSplitByPortal: Record<AuthPortal, AuthSplitContent> = {
   buyer: {
-    eyebrow: 'KKOO Buyer',
+    eyebrow: 'KkooApp Buyer',
     tagline: 'Shop · Sell · Move',
     title: 'Shop, order, and track in one place.',
-    lead: 'Food, groceries, local shops, and parcels — same account, escrow checkout, and live tracking.',
-    points: ['Escrow-protected checkout', 'Live delivery updates', 'Rewards on every order'],
+    lead: 'Food, groceries, local shops, and parcels — same account, 24-hour money-back, and live tracking.',
+    points: ['24-hour money-back', 'Live delivery updates', 'Rewards on every order'],
     footerLinks: [
       { label: 'Browse marketplace', href: buyerWebPath('/marketplace'), variant: 'ghost' },
     ],
   },
   seller: {
-    eyebrow: 'KKOO Seller',
+    eyebrow: 'KkooApp Seller',
     tagline: 'Your business, one dashboard',
     title: 'Run your shop and get paid when buyers confirm.',
     lead: 'List products, take orders, sync POS, and manage your business from one dashboard.',
     points: ['Online + in-store sales', 'Inventory & CRM tools', 'Clear payouts after delivery'],
     footerLinks: [
-      { label: 'Shop on KKOO', href: buyerWebPath('/marketplace'), variant: 'ghost', external: true },
+      { label: 'Shop on KkooApp', href: buyerWebPath('/marketplace'), variant: 'ghost', external: true },
       { label: 'Buyer sign in', href: buyerWebPath('/auth/sign-in'), variant: 'text', external: true },
     ],
   },
   admin: {
-    eyebrow: 'KKOO Admin',
+    eyebrow: 'KkooApp Admin',
     tagline: 'Platform operations',
     title: 'Operate the platform with confidence.',
-    lead: 'Users, orders, catalog, logistics, and analytics — secure tools for KKOO teams.',
+    lead: 'Users, orders, catalog, logistics, and analytics — secure tools for KkooApp teams.',
     points: ['Role-based access', 'Audit-friendly controls', 'Built for East Africa scale'],
     footerLinks: [
       { label: 'Buyer app', href: buyerWebPath('/'), variant: 'ghost', external: true },

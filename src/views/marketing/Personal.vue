@@ -61,9 +61,9 @@ const howItWorks = [
   },
   {
     key: 'checkout',
-    title: 'Checkout with escrow protection',
+    title: 'Checkout with money-back protection',
     copy:
-      'Pay with confidence knowing funds are held until your order is confirmed and on its way.',
+      'Pay with confidence — if your order is wrong or never arrives, claim a full refund within 24 hours.',
     icon: 'solar:shield-check-linear',
   },
   {
@@ -91,7 +91,7 @@ const checkoutSteps = [
   {
     key: 'complete',
     title: 'Complete and review',
-    copy: 'Confirm delivery, release escrow, and leave feedback for the seller or rider.',
+    copy: 'Confirm delivery and leave feedback for the seller or rider.',
     icon: 'solar:star-linear',
   },
 ]

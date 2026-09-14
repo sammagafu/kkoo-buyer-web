@@ -131,34 +131,17 @@
       <b-container class="px-3 px-sm-4 px-lg-4">
         <div class="se-cta-shell">
           <div class="se-cta-text">
+            <p class="se-eyebrow">{{ t('landing.navShareEarn') }}</p>
             <h2>{{ t('shareEarn.ctaTitle') }}</h2>
             <p>{{ t('shareEarn.ctaDesc') }}</p>
           </div>
           <div class="se-cta-actions">
-            <b-button
-              class="lp-btn-pill lp-btn-pill--primary lp-btn-pill--lg border-0 p-0 text-white d-inline-flex align-items-center"
-              :to="{ name: 'auth.sign-up' }"
-            >
-              <span class="lp-btn-pill__label">
-                <Icon icon="solar:download-minimalistic-bold" class="lp-btn-pill__lead-icon" aria-hidden="true" />
-                {{ t('landing.finalCtaDownloadShort') }}
-              </span>
-              <span class="lp-btn-pill__well" aria-hidden="true">
-                <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
-              </span>
-            </b-button>
-            <b-button
-              class="lp-btn-pill lp-btn-pill--secondary lp-btn-pill--lg border-0 p-0 d-inline-flex align-items-center"
-              :to="{ name: 'auth.sign-up' }"
-            >
-              <span class="lp-btn-pill__label">
-                <Icon icon="solar:users-group-rounded-bold" class="lp-btn-pill__lead-icon" aria-hidden="true" />
-                {{ t('shareEarn.heroCtaPrimary') }}
-              </span>
-              <span class="lp-btn-pill__well" aria-hidden="true">
-                <Icon icon="solar:arrow-right-up-linear" class="lp-btn-pill__icon" />
-              </span>
-            </b-button>
+            <LhButton as="router-link" :to="{ name: 'auth.sign-up' }" variant="on-dark" size="lg" with-well>
+              {{ t('shareEarn.heroCtaPrimary') }}
+            </LhButton>
+            <LhButton as="a" href="#how-it-works" variant="ghost" size="lg" class="lh-cta__ghost se-cta-ghost">
+              {{ t('shareEarn.heroCtaSecondary') }}
+            </LhButton>
           </div>
         </div>
       </b-container>
@@ -198,72 +181,104 @@ const earnings = [
 <style scoped>
 /* Title sizes/layout: _lh-marketing-bridge.scss (house landing scale) */
 
-.se-visual { display: flex; justify-content: center; }
+.se-hero {
+  padding-block: clamp(2.5rem, 6vw, 4.5rem) !important;
+}
+
+.se-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  min-width: 0;
+}
+
+.se-eyebrow {
+  margin: 0 0 0.85rem;
+}
+
+.se-lead {
+  margin: 1.1rem 0 0;
+}
+
+.se-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 1.75rem;
+}
+
+.se-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+}
 
 .se-visual-stack {
   position: relative;
   width: min(100%, 420px);
-  padding-top: 1.5rem;
+  padding-top: 0.5rem;
 }
 
 .se-hero-image {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 2rem;
+  border-radius: 1.5rem;
   box-shadow: 0 28px 72px rgba(92, 48, 143, 0.22);
 }
 
 .se-stats-card {
-  width: 340px;
-  max-width: calc(100% - 1.5rem);
-  margin-top: -6rem;
+  width: min(340px, calc(100% - 1.25rem));
+  margin-top: -5rem;
   margin-left: auto;
   position: relative;
-  padding: 1.75rem;
+  padding: 1.35rem 1.4rem;
 }
 
 .se-stat-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.85rem;
+  margin-bottom: 1.15rem;
 }
 
 .se-stat {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.45rem;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 1rem;
-  padding: 1rem;
+  padding: 0.9rem;
 }
 
 .se-stat--accent { background: rgba(247, 168, 41, 0.15); }
 
-.se-stat-icon { font-size: 1.4rem; color: rgba(255, 255, 255, 0.75); }
+.se-stat-icon { font-size: 1.25rem; color: rgba(255, 255, 255, 0.75); }
 .se-stat--accent .se-stat-icon { color: #F7A829; }
 
 .se-stat strong {
   display: block;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 800;
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .se-stat span {
   display: block;
   font-size: 0.72rem;
-  opacity: 0.7;
+  opacity: 0.75;
   line-height: 1.35;
 }
 
-.se-progress-wrap { margin-bottom: 1.25rem; }
+.se-progress-wrap { margin-bottom: 1rem; }
 
 .se-progress-label {
   font-size: 0.76rem;
-  opacity: 0.7;
-  margin-bottom: 0.5rem;
+  opacity: 0.75;
+  margin-bottom: 0.45rem;
 }
 
 .se-progress-bar {
@@ -279,11 +294,11 @@ const earnings = [
   border-radius: 999px;
 }
 
-.se-chip-row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.se-chip-row { display: flex; gap: 0.55rem; flex-wrap: wrap; }
 
 .se-chip {
   font-size: 0.75rem;
-  padding: 0.3rem 0.75rem;
+  padding: 0.3rem 0.7rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.12);
   color: white;
@@ -293,19 +308,24 @@ const earnings = [
 
 /* ---- features section ---- */
 .se-features-section {
-  padding: clamp(3rem, 8vw, 5rem) 0;
+  padding: clamp(2.75rem, 6vw, 4.5rem) 0 !important;
   background: linear-gradient(180deg, rgba(92, 48, 143, 0.04) 0%, transparent 100%);
+}
+
+.se-section-copy {
+  margin-top: 0.75rem;
 }
 
 .se-feature-grid {
   display: grid;
-  gap: 1.5rem;
+  gap: 1.25rem;
+  margin-top: 0.25rem;
 }
 
-@media (min-width: 768px) { .se-feature-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 768px) { .se-feature-grid { grid-template-columns: repeat(3, 1fr); gap: 1.35rem; } }
 
 .se-feature-card {
-  padding: 2rem 1.75rem;
+  padding: 1.75rem 1.5rem;
   border-radius: 1.5rem;
   border: 1px solid rgba(92, 48, 143, 0.12);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -355,12 +375,12 @@ const earnings = [
 
 /* ---- how it works ---- */
 .se-how-section {
-  padding: clamp(3rem, 8vw, 5rem) 0;
+  padding: clamp(2.75rem, 6vw, 4.5rem) 0 !important;
 }
 
 .se-how-grid {
   display: grid;
-  gap: 3rem;
+  gap: clamp(2rem, 4vw, 3rem);
   align-items: start;
 }
 
@@ -400,7 +420,7 @@ const earnings = [
 
 /* ---- earnings breakdown ---- */
 .se-breakdown-section {
-  padding: clamp(3rem, 8vw, 5rem) 0;
+  padding: clamp(2.75rem, 6vw, 4.5rem) 0 !important;
   background: linear-gradient(180deg, rgba(247, 168, 41, 0.04) 0%, transparent 100%);
 }
 
@@ -435,42 +455,68 @@ html[data-bs-theme='dark'] .se-earn-icon { color: #F7A829; }
 
 /* ---- CTA ---- */
 .se-cta-section {
-  padding: clamp(3rem, 8vw, 5rem) 0;
+  padding: clamp(2.5rem, 5vw, 4rem) 0 !important;
 }
 
 .se-cta-shell {
   display: grid;
-  gap: 2rem;
-  align-items: center;
-  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.5rem, 5vw, 3.5rem);
-  border-radius: 2rem;
-  background: linear-gradient(135deg, #3B1A5A 0%, #5C308F 60%, rgba(247,168,41,0.6) 100%);
-  color: #F7A829;
+  gap: 1.5rem;
+  align-items: start;
 }
 
-@media (min-width: 768px) {
-  .se-cta-shell { grid-template-columns: 1fr auto; }
+@media (min-width: 840px) {
+  .se-cta-shell {
+    grid-template-columns: 1.3fr 0.7fr;
+    align-items: end;
+    gap: 2rem;
+  }
+}
+
+.se-cta-text .se-eyebrow {
+  margin: 0 0 0.65rem;
 }
 
 .se-cta-text h2 {
-  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  margin: 0;
+  font-family: var(--lh-font-display, 'Poppins', sans-serif);
+  font-size: clamp(1.45rem, 2.8vw, 2rem);
   font-weight: 800;
-  margin-bottom: 0.75rem;
-  color: #F7A829;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  max-width: 16ch;
 }
 
 .se-cta-text p {
+  margin: 0.75rem 0 0;
   font-size: 1rem;
-  opacity: 0.85;
-  line-height: 1.65;
-  margin: 0;
-  max-width: 48ch;
+  line-height: 1.55;
+  max-width: 42ch;
+  opacity: 0.9;
 }
 
 .se-cta-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.9rem;
-  align-items: center;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+@media (min-width: 840px) {
+  .se-cta-actions {
+    align-items: flex-end;
+  }
+}
+
+.se-cta-ghost.lh-btn--ghost {
+  color: #fffaf6 !important;
+  border-color: rgba(255, 250, 246, 0.35) !important;
+  background: transparent !important;
+}
+
+.se-cta-ghost.lh-btn--ghost:hover {
+  background: rgba(255, 250, 246, 0.1) !important;
+  border-color: rgba(255, 250, 246, 0.55) !important;
+  color: #fffaf6 !important;
 }
 </style>

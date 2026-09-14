@@ -25,7 +25,7 @@ const items = computed(() => [
     summary: t('trust.newsItem1Body'),
   },
   {
-    id: 'escrow',
+    id: 'moneyback',
     date: '2026',
     title: t('trust.newsItem2Title'),
     summary: t('trust.newsItem2Body'),

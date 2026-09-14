@@ -323,7 +323,7 @@ export const buyerXpVerticalsSw = {
       send: 'Maombi ya Nitume yaliyokamilika kwa wakati',
       move: 'Safari na parcel zilizokamilika vizuri',
     },
-    escrow: 'Escrow inashikilia malipo hadi uthibitishe — umelindwa.',
+    escrow: 'Rudisha pesa ndani ya saa 24 ikiwa kuna tatizo — umelindwa.',
     disputeTitle: 'Kuna tatizo?',
     disputeSub: {
       buy: 'Fungua mzozo kwa agizo hili',

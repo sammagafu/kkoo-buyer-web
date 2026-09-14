@@ -67,7 +67,7 @@
       <p v-else-if="menuError" class="shop-products__status shop-products__status--error">{{ menuError }}</p>
       <p v-else-if="!displayMenuItems.length" class="shop-products__status">{{ t('buyerXp.eats.noDishes') }}</p>
 
-      <div v-else class="shop-product-grid">
+      <div v-else class="shop-product-grid shop-product-grid--four">
         <BuyerStoreProductCard
           v-for="item in displayMenuItems"
           :key="String(item.id)"

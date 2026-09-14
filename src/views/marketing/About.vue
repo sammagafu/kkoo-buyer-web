@@ -7,7 +7,7 @@
       </article>
     </div>
     <p class="trust-page__note">
-      {{ t('trust.aboutEntity', { entity: companyLegal.legalEntity, place: companyLegal.jurisdiction }) }}
+      {{ t('trust.aboutEntity', { entity: companyLegal.legalEntity, place: companyLegal.jurisdiction, brela: companyLegal.brela }) }}
     </p>
   </TrustPageShell>
 </template>

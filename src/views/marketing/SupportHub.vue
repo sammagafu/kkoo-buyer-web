@@ -15,6 +15,8 @@
     <p class="trust-page__note">
       {{ t('trust.supportEmailNote') }}
       <a :href="`mailto:${companyLegal.supportEmail}`">{{ companyLegal.supportEmail }}</a>
+      ·
+      <a :href="`tel:${companyLegal.supportPhone}`">{{ companyLegal.supportPhoneDisplay }}</a>
     </p>
   </TrustPageShell>
 </template>

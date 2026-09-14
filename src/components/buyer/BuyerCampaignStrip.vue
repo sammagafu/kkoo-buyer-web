@@ -278,18 +278,23 @@ watch(activeIndex, () => {
 
 .buyer-promo-strip__dismiss {
   position: absolute;
-  top: 0.55rem;
-  right: 0.55rem;
+  top: 0.75rem;
+  right: 0.75rem;
   z-index: 3;
+  box-sizing: border-box;
   border: none;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.48);
   color: #fff;
   border-radius: 50%;
-  width: 2rem;
-  height: 2rem;
+  width: 2.35rem;
+  height: 2.35rem;
+  padding: 0;
+  margin: 0;
   display: grid;
   place-items: center;
   font-size: 1.15rem;
+  backdrop-filter: blur(8px);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .buyer-promo-strip__copy {
@@ -301,7 +306,7 @@ watch(activeIndex, () => {
   justify-content: flex-end;
   align-items: flex-start;
   gap: 0.45rem;
-  padding: 0.85rem 1rem 1rem;
+  padding: 0.95rem 3.1rem 1.05rem 1rem; /* right clears dismiss */
   max-width: min(100%, 28rem);
 }
 

@@ -15,8 +15,8 @@ export default {
     heroAccentWord: '',
     heroTitleAccent: 'Deux côtés. Un écosystème de confiance.',
     heroSubtitle:
-      "KKOO est l'app où les acheteurs achètent en toute sécurité et les vendeurs gèrent leur activité sans chaos.",
-    heroTrust1: 'Protection escrow',
+      "KkooApp est l'app où les acheteurs achètent en toute sécurité et les vendeurs gèrent leur activité sans chaos.",
+    heroTrust1: 'Garantie de remboursement 24 h',
     heroTrust2: 'Suivi GPS en direct',
     heroTrust3: 'Garantie de remboursement',
     heroTrust4: 'M-Pesa, Airtel Money, Tigo Pesa',
@@ -25,39 +25,39 @@ export default {
     whatsInsideHeadline: 'Achetez. Vendez.',
     verticalsTitleAccent: 'Protégé.',
     verticalsSub:
-      "App acheteurs KKOO pour acheter en toute sécurité. KKOO pour vendeurs : vitrine, livraison, paiements et CRM. La même couche de confiance des deux côtés.",
+      "App acheteurs KkooApp pour acheter en toute sécurité. KkooApp pour vendeurs : vitrine, livraison, paiements et CRM. La même couche de confiance des deux côtés.",
     verticalBuyersTag: 'App acheteurs',
-    verticalBuyersTitle: 'App acheteurs KKOO',
+    verticalBuyersTitle: 'App acheteurs KkooApp',
     verticalBuyersDesc:
       'Produits, restauration, courses — un paiement, une garantie de livraison, des récompenses à chaque commande.',
     verticalBuyersContext:
-      'Payez en escrow, suivez la livraison en direct et ouvrez un litige dans l’app si quelque chose cloche.',
+      'Payez sous garantie 24 h, suivez la livraison en direct et ouvrez un litige dans l’app si quelque chose cloche.',
     verticalSellersTag: 'Espace vendeur',
-    verticalSellersTitle: 'KKOO pour vendeurs',
+    verticalSellersTitle: 'KkooApp pour vendeurs',
     verticalSellersDesc:
       'Gérez votre activité depuis votre téléphone — vitrine, réseau de livraison, analyses et paiements sous 48 h.',
     verticalSellersContext:
       'Publiez des produits, traitez les commandes et soyez payé selon un calendrier clair — confiance par paliers.',
-    onboarding6Title: 'Prêt à vendre sur KKOO ?',
+    onboarding6Title: 'Prêt à vendre sur KkooApp ?',
     onboarding6Desc:
       'Cinq étapes guidées, puis votre boutique est en ligne — examen rapide, standards clairs, accompagnement le premier mois.',
-    onboarding6Cta: 'Commencer à vendre sur KKOO',
-    onboarding6CtaSecondary: 'Télécharger KKOO — gratuit',
+    onboarding6Cta: 'Commencer à vendre sur KkooApp',
+    onboarding6CtaSecondary: 'Télécharger KkooApp — gratuit',
     onboardingStatSteps: 'étapes guidées',
     onboardingStatReview: 'examen type',
-    onboardingCta: 'Commencer à vendre sur KKOO',
+    onboardingCta: 'Commencer à vendre sur KkooApp',
     influencerLabel: 'PARTAGEZ ET GAGNEZ',
-    influencerHeadline1: 'Recommandez KKOO.',
+    influencerHeadline1: 'Recommandez KkooApp.',
     influencerHeadline2: 'Soyez payé quand ils achètent.',
     influencerBody:
-      'Partagez un produit ou votre lien depuis l’app acheteurs. Quand quelqu’un s’inscrit ou commande via vous, KKOO le suit—vous voyez vos gains dans l’app et êtes payé selon notre calendrier publié.',
+      'Partagez un produit ou votre lien depuis l’app acheteurs. Quand quelqu’un s’inscrit ou commande via vous, KkooApp le suit—vous voyez vos gains dans l’app et êtes payé selon notre calendrier publié.',
     influencerHowLabel: 'Comment ça marche',
     influencerNote:
       'M-Pesa, Airtel Money, Tigo Pesa ou virement bancaire. Les taux de commission sont publiés—rien de caché dans les réglages.',
     influencerStep1Title: 'Partagez votre lien',
     influencerStep1Desc:
       'Depuis l’app vers WhatsApp, Stories ou votre bio. Un tap—sans copier-coller compliqué.',
-    influencerStep2Title: 'KKOO suit chaque commande',
+    influencerStep2Title: 'KkooApp suit chaque commande',
     influencerStep2Desc:
       'Inscriptions et achats restent liés à vous. Pas de tableur ni de relances pour une preuve.',
     influencerStep3Title: 'Encaissez localement',
@@ -77,13 +77,13 @@ export default {
       'M-Pesa, Airtel Money, Tigo Pesa ou banque—aux dates de paiement que nous publions.',
     influencerPerksAria: 'Avantages du programme partage et gains',
     influencerCta: 'Obtenir votre lien dans l’app',
-    sellerTiersLabel: 'Niveaux vendeur sur KKOO',
+    sellerTiersLabel: 'Niveaux vendeur sur KkooApp',
     sellerTiersSub:
       'Votre niveau reflète votre fiabilité — débloquez plus de confiance, de visibilité et d’avantages en grandissant.',
     sellerTier1Level: 'Niveau 1',
     sellerTier1Name: 'Lancement',
     sellerTier1Desc:
-      'Boutique en ligne. Publiez, recevez des commandes et soyez payé via l’escrow KKOO.',
+      'Boutique en ligne. Publiez, recevez des commandes et soyez payé via KkooApp.',
     sellerTier2Level: 'Niveau 2',
     sellerTier2Name: 'Vérifié',
     sellerTier2Desc:
@@ -100,11 +100,11 @@ export default {
     ifYouShopHeadline1: 'Achetez en confiance',
     ifYouShopHeadline2: 'du paiement à la livraison.',
     ifYouShopBody:
-      "Payez sur KKOO avec escrow, suivi en direct et litiges clairs. Votre argent reste protégé jusqu'à livraison conforme — puis le vendeur est payé.",
-    ifYouShopCta: 'Télécharger KKOO — c\'est gratuit',
+      "Payez sur KkooApp avec garantie de remboursement 24 h, suivi en direct et litiges clairs. Votre argent reste protégé jusqu'à livraison conforme — puis le vendeur est payé.",
+    ifYouShopCta: 'Télécharger KkooApp — c\'est gratuit',
     buyerFeature1Title: 'Votre argent reste en sécurité jusqu\'à la livraison',
     buyerFeature1Desc:
-      "Sur KKOO, votre paiement va en escrow — pas au vendeur. Il reste là jusqu'à livraison conforme. Vous confirmez. Ensuite seulement le vendeur est payé.",
+      "Sur KkooApp, votre paiement va sous garantie 24 h — pas au vendeur. Il reste là jusqu'à livraison conforme. Vous confirmez. Ensuite seulement le vendeur est payé.",
     buyerFeature2Title: 'Suivez votre commande en temps réel',
     buyerFeature2Desc:
       'GPS toutes les 30 secondes de l\'enlèvement à votre porte. Photo à la livraison. Vous ne demandez plus « où est ma commande ? » — vous la voyez à l\'écran.',
@@ -128,7 +128,7 @@ export default {
     ifYouSellCta: 'Vendre maintenant',
     sellerFeature1Title: 'Une vitrine ouverte 24 h/24',
     sellerFeature1Desc:
-      'Toujours visible par tous les acheteurs KKOO. Badge vérifié, photos, prix — on vous trouve même quand vous dormez.',
+      'Toujours visible par tous les acheteurs KkooApp. Badge vérifié, photos, prix — on vous trouve même quand vous dormez.',
     sellerFeature2Title: 'Payé en 48 h. À chaque fois.',
     sellerFeature2Desc:
       'Livraison confirmée — paiement sur votre mobile money sous 48 h. Plus de relances ni de rapprochements flous.',
@@ -143,7 +143,7 @@ export default {
       'Niveaux mis à jour à chaque commande. Alertes avant rupture. Ne promettez plus ce que vous n\'avez pas.',
     sellerFeature6Title: 'Promos qui touchent les acheteurs',
     sellerFeature6Desc:
-      'Ventes flash, lots et fidélité — visibles par les acheteurs KKOO près de chez vous, déjà en train d\'acheter.',
+      'Ventes flash, lots et fidélité — visibles par les acheteurs KkooApp près de chez vous, déjà en train d\'acheter.',
     ifYouRideLabel: 'PROTECTION ACHETEUR',
     ifYouRideHeadline1: 'La confiance n\'est pas un sentiment.',
     ifYouRideHeadline2: 'C\'est une structure.',
@@ -152,7 +152,7 @@ export default {
     buyerProtection1Title: 'Entreprises vérifiées uniquement',
     buyerProtection1Desc:
       'Chaque vendeur est vérifié. Starter → Vérifié → Fiable → Élite — chaque badge mérite par des mois de performance réelle.',
-    buyerProtection2Title: 'Escrow — votre argent, votre contrôle',
+    buyerProtection2Title: 'Garantie 24 h — votre argent, votre contrôle',
     buyerProtection2Desc:
       'Paiement capturé à la commande. Libéré au vendeur seulement après votre confirmation de livraison.',
     buyerProtection3Title: 'Garantie livraison avec compensation',
@@ -160,9 +160,9 @@ export default {
       'Retard ? Crédit automatique. Mauvais article ? Remplacement le jour même. Dommage ? Remboursement intégral. Engagements financés.',
     buyerProtection4Title: 'Litiges résolus en 24 h',
     buyerProtection4Desc:
-      'Un membre de l\'équipe KKOO examine votre dossier en quelques heures. Cas complexes traités sous 24 h, à chaque fois.',
-    featuresTitle: 'Quand les acheteurs gagnent sur KKOO,',
-    featuresTitleAccent: 'les vendeurs gagnent sur KKOO.',
+      'Un membre de l\'équipe KkooApp examine votre dossier en quelques heures. Cas complexes traités sous 24 h, à chaque fois.',
+    featuresTitle: 'Quand les acheteurs gagnent sur KkooApp,',
+    featuresTitleAccent: 'les vendeurs gagnent sur KkooApp.',
     featuresSub:
       'Même infrastructure de paiement, même confiance, même fidélité. Chaque transaction prépare la suivante — pas un autre changement d\'app.',
     ecosystemCard1Title: 'Pour les acheteurs',
@@ -173,24 +173,24 @@ export default {
       'La fidélité acheteur devient votre chiffre d\'affaires — sans budget pub. Soyez là quand ils reviennent.',
     ecosystemCard3Title: 'Le résultat',
     ecosystemCard3Desc:
-      'Sur les apps fragmentées, chaque transaction est isolée. Sur KKOO, chaque transaction en entraîne une autre.',
+      'Sur les apps fragmentées, chaque transaction est isolée. Sur KkooApp, chaque transaction en entraîne une autre.',
     onboardingHeadline1: 'En ligne',
     onboardingHeadline2: 'instantanément.',
     onboardingHeadlineAccent: 'Un parcours guidé — étapes claires, validation rapide.',
     onboarding1Title: 'Revue de candidature',
-    onboarding1Desc: 'ID et photos produits. KKOO répond en quelques heures. Clair et transparent.',
+    onboarding1Desc: 'ID et photos produits. KkooApp répond en quelques heures. Clair et transparent.',
     onboarding2Title: 'Orientation plateforme',
     onboarding2Desc: 'Présentation de votre tableau de bord, commission, délais de paiement et standards qualité.',
     onboarding3Title: 'Catalogue',
-    onboarding3Desc: 'Premiers produits en ligne. KKOO valide chaque fiche — on vous dit quoi ajuster.',
+    onboarding3Desc: 'Premiers produits en ligne. KkooApp valide chaque fiche — on vous dit quoi ajuster.',
     onboarding4Title: 'Commande test',
-    onboarding4Desc: 'Une vraie commande KKOO. Vous livrez. Timing, emballage, remise — tout est vérifié.',
+    onboarding4Desc: 'Une vraie commande KkooApp. Vous livrez. Timing, emballage, remise — tout est vérifié.',
     onboarding5Title: 'Mise en ligne',
-    onboarding5Desc: 'Vitrine ouverte aux acheteurs KKOO. Manager dédié pendant 30 jours.',
+    onboarding5Desc: 'Vitrine ouverte aux acheteurs KkooApp. Manager dédié pendant 30 jours.',
     movementHeadline1: 'Vous recevez exactement',
-    movementHeadline2: 'ce que vous avez commandé. Ou KKOO répare.',
+    movementHeadline2: 'ce que vous avez commandé. Ou KkooApp répare.',
     movementBody:
-      "Pour les acheteurs : argent protégé jusqu'à confirmation. Pour les vendeurs : commandes honorées, paiements garantis, réputation protégée. Escrow, GPS, photo, niveaux vérifiés, litiges 24 h — de l'infrastructure, pas une promesse.",
+      "Pour les acheteurs : argent protégé jusqu'à confirmation. Pour les vendeurs : commandes honorées, paiements garantis, réputation protégée. money-back guarantee, GPS, photo, niveaux vérifiés, litiges 24 h — de l'infrastructure, pas une promesse.",
     testimonialsLabel: 'VOIX ACHETEURS',
     testimonialsHeadline1: 'Ce qu\'ils ont dit quand',
     testimonialsHeadline2: 'la commande est bien arrivée.',
@@ -198,7 +198,7 @@ export default {
     testimonial1Name: 'Amina M.',
     testimonial1Role: 'Kinondoni · acheteuse régulière',
     testimonial1Text:
-      "Avant KKOO, j'appelais le vendeur après chaque commande. Maintenant je suis le livreur sur la carte depuis ma cuisine. Je ne stresse plus.",
+      "Avant KkooApp, j'appelais le vendeur après chaque commande. Maintenant je suis le livreur sur la carte depuis ma cuisine. Je ne stresse plus.",
     testimonial2Name: 'Daniel K.',
     testimonial2Role: 'Kariakoo · freelance',
     testimonial2Text:
@@ -210,7 +210,7 @@ export default {
     sellerTestimonialsLabel: 'VOIX VENDEURS',
     sellerTestimonialsHeadline1: 'Ce qui a changé quand ils',
     sellerTestimonialsHeadline2: 'sont passés au pro.',
-    sellerTestimonialsCallout: 'Votre activité tourne déjà. KKOO lui donne l\'infrastructure qu\'elle mérite.',
+    sellerTestimonialsCallout: 'Votre activité tourne déjà. KkooApp lui donne l\'infrastructure qu\'elle mérite.',
     testimonial4Name: 'Hassan K.',
     testimonial4Role: 'Électronique Kariakoo · Vendeur vérifié',
     testimonial4Text:
@@ -228,31 +228,31 @@ export default {
     footerTaglineSub:
       'Pour les acheteurs : argent en sécurité jusqu\'à livraison. Pour les vendeurs : revenus protégés, clients fidèles, opérations structurées.',
     downloadSectionPill: 'Obtenir l\'app',
-    downloadSectionHeadline: 'KKOO là où vous en avez besoin.',
+    downloadSectionHeadline: 'KkooApp là où vous en avez besoin.',
     downloadSectionSub:
-      'Les acheteurs achètent dans l’app. Les vendeurs gèrent leur boutique sur bureau ou navigateur. Même confiance, suivi et escrow.',
+      'Les acheteurs achètent dans l’app. Les vendeurs gèrent leur boutique sur bureau ou navigateur. Même confiance, suivi et garantie 24 h.',
     downloadBuyersDesc:
-      'Achetez, suivez la livraison, payez en escrow et gagnez des récompenses—iOS ou Android.',
+      'Achetez, suivez la livraison, payez sous garantie 24 h et gagnez des récompenses—iOS ou Android.',
     downloadSellersDesc:
       'Listez vos produits, traitez les commandes et soyez payé—installez Kkoo Business pour Windows ou Mac, ou utilisez le web.',
     downloadSellersNote: 'Vous préférez le navigateur ? Connectez-vous depuis n’importe quel appareil—sans installation.',
     downloadSellersCta: 'Ouvrir l’espace vendeur',
     downloadAvailableOn: 'Disponible sur',
-    downloadWhisper1: 'Une install. Escrow sur chaque commande.',
+    downloadWhisper1: 'Une install. Garantie 24 h sur chaque commande.',
     downloadWhisper2: 'Vendeurs payés à l’échéance—acheteurs avec preuve de livraison.',
     downloadWhisper3: 'Astuce : quatre clics sur la pastille « Obtenir l’app ».',
     downloadWhisper4: 'Téléphone en poche. Dashboard au bureau.',
     downloadWhisper5: 'Shopping · Livraison · Business — même confiance.',
     downloadLaneBuyers: "J'achète",
     downloadLaneSellers: 'Je vends',
-    downloadLaneA11y: 'Choisissez votre voie KKOO',
+    downloadLaneA11y: 'Choisissez votre voie KkooApp',
     downloadPillA11y: 'Obtenir l’app — quatre clics pour une surprise',
     downloadBridgeLabel: 'Même confiance',
     downloadBurstTitle: 'Prêt quand vous l’êtes',
     downloadBurstMessage: 'Choisissez une voie—boutique ou panier en un clic.',
     finalHeadline1: 'Une app.',
     finalHeadline2: 'Achetez. Mangez. Bougez.',
-    finalBody: 'Téléchargez KKOO. Votre première commande est protégée dès le paiement.',
+    finalBody: 'Téléchargez KkooApp. Votre première commande est protégée dès le paiement.',
     finalMicrocopy: 'Gratuit à télécharger. Gratuit à rejoindre. Conçu pour la confiance.',
     rewardsCta: 'Acheter en confiance',
   },

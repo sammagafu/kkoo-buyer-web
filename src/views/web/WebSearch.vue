@@ -1,5 +1,5 @@
 <template>
-  <div class="buyer-search-page">
+  <div class="buyer-xp buyer-search-page">
     <header class="buyer-search-page__hero">
       <p class="buyer-home-hero__overline">{{ t('buyerXp.search.overline') }}</p>
       <h1 class="buyer-search-page__title">{{ t('buyerXp.search.title') }}</h1>

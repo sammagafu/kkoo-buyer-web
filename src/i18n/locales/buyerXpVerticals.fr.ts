@@ -323,7 +323,7 @@ export const buyerXpVerticalsFr = {
       send: 'Demandes Envoyez-moi honorées à temps',
       move: 'Courses et colis terminés avec succès',
     },
-    escrow: 'Le séquestre retient le paiement jusqu’à votre confirmation — vous êtes protégé.',
+    escrow: 'Remboursement sous 24 h en cas de problème — vous êtes protégé.',
     disputeTitle: 'Un problème ?',
     disputeSub: {
       buy: 'Ouvrir un litige pour cette commande',

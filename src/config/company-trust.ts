@@ -5,16 +5,25 @@
 
 export const companyLegal = {
   brand: 'KkooApp',
-  /** Registered operating company — update when formal entity name is confirmed. */
-  legalEntity: 'KKOO Technologies Limited',
+  /** Registered operating company (BRELA). */
+  legalEntity: 'KkooApp Innovation Limited',
+  brela: '209048183',
   jurisdiction: 'United Republic of Tanzania',
   supportEmail: 'info@kkooapp.co.tz',
+  supportPhone: '+255788419991',
+  supportPhoneDisplay: '+255 788 419 991',
   safetyEmail: 'safety@kkooapp.co.tz',
   pressEmail: 'press@kkooapp.co.tz',
   investorsEmail: 'investors@kkooapp.co.tz',
 } as const
 
 export const companySocialLinks = [
+  {
+    key: 'whatsapp',
+    label: 'WhatsApp',
+    href: 'https://wa.me/255788419991',
+    icon: 'mdi:whatsapp',
+  },
   {
     key: 'instagram',
     label: 'Instagram',

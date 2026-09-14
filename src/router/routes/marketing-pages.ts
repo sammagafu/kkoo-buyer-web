@@ -7,7 +7,7 @@ export const pagesRoutes = [
         meta: {
             title: setLandingTitle('Home'),
             description:
-                'KKOO — buy, sell, deliver, and earn in one trusted ecosystem. Marketplace, KkooApp POS, business tools, riders, referrals, and rewards for East Africa.',
+                'KkooApp — buy, sell, deliver, and earn in one trusted ecosystem. Marketplace, POS, business tools, riders, referrals, and rewards for East Africa.',
         },
         component: () => import('@/views/marketing/LandingHousePage.vue'),
     },
@@ -37,7 +37,7 @@ export const pagesRoutes = [
         meta: {
             title: setLandingTitle('For You'),
             description:
-                'Shop, order food and groceries, book rides with Kkoo. Pay with escrow and insured delivery. Track orders and earn rewards. Share your link and earn when friends buy.',
+                'Shop, order food and groceries, book rides with KkooApp. Pay with 24-hour money-back and insured delivery. Track orders and earn rewards. Share your link and earn when friends buy.',
         },
         component: () => import('@/views/marketing/Personal.vue'),
     },
@@ -182,7 +182,7 @@ export const pagesRoutes = [
         name: 'pages.safety',
         meta: {
             title: setLandingTitle('Safety'),
-            description: 'KKOO safety information for buyers, riders, sellers, and escrow payments.',
+            description: 'KkooApp safety information for buyers, riders, sellers, and protected payments.',
         },
         component: () => import('@/views/marketing/Safety.vue'),
     },

@@ -127,6 +127,7 @@ export const houseTrust = [
   { key: 'escrow', icon: 'solar:shield-check-bold' },
   { key: 'tracking', icon: 'solar:map-point-bold' },
   { key: 'ecosystem', icon: 'solar:widget-bold' },
+  { key: 'registered', icon: 'solar:buildings-bold' },
 ] as const
 
 export const houseHeroImage = heroImage

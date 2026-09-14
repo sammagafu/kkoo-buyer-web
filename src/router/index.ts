@@ -48,7 +48,7 @@ router.beforeEach((to, from, next) => {
   } else if (descEl && !description) {
     descEl.setAttribute(
       'content',
-      "Shop, eat, send, and order groceries on KKOO. Escrow, tracking, and rewards — Tanzania's super-app.",
+      "Shop, eat, send, and order groceries on KkooApp. Money-back, tracking, and rewards — Tanzania's super-app.",
     );
   }
   next();

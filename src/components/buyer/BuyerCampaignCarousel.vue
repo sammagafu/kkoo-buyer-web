@@ -37,50 +37,58 @@
         </button>
 
         <div class="buyer-promo-fs__copy">
-          <p v-if="badgeText(camp)" class="buyer-promo-fs__badge" :data-badge="camp.badge || camp.action_type || 'promo'">
-            {{ badgeText(camp) }}
-          </p>
-          <p v-if="camp.gift_label || camp.gift_voucher_id" class="buyer-promo-fs__gift">
-            <Icon icon="solar:gift-bold" />
-            {{ camp.gift_label || 'Gift inside' }}
-          </p>
-          <div
-            v-if="isPreorderCampaign(camp) && daysLeft(camp) != null"
-            class="buyer-promo-fs__countdown"
-            :aria-label="`${daysLeft(camp)} days left`"
-          >
-            <span class="buyer-promo-fs__countdown-days">{{ daysLeft(camp) }}</span>
-            <span class="buyer-promo-fs__countdown-label">{{ daysLeft(camp) === 1 ? 'day left' : 'days left' }}</span>
+          <div class="buyer-promo-fs__topline">
+            <p v-if="badgeText(camp)" class="buyer-promo-fs__badge" :data-badge="camp.badge || camp.action_type || 'promo'">
+              {{ badgeText(camp) }}
+            </p>
+            <div
+              v-if="isPreorderCampaign(camp) && daysLeft(camp) != null"
+              class="buyer-promo-fs__countdown"
+              :aria-label="`${daysLeft(camp)} days left`"
+            >
+              <span class="buyer-promo-fs__countdown-days">{{ daysLeft(camp) }}</span>
+              <span class="buyer-promo-fs__countdown-label">{{ daysLeft(camp) === 1 ? 'day left' : 'days left' }}</span>
+            </div>
+            <p v-if="camp.gift_label || camp.gift_voucher_id" class="buyer-promo-fs__gift">
+              <Icon icon="solar:gift-bold" />
+              {{ camp.gift_label || 'Gift inside' }}
+            </p>
           </div>
           <h2 class="buyer-promo-fs__title">{{ camp.title }}</h2>
           <p v-if="camp.subtitle" class="buyer-promo-fs__meta">{{ camp.subtitle }}</p>
           <div
-            v-if="slideProducts(camp).length"
-            class="buyer-promo-fs__products"
-            aria-label="Campaign products"
+            v-if="slideProducts(camp).length || campaignCtaRoute(camp)"
+            class="buyer-promo-fs__actions"
           >
-            <RouterLink
-              v-for="prod in slideProducts(camp)"
-              :key="prod.id"
-              class="buyer-promo-fs__product"
-              :to="productThumbTo(prod)"
-              :title="prod.title || undefined"
+            <div
+              v-if="slideProducts(camp).length"
+              class="buyer-promo-fs__products"
+              aria-label="Campaign products"
             >
-              <img :src="prod.image" :alt="prod.title || 'Product'" loading="lazy" decoding="async" />
-            </RouterLink>
+              <RouterLink
+                v-for="prod in slideProducts(camp)"
+                :key="prod.id"
+                class="buyer-promo-fs__product"
+                :to="productThumbTo(prod)"
+                :title="prod.title || undefined"
+              >
+                <img :src="prod.image" :alt="prod.title || 'Product'" loading="lazy" decoding="async" />
+              </RouterLink>
+            </div>
+            <component
+              :is="isExternal(camp) ? 'a' : 'router-link'"
+              v-if="campaignCtaRoute(camp)"
+              :href="isExternal(camp) ? String(campaignCtaRoute(camp)) : undefined"
+              :to="isExternal(camp) ? undefined : (campaignCtaRoute(camp) as RouteLocationRaw)"
+              class="buyer-promo-fs__cta"
+              :class="{ 'buyer-promo-fs__cta--preorder': isPreorderCampaign(camp) }"
+              :target="isExternal(camp) ? '_blank' : undefined"
+              :rel="isExternal(camp) ? 'noopener' : undefined"
+            >
+              <span>{{ camp.cta_label || 'View' }}</span>
+              <Icon icon="solar:arrow-right-linear" />
+            </component>
           </div>
-          <component
-            :is="isExternal(camp) ? 'a' : 'router-link'"
-            v-if="campaignCtaRoute(camp)"
-            :href="isExternal(camp) ? String(campaignCtaRoute(camp)) : undefined"
-            :to="isExternal(camp) ? undefined : (campaignCtaRoute(camp) as RouteLocationRaw)"
-            class="buyer-promo-fs__cta"
-            :target="isExternal(camp) ? '_blank' : undefined"
-            :rel="isExternal(camp) ? 'noopener' : undefined"
-          >
-            <span>{{ camp.cta_label || 'View' }}</span>
-            <Icon icon="solar:alt-arrow-right-linear" />
-          </component>
         </div>
       </article>
     </div>
@@ -230,37 +238,35 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .buyer-promo-fs {
-  --buyer-promo-fs-radius: 0;
-  /* Text stays light over photo in both themes; veil provides contrast */
+  --buyer-promo-fs-radius: 1rem;
   --buyer-promo-fs-ink: #ffffff;
-  --buyer-promo-fs-ink-muted: rgba(255, 255, 255, 0.92);
-  --buyer-promo-fs-accent: #f7c948;
+  --buyer-promo-fs-ink-muted: rgba(255, 255, 255, 0.88);
+  --buyer-promo-fs-accent: #f7a829;
   position: relative;
-  width: calc(100% + 2.2rem);
-  margin-left: -1.1rem;
-  margin-right: -1.1rem;
-  margin-bottom: 0.5rem;
+  width: auto;
+  margin: 0 0 0.85rem;
   border-radius: var(--buyer-promo-fs-radius);
   overflow: hidden;
   background: #100c14;
   color: var(--buyer-promo-fs-ink);
-  aspect-ratio: 1080 / 1350;
-  max-height: min(78dvh, 42rem);
-  min-height: 16rem;
+  aspect-ratio: 4 / 5;
+  max-height: min(68dvh, 26rem);
+  min-height: 14rem;
 }
 
-:global(.buyer-xp--mhome) > .buyer-promo-fs {
-  width: 100%;
-  margin-left: 0;
-  margin-right: 0;
-  max-height: min(68dvh, 34rem);
+/* Whole selector must be :global — Vue scoped drops the child after a partial :global(). */
+:global(.buyer-xp--mhome > .buyer-promo-fs) {
+  margin-left: var(--buyer-page-inset-x, 1rem);
+  margin-right: var(--buyer-page-inset-x, 1rem);
+  max-height: min(56dvh, 24rem);
 }
 
 @media (min-width: 768px) {
   .buyer-promo-fs {
-    width: calc(100% + 3.3rem);
-    margin-left: -1.65rem;
-    margin-right: -1.65rem;
+    aspect-ratio: 21 / 9;
+    max-height: min(46dvh, 24rem);
+    min-height: 17.5rem;
+    --buyer-promo-fs-radius: 1.15rem;
   }
 }
 
@@ -269,12 +275,18 @@ onBeforeUnmount(() => {
     width: calc(100% + 3.7rem);
     margin-left: -1.85rem;
     margin-right: -1.85rem;
+    margin-bottom: 0.75rem;
     --buyer-promo-fs-radius: 1.25rem;
-    max-height: min(72dvh, 42rem);
+    aspect-ratio: 2.35 / 1;
+    max-height: 22rem;
+    min-height: 18.5rem;
   }
 
-  :global(.buyer-xp--mhome) > .buyer-promo-fs {
-    max-height: min(62dvh, 38rem);
+  :global(.buyer-xp--mhome > .buyer-promo-fs) {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    max-height: 22rem;
   }
 }
 
@@ -327,27 +339,43 @@ onBeforeUnmount(() => {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(8, 6, 12, 0.28) 0%, rgba(8, 6, 12, 0.18) 36%, rgba(8, 6, 12, 0.55) 62%, rgba(8, 6, 12, 0.92) 100%),
-    linear-gradient(90deg, rgba(8, 6, 12, 0.35) 0%, transparent 42%);
+    linear-gradient(180deg, rgba(8, 6, 12, 0.2) 0%, rgba(8, 6, 12, 0.15) 40%, rgba(8, 6, 12, 0.72) 78%, rgba(8, 6, 12, 0.92) 100%),
+    linear-gradient(90deg, rgba(8, 6, 12, 0.55) 0%, rgba(8, 6, 12, 0.2) 48%, transparent 70%);
   pointer-events: none;
 }
 
 .buyer-promo-fs__dismiss {
   position: absolute;
-  top: max(0.85rem, env(safe-area-inset-top));
+  top: max(0.85rem, calc(env(safe-area-inset-top, 0px) + 0.55rem));
   right: 0.85rem;
   z-index: 3;
+  box-sizing: border-box;
   border: none;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.48);
   color: #fff;
   border-radius: 50%;
   width: 2.5rem;
   height: 2.5rem;
+  padding: 0;
+  margin: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.buyer-promo-fs__dismiss :deep(svg) {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .buyer-promo-fs__dismiss {
+    top: 1rem;
+    right: 1rem;
+  }
 }
 
 .buyer-promo-fs__copy {
@@ -359,59 +387,67 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: flex-end;
   gap: 0.55rem;
-  padding: 1.5rem 1.25rem max(5.5rem, calc(env(safe-area-inset-bottom) + 4.5rem));
-  max-width: 40rem;
+  padding: 1.15rem 1rem max(3.25rem, calc(env(safe-area-inset-bottom, 0px) + 2.5rem));
+  padding-right: 3.25rem; /* clear dismiss control */
+  max-width: min(100%, 36rem);
   color: var(--buyer-promo-fs-ink);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }
 
-.buyer-promo-fs__copy::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: -2.5rem;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(180deg, transparent 0%, rgba(8, 6, 12, 0.55) 42%, rgba(8, 6, 12, 0.78) 100%);
+@media (min-width: 768px) {
+  .buyer-promo-fs__copy {
+    padding: 1.35rem 3.5rem 1.5rem 1.6rem; /* right clears dismiss */
+    max-width: min(100%, 36rem);
+    gap: 0.5rem;
+  }
 }
 
 @media (min-width: 992px) {
   .buyer-promo-fs__copy {
-    padding: 2rem 2rem 2.5rem;
+    padding: 1.5rem 3.75rem 1.65rem 1.85rem;
+    max-width: min(56%, 34rem);
   }
+}
+
+.buyer-promo-fs__topline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .buyer-promo-fs__gift {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   margin: 0;
-  font-size: 0.8rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: var(--buyer-promo-fs-accent);
+  color: #1a1200;
+  background: color-mix(in srgb, var(--buyer-promo-fs-accent) 88%, #fff);
 }
 
 .buyer-promo-fs__badge {
   display: inline-flex;
   align-items: center;
   margin: 0;
-  padding: 0.35rem 0.7rem;
-  border-radius: 0.4rem;
-  font-size: 0.72rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   background: rgba(255, 255, 255, 0.16);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.22);
 }
 
 .buyer-promo-fs__badge[data-badge='preorder'] {
-  background: color-mix(in srgb, var(--kkoo-primary, #6b2fd6) 72%, #000);
+  background: #5c308f;
   border-color: transparent;
 }
 
@@ -455,59 +491,76 @@ onBeforeUnmount(() => {
   border-color: transparent;
 }
 
-.buyer-promo-fs__title {
-  margin: 0;
-  font-size: clamp(1.75rem, 6vw, 3rem);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  text-wrap: balance;
-  color: var(--buyer-promo-fs-ink);
-}
-
-.buyer-promo-fs__meta {
-  margin: 0;
-  font-size: clamp(0.95rem, 2.4vw, 1.15rem);
-  line-height: 1.45;
-  max-width: 32rem;
-  color: var(--buyer-promo-fs-ink-muted);
-}
-
 .buyer-promo-fs__countdown {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.1rem;
-  margin: 0.15rem 0 0.35rem;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.42);
+  border: 1px solid rgba(247, 168, 41, 0.45);
+  backdrop-filter: blur(6px);
   line-height: 1;
 }
 
 .buyer-promo-fs__countdown-days {
-  font-size: clamp(4.5rem, 22vw, 9rem);
-  font-weight: 900;
-  letter-spacing: -0.06em;
-  line-height: 0.88;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   color: var(--buyer-promo-fs-accent);
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
   font-variant-numeric: tabular-nums;
 }
 
 .buyer-promo-fs__countdown-label {
-  font-size: clamp(0.85rem, 2.4vw, 1.15rem);
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.buyer-promo-fs__title {
+  margin: 0;
+  font-family: var(--kkoo-font-display, 'Poppins', sans-serif);
+  font-size: clamp(1.3rem, 2.8vw, 2rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+  color: var(--buyer-promo-fs-ink);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+}
+
+.buyer-promo-fs__meta {
+  margin: 0;
+  font-size: clamp(0.86rem, 1.35vw, 0.98rem);
+  line-height: 1.4;
+  max-width: 38ch;
   color: var(--buyer-promo-fs-ink-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.buyer-promo-fs__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.15rem;
+  width: 100%;
 }
 
 .buyer-promo-fs__products {
   display: flex;
   flex-wrap: nowrap;
-  gap: 0.55rem;
+  gap: 0.4rem;
   max-width: 100%;
   overflow-x: auto;
-  padding: 0.15rem 0.1rem 0.25rem;
-  margin-top: 0.15rem;
+  padding: 0;
   scrollbar-width: none;
 }
 
@@ -517,12 +570,12 @@ onBeforeUnmount(() => {
 
 .buyer-promo-fs__product {
   flex: 0 0 auto;
-  width: 3.35rem;
-  height: 3.35rem;
-  border-radius: 0.7rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 0.6rem;
   overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.55);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
   background: rgba(0, 0, 0, 0.25);
 }
 
@@ -536,49 +589,77 @@ onBeforeUnmount(() => {
 .buyer-promo-fs__cta {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  margin-top: 0.55rem;
-  padding: 0.85rem 1.35rem;
-  border-radius: 0.85rem;
-  background: var(--kkoo-primary, #6b2fd6);
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0;
+  min-height: 2.55rem;
+  padding: 0.65rem 1.15rem;
+  border-radius: 0.8rem;
+  background: #5c308f;
   color: #fff;
-  font-size: 1rem;
-  font-weight: 800;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1;
   text-decoration: none;
   border: none;
+  box-shadow: 0 8px 20px rgba(92, 48, 143, 0.35);
   cursor: pointer;
-  transition: transform 0.18s ease, filter 0.18s ease;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.buyer-promo-fs__cta span {
+  white-space: nowrap;
+}
+
+.buyer-promo-fs__cta :deep(svg) {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+}
+
+.buyer-promo-fs__cta--preorder {
+  background: #f7a829;
+  color: #1a1200;
+  box-shadow: 0 8px 20px rgba(247, 168, 41, 0.32);
 }
 
 .buyer-promo-fs__cta:hover {
-  filter: brightness(1.06);
+  filter: brightness(1.05);
   transform: translateY(-1px);
-  color: #fff;
+  color: inherit;
+}
+
+.buyer-promo-fs__cta--preorder:hover {
+  color: #1a1200;
 }
 
 .buyer-promo-fs__dots {
   position: absolute;
   left: 50%;
-  bottom: max(1.15rem, env(safe-area-inset-bottom));
+  bottom: max(0.85rem, env(safe-area-inset-bottom));
   transform: translateX(-50%);
   z-index: 3;
   display: flex;
-  gap: 0.4rem;
-  padding: 0.35rem 0.5rem;
+  gap: 0.35rem;
+  padding: 0.3rem 0.45rem;
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(6px);
 }
 
-@media (min-width: 992px) {
+@media (min-width: 768px) {
   .buyer-promo-fs__dots {
-    bottom: 1.35rem;
+    bottom: 0.95rem;
+    left: auto;
+    right: 1.25rem;
+    transform: none;
   }
 }
 
 .buyer-promo-fs__dot {
-  width: 0.45rem;
-  height: 0.45rem;
+  width: 0.4rem;
+  height: 0.4rem;
   padding: 0;
   border: none;
   border-radius: 999px;
@@ -588,7 +669,7 @@ onBeforeUnmount(() => {
 }
 
 .buyer-promo-fs__dot.is-active {
-  width: 1.35rem;
+  width: 1.2rem;
   background: #fff;
 }
 </style>

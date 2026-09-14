@@ -13,7 +13,7 @@
                 v-if="imageUrl && !imageError"
                 :src="imageUrl"
                 :alt="title || t('buyerXp.products.productFallback')"
-                class="store-product-card__image store-product-card__image--contain"
+                class="store-product-card__image store-product-card__image--cover"
                 loading="lazy"
                 @error="imageError = true"
               />
@@ -34,9 +34,6 @@
           >
             <Icon :icon="favorited ? 'solar:heart-bold' : 'solar:heart-linear'" aria-hidden="true" />
           </button>
-          <div class="store-product-card__gallery-dots" aria-hidden="true">
-            <span class="store-product-card__gallery-dot is-active" />
-          </div>
         </div>
 
         <div class="store-product-card__body store-product-card__body--featured">
@@ -54,11 +51,12 @@
             <button
               type="button"
               class="store-product-card__cart-btn"
+              :class="{ 'store-product-card__cart-btn--bounce': cartBounce }"
               :disabled="disabled || adding"
-              @click.stop="emit('add', 1)"
+              :aria-label="t('buyerXp.products.add')"
+              @click.stop="onAddClick"
             >
-              <Icon icon="solar:cart-large-2-bold" aria-hidden="true" />
-              <span class="store-product-card__cart-label">{{ t('buyerXp.products.add') }}</span>
+              <Icon icon="solar:cart-large-2-bold" class="store-product-card__cart-icon" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -73,7 +71,7 @@
             v-if="imageUrl && !imageError"
             :src="imageUrl"
             :alt="title || t('buyerXp.products.productFallback')"
-            class="store-product-card__image"
+            class="store-product-card__image store-product-card__image--cover"
             loading="lazy"
             @error="imageError = true"
           />
@@ -87,59 +85,25 @@
         </div>
       </button>
       <div class="store-product-card__body">
-        <div class="store-product-card__head" @click="emit('open')">
+        <button type="button" class="store-product-card__head store-product-card__head--open" @click="emit('open')">
           <div class="store-product-card__copy">
             <p v-if="storeLabel" class="store-product-card__store">{{ storeLabel }}</p>
             <h3 class="store-product-card__title">{{ displayTitle }}</h3>
             <p v-if="description" class="store-product-card__desc">{{ description }}</p>
           </div>
           <p v-if="priceLabel" class="store-product-card__price">{{ priceLabel }}</p>
-        </div>
-        <div class="store-product-card__actions" @click.stop>
-          <div
-            class="store-product-card__qty"
-            role="group"
-            :aria-label="`Quantity for ${displayTitle}`"
+        </button>
+        <div v-if="productId" class="store-product-card__actions store-product-card__actions--wish-only" @click.stop>
+          <button
+            type="button"
+            class="store-product-card__favorite"
+            :class="{ 'store-product-card__favorite--active': favorited }"
+            :disabled="togglingFavorite"
+            :aria-label="favorited ? t('buyerXp.product.removeFavorite') : t('buyerXp.product.saveFavorite')"
+            @click="toggleFavorite"
           >
-            <button
-              type="button"
-              class="store-product-card__qty-btn"
-              aria-label="Decrease quantity"
-              @click="bumpQty(-1)"
-            >
-              −
-            </button>
-            <span class="store-product-card__qty-value">{{ quantity }}</span>
-            <button
-              type="button"
-              class="store-product-card__qty-btn"
-              aria-label="Increase quantity"
-              @click="bumpQty(1)"
-            >
-              +
-            </button>
-          </div>
-          <div class="store-product-card__actions-end">
-            <button
-              v-if="productId"
-              type="button"
-              class="store-product-card__favorite"
-              :class="{ 'store-product-card__favorite--active': favorited }"
-              :disabled="togglingFavorite"
-              :aria-label="favorited ? t('buyerXp.product.removeFavorite') : t('buyerXp.product.saveFavorite')"
-              @click="toggleFavorite"
-            >
-              <Icon :icon="favorited ? 'solar:heart-bold' : 'solar:heart-linear'" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              class="store-product-card__add-btn"
-              :disabled="disabled || adding"
-              @click="emit('add', quantity)"
-            >
-              {{ t('buyerXp.products.add') }}
-            </button>
-          </div>
+            <Icon :icon="favorited ? 'solar:heart-bold' : 'solar:heart-linear'" aria-hidden="true" />
+          </button>
         </div>
       </div>
     </template>
@@ -179,7 +143,21 @@ const props = withDefaults(
 
 const emit = defineEmits<{ add: [quantity: number]; open: [] }>()
 const imageError = ref(false)
-const quantity = ref(1)
+const cartBounce = ref(false)
+let bounceTimer: ReturnType<typeof setTimeout> | null = null
+
+function onAddClick() {
+  if (props.disabled || props.adding) return
+  emit('add', 1)
+  cartBounce.value = false
+  requestAnimationFrame(() => {
+    cartBounce.value = true
+  })
+  if (bounceTimer) clearTimeout(bounceTimer)
+  bounceTimer = setTimeout(() => {
+    cartBounce.value = false
+  }, 380)
+}
 
 const showPreorderBadge = computed(() => {
   const mode = (props.purchaseMode || '').trim().toLowerCase()
@@ -218,8 +196,4 @@ const displayTitle = computed(() => {
 
 const productIdRef = computed(() => props.productId)
 const { favorited, toggling: togglingFavorite, toggleFavorite } = useProductFavorite(productIdRef)
-
-function bumpQty(delta: number) {
-  quantity.value = Math.max(1, Math.min(99, quantity.value + delta))
-}
 </script>

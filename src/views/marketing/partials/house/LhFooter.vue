@@ -10,6 +10,7 @@
           height="40"
         />
         <p class="lh-footer__tagline">{{ t('landingHouse.footer.meta') }}</p>
+        <a class="lh-footer__phone" :href="houseCopy.phoneHref">{{ houseCopy.phone }}</a>
         <div class="lh-footer__social" role="list">
           <a
             v-for="s in companySocialLinks"
@@ -64,7 +65,7 @@
 
     <div class="lh-footer__meta">
       <div class="lh-footer__meta-main">
-        <span>{{ t('trust.copyrightLine', { year, entity: companyLegal.legalEntity }) }}</span>
+        <span>{{ t('trust.copyrightLine', { year, entity: companyLegal.legalEntity, brela: companyLegal.brela }) }}</span>
         <span class="lh-footer__entity">{{ companyLegal.jurisdiction }}</span>
       </div>
       <div class="lh-footer__meta-tools">

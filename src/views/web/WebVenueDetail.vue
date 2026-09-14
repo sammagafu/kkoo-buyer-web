@@ -62,6 +62,7 @@
         :add-error="addError"
         :adding="adding"
         :show-store-label="false"
+        columns="four"
         @add="addProduct"
       />
     </section>

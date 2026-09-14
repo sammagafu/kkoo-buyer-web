@@ -449,7 +449,7 @@ export const buyerXpVerticals = {
       send: 'Send me requests fulfilled on time',
       move: 'Rides and parcels completed successfully',
     },
-    escrow: 'Escrow holds payment until you confirm — you’re covered.',
+    escrow: '24-hour money-back if something’s wrong — you’re covered.',
     disputeTitle: 'Something wrong?',
     disputeSub: {
       buy: 'Open a dispute for this order',

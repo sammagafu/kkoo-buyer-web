@@ -173,7 +173,7 @@
               </button>
             </div>
             <div class="menu-layout-controls">
-              <span class="menu-layout-label">Menu</span>
+              <span class="menu-layout-label">Catalog</span>
             </div>
           </div>
 
@@ -264,72 +264,20 @@
             </template>
           </p>
 
-          <!-- Product list — image left · name/details/price · qty + Add to cart -->
-          <div class="menu-cards menu-cards--rows">
-            <article
+          <!-- Product grid — image · name · price (tap for details) -->
+          <div class="shop-product-grid menu-cards-grid">
+            <BuyerStoreProductCard
               v-for="(item, i) in searchFilteredItems"
               :key="item.id ?? i"
-              class="menu-card menu-card--row"
-              :style="{ '--card-i': i }"
-            >
-              <button type="button" class="menu-card-visual" @click="openProductDetail(item)">
-                <div class="menu-card-image-wrap">
-                  <img
-                    v-if="item.cover_image && !cardImageErrors[itemKey(item, i)]"
-                    :src="resolveLogo(item.cover_image)"
-                    :alt="item.title || ''"
-                    class="menu-card-image"
-                    loading="lazy"
-                    @error="onCardImageError(itemKey(item, i))"
-                  />
-                  <div v-else class="menu-card-image menu-card-image-placeholder">
-                    <Icon icon="solar:gallery-minimalistic-bold-duotone" class="menu-card-placeholder-icon" />
-                  </div>
-                  <span v-if="itemRequiresRx(item)" class="menu-card-rx-badge">Rx</span>
-                </div>
-              </button>
-              <div class="menu-card-body">
-                <div class="menu-card-head" @click="openProductDetail(item)">
-                  <h3 class="menu-card-title">{{ item.title || 'Item' }}</h3>
-                  <span v-if="item.price != null" class="menu-card-price-inline">{{ formatPrice(item.price) }}</span>
-                </div>
-                <p v-if="item.description" class="menu-card-desc" @click="openProductDetail(item)">
-                  {{ item.description }}
-                </p>
-                <p v-else-if="item.categoryName || item.category_name" class="menu-card-desc" @click="openProductDetail(item)">
-                  {{ item.categoryName || item.category_name }}
-                </p>
-                <div class="menu-card-actions" @click.stop>
-                  <div class="menu-card-qty" role="group" :aria-label="`Quantity for ${item.title || 'item'}`">
-                    <button
-                      type="button"
-                      class="menu-card-qty-btn"
-                      :aria-label="`Decrease quantity`"
-                      @click="bumpQty(item, -1)"
-                    >
-                      −
-                    </button>
-                    <span class="menu-card-qty-value">{{ qtyFor(item) }}</span>
-                    <button
-                      type="button"
-                      class="menu-card-qty-btn"
-                      :aria-label="`Increase quantity`"
-                      @click="bumpQty(item, 1)"
-                    >
-                      +
-                    </button>
-                  </div>
-                  <button
-                    type="button"
-                    class="menu-card-add-btn"
-                    :disabled="adding"
-                    @click="addToCartWithQty(item)"
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </article>
+              layout="grid"
+              :title="item.title || 'Item'"
+              :description="item.description || item.categoryName || item.category_name"
+              :price-label="item.price != null ? formatPrice(item.price) : undefined"
+              :image-url="item.cover_image ? resolveLogo(item.cover_image) : null"
+              :product-id="item.id"
+              :category-label="itemRequiresRx(item) ? 'Rx' : undefined"
+              @open="openProductDetail(item)"
+            />
           </div>
         </section>
 
@@ -340,7 +288,7 @@
               <h2 class="checkout-explainer__title mb-2">One business. More ways to be found.</h2>
               <p class="checkout-explainer__copy mb-0">
                 This is the seller's storefront. The same catalog can also show up in {{ discoveryChannelName }} — one
-                KKOO checkout and escrow on every order.
+                KkooApp checkout with 24-hour money-back on every order.
               </p>
             </div>
             <div class="checkout-explainer__grid">
@@ -355,8 +303,8 @@
             <p class="checkout-explainer__eyebrow mb-2">How ordering works</p>
             <h2 class="checkout-explainer__title mb-2">From browse to delivery.</h2>
             <p class="checkout-explainer__copy mb-0">
-              Customers explore here first. When they're ready, they checkout through KKOO — payment protected until
-              delivery is confirmed.
+              Customers explore here first. When they're ready, they checkout through KkooApp — covered by a 24-hour
+              money-back guarantee.
             </p>
           </div>
           <div class="checkout-explainer__grid">
@@ -373,7 +321,7 @@
           <div class="microsite-checkout-bar__copy">
             <p class="microsite-checkout-bar__title mb-0">Ready to order?</p>
             <p class="microsite-checkout-bar__hint mb-0">
-              Checkout on KKOO — escrow-protected until delivery is confirmed.
+              Checkout on KkooApp — 24-hour money-back if something’s wrong.
               Guests can add items now; sign in at checkout.
             </p>
           </div>
@@ -389,11 +337,11 @@
         <div class="container microsite-footer__inner">
           <div class="microsite-footer__brand">
             <p class="microsite-footer-tagline mb-2">
-              Shop, pay with escrow, and track delivery on KKOO.
+              Shop, pay with money-back protection, and track delivery on KkooApp.
             </p>
             <p class="microsite-footer-powered mb-0">
               © {{ new Date().getFullYear() }} {{ store.business_name || 'Store' }} · Storefront on
-              <strong class="microsite-footer-brand">KKOO</strong>
+              <strong class="microsite-footer-brand">KkooApp</strong>
             </p>
           </div>
           <RouterLink :to="{ name: 'buyer.checkout' }" class="btn btn-outline-primary">
@@ -467,6 +415,7 @@ import { computed, ref, watch, onMounted } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { getStorePublic, type StorePromocode, type StorePublicPayload, type StorePublicProduct } from '@/api/store'
+import BuyerStoreProductCard from '@/components/buyer/BuyerStoreProductCard.vue'
 import { useAddToCart } from '@/composables/useAddToCart'
 import { useWebCart } from '@/composables/useWebCart'
 import { resolveAssetUrl } from '@/utils/assetUrl'
@@ -499,11 +448,10 @@ const categorySearch = ref('')
 const showCategoryPicker = ref(false)
 const sortBy = ref<'default' | 'name' | 'price_asc' | 'price_desc'>('default')
 const priceBand = ref<'all' | 'under_10k' | '10k_50k' | 'over_50k'>('all')
-const cardImageErrors = ref<Record<string, boolean>>({})
 const selectedProduct = ref<MenuItem | null>(null)
 const detailImageError = ref(false)
 const copyMessage = ref('')
-/** Per-product quantity before add-to-cart (list row steppers). */
+/** Per-product quantity before add-to-cart (detail modal). */
 const rowQty = ref<Record<string, number>>({})
 
 onMounted(() => {
@@ -727,14 +675,6 @@ function itemRating(item: StorePublicProduct): number {
   return 0
 }
 
-function itemKey(item: MenuItem, index: number): string {
-  return item.id != null ? String(item.id) : `idx-${index}`
-}
-
-function onCardImageError(key: string): void {
-  cardImageErrors.value = { ...cardImageErrors.value, [key]: true }
-}
-
 function openProductDetail(item: MenuItem): void {
   detailImageError.value = false
   selectedProduct.value = item
@@ -938,12 +878,12 @@ const checkoutExplainer = [
     copy: 'Explore the menu or catalog, filter what you need, and add items before you checkout.',
   },
   {
-    title: 'Checkout on KKOO',
-    copy: 'Confirm your cart, address, and payment — escrow keeps money protected until delivery is confirmed.',
+    title: 'Checkout on KkooApp',
+    copy: 'Confirm your cart, address, and payment — claim a full refund within 24 hours if the order is wrong or never arrives.',
   },
   {
     title: 'Track your order',
-    copy: 'Follow live updates and delivery in the KKOO app or web until your order arrives.',
+    copy: 'Follow live updates and delivery in the KkooApp app or web until your order arrives.',
   },
 ]
 
@@ -969,7 +909,6 @@ function load() {
   loading.value = true
   error.value = ''
   logoError.value = false
-  cardImageErrors.value = {}
   activeFilter.value = 'all'
   searchQuery.value = ''
   categorySearch.value = ''
@@ -1370,142 +1309,12 @@ onMounted(load)
   height: 1.1rem;
 }
 
-/* Product list — horizontal cards (image left · copy · actions) */
-.menu-cards {
-  display: grid;
-  gap: 0.85rem;
-}
-.menu-cards--rows {
-  grid-template-columns: 1fr;
+/* Product grid — shared marketplace card layout */
+.menu-cards-grid {
+  margin-top: 0.25rem;
 }
 
-.menu-card {
-  background: var(--microsite-surface, #fff);
-  border: 1px solid var(--microsite-border, rgba(0, 0, 0, 0.06));
-  border-radius: 1.25rem;
-  box-shadow: 0 8px 24px rgba(31, 27, 36, 0.06);
-  overflow: hidden;
-  animation: menu-card-in 0.35s ease both;
-  animation-delay: calc(var(--card-i, 0) * 30ms);
-}
-
-@keyframes menu-card-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: none; }
-}
-
-.menu-card--row {
-  display: grid;
-  grid-template-columns: 7.5rem minmax(0, 1fr);
-  gap: 0.85rem;
-  align-items: stretch;
-  padding: 0.75rem;
-  min-height: 7.5rem;
-}
-
-.menu-card-visual {
-  border: none;
-  background: transparent;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  border-radius: 1rem;
-  overflow: hidden;
-  align-self: stretch;
-}
-
-.menu-card--row .menu-card-image-wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: 6.5rem;
-  aspect-ratio: 1;
-  border-radius: 1rem;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--microsite-primary, #5c308f) 8%, #fff);
-}
-
-.menu-card--row .menu-card-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.menu-card-image-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: color-mix(in srgb, var(--microsite-primary, #5c308f) 40%, transparent);
-}
-
-.menu-card-placeholder-icon {
-  font-size: 2rem;
-}
-
-.menu-card-rx-badge {
-  position: absolute;
-  top: 0.4rem;
-  left: 0.4rem;
-  padding: 0.15rem 0.45rem;
-  border-radius: 999px;
-  background: rgba(180, 83, 9, 0.92);
-  color: #fff;
-  font-size: 0.65rem;
-  font-weight: 700;
-}
-
-.menu-card-body {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  padding: 0.15rem 0.25rem 0.15rem 0;
-  gap: 0.35rem;
-}
-
-.menu-card-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
-  cursor: pointer;
-}
-
-.menu-card-title {
-  margin: 0;
-  font-size: 1.05rem;
-  font-weight: 700;
-  line-height: 1.25;
-  color: var(--microsite-text, #1f1b24);
-}
-
-.menu-card-price-inline {
-  flex-shrink: 0;
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: var(--microsite-text, #1f1b24);
-}
-
-.menu-card-desc {
-  margin: 0;
-  font-size: 0.85rem;
-  line-height: 1.4;
-  color: var(--microsite-text-muted, #6b7280);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.menu-card-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-top: auto;
-  padding-top: 0.35rem;
-}
+/* Legacy row styles kept for detail modal qty controls */
 
 .menu-card-qty {
   display: inline-flex;
@@ -1608,21 +1417,6 @@ onMounted(load)
   display: none !important;
 }
 
-@media (max-width: 576px) {
-  .menu-card--row {
-    grid-template-columns: 5.75rem minmax(0, 1fr);
-    gap: 0.65rem;
-    padding: 0.65rem;
-  }
-  .menu-card-title,
-  .menu-card-price-inline {
-    font-size: 0.95rem;
-  }
-  .menu-card-add-btn {
-    padding: 0.45rem 0.85rem;
-    font-size: 0.8rem;
-  }
-}
 /* Menu section (Tasty Foods style) */
 .menu-section-header .menu-breadcrumb {
   font-size: 0.8rem;

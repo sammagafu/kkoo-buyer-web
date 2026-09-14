@@ -1,23 +1,40 @@
 <template>
-  <section class="buyer-discovery" :class="{ 'buyer-discovery--desktop': desktopLayout }" :aria-label="t('buyerXp.home.nearYou')">
-    <div class="buyer-discovery__head">
-      <h2 class="buyer-discovery__title">{{ t('buyerXp.home.nearYou') }}</h2>
-    </div>
+  <section
+    class="buyer-discovery"
+    :class="{ 'buyer-discovery--desktop': desktopLayout }"
+    :aria-label="t('buyerXp.home.nearYou')"
+  >
+    <BuyerSectionHeader :title="t('buyerXp.home.nearYou')" />
+
     <div v-if="loading" class="buyer-discovery__status">{{ t('buyerXp.common.loading') }}</div>
-    <div v-else-if="!nearbyStores.length" class="buyer-discovery__status">{{ t('buyerXp.home.noStoresNearby') }}</div>
-    <div v-else class="buyer-discovery__scroll" role="list">
+    <div v-else-if="!nearbyStores.length" class="buyer-discovery__status">
+      {{ t('buyerXp.home.noStoresNearby') }}
+    </div>
+    <div v-else class="buyer-discovery__rail" role="list">
       <RouterLink
         v-for="store in nearbyStores"
         :key="store.key"
         :to="store.to"
-        class="buyer-discovery__shop"
+        class="buyer-discovery__place"
+        :data-vertical="store.vertical"
         role="listitem"
       >
-        <img v-if="store.image" :src="store.image" :alt="store.name" loading="lazy" decoding="async" />
-        <span v-else class="buyer-discovery__shop-fallback" aria-hidden="true">
-          <Icon icon="solar:shop-2-bold" />
+        <span class="buyer-discovery__visual">
+          <img
+            v-if="store.image"
+            :src="store.image"
+            :alt="store.name"
+            loading="lazy"
+            decoding="async"
+          />
+          <span v-else class="buyer-discovery__mark" aria-hidden="true">
+            <Icon :icon="store.icon" width="28" height="28" />
+          </span>
         </span>
-        <span class="buyer-discovery__shop-name">{{ store.name }}</span>
+        <span class="buyer-discovery__copy">
+          <span class="buyer-discovery__kind">{{ store.kindLabel }}</span>
+          <span class="buyer-discovery__name">{{ store.name }}</span>
+        </span>
       </RouterLink>
     </div>
   </section>
@@ -28,6 +45,7 @@ import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
+import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import { venueImageUrl } from '@/utils/assetUrl'
 import { venueDetailLink, type VenueVertical } from '@/utils/buyerDetailLinks'
 
@@ -48,6 +66,16 @@ const props = defineProps<{
 
 const { t } = useI18n()
 
+const VERTICAL_META: Record<
+  VenueVertical,
+  { icon: string; kindKey: string }
+> = {
+  grocery: { icon: 'solar:shop-2-bold', kindKey: 'buyerXp.nav.groceries' },
+  eats: { icon: 'solar:chef-hat-bold', kindKey: 'buyerXp.nav.eats' },
+  pharmacy: { icon: 'solar:medical-kit-bold', kindKey: 'buyerXp.nav.pharmacy' },
+  hotel: { icon: 'solar:buildings-2-bold', kindKey: 'hotels.directory.tagHotel' },
+}
+
 function storeVertical(store: Store): VenueVertical {
   const type = (store.seller_type || '').toLowerCase()
   if (type === 'restaurant') return 'eats'
@@ -59,11 +87,16 @@ function storeVertical(store: Store): VenueVertical {
 const nearbyStores = computed(() =>
   (props.stores ?? []).slice(0, 8).map((store) => {
     const id = store.seller_id ?? store.user_id
+    const vertical = storeVertical(store)
+    const meta = VERTICAL_META[vertical]
     return {
       key: String(id ?? store.business_name),
       name: store.business_name || t('buyerXp.marketplace.storeFallback'),
       image: venueImageUrl(store),
-      to: id ? venueDetailLink(storeVertical(store), id) : { name: 'buyer.search' },
+      vertical,
+      icon: meta.icon,
+      kindLabel: t(meta.kindKey),
+      to: id ? venueDetailLink(vertical, id) : { name: 'buyer.search' },
     }
   }),
 )
