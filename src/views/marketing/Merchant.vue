@@ -14,7 +14,7 @@
         <LhButton as="a" :href="bizSellerRegisterUrl" variant="primary" size="lg" with-well>
           {{ t('merchant.cta.becomeMerchant') }}
         </LhButton>
-        <LhButton as="router-link" :to="buyerRoutes.business" variant="ghost" size="lg">
+        <LhButton as="a" :href="bizSignInUrl" variant="ghost" size="lg">
           {{ t('merchant.cta.needTools') }}
         </LhButton>
       </template>
@@ -56,7 +56,7 @@
         </LhButton>
         <LhButton
           as="a"
-          href="mailto:info@kkooapp.co.tz?subject=KKOO%20Merchant%20Partnership"
+          href="mailto:info@kkooapp.co.tz?subject=KKOO%20Merchant"
           variant="ghost"
           size="lg"
           class="lh-cta__ghost"
@@ -78,14 +78,14 @@ import MkFeatureList from './components/toolkit/MkFeatureList.vue'
 import MkProcessGrid from './components/toolkit/MkProcessGrid.vue'
 import MkCtaPanel from './components/toolkit/MkCtaPanel.vue'
 import LhButton from './partials/house/LhButton.vue'
-import { buyerRoutes, bizSellerRegisterUrl } from '@/config/landing-links'
+import { bizSellerRegisterUrl, bizSignInUrl } from '@/config/landing-links'
 import shopImage from '@/assets/images/landing/services/shop.jpg'
 
 const { t } = useI18n()
 
 const benefits = computed(() =>
   [1, 2, 3, 4].map((n) => ({
-    icon: ['solar:chart-square-linear', 'solar:wallet-money-linear', 'solar:box-linear', 'solar:smartphone-2-linear'][n - 1],
+    icon: ['solar:shop-2-linear', 'solar:wallet-money-linear', 'solar:box-linear', 'solar:smartphone-2-linear'][n - 1],
     title: t(`merchant.benefits.${n}.title`),
     copy: t(`merchant.benefits.${n}.copy`),
   })),
@@ -111,19 +111,20 @@ const faqs = computed(() =>
 <style scoped>
 .mk-faq {
   display: grid;
-  max-width: 44rem;
+  max-width: 40rem;
   border-top: 1px solid var(--lh-border, rgba(26, 26, 26, 0.08));
 }
 
 .mk-faq details {
   border-bottom: 1px solid var(--lh-border, rgba(26, 26, 26, 0.08));
-  padding: 1.1rem 0;
+  padding: 1rem 0;
 }
 
 .mk-faq summary {
   cursor: pointer;
   font-family: var(--lh-font-display, var(--kkoo-font-display));
   font-weight: 700;
+  font-size: 1rem;
   color: var(--lh-text, #1a1a1a);
   list-style: none;
 }
@@ -133,8 +134,9 @@ const faqs = computed(() =>
 }
 
 .mk-faq p {
-  margin: 0.75rem 0 0;
-  line-height: 1.65;
+  margin: 0.55rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
   color: var(--lh-text-muted, rgba(26, 26, 26, 0.62));
 }
 </style>

@@ -39,15 +39,27 @@
             :class="{ 'discover-card--active': selectedEvent?.id === event.id }"
             @click="openEvent(event)"
           >
-            <div class="discover-card-top">
-              <span class="discover-card-tag">{{ categoryLabel(event.category) }}</span>
-              <span v-if="event.is_featured" class="discover-card-tag discover-card-tag--featured">{{ t('discover.featured') }}</span>
+            <div class="discover-card-media">
+              <img
+                v-if="eventCover(event)"
+                :src="eventCover(event)!"
+                :alt="event.title"
+                class="discover-card-cover"
+                loading="lazy"
+              />
+              <div v-else class="discover-card-cover discover-card-cover--empty" aria-hidden="true" />
             </div>
-            <h3>{{ event.title }}</h3>
-            <p class="discover-card-copy">{{ event.summary || event.description }}</p>
-            <div class="discover-card-meta">
-              <span><Icon icon="solar:calendar-bold" /> {{ formatDate(event.starts_at) }}</span>
-              <span v-if="event.venue_name"><Icon icon="solar:map-point-bold" /> {{ event.venue_name }}</span>
+            <div class="discover-card-body">
+              <div class="discover-card-top">
+                <span class="discover-card-tag">{{ categoryLabel(event.category) }}</span>
+                <span v-if="event.is_featured" class="discover-card-tag discover-card-tag--featured">{{ t('discover.featured') }}</span>
+              </div>
+              <h3>{{ event.title }}</h3>
+              <p class="discover-card-copy">{{ event.summary || event.description }}</p>
+              <div class="discover-card-meta">
+                <span><Icon icon="solar:calendar-bold" /> {{ formatDate(event.starts_at) }}</span>
+                <span v-if="event.venue_name"><Icon icon="solar:map-point-bold" /> {{ event.venue_name }}</span>
+              </div>
             </div>
           </article>
         </div>
@@ -60,6 +72,12 @@
       <b-container class="px-3 px-sm-4 px-lg-4">
         <div class="discover-detail-grid">
           <div>
+            <img
+              v-if="eventCover(selectedEvent)"
+              :src="eventCover(selectedEvent)!"
+              :alt="selectedEvent.title"
+              class="discover-detail-cover mb-3"
+            />
             <p class="discover-detail-kicker">{{ categoryLabel(selectedEvent.category) }}</p>
             <h2 class="discover-detail-title">{{ selectedEvent.title }}</h2>
             <p class="discover-detail-copy">{{ selectedEvent.description || selectedEvent.summary }}</p>
@@ -162,6 +180,7 @@ import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
 import { eventsApi, type EventTicketClass, type MyTicketRow, type PlatformEvent } from '@/api/events'
 import { useAuthStore } from '@/stores/auth'
 import { formatApiError } from '@/utils/formatApiError'
+import { resolveAssetUrl } from '@/utils/assetUrl'
 
 const { t } = useI18n()
 const auth = useAuthStore()
@@ -182,6 +201,11 @@ const myTickets = ref<MyTicketRow[]>([])
 const activeCategory = ref('all')
 
 const isAuthenticated = computed(() => auth.isAuthenticated)
+
+function eventCover(event: PlatformEvent | null | undefined) {
+  if (!event?.cover_image) return null
+  return resolveAssetUrl(event.cover_image)
+}
 const selectedClass = computed(() => ticketClasses.value.find((tc) => tc.id === selectedClassId.value) ?? null)
 
 const categories = computed(() => [
@@ -329,9 +353,12 @@ onMounted(async () => {
 @media (min-width: 768px) { .discover-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1200px) { .discover-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .discover-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   border: 1px solid var(--buyer-border);
   border-radius: 1rem;
-  padding: 1rem;
+  padding: 0;
   background: var(--buyer-surface);
   color: var(--buyer-ink);
   cursor: pointer;
@@ -341,6 +368,32 @@ onMounted(async () => {
   transform: translateY(-2px);
   box-shadow: 0 14px 30px var(--buyer-shadow-color);
   border-color: var(--buyer-border-strong);
+}
+.discover-card-media {
+  width: 100%;
+  aspect-ratio: 1920 / 786;
+  background: var(--buyer-chip-bg, #eef0f3);
+}
+.discover-card-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.discover-card-cover--empty {
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--kkoo-primary) 18%, transparent), transparent 60%),
+    var(--buyer-chip-bg, #e8ebf0);
+}
+.discover-card-body { padding: 0.9rem 1rem 1rem; }
+.discover-detail-cover {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border-radius: 1rem;
+  border: 1px solid var(--buyer-border);
 }
 .discover-card-top { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
 .discover-card-tag {
