@@ -91,8 +91,24 @@
           @open="openProduct(prod)"
         />
       </div>
-      <p v-else class="shop-products__status">{{ t('buyerXp.search.noProductMatch') }}</p>
-      <div class="buyer-search-chips mt-3">
+      <BuyerEmptyState
+        v-else
+        size="page"
+        tone="search"
+        :title="t('buyerXp.search.emptyTitle')"
+        :message="t('buyerXp.search.emptyMessage')"
+        icon="solar:magnifer-bold"
+      >
+        <template #action>
+          <RouterLink :to="{ name: 'buyer.eats', query: { q: query } }" class="buyer-empty__cta">
+            {{ t('buyerXp.search.searchInEats') }}
+          </RouterLink>
+          <RouterLink :to="{ name: 'buyer.grocery', query: { q: query } }" class="buyer-empty__cta buyer-empty__cta--secondary">
+            {{ t('buyerXp.search.searchInGroceries') }}
+          </RouterLink>
+        </template>
+      </BuyerEmptyState>
+      <div v-if="results.length" class="buyer-search-chips mt-3">
         <RouterLink :to="{ name: 'buyer.eats', query: { q: query } }" class="buyer-search-chip">
           {{ t('buyerXp.search.searchInEats') }}
         </RouterLink>
@@ -114,6 +130,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useAddToCart } from '@/composables/useAddToCart'
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
+import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 import BuyerStoreProductCard from '@/components/buyer/BuyerStoreProductCard.vue'
 import { resolveAssetUrl } from '@/utils/assetUrl'
 import { productDetailLink } from '@/utils/buyerDetailLinks'

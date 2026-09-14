@@ -7,9 +7,21 @@
     <BuyerSectionHeader :title="t('buyerXp.home.nearYou')" />
 
     <div v-if="loading" class="buyer-discovery__status">{{ t('buyerXp.common.loading') }}</div>
-    <div v-else-if="!nearbyStores.length" class="buyer-discovery__status">
-      {{ t('buyerXp.home.noStoresNearby') }}
-    </div>
+    <BuyerEmptyState
+      v-else-if="!nearbyStores.length"
+      size="compact"
+      flush
+      tone="grocery"
+      :eyebrow="t('buyerXp.home.emptyNearbyEyebrow')"
+      :title="t('buyerXp.home.emptyNearbyTitle')"
+      :message="t('buyerXp.home.emptyNearbyMessage')"
+      icon="solar:map-point-bold"
+    >
+      <template #action>
+        <RouterLink :to="{ name: 'buyer.search' }" class="buyer-empty__cta">{{ t('buyerXp.nav.search') }}</RouterLink>
+        <RouterLink :to="{ name: 'buyer.eats' }" class="buyer-empty__cta buyer-empty__cta--secondary">{{ t('buyerXp.nav.eats') }}</RouterLink>
+      </template>
+    </BuyerEmptyState>
     <div v-else class="buyer-discovery__rail" role="list">
       <RouterLink
         v-for="store in nearbyStores"
@@ -46,6 +58,7 @@ import { RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
+import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 import { venueImageUrl } from '@/utils/assetUrl'
 import { venueDetailLink, type VenueVertical } from '@/utils/buyerDetailLinks'
 

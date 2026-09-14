@@ -2,7 +2,21 @@
   <div>
     <p v-if="loading" class="shop-products__status">{{ t('buyerXp.products.loading') }}</p>
     <p v-else-if="error" class="shop-products__status shop-products__status--error">{{ error }}</p>
-    <p v-else-if="!products.length" class="shop-products__status">{{ t('buyerXp.products.notFound') }}</p>
+    <BuyerEmptyState
+      v-else-if="!products.length"
+      :size="layout === 'popular-row' ? 'compact' : emptySize"
+      :flush="layout === 'popular-row'"
+      :tone="emptyTone"
+      :eyebrow="emptyEyebrow"
+      :title="emptyTitleResolved"
+      :message="emptyMessageResolved"
+      :icon="emptyIcon"
+    >
+      <template v-if="showEmptyAction" #action>
+        <RouterLink :to="{ name: 'buyer.search' }" class="buyer-empty__cta">{{ t('buyerXp.nav.search') }}</RouterLink>
+        <RouterLink :to="{ name: 'buyer.eats' }" class="buyer-empty__cta buyer-empty__cta--secondary">{{ t('buyerXp.nav.eats') }}</RouterLink>
+      </template>
+    </BuyerEmptyState>
     <div
       v-else
       class="shop-product-grid"
@@ -39,9 +53,11 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { computed } from 'vue'
+import { useRouter, RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import BuyerStoreProductCard from '@/components/buyer/BuyerStoreProductCard.vue'
+import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 import { resolveAssetUrl } from '@/utils/assetUrl'
 
 const router = useRouter()
@@ -66,7 +82,7 @@ export type GridProduct = {
   review_count?: number
 }
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     products: GridProduct[]
     loading?: boolean
@@ -78,11 +94,32 @@ withDefaults(
     layout?: 'default' | 'popular-row'
     cardLayout?: 'grid' | 'list'
     columns?: 'default' | 'four'
+    emptyTitle?: string
+    emptyMessage?: string
+    emptyIcon?: string
+    emptyTone?: 'default' | 'grocery' | 'eats' | 'pharmacy' | 'search' | 'cart'
+    emptySize?: 'default' | 'compact' | 'page'
+    emptyEyebrow?: string
+    showEmptyAction?: boolean
   }>(),
-  { cardLayout: 'grid', columns: 'default' },
+  {
+    cardLayout: 'grid',
+    columns: 'default',
+    emptyIcon: 'solar:bag-smile-bold',
+    emptyTone: 'default',
+    emptySize: 'default',
+    showEmptyAction: true,
+  },
 )
 
 defineEmits<{ add: [product: GridProduct, quantity?: number] }>()
+
+const emptyTitleResolved = computed(
+  () => props.emptyTitle || t('buyerXp.products.emptyTitle'),
+)
+const emptyMessageResolved = computed(
+  () => props.emptyMessage || t('buyerXp.products.emptyMessage'),
+)
 
 function productKey(prod: GridProduct) {
   return String(prod.id ?? `${prod.store_id}-${prod.title}`)

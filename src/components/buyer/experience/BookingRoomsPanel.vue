@@ -7,7 +7,14 @@
 
     <p v-if="loading" class="shop-products__status">{{ t('buyerXp.booking.loadingRooms') }}</p>
     <p v-if="menuError" class="buyer-xp-toast buyer-xp-toast--warn">{{ menuError }}</p>
-    <p v-if="!loading && !menuItems.length" class="booking-rooms-panel__empty">{{ t('buyerXp.booking.selectHotelPrompt') }}</p>
+    <BuyerEmptyState
+      v-if="!loading && !menuItems.length"
+      size="compact"
+      flush
+      :title="t('buyerXp.booking.selectHotelPrompt')"
+      :message="t('buyerXp.booking.emptyRoomsMessage')"
+      icon="solar:bed-bold"
+    />
 
     <ul v-if="menuItems.length" class="booking-rooms-list">
       <li v-for="item in menuItems" :key="item.id" class="booking-room-row">
@@ -48,6 +55,7 @@ import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import type { RestaurantMenuItem } from '@/api/superApp'
+import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 
 type MenuItem = RestaurantMenuItem & { description?: string }
 

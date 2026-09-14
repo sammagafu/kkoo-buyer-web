@@ -310,12 +310,15 @@ $kkoo-badge-border-accent: rgba(247, 168, 41, 0.35);
   --buyer-card-shadow: 0 4px 16px var(--buyer-shadow-color);
 
   // Section rhythm — readable insets on mobile and desktop
-  --buyer-page-inset-x: 1rem;
-  --buyer-page-inset-top: 0.75rem;
-  --buyer-page-inset-bottom: 1.25rem;
-  --buyer-section-pad-x: 1rem;
-  --buyer-section-pad-y: 1.25rem;
-  --buyer-section-gap: 1rem;
+  --buyer-page-inset-x: 1.1rem;
+  --buyer-page-inset-top: 1rem;
+  --buyer-page-inset-bottom: 1.5rem;
+  --buyer-section-pad-x: 1.1rem;
+  --buyer-section-pad-y: 1.35rem;
+  --buyer-section-gap: 1.25rem;
+  --buyer-block-gap: 0.85rem;
+  --buyer-card-pad: 0.95rem;
+  --buyer-card-gap: 0.85rem;
   /* Shared column for wallet, rewards, search, settings, etc. */
   --buyer-content-max: 52rem;
 
@@ -330,20 +333,24 @@ $kkoo-badge-border-accent: rgba(247, 168, 41, 0.35);
 
 @media (min-width: 768px) {
   :root {
-    --buyer-page-inset-x: 1.25rem;
-    --buyer-page-inset-top: 1rem;
-    --buyer-page-inset-bottom: 1.35rem;
-    --buyer-section-pad-x: 1.25rem;
-    --buyer-section-pad-y: 1.5rem;
-    --buyer-section-gap: 1.15rem;
+    --buyer-page-inset-x: 1.35rem;
+    --buyer-page-inset-top: 1.15rem;
+    --buyer-page-inset-bottom: 1.6rem;
+    --buyer-section-pad-x: 1.35rem;
+    --buyer-section-pad-y: 1.55rem;
+    --buyer-section-gap: 1.4rem;
+    --buyer-block-gap: 1rem;
+    --buyer-card-pad: 1.05rem;
+    --buyer-card-gap: 1rem;
   }
 }
 
 @media (min-width: 992px) {
   :root {
-    --buyer-page-inset-x: 1.5rem;
+    --buyer-page-inset-x: 1.6rem;
     --buyer-section-pad-x: 1.5rem;
-    --buyer-section-pad-y: 1.65rem;
+    --buyer-section-pad-y: 1.7rem;
+    --buyer-section-gap: 1.5rem;
   }
 }
 

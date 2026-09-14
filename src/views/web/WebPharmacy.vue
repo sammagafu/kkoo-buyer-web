@@ -87,80 +87,121 @@
 
         <BuyerSearchBar v-model="search" :placeholder="t('buyerXp.pharmacy.searchPlaceholder')" />
 
-        <div v-if="categoryOptions.length" class="buyer-pharmacy-filters">
-          <button
-            type="button"
-            class="buyer-venue__chip"
-            :class="{ 'buyer-venue__chip--primary': activeCategory === 'all' }"
-            @click="activeCategory = 'all'; activeSubcategory = 'all'"
-          >
-            All categories
-          </button>
-          <button
-            v-for="c in categoryOptions"
-            :key="c.slug"
-            type="button"
-            class="buyer-venue__chip"
-            :class="{ 'buyer-venue__chip--primary': activeCategory === c.slug }"
-            @click="activeCategory = c.slug; activeSubcategory = 'all'"
-          >
-            {{ c.name }}
-          </button>
-        </div>
-        <div v-if="subcategoryOptions.length" class="buyer-pharmacy-filters">
-          <button
-            type="button"
-            class="buyer-venue__chip"
-            :class="{ 'buyer-venue__chip--primary': activeSubcategory === 'all' }"
-            @click="activeSubcategory = 'all'"
-          >
-            All subcategories
-          </button>
-          <button
-            v-for="c in subcategoryOptions"
-            :key="c.slug"
-            type="button"
-            class="buyer-venue__chip"
-            :class="{ 'buyer-venue__chip--primary': activeSubcategory === c.slug }"
-            @click="activeSubcategory = c.slug"
-          >
-            {{ c.name }}
-          </button>
-        </div>
-        <div class="buyer-pharmacy-filters">
-          <button
-            v-for="age in ageOptions"
-            :key="age.value"
-            type="button"
-            class="buyer-venue__chip"
-            :class="{ 'buyer-venue__chip--primary': activeAge === age.value }"
-            @click="activeAge = age.value"
-          >
-            {{ age.label }}
-          </button>
-        </div>
-        <div v-if="requirementOptions.length" class="buyer-pharmacy-filters">
-          <button
-            type="button"
-            class="buyer-venue__chip"
-            :class="{ 'buyer-venue__chip--primary': activeRequirement === 'all' }"
-            @click="activeRequirement = 'all'"
-          >
-            All needs
-          </button>
-          <button
-            v-for="req in requirementOptions"
-            :key="req"
-            type="button"
-            class="buyer-venue__chip"
-            :class="{ 'buyer-venue__chip--primary': activeRequirement === req }"
-            @click="activeRequirement = req"
-          >
-            {{ formatRequirement(req) }}
-          </button>
-        </div>
+        <template v-if="!loading && !error && products.length">
+          <div v-if="categoryOptions.length" class="buyer-pharmacy-filters">
+            <button
+              type="button"
+              class="buyer-venue__chip"
+              :class="{ 'buyer-venue__chip--primary': activeCategory === 'all' }"
+              @click="activeCategory = 'all'; activeSubcategory = 'all'"
+            >
+              All categories
+            </button>
+            <button
+              v-for="c in categoryOptions"
+              :key="c.slug"
+              type="button"
+              class="buyer-venue__chip"
+              :class="{ 'buyer-venue__chip--primary': activeCategory === c.slug }"
+              @click="activeCategory = c.slug; activeSubcategory = 'all'"
+            >
+              {{ c.name }}
+            </button>
+          </div>
+          <div v-if="subcategoryOptions.length" class="buyer-pharmacy-filters">
+            <button
+              type="button"
+              class="buyer-venue__chip"
+              :class="{ 'buyer-venue__chip--primary': activeSubcategory === 'all' }"
+              @click="activeSubcategory = 'all'"
+            >
+              All subcategories
+            </button>
+            <button
+              v-for="c in subcategoryOptions"
+              :key="c.slug"
+              type="button"
+              class="buyer-venue__chip"
+              :class="{ 'buyer-venue__chip--primary': activeSubcategory === c.slug }"
+              @click="activeSubcategory = c.slug"
+            >
+              {{ c.name }}
+            </button>
+          </div>
+          <div class="buyer-pharmacy-filters">
+            <button
+              v-for="age in ageOptions"
+              :key="age.value"
+              type="button"
+              class="buyer-venue__chip"
+              :class="{ 'buyer-venue__chip--primary': activeAge === age.value }"
+              @click="activeAge = age.value"
+            >
+              {{ age.label }}
+            </button>
+          </div>
+          <div v-if="requirementOptions.length" class="buyer-pharmacy-filters">
+            <button
+              type="button"
+              class="buyer-venue__chip"
+              :class="{ 'buyer-venue__chip--primary': activeRequirement === 'all' }"
+              @click="activeRequirement = 'all'"
+            >
+              All needs
+            </button>
+            <button
+              v-for="req in requirementOptions"
+              :key="req"
+              type="button"
+              class="buyer-venue__chip"
+              :class="{ 'buyer-venue__chip--primary': activeRequirement === req }"
+              @click="activeRequirement = req"
+            >
+              {{ formatRequirement(req) }}
+            </button>
+          </div>
+        </template>
 
-        <template v-if="groupedProducts.length">
+        <p v-if="loading" class="shop-products__status">{{ t('buyerXp.common.loading') }}</p>
+        <p v-else-if="error" class="shop-products__status shop-products__status--error">{{ error }}</p>
+        <BuyerEmptyState
+          v-else-if="!products.length"
+          size="page"
+          tone="pharmacy"
+          :eyebrow="t('buyerXp.pharmacy.emptyEyebrow')"
+          :title="t('buyerXp.pharmacy.emptyTitle')"
+          :message="t('buyerXp.pharmacy.emptyMessage')"
+          :hints="[
+            t('buyerXp.pharmacy.emptyHint1'),
+            t('buyerXp.pharmacy.emptyHint2'),
+            t('buyerXp.pharmacy.emptyHint3'),
+          ]"
+          icon="solar:medical-kit-bold"
+        >
+          <template #action>
+            <RouterLink :to="{ name: 'buyer.search' }" class="buyer-empty__cta">{{ t('buyerXp.nav.search') }}</RouterLink>
+            <RouterLink
+              :to="{ name: 'buyer.send', query: { category: 'pharmacy' } }"
+              class="buyer-empty__cta buyer-empty__cta--secondary"
+            >{{ t('buyerXp.pharmacy.deliveryRequest') }}</RouterLink>
+            <RouterLink :to="{ name: 'buyer.grocery' }" class="buyer-empty__cta buyer-empty__cta--secondary">{{ t('buyerXp.nav.groceries') }}</RouterLink>
+          </template>
+        </BuyerEmptyState>
+        <BuyerEmptyState
+          v-else-if="!filteredProducts.length"
+          size="compact"
+          tone="pharmacy"
+          :title="t('buyerXp.pharmacy.emptyFilterTitle')"
+          :message="t('buyerXp.pharmacy.emptyFilterMessage')"
+          icon="solar:filter-bold"
+        >
+          <template #action>
+            <button type="button" class="buyer-empty__cta" @click="clearPharmacyFilters">
+              {{ t('buyerXp.pharmacy.clearFilters') }}
+            </button>
+          </template>
+        </BuyerEmptyState>
+        <template v-else-if="groupedProducts.length">
           <div v-for="group in groupedProducts" :key="group.title" class="buyer-pharmacy-group">
             <h3 class="buyer-pharmacy-group__title">{{ group.title }}</h3>
             <BuyerProductGridSection
@@ -169,6 +210,7 @@
               :error="''"
               :adding="adding"
               :add-error="addError"
+              :show-empty-action="false"
               @add="(p, qty) => addProduct(p, qty)"
             />
           </div>
@@ -177,10 +219,13 @@
           v-else
           class="buyer-pharmacy-products"
           :products="filteredProducts"
-          :loading="loading"
-          :error="error"
+          :loading="false"
+          :error="''"
           :adding="adding"
           :add-error="addError"
+          :empty-title="t('buyerXp.pharmacy.emptyTitle')"
+          :empty-message="t('buyerXp.pharmacy.emptyMessage')"
+          empty-icon="solar:medical-kit-bold"
           @add="(p, qty) => addProduct(p, qty)"
         />
 
@@ -214,6 +259,7 @@ import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader
 import BuyerHubCard from '@/components/buyer/experience/BuyerHubCard.vue'
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import BuyerProductGridSection, { type GridProduct } from '@/components/buyer/experience/BuyerProductGridSection.vue'
+import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 
 const PHARMACY_SLUG = 'pharmacy'
 const { t } = useI18n()
@@ -262,6 +308,14 @@ const ageOptions = [
 
 function formatRequirement(value: string) {
   return value.replace(/_/g, ' ')
+}
+
+function clearPharmacyFilters() {
+  activeCategory.value = 'all'
+  activeSubcategory.value = 'all'
+  activeAge.value = 'all'
+  activeRequirement.value = 'all'
+  search.value = ''
 }
 
 const pharmacyRoot = computed(() => {

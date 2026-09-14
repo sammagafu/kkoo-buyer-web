@@ -84,7 +84,7 @@
       :message="t('buyerXp.orders.emptyMessage')"
     >
       <template #action>
-        <RouterLink :to="BUYER_DASHBOARD_ROUTE" class="buyer-venue__chip buyer-venue__chip--primary">
+        <RouterLink :to="BUYER_DASHBOARD_ROUTE" class="buyer-empty__cta">
           {{ t('buyerXp.common.startShopping') }}
         </RouterLink>
       </template>

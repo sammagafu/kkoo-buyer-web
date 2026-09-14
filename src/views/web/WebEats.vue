@@ -46,7 +46,22 @@
     <section v-if="viewMode === 'directory'" class="buyer-venue-list" aria-label="Restaurants">
       <p v-if="loadingRestaurants" class="shop-products__status">{{ t('buyerXp.eats.loadingRestaurants') }}</p>
       <p v-else-if="restaurantError" class="shop-products__status shop-products__status--error">{{ restaurantError }}</p>
-      <p v-else-if="!filteredRestaurants.length" class="shop-products__status">{{ t('buyerXp.eats.noRestaurants') }}</p>
+      <BuyerEmptyState
+        v-else-if="!filteredRestaurants.length"
+        size="page"
+        tone="eats"
+        :eyebrow="t('buyerXp.eats.emptyEyebrow')"
+        :title="t('buyerXp.eats.emptyTitle')"
+        :message="t('buyerXp.eats.emptyMessage')"
+        :hints="[t('buyerXp.eats.emptyHint1'), t('buyerXp.eats.emptyHint2'), t('buyerXp.eats.emptyHint3')]"
+        icon="solar:chef-hat-bold"
+      >
+        <template #action>
+          <RouterLink :to="{ name: 'buyer.search' }" class="buyer-empty__cta">{{ t('buyerXp.nav.search') }}</RouterLink>
+          <RouterLink :to="{ name: 'buyer.grocery' }" class="buyer-empty__cta buyer-empty__cta--secondary">{{ t('buyerXp.nav.groceries') }}</RouterLink>
+          <RouterLink :to="{ name: 'buyer.pharmacy' }" class="buyer-empty__cta buyer-empty__cta--secondary">{{ t('buyerXp.nav.pharmacy') }}</RouterLink>
+        </template>
+      </BuyerEmptyState>
       <BuyerVenueCard
         v-for="restaurant in filteredRestaurants"
         :key="entryKey(restaurant)"
@@ -65,7 +80,18 @@
     <section v-else class="shop-products" aria-label="Menu">
       <p v-if="loadingMenu" class="shop-products__status">{{ t('buyerXp.eats.loadingMenu') }}</p>
       <p v-else-if="menuError" class="shop-products__status shop-products__status--error">{{ menuError }}</p>
-      <p v-else-if="!displayMenuItems.length" class="shop-products__status">{{ t('buyerXp.eats.noDishes') }}</p>
+      <BuyerEmptyState
+        v-else-if="!displayMenuItems.length"
+        size="page"
+        tone="eats"
+        :title="t('buyerXp.eats.emptyMenuTitle')"
+        :message="t('buyerXp.eats.emptyMenuMessage')"
+        icon="solar:bowl-bold"
+      >
+        <template #action>
+          <RouterLink :to="{ name: 'buyer.eats' }" class="buyer-empty__cta">{{ t('buyerXp.eats.backToRestaurants') }}</RouterLink>
+        </template>
+      </BuyerEmptyState>
 
       <div v-else class="shop-product-grid shop-product-grid--four">
         <BuyerStoreProductCard
@@ -122,6 +148,7 @@ import BuyerTableBookingPanel from '@/components/buyer/BuyerTableBookingPanel.vu
 import BuyerStoreProductCard from '@/components/buyer/BuyerStoreProductCard.vue'
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import BuyerVenueCard from '@/components/buyer/experience/BuyerVenueCard.vue'
+import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 import { resolveAssetUrl, venueImageUrl } from '@/utils/assetUrl'
 import { venueDetailLink } from '@/utils/buyerDetailLinks'
 import { formatApiError } from '@/utils/formatApiError'
@@ -269,7 +296,6 @@ async function loadMenu() {
   try {
     const { data } = await superAppApi.getRestaurantMenu(activeRestaurantId.value)
     menuItems.value = flattenMenu(data)
-    if (!menuItems.value.length) menuError.value = t('buyerXp.eats.noDishes')
   } catch (e) {
     menuError.value = formatApiError(e, t('buyerXp.common.couldNotLoad'))
   } finally {

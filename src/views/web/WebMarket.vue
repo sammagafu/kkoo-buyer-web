@@ -59,7 +59,18 @@
         >
           <BuyerSectionHeader :title="t('buyerXp.home.popularToday')" />
           <p v-if="homeProductsError" class="shop-products__status shop-products__status--error">{{ homeProductsError }}</p>
-          <p v-else class="shop-products__status">{{ t('buyerXp.home.noProductsYet') }}</p>
+          <BuyerEmptyState
+            v-else
+            size="compact"
+            flush
+            :title="t('buyerXp.home.emptyProductsTitle')"
+            :message="t('buyerXp.home.emptyProductsMessage')"
+            icon="solar:bag-smile-bold"
+          >
+            <template #action>
+              <RouterLink :to="{ name: 'buyer.search' }" class="buyer-empty__cta">{{ t('buyerXp.nav.search') }}</RouterLink>
+            </template>
+          </BuyerEmptyState>
         </section>
 
         <div class="d-none d-lg-flex buyer-home-hero buyer-home-hero--aside">
@@ -87,7 +98,18 @@
       <section class="buyer-surface buyer-surface--compact buyer-reveal" :aria-label="t('buyerXp.marketplace.browseCategories')">
         <BuyerSectionHeader :title="t('buyerXp.marketplace.browseCategories')" />
         <p v-if="loadingCategories" class="shop-products__status">{{ t('buyerXp.common.loading') }}</p>
-        <p v-else-if="!categories.length" class="shop-products__status">{{ t('buyerXp.home.noCategories') }}</p>
+        <BuyerEmptyState
+          v-else-if="!categories.length"
+          size="compact"
+          flush
+          :title="t('buyerXp.home.emptyCategoriesTitle')"
+          :message="t('buyerXp.home.emptyCategoriesMessage')"
+          icon="solar:widget-2-bold"
+        >
+          <template #action>
+            <RouterLink :to="{ name: 'buyer.search' }" class="buyer-empty__cta">{{ t('buyerXp.nav.search') }}</RouterLink>
+          </template>
+        </BuyerEmptyState>
         <div v-else class="buyer-category-pills" role="tablist">
           <button
             type="button"
@@ -180,7 +202,34 @@
       <section v-if="viewMode === 'directory'" class="buyer-venue-list" aria-label="Grocery stores">
         <p v-if="loadingStores" class="shop-products__status">{{ t('buyerXp.marketplace.loadingStores') }}</p>
         <p v-else-if="storeLoadError" class="shop-products__status shop-products__status--error">{{ storeLoadError }}</p>
-        <p v-else-if="!filteredStores.length" class="shop-products__status">{{ t('buyerXp.marketplace.noStores') }}</p>
+        <BuyerEmptyState
+          v-else-if="!filteredStores.length"
+          :size="compact ? 'page' : 'default'"
+          :tone="compact ? 'grocery' : 'default'"
+          :eyebrow="compact ? t('buyerXp.marketplace.groceryEmptyEyebrow') : undefined"
+          :title="compact ? t('buyerXp.marketplace.groceryEmptyTitle') : t('buyerXp.marketplace.emptyTitle')"
+          :message="compact ? t('buyerXp.marketplace.groceryEmptyMessage') : t('buyerXp.marketplace.emptyMessage')"
+          :hints="
+            compact
+              ? [
+                  t('buyerXp.marketplace.groceryEmptyHint1'),
+                  t('buyerXp.marketplace.groceryEmptyHint2'),
+                  t('buyerXp.marketplace.groceryEmptyHint3'),
+                ]
+              : undefined
+          "
+          :icon="compact ? 'solar:cart-large-2-bold' : 'solar:shop-2-bold'"
+        >
+          <template #action>
+            <RouterLink :to="{ name: 'buyer.search' }" class="buyer-empty__cta">{{ t('buyerXp.nav.search') }}</RouterLink>
+            <RouterLink :to="{ name: 'buyer.eats' }" class="buyer-empty__cta buyer-empty__cta--secondary">{{ t('buyerXp.nav.eats') }}</RouterLink>
+            <RouterLink
+              v-if="compact"
+              :to="{ name: 'buyer.pharmacy' }"
+              class="buyer-empty__cta buyer-empty__cta--secondary"
+            >{{ t('buyerXp.nav.pharmacy') }}</RouterLink>
+          </template>
+        </BuyerEmptyState>
         <BuyerVenueCard
           v-for="store in filteredStores"
           :key="storeKey(store)"
@@ -205,6 +254,12 @@
           :adding="adding"
           :show-store-label="!compact"
           columns="four"
+          :empty-title="compact ? t('buyerXp.marketplace.groceryEmptyProductsTitle') : t('buyerXp.marketplace.emptyProductsTitle')"
+          :empty-message="compact ? t('buyerXp.marketplace.groceryEmptyProductsMessage') : t('buyerXp.marketplace.emptyProductsMessage')"
+          :empty-icon="compact ? 'solar:cart-large-2-bold' : 'solar:shop-2-bold'"
+          :empty-tone="compact ? 'grocery' : 'default'"
+          :empty-size="compact ? 'page' : 'default'"
+          :empty-eyebrow="compact ? t('buyerXp.marketplace.groceryEmptyEyebrow') : undefined"
           @add="addProduct"
         />
       </section>
@@ -241,6 +296,7 @@ import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader
 import BuyerVenueCard from '@/components/buyer/experience/BuyerVenueCard.vue'
 import BuyerProductGridSection from '@/components/buyer/experience/BuyerProductGridSection.vue'
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
+import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 import BuyerCampaignCarousel from '@/components/buyer/BuyerCampaignCarousel.vue'
 import BuyerCampaignStrip from '@/components/buyer/BuyerCampaignStrip.vue'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
@@ -555,7 +611,6 @@ async function loadProducts() {
         store_name: activeStoreName.value,
       }))
     }
-    if (!products.value.length) productError.value = t('buyerXp.marketplace.noProductsInStore')
   } catch (e) {
     productError.value = formatApiError(e, t('buyerXp.marketplace.couldNotLoadProducts'))
   } finally {
@@ -572,9 +627,6 @@ async function loadAllProducts() {
     if (searchTerm.value) params.search = searchTerm.value
     const { data } = await catalogPublicApi.listProducts(params as never)
     allProducts.value = (data?.results as Product[]) ?? []
-    if (!allProducts.value.length) {
-      homeProductsError.value = t('buyerXp.home.noProductsYet')
-    }
   } catch (e) {
     allProducts.value = []
     homeProductsError.value = formatApiError(e, t('buyerXp.marketplace.couldNotLoadProducts'))

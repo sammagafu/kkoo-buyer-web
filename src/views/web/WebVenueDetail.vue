@@ -63,6 +63,12 @@
         :adding="adding"
         :show-store-label="false"
         columns="four"
+        :empty-title="t('buyerXp.venue.emptyTitle')"
+        :empty-message="t('buyerXp.venue.emptyMessage')"
+        :empty-tone="vertical === 'grocery' ? 'grocery' : vertical === 'eats' ? 'eats' : vertical === 'pharmacy' ? 'pharmacy' : 'default'"
+        empty-size="page"
+        :empty-eyebrow="t('buyerXp.venue.emptyEyebrow')"
+        empty-icon="solar:box-minimalistic-bold"
         @add="addProduct"
       />
     </section>
@@ -359,7 +365,6 @@ async function loadVenue() {
       } as never)
       products.value = ((data as { results?: MenuGridProduct[] })?.results ?? []) as MenuGridProduct[]
     }
-    if (!products.value.length) error.value = t('buyerXp.venue.noItems')
   } catch (e) {
     error.value = formatApiError(e, t('buyerXp.common.couldNotLoad'))
   } finally {

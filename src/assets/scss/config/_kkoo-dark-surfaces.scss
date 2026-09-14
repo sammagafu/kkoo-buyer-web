@@ -183,8 +183,38 @@ html.theme-dark {
   }
 
   .buyer-empty {
-    background: color-mix(in srgb, var(--buyer-surface) 90%, transparent);
-    border-color: var(--buyer-border-strong);
+    background:
+      radial-gradient(
+        120% 90% at 50% -10%,
+        color-mix(in srgb, var(--buyer-empty-accent, var(--kkoo-primary, #5c308f)) 18%, transparent) 0%,
+        transparent 58%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--buyer-surface) 92%, var(--buyer-empty-accent, var(--kkoo-primary, #5c308f))) 0%,
+        var(--buyer-surface) 100%
+      );
+    border-color: color-mix(in srgb, var(--buyer-border-strong) 75%, var(--buyer-empty-accent, var(--kkoo-primary, #5c308f)));
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  }
+
+  .buyer-empty__icon {
+    background: color-mix(in srgb, var(--buyer-empty-accent, var(--kkoo-primary, #5c308f)) 18%, var(--buyer-surface));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 8px 18px rgba(0, 0, 0, 0.25);
+  }
+
+  .buyer-empty__eyebrow,
+  .buyer-empty__hints li {
+    background: color-mix(in srgb, var(--buyer-empty-accent, var(--kkoo-primary, #5c308f)) 16%, var(--buyer-surface));
+    color: #ede9f5;
+  }
+
+  .buyer-empty__cta--secondary {
+    background: color-mix(in srgb, var(--buyer-surface) 70%, var(--buyer-empty-accent, var(--kkoo-primary, #5c308f)));
+    color: #ede9f5;
+    border-color: color-mix(in srgb, var(--buyer-empty-accent, var(--kkoo-primary, #5c308f)) 40%, transparent);
   }
 
   // Search & inputs

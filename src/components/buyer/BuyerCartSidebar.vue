@@ -16,9 +16,19 @@
       <p class="small text-muted mb-2">{{ error }}</p>
       <button type="button" class="buyer-venue__chip buyer-venue__chip--sm" @click="loadCart">{{ t('buyerXp.cart.tryAgain') }}</button>
     </div>
-    <div v-else-if="!cartItems.length" class="buyer-cart-sidebar__empty">
-      <p class="mb-1 fw-semibold">{{ t('buyerXp.cart.emptyTitle') }}</p>
-      <p class="small text-muted mb-0">{{ t('buyerXp.cart.emptyHint') }}</p>
+    <div v-else-if="!cartItems.length" class="buyer-cart-sidebar__empty buyer-cart-sidebar__empty--panel">
+      <BuyerEmptyState
+        size="compact"
+        tone="cart"
+        flush
+        :title="t('buyerXp.cart.emptyTitle')"
+        :message="t('buyerXp.cart.emptyHint')"
+        icon="solar:bag-3-bold"
+      >
+        <template #action>
+          <RouterLink :to="{ name: 'buyer.marketplace' }" class="buyer-empty__cta">{{ t('buyerXp.common.startShopping') }}</RouterLink>
+        </template>
+      </BuyerEmptyState>
     </div>
     <div v-if="isGuestCart && cartItems.length" class="buyer-cart-sidebar__guest-banner">
       <Icon icon="solar:cloud-storage-bold" aria-hidden="true" />
@@ -80,10 +90,11 @@
 import { computed, onMounted } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import { useWebCart } from '@/composables/useWebCart'
 import { buildCheckoutLink } from '@/utils/fulfillmentLinks'
 import { useInShopFulfillment } from '@/composables/useInShopFulfillment'
+import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 
 withDefaults(
   defineProps<{

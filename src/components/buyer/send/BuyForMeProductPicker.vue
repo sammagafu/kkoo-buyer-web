@@ -18,7 +18,15 @@
           <div class="send-picker__body">
             <p v-if="loading" class="send-picker__status">Loading products…</p>
             <p v-else-if="error" class="send-picker__status send-picker__status--err">{{ error }}</p>
-            <p v-else-if="!displayProducts.length" class="send-picker__status">{{ emptyMessage }}</p>
+            <BuyerEmptyState
+              v-else-if="!displayProducts.length"
+              size="compact"
+              flush
+              :tone="emptyTone"
+              :title="emptyTitle"
+              :message="emptyMessage"
+              :icon="emptyIcon"
+            />
             <ul v-else class="send-picker__list">
               <li v-for="prod in displayProducts" :key="productKey(prod)">
                 <button type="button" class="send-picker__row" @click="selectProduct(prod)">
@@ -56,6 +64,7 @@ import { useBuyForMeStoreIndex } from '@/composables/useBuyForMeStoreIndex'
 import { useBuyForMePricingConfig } from '@/composables/useBuyForMePricingConfig'
 import { buyForMeCategoryById, type BuyForMeCategoryId } from '@/constants/buyForMeCategories'
 import type { BuyForMeProductSelection } from '@/types/buyForMe'
+import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 
 type CatalogProduct = {
   id?: number
@@ -92,14 +101,47 @@ const activeCategory = computed(() => buyForMeCategoryById(props.categoryId ?? '
 
 const pickerTitle = computed(() => `Pick from ${activeCategory.value.shoppingArea.toLowerCase()}`)
 
+const emptyTitle = computed(() => {
+  switch (activeCategory.value.id) {
+    case 'food':
+      return 'No dishes nearby yet'
+    case 'grocery':
+      return 'No groceries nearby yet'
+    default:
+      return 'Nothing to pick yet'
+  }
+})
+
 const emptyMessage = computed(() => {
   switch (activeCategory.value.id) {
     case 'food':
-      return 'No restaurant items found nearby. Try another category or add a custom item.'
+      return 'No restaurant items nearby. Try another category or add a custom item.'
     case 'grocery':
-      return 'No grocery items found nearby. Try another category or add a custom item.'
+      return 'No grocery items nearby. Try another category or add a custom item.'
     default:
-      return 'No products found.'
+      return 'Nothing matched. Try another category or add a custom item.'
+  }
+})
+
+const emptyTone = computed(() => {
+  switch (activeCategory.value.id) {
+    case 'food':
+      return 'eats' as const
+    case 'grocery':
+      return 'grocery' as const
+    default:
+      return 'default' as const
+  }
+})
+
+const emptyIcon = computed(() => {
+  switch (activeCategory.value.id) {
+    case 'food':
+      return 'solar:chef-hat-bold'
+    case 'grocery':
+      return 'solar:cart-large-2-bold'
+    default:
+      return 'solar:box-minimalistic-bold'
   }
 })
 
