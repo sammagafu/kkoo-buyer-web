@@ -606,6 +606,12 @@ export const buyerXpVerticalsFr = {
     hintInstagram: 'Lien copié — collez dans une story, un DM ou une publication Instagram.',
     hintTiktok: 'Lien copié — collez-le dans la légende TikTok.',
     copyMessage: 'Copier le message',
+    ctaPhoneLabel: 'Ou envoyer un message bouton WhatsApp à un numéro',
+    ctaPhonePlaceholder: '2557…',
+    ctaSend: 'Envoyer le message bouton',
+    ctaSending: 'Envoi…',
+    ctaSent: 'Message bouton envoyé à {phone}',
+    ctaFailed: 'Impossible d’envoyer le message bouton WhatsApp.',
   },
   rewards: {
     tagline:

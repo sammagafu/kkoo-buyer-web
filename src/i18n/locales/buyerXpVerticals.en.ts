@@ -867,6 +867,12 @@ export const buyerXpVerticals = {
     hintFacebookStory: 'Link copied — open Facebook and paste into a story or status.',
     hintInstagram: 'Link copied — paste into an Instagram story, DM, or post.',
     hintTiktok: 'Link copied — paste it into your TikTok caption or bio.',
+    ctaPhoneLabel: 'Or send a WhatsApp button message to a number',
+    ctaPhonePlaceholder: '2557…',
+    ctaSend: 'Send button message',
+    ctaSending: 'Sending…',
+    ctaSent: 'Button message sent to {phone}',
+    ctaFailed: 'Could not send WhatsApp button message.',
   },
   premium: {
     overline: 'KKOO Premium',

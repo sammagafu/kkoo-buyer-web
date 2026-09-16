@@ -82,6 +82,26 @@
                   {{ t(action.labelKey) }}
                 </button>
               </div>
+
+              <template v-if="selectedAppId === 'whatsapp'">
+                <p class="product-share-sheet__step">{{ t('buyerXp.shareEarn.ctaPhoneLabel') }}</p>
+                <input
+                  v-model="ctaPhone"
+                  type="tel"
+                  class="product-share-sheet__phone"
+                  inputmode="tel"
+                  autocomplete="tel"
+                  :placeholder="t('buyerXp.shareEarn.ctaPhonePlaceholder')"
+                />
+                <button
+                  type="button"
+                  class="product-share-sheet__action product-share-sheet__cta-send"
+                  :disabled="ctaSending || !ctaPhone.trim()"
+                  @click="sendWhatsAppCta"
+                >
+                  {{ ctaSending ? t('buyerXp.shareEarn.ctaSending') : t('buyerXp.shareEarn.ctaSend') }}
+                </button>
+              </template>
             </template>
 
             <p v-if="actionHint" class="product-share-sheet__hint">{{ actionHint }}</p>
@@ -109,7 +129,9 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
+import { sharesApi } from '@/api/shares'
 import { useProductShareEarn } from '@/composables/useProductShareEarn'
+import { formatApiError } from '@/utils/formatApiError'
 import {
   SHARE_APPS,
   hintKeyForAction,
@@ -124,6 +146,7 @@ const {
   loading,
   error,
   preview,
+  result,
   closeShareSheet,
   shareLink,
   shareMessage,
@@ -134,6 +157,8 @@ const copiedLink = ref(false)
 const copiedMessage = ref(false)
 const selectedAppId = ref<ShareAppId | null>(null)
 const actionHint = ref('')
+const ctaPhone = ref('')
+const ctaSending = ref(false)
 
 const selectedApp = computed(() => SHARE_APPS.find((a) => a.id === selectedAppId.value) ?? null)
 
@@ -162,6 +187,27 @@ function copyMessage() {
 function selectApp(id: ShareAppId) {
   selectedAppId.value = id
   actionHint.value = ''
+}
+
+async function sendWhatsAppCta() {
+  const to = ctaPhone.value.trim()
+  if (!to) return
+  ctaSending.value = true
+  actionHint.value = ''
+  try {
+    await sharesApi.sendWhatsAppCTA({
+      product_id: preview.value?.productId,
+      product_slug: preview.value?.productSlug,
+      to,
+      message: shareMessage(),
+      share_code: result.value?.code,
+    })
+    actionHint.value = t('buyerXp.shareEarn.ctaSent', { phone: to })
+  } catch (e) {
+    actionHint.value = formatApiError(e, t('buyerXp.shareEarn.ctaFailed'))
+  } finally {
+    ctaSending.value = false
+  }
 }
 
 async function runAction(app: ShareApp, action: ShareAction) {
@@ -198,6 +244,8 @@ watch(open, () => {
   copiedMessage.value = false
   selectedAppId.value = null
   actionHint.value = ''
+  ctaPhone.value = ''
+  ctaSending.value = false
 })
 
 onMounted(() => document.addEventListener('keydown', onKeydown))
@@ -350,6 +398,29 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
 
 .product-share-sheet__action:hover {
   background: rgba(13, 148, 136, 0.08);
+}
+
+.product-share-sheet__phone {
+  width: 100%;
+  min-height: 2.4rem;
+  margin-bottom: 0.45rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.7rem;
+  border: 1px solid var(--buyer-border-strong, rgba(15, 23, 42, 0.12));
+  font-size: 0.9375rem;
+}
+
+.product-share-sheet__cta-send {
+  width: 100%;
+  margin-bottom: 0.75rem;
+  background: #128c7e;
+  color: #fff;
+  border-color: transparent;
+}
+
+.product-share-sheet__cta-send:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .product-share-sheet__hint {

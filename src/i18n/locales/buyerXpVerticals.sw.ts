@@ -583,6 +583,12 @@ export const buyerXpVerticalsSw = {
     hintInstagram: 'Kiungo kimenakiliwa — bandika kwenye hadithi, DM, au chapisho la Instagram.',
     hintTiktok: 'Kiungo kimenakiliwa — bandika kwenye maelezo ya TikTok.',
     copyMessage: 'Nakili ujumbe',
+    ctaPhoneLabel: 'Au tuma ujumbe wa kitufe cha WhatsApp kwa namba',
+    ctaPhonePlaceholder: '2557…',
+    ctaSend: 'Tuma ujumbe wa kitufe',
+    ctaSending: 'Inatuma…',
+    ctaSent: 'Ujumbe wa kitufe umetumwa kwa {phone}',
+    ctaFailed: 'Imeshindwa kutuma ujumbe wa kitufe wa WhatsApp.',
   },
   rewards: {
     tagline:
