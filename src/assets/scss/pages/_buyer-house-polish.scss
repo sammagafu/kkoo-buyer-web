@@ -631,3 +631,53 @@ html.theme-dark {
 .buyer-side-nav__link--active .buyer-side-nav__icon {
   color: var(--kkoo-accent);
 }
+
+@media (max-width: 991.98px) {
+  .buyer-xp .buyer-venue--grid {
+    display: grid;
+    gap: 0.55rem;
+    padding: 0.7rem;
+  }
+
+  .buyer-xp .buyer-venue__tap--grid {
+    display: grid;
+    grid-template-columns: 5.25rem minmax(0, 1fr);
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .buyer-xp .buyer-venue__tap--grid .buyer-venue__hero {
+    width: 5.25rem;
+    min-height: 5.25rem;
+    aspect-ratio: 1;
+  }
+
+  .buyer-xp .buyer-venue__actions,
+  .buyer-xp .buyer-venue__actions--grid,
+  .buyer-xp .buyer-venue__actions--row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    min-width: 0;
+    gap: 0.35rem;
+    padding: 0;
+  }
+
+  .buyer-xp .buyer-venue__actions .buyer-venue__chip {
+    justify-self: stretch;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    min-height: 2.2rem;
+    padding: 0.35rem 0.3rem;
+    font-size: 0.7rem;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .buyer-xp .buyer-venue__actions .buyer-venue__chip--primary {
+    grid-column: auto;
+  }
+}

@@ -232,7 +232,7 @@ export default {
     downloadSectionSub:
       'Wanunuzi wanunua kwenye programu. Wauzaji wanaendesha duka kwenye desktop au kivinjari. Uaminifu, ufuatiliaji, na dhamana ya saa 24 vile vile.',
     downloadBuyersDesc:
-      'Nunua, fuatilia usafirishaji, lipa kwa dhamana ya saa 24, na pata zawadi—iOS au Android.',
+      'Jaribu kwenye Android au iPhone. Nunua, fuatilia usafirishaji, lipa kwa dhamana ya saa 24, na pata zawadi.',
     downloadSellersDesc:
       'Orodhesha bidhaa, timiza maagizo, na lipwa kwa ratiba—sakinisha Kkoo Business kwa Windows au Mac, au tumia dashibodi ya wavuti.',
     downloadSellersNote: 'Unapendelea kivinjari? Ingia kutoka simu au kompyuta—hakuna usakinishaji.',

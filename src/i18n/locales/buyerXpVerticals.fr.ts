@@ -606,12 +606,12 @@ export const buyerXpVerticalsFr = {
     hintInstagram: 'Lien copié — collez dans une story, un DM ou une publication Instagram.',
     hintTiktok: 'Lien copié — collez-le dans la légende TikTok.',
     copyMessage: 'Copier le message',
-    ctaPhoneLabel: 'Ou envoyer un message bouton WhatsApp à un numéro',
+    ctaPhoneLabel: 'Envoyer une carte Acheter maintenant WhatsApp (suivie pour vous)',
     ctaPhonePlaceholder: '2557…',
-    ctaSend: 'Envoyer le message bouton',
+    ctaSend: 'Envoyer la carte Acheter maintenant',
     ctaSending: 'Envoi…',
-    ctaSent: 'Message bouton envoyé à {phone}',
-    ctaFailed: 'Impossible d’envoyer le message bouton WhatsApp.',
+    ctaSent: 'Carte Acheter maintenant envoyée à {phone}. Vous gagnez s’ils commandent.',
+    ctaFailed: 'Impossible d’envoyer la carte Acheter maintenant WhatsApp.',
   },
   rewards: {
     tagline:

@@ -16,9 +16,12 @@ export type ProductShareResult = {
   code?: string
   land_url?: string
   share_url?: string
+  card_url?: string
+  buy_url?: string
   share_text?: string
   whatsapp_share_url?: string
   facebook_share_url?: string
+  whatsapp_ready?: boolean
 }
 
 const open = ref(false)
@@ -61,7 +64,7 @@ export function useProductShareEarn() {
   }
 
   function shareLink() {
-    return String(result.value?.land_url || result.value?.share_url || '').trim()
+    return String(result.value?.card_url || result.value?.land_url || result.value?.share_url || '').trim()
   }
 
   function shareMessage() {

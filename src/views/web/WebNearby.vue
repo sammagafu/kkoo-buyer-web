@@ -49,6 +49,8 @@
             :image-url="venueImageUrl(r)"
             kind="restaurant"
             icon="solar:chef-hat-bold"
+            :send-to="sendLink(r)"
+            :ride-to="rideLinkFor(r)"
             :detail-to="venueLink('eats', r)"
           />
         </div>
@@ -66,6 +68,8 @@
             :image-url="venueImageUrl(g)"
             kind="grocery"
             icon="solar:cart-large-2-bold"
+            :send-to="sendLink(g)"
+            :ride-to="rideLinkFor(g)"
             :detail-to="venueLink('grocery', g)"
           />
         </div>
@@ -113,6 +117,7 @@ import { formatApiError } from '@/utils/formatApiError'
 import { formatBuyerDistance } from '@/utils/buyerFormat'
 import { venueImageUrl } from '@/utils/assetUrl'
 import { venueDetailLink, type VenueVertical } from '@/utils/buyerDetailLinks'
+import { buildRideLink } from '@/utils/fulfillmentLinks'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerVenueCard from '@/components/buyer/experience/BuyerVenueCard.vue'
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
@@ -188,6 +193,24 @@ function venueLink(vertical: VenueVertical, row: Record<string, unknown>) {
   const id = row.seller_id ?? row.user_id ?? row.id
   if (id == null) return undefined
   return venueDetailLink(vertical, id as number | string)
+}
+
+function sendLink(row: Record<string, unknown>) {
+  return {
+    name: 'buyer.send',
+    query: {
+      store: venueName(row),
+      seller_id: row.seller_id ?? row.user_id,
+    },
+  }
+}
+
+function rideLinkFor(row: Record<string, unknown>) {
+  return buildRideLink({
+    pickup: venueAddress(row),
+    notes: `From ${venueName(row)}`,
+    vehicleType: 'boda',
+  })
 }
 
 async function load() {

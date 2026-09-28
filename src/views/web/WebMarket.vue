@@ -1,5 +1,5 @@
 <template>
-  <div ref="xpRoot" class="buyer-xp buyer-xp--wide" :class="{ 'buyer-xp--mhome': isHomeMode }">
+  <div ref="xpRoot" class="buyer-xp buyer-xp--wide" :class="{ 'buyer-xp--mhome': isHomeMode, 'grocery-main': compact }">
     <!-- Home marketplace — mobile-first entry -->
     <template v-if="isHomeMode">
       <BuyerMobileHomeHeader

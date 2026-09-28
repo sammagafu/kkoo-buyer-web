@@ -12,7 +12,7 @@ export const appLinks = {
   marketplace: {
     googlePlay:
       (env.VITE_KKOO_BUYERS_GOOGLE_PLAY_URL as string | undefined) ??
-      'https://play.google.com/store/apps/details?id=kkoo.co.tz.kkoo',
+      'https://play.google.com/apps/internaltest/4701130685281760062',
     appStore:
       (env.VITE_KKOO_BUYERS_APP_STORE_URL as string | undefined) ??
       'https://apps.apple.com/app/kkoo-marketplace/id123456789',

@@ -343,14 +343,14 @@ button.buyer-search-bar {
 .buyer-venue-list {
   display: grid;
   gap: var(--buyer-card-gap, 0.85rem);
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
 }
 
 .buyer-venue-list--rows {
   grid-template-columns: 1fr;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .buyer-venue-list:not(.buyer-venue-list--rows) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--buyer-card-gap, 1rem);
@@ -578,6 +578,12 @@ button.buyer-search-bar {
   gap: 0.45rem;
   padding: 0.15rem 0 0;
   margin-top: 0;
+}
+
+.buyer-venue__actions--grid {
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0 0.1rem;
 }
 
 @media (max-width: 575.98px) {

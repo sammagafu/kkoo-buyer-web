@@ -292,6 +292,34 @@ async function addRelated(prod: GridProduct, quantity = 1) {
 
 watch(() => [route.params.id, route.params.slug], () => void load())
 
+const appliedQueryKey = ref('')
+
+async function applyQueryActions() {
+  const p = product.value
+  if (!p) return
+  const add = String(route.query.add ?? '') === '1'
+  const buy = String(route.query.buy ?? '') === '1'
+  if (!add && !buy) return
+  const key = `${p.id || p.slug}:${add}:${buy}`
+  if (appliedQueryKey.value === key) return
+  appliedQueryKey.value = key
+  const ok = await addToCart()
+  const query = { ...route.query }
+  delete query.add
+  delete query.buy
+  await router.replace({ path: route.path, query })
+  if (buy && ok) {
+    await router.push({ path: '/checkout' })
+  }
+}
+
+watch(
+  () => [product.value?.id, product.value?.slug, route.query.add, route.query.buy],
+  () => {
+    void applyQueryActions()
+  },
+)
+
 onMounted(load)
 </script>
 

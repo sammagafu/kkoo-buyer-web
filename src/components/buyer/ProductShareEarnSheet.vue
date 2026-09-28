@@ -242,7 +242,7 @@ function onKeydown(e: KeyboardEvent) {
 watch(open, () => {
   copiedLink.value = false
   copiedMessage.value = false
-  selectedAppId.value = null
+  selectedAppId.value = open.value ? 'whatsapp' : null
   actionHint.value = ''
   ctaPhone.value = ''
   ctaSending.value = false

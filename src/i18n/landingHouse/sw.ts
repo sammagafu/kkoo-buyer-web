@@ -24,7 +24,9 @@ export default {
     },
     hero: {
       brand: 'KkooApp',
-      title: 'Nunua. Uza. Peleka. Chuma.',
+      title: 'Nunua. Uza. Peleka na Chuma.',
+      titleLine1: 'Nunua. Uza. Peleka na Chuma.',
+      titleLine2: '',
       lead:
         'Hukupata ulichoagiza? Tuambie ndani ya saa 24, pesa yako inarudi. Nunua, uza, peleka au chuma — akaunti moja kwa yote.',
       assurance: 'Dhamana ya saa 24 · Fuatilia moja kwa moja · Akaunti moja',

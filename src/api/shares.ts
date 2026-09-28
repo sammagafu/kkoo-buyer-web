@@ -16,6 +16,8 @@ export const sharesApi = {
       product_id?: number
       land_url?: string
       share_url?: string
+      card_url?: string
+      buy_url?: string
       share_text?: string
       whatsapp_share_url?: string
       facebook_share_url?: string

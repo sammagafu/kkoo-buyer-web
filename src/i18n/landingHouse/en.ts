@@ -24,7 +24,9 @@ export default {
     },
     hero: {
       brand: 'KkooApp',
-      title: 'Buy. Sell. Deliver. Earn.',
+      title: 'Buy. Sell. Deliver and Earn.',
+      titleLine1: 'Buy. Sell. Deliver and Earn.',
+      titleLine2: '',
       lead:
         'Not what you ordered? Tell us within 24 hours and you get your money back. Shop, sell, deliver or earn — one account for all of it.',
       assurance: '24-hour money-back guarantee · Live tracking · One account',

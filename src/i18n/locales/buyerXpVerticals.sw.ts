@@ -583,12 +583,12 @@ export const buyerXpVerticalsSw = {
     hintInstagram: 'Kiungo kimenakiliwa — bandika kwenye hadithi, DM, au chapisho la Instagram.',
     hintTiktok: 'Kiungo kimenakiliwa — bandika kwenye maelezo ya TikTok.',
     copyMessage: 'Nakili ujumbe',
-    ctaPhoneLabel: 'Au tuma ujumbe wa kitufe cha WhatsApp kwa namba',
+    ctaPhoneLabel: 'Tuma kadi ya Nunua sasa kwenye WhatsApp (inakuhesabia wewe)',
     ctaPhonePlaceholder: '2557…',
-    ctaSend: 'Tuma ujumbe wa kitufe',
+    ctaSend: 'Tuma kadi ya Nunua sasa',
     ctaSending: 'Inatuma…',
-    ctaSent: 'Ujumbe wa kitufe umetumwa kwa {phone}',
-    ctaFailed: 'Imeshindwa kutuma ujumbe wa kitufe wa WhatsApp.',
+    ctaSent: 'Kadi ya Nunua sasa imetumwa kwa {phone}. Utapata kama wataagiza.',
+    ctaFailed: 'Imeshindwa kutuma kadi ya Nunua sasa kwenye WhatsApp.',
   },
   rewards: {
     tagline:

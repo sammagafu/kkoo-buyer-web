@@ -24,7 +24,9 @@ export default {
     },
     hero: {
       brand: 'KkooApp',
-      title: 'Acheter. Vendre. Livrer. Gagner.',
+      title: 'Acheter. Vendre. Livrer et Gagner.',
+      titleLine1: 'Acheter. Vendre. Livrer et Gagner.',
+      titleLine2: '',
       lead:
         'Une plateforme de commerce pour acheteurs, marchands, livreurs et équipes — avec une garantie de remboursement sous 24 heures, suivi en direct et récompenses.',
       assurance: 'Garantie de remboursement 24 h · Suivi en direct · Un seul compte',

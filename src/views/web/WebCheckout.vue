@@ -199,7 +199,9 @@ import type { PaymentMethodRow } from '@/api/payments'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 import { useWebCart, buildSellerConfigs } from '@/composables/useWebCart'
-import { takePendingShareCode } from '@/composables/usePendingShareCode'
+import { catalogPublicApi } from '@/api/catalog'
+import { useAddToCart, type CartableProduct } from '@/composables/useAddToCart'
+import { setPendingShareCode, takePendingShareCode } from '@/composables/usePendingShareCode'
 import { formatApiError } from '@/utils/formatApiError'
 import type { AddressPayload } from '@/api/addresses'
 
@@ -210,6 +212,7 @@ const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
 const { itemCount, formattedTotal, loadCart, cartItems } = useWebCart()
+const { addProduct: addProductToCart } = useAddToCart()
 
 const loadingAddresses = ref(false)
 const placingOrder = ref(false)
@@ -599,8 +602,27 @@ watch(isAuthenticated, (authed) => {
   if (authed) void loadLoyalty()
 })
 
+async function seedProductFromQuery() {
+  const slug = String(route.query.product ?? '').trim()
+  const ref = String(route.query.ref ?? '').trim()
+  if (ref) setPendingShareCode(ref)
+  if (!slug) return
+  try {
+    const { data } = await catalogPublicApi.getProductBySlug(slug)
+    await addProductToCart(data as CartableProduct, 1)
+  } catch (e) {
+    orderError.value = formatApiError(e, t('buyerXp.product.notFound'))
+  }
+  const query = { ...route.query }
+  delete query.product
+  delete query.ref
+  await router.replace({ path: route.path, query })
+}
+
 onMounted(() => {
-  void loadCart().then(() => refreshLoyaltyQuote())
+  void seedProductFromQuery()
+    .then(() => loadCart())
+    .then(() => refreshLoyaltyQuote())
   void loadAddresses()
   void loadPaymentMethods()
   void loadLoyalty()

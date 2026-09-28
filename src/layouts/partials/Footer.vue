@@ -33,20 +33,20 @@
               target="_blank"
               rel="noopener noreferrer"
               class="footer-app-link"
-              title="App Store"
+              title="Test on iPhone"
             >
               <Icon icon="logos:apple-app-store" class="footer-app-icon" aria-hidden="true" />
-              App Store
+              Test on iPhone
             </a>
             <a
               :href="appLinks.marketplace.googlePlay"
               target="_blank"
               rel="noopener noreferrer"
               class="footer-app-link"
-              title="Google Play"
+              title="Test on Android"
             >
               <Icon icon="logos:google-play-icon" class="footer-app-icon" aria-hidden="true" />
-              Google Play
+              Test on Android
             </a>
           </div>
           <p class="footer__credit mb-0">

@@ -232,7 +232,7 @@ export default {
     downloadSectionSub:
       'Les acheteurs achètent dans l’app. Les vendeurs gèrent leur boutique sur bureau ou navigateur. Même confiance, suivi et garantie 24 h.',
     downloadBuyersDesc:
-      'Achetez, suivez la livraison, payez sous garantie 24 h et gagnez des récompenses—iOS ou Android.',
+      'Testez sur Android ou iPhone. Achetez, suivez la livraison, payez sous garantie 24 h et gagnez des récompenses.',
     downloadSellersDesc:
       'Listez vos produits, traitez les commandes et soyez payé—installez Kkoo Business pour Windows ou Mac, ou utilisez le web.',
     downloadSellersNote: 'Vous préférez le navigateur ? Connectez-vous depuis n’importe quel appareil—sans installation.',

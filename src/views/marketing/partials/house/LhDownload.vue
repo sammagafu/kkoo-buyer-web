@@ -34,8 +34,8 @@
           >
             <Icon icon="ic:baseline-apple" width="22" height="22" />
             <span>
-              <small>{{ t('landing.footerStoreKickerApple') }}</small>
-              <strong>{{ t('landing.footerAppStore') }}</strong>
+              <small>{{ t('trust.downloadStoreKicker') }}</small>
+              <strong>{{ t('trust.downloadStoreIphone') }}</strong>
             </span>
           </a>
           <a
@@ -46,8 +46,8 @@
           >
             <Icon icon="logos:google-play-icon" width="20" height="20" />
             <span>
-              <small>{{ t('landing.footerStoreKickerGoogle') }}</small>
-              <strong>{{ t('landing.footerGooglePlay') }}</strong>
+              <small>{{ t('trust.downloadStoreKicker') }}</small>
+              <strong>{{ t('trust.downloadStoreAndroid') }}</strong>
             </span>
           </a>
         </div>
