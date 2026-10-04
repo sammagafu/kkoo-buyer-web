@@ -192,15 +192,6 @@
   text-decoration: none;
 }
 
-.buyer-mhome-header__name {
-  font-family: var(--kkoo-font-primary);
-  font-weight: 800;
-  font-size: 1.25rem;
-  letter-spacing: -0.04em;
-  color: var(--kkoo-primary);
-  line-height: 1;
-}
-
 .buyer-mhome-header__badge,
 .buyer-float-action__badge,
 .buyer-side-nav__badge,
@@ -216,6 +207,7 @@
   border: 1px solid var(--kkoo-border, var(--buyer-border));
 }
 
+.buyer-mhome-header__menu,
 .buyer-mhome-header__notify {
   border-radius: 999px;
   border: 1px solid var(--kkoo-border, var(--buyer-border));
@@ -224,16 +216,6 @@
 .buyer-mhome-greeting {
   display: grid;
   gap: 0.35rem;
-}
-
-.buyer-mhome-greeting__brand {
-  margin: 0;
-  font-family: var(--kkoo-font-primary);
-  font-weight: 800;
-  font-size: clamp(1.35rem, 4vw, 1.75rem);
-  letter-spacing: -0.05em;
-  line-height: 0.95;
-  color: var(--kkoo-accent);
 }
 
 .buyer-mhome-greeting__line {
@@ -518,6 +500,7 @@
   .buyer-page-head__back,
   .buyer-mhome-header__badge,
   .buyer-mhome-header__location,
+  .buyer-mhome-header__menu,
   .buyer-mhome-header__notify,
   .buyer-float-action__badge,
   .buyer-side-nav__badge,
@@ -537,6 +520,7 @@ html.theme-dark {
     .buyer-section-head__action,
     .buyer-page-head__action,
     .buyer-page-head__back,
+    .buyer-mhome-header__menu,
     .buyer-mhome-header__notify,
     .buyer-mhome-header__location {
       background: var(--buyer-surface);
@@ -635,20 +619,20 @@ html.theme-dark {
 @media (max-width: 991.98px) {
   .buyer-xp .buyer-venue--grid {
     display: grid;
-    gap: 0.55rem;
-    padding: 0.7rem;
+    gap: 0.85rem;
+    padding: 1rem;
   }
 
   .buyer-xp .buyer-venue__tap--grid {
     display: grid;
-    grid-template-columns: 5.25rem minmax(0, 1fr);
+    grid-template-columns: 6.75rem minmax(0, 1fr);
     align-items: center;
-    gap: 0.7rem;
+    gap: 0.75rem;
   }
 
   .buyer-xp .buyer-venue__tap--grid .buyer-venue__hero {
-    width: 5.25rem;
-    min-height: 5.25rem;
+    width: 6.75rem;
+    min-height: 6.75rem;
     aspect-ratio: 1;
   }
 
@@ -659,8 +643,8 @@ html.theme-dark {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     width: 100%;
     min-width: 0;
-    gap: 0.35rem;
-    padding: 0;
+    gap: 0.5rem;
+    padding: 0.15rem 0 0;
   }
 
   .buyer-xp .buyer-venue__actions .buyer-venue__chip {
@@ -668,8 +652,8 @@ html.theme-dark {
     width: 100%;
     max-width: none;
     min-width: 0;
-    min-height: 2.2rem;
-    padding: 0.35rem 0.3rem;
+    min-height: 2.35rem;
+    padding: 0.5rem 0.45rem;
     font-size: 0.7rem;
     box-sizing: border-box;
     white-space: nowrap;

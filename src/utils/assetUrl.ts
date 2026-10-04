@@ -68,15 +68,26 @@ export function productImageUrls(product: Record<string, unknown>): string[] {
   return out
 }
 
+function venueMediaUrl(raw: unknown): string | null {
+  if (typeof raw !== 'string' || !looksLikeMediaPath(raw)) return null
+  return resolveAssetUrl(raw)
+}
+
 /** Storefront hero image from venue listing (cover, logo, or generic image fields). */
 export function venueImageUrl(venue: object): string | null {
   const row = venue as Record<string, unknown>
   for (const key of ['cover_image', 'logo_url', 'image_url', 'photo_url'] as const) {
-    const raw = row[key]
-    const resolved = resolveAssetUrl(typeof raw === 'string' ? raw : '')
+    const resolved = venueMediaUrl(row[key])
     if (resolved) return resolved
   }
   return null
+}
+
+/** True when the resolved visual is a logo, not a cover photo. */
+export function venueImageIsLogo(venue: object): boolean {
+  const row = venue as Record<string, unknown>
+  if (venueMediaUrl(row.cover_image)) return false
+  return Boolean(venueMediaUrl(row.logo_url))
 }
 
 /** Get brand logo URL (logo or logo_url from API). */

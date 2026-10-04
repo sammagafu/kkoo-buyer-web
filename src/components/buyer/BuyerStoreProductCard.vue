@@ -18,7 +18,7 @@
                 @error="imageError = true"
               />
               <div v-else class="store-product-card__image store-product-card__placeholder" aria-hidden="true">
-                <Icon icon="solar:gallery-minimalistic-bold-duotone" class="store-product-card__placeholder-icon" />
+                <Icon icon="solar:bowl-bold" class="store-product-card__placeholder-icon" />
               </div>
             </div>
           </button>

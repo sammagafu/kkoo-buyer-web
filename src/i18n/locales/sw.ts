@@ -2223,6 +2223,8 @@ export default {
       themeLight: 'Mwanga',
       themeDark: 'Giza',
       language: 'Lugha',
+      openMenu: 'Fungua menyu',
+      closeMenu: 'Funga menyu',
     },
     marketplace: {
       overline: 'KkooApp · Dar',

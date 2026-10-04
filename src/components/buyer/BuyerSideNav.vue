@@ -1,8 +1,18 @@
 <template>
   <aside class="buyer-side-nav" aria-label="Shop navigation">
-    <router-link :to="BUYER_DASHBOARD_ROUTE" class="buyer-side-nav__brand">
-      <img :src="logoSrc" alt="" />
-    </router-link>
+    <div class="buyer-side-nav__brand-row">
+      <router-link :to="BUYER_DASHBOARD_ROUTE" class="buyer-side-nav__brand">
+        <img :src="logoSrc" alt="" />
+      </router-link>
+      <button
+        type="button"
+        class="buyer-side-nav__close"
+        :aria-label="t('buyerXp.nav.closeMenu')"
+        @click="closeNav"
+      >
+        <Icon icon="solar:close-circle-bold" />
+      </button>
+    </div>
 
     <router-link
       :to="userLink"
@@ -111,6 +121,7 @@ const { t, locale } = useI18n()
 const { greeting } = useBuyerGreeting()
 const { unreadCount: notificationUnreadCount } = useBuyerNotifications()
 const openNotifications = inject<() => void>('openBuyerNotifications', () => {})
+const closeNav = inject<() => void>('closeBuyerNav', () => {})
 
 const notificationBadge = computed(() => {
   const count = notificationUnreadCount.value

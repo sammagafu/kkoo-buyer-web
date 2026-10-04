@@ -26,28 +26,29 @@
         </header>
 
         <div class="food-combo__steps" aria-hidden="true">
-          <span class="food-combo__step" :class="{ 'is-done': !!main, 'is-active': !main }">1</span>
-          <span class="food-combo__rail" />
-          <span class="food-combo__step" :class="{ 'is-done': !!side, 'is-active': !!main && !side }">2</span>
-          <span class="food-combo__rail" />
-          <span class="food-combo__step" :class="{ 'is-done': !!drink, 'is-active': !!main && !!side && !drink }">3</span>
+          <template v-for="(kind, i) in flow" :key="kind">
+            <span v-if="i > 0" class="food-combo__rail" />
+            <span class="food-combo__step" :class="{ 'is-done': step > i, 'is-active': step === i }">{{ i + 1 }}</span>
+          </template>
         </div>
 
-        <section class="food-combo__section">
+        <section v-if="currentKind !== 'review'" class="food-combo__section">
           <h3>
-            {{ t('buyerXp.eats.comboMain') }}
-            <span class="food-combo__req">{{ t('buyerXp.eats.comboRequired') }}</span>
+            {{ stepTitle }}
+            <span :class="currentKind === 'main' ? 'food-combo__req' : 'food-combo__opt'">
+              {{ currentKind === 'main' ? t('buyerXp.eats.comboRequired') : t('buyerXp.eats.comboOptional') }}
+            </span>
           </h3>
-          <div class="food-combo__chips" role="listbox" :aria-label="t('buyerXp.eats.comboMain')">
+          <div class="food-combo__chips" role="listbox" :aria-label="stepTitle">
             <button
-              v-for="item in mains"
-              :key="`m-${item.id}`"
+              v-for="item in currentItems"
+              :key="`${currentKind}-${item.id}`"
               type="button"
               role="option"
               class="food-combo__chip"
-              :class="{ 'is-selected': main?.id === item.id }"
-              :aria-selected="main?.id === item.id"
-              @click="main = item"
+              :class="{ 'is-selected': selected?.id === item.id }"
+              :aria-selected="selected?.id === item.id"
+              @click="pick(item)"
             >
               <span class="food-combo__chip-name">{{ item.title }}</span>
               <span class="food-combo__chip-price">{{ formatTzs(priceOf(item)) }}</span>
@@ -55,48 +56,13 @@
           </div>
         </section>
 
-        <section v-if="sides.length" class="food-combo__section">
-          <h3>
-            {{ t('buyerXp.eats.comboSide') }}
-            <span class="food-combo__opt">{{ t('buyerXp.eats.comboOptional') }}</span>
-          </h3>
-          <div class="food-combo__chips" role="listbox" :aria-label="t('buyerXp.eats.comboSide')">
-            <button
-              v-for="item in sides"
-              :key="`s-${item.id}`"
-              type="button"
-              role="option"
-              class="food-combo__chip"
-              :class="{ 'is-selected': side?.id === item.id }"
-              :aria-selected="side?.id === item.id"
-              @click="side = side?.id === item.id ? null : item"
-            >
-              <span class="food-combo__chip-name">{{ item.title }}</span>
-              <span class="food-combo__chip-price">{{ formatTzs(priceOf(item)) }}</span>
-            </button>
-          </div>
-        </section>
-
-        <section v-if="drinks.length" class="food-combo__section">
-          <h3>
-            {{ t('buyerXp.eats.comboDrink') }}
-            <span class="food-combo__opt">{{ t('buyerXp.eats.comboOptional') }}</span>
-          </h3>
-          <div class="food-combo__chips" role="listbox" :aria-label="t('buyerXp.eats.comboDrink')">
-            <button
-              v-for="item in drinks"
-              :key="`d-${item.id}`"
-              type="button"
-              role="option"
-              class="food-combo__chip"
-              :class="{ 'is-selected': drink?.id === item.id }"
-              :aria-selected="drink?.id === item.id"
-              @click="drink = drink?.id === item.id ? null : item"
-            >
-              <span class="food-combo__chip-name">{{ item.title }}</span>
-              <span class="food-combo__chip-price">{{ formatTzs(priceOf(item)) }}</span>
-            </button>
-          </div>
+        <section v-else class="food-combo__section">
+          <h3>{{ t('buyerXp.eats.comboReview') }}</h3>
+          <ul class="food-combo__review">
+            <li v-if="main"><span>{{ main.title }}</span><strong>{{ formatTzs(priceOf(main)) }}</strong></li>
+            <li v-if="side"><span>{{ side.title }}</span><strong>{{ formatTzs(priceOf(side)) }}</strong></li>
+            <li v-if="drink"><span>{{ drink.title }}</span><strong>{{ formatTzs(priceOf(drink)) }}</strong></li>
+          </ul>
         </section>
 
         <footer class="food-combo__footer">
@@ -104,17 +70,43 @@
             <span>{{ t('buyerXp.eats.comboTotal') }}</span>
             <strong>{{ formatTzs(total) }}</strong>
           </div>
-          <button
-            type="button"
-            class="food-combo__submit kkoo-btn kkoo-btn--primary kkoo-btn--block kkoo-btn--lg"
-            :disabled="!main || adding"
-            @click="submit"
-          >
-            <span class="kkoo-btn__label">
-              {{ adding ? t('buyerXp.eats.comboAdding') : t('buyerXp.eats.comboAdd') }}
-            </span>
-          </button>
-          <p class="food-combo__hint">{{ t('buyerXp.eats.comboHint') }}</p>
+          <div class="food-combo__nav">
+            <button v-if="step > 0" type="button" class="food-combo__back" @click="back">
+              {{ t('buyerXp.eats.comboBack') }}
+            </button>
+            <button
+              v-if="currentKind !== 'review'"
+              type="button"
+              class="food-combo__submit kkoo-btn kkoo-btn--primary kkoo-btn--block kkoo-btn--lg"
+              :disabled="currentKind === 'main' && !main"
+              @click="next"
+            >
+              <span class="kkoo-btn__label">
+                {{ currentKind === 'main' || selected ? t('buyerXp.eats.comboNext') : t('buyerXp.eats.comboSkip') }}
+              </span>
+            </button>
+            <template v-else>
+              <button
+                type="button"
+                class="food-combo__submit kkoo-btn kkoo-btn--primary kkoo-btn--block kkoo-btn--lg"
+                :disabled="!main || adding"
+                @click="submit(false)"
+              >
+                <span class="kkoo-btn__label">
+                  {{ adding ? t('buyerXp.eats.comboAdding') : t('buyerXp.eats.comboAdd') }}
+                </span>
+              </button>
+              <button
+                type="button"
+                class="food-combo__book"
+                :disabled="!main || adding"
+                @click="submit(true)"
+              >
+                {{ t('buyerXp.eats.comboAndBook') }}
+              </button>
+              <p class="food-combo__hint">{{ t('buyerXp.eats.comboBookHint') }}</p>
+            </template>
+          </div>
         </footer>
       </div>
     </div>
@@ -138,14 +130,63 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   close: []
-  submit: [items: RestaurantMenuItem[]]
+  submit: [items: RestaurantMenuItem[], bookTable: boolean]
 }>()
 
 const { t } = useI18n()
 const titleId = 'food-combo-title'
+const step = ref(0)
 const main = ref<RestaurantMenuItem | null>(null)
 const side = ref<RestaurantMenuItem | null>(null)
 const drink = ref<RestaurantMenuItem | null>(null)
+
+const flow = computed(() => {
+  const kinds: Array<'main' | 'side' | 'drink' | 'review'> = ['main']
+  if (props.sides.length) kinds.push('side')
+  if (props.drinks.length) kinds.push('drink')
+  kinds.push('review')
+  return kinds
+})
+
+const currentKind = computed(() => flow.value[step.value] ?? 'review')
+const currentItems = computed(() => {
+  if (currentKind.value === 'side') return props.sides
+  if (currentKind.value === 'drink') return props.drinks
+  return props.mains
+})
+const selected = computed(() => {
+  if (currentKind.value === 'side') return side.value
+  if (currentKind.value === 'drink') return drink.value
+  if (currentKind.value === 'main') return main.value
+  return null
+})
+const stepTitle = computed(() => {
+  if (currentKind.value === 'side') return t('buyerXp.eats.comboSide')
+  if (currentKind.value === 'drink') return t('buyerXp.eats.comboDrink')
+  return t('buyerXp.eats.comboMain')
+})
+
+function pick(item: RestaurantMenuItem) {
+  if (currentKind.value === 'side') {
+    side.value = side.value?.id === item.id ? null : item
+    return
+  }
+  if (currentKind.value === 'drink') {
+    drink.value = drink.value?.id === item.id ? null : item
+    return
+  }
+  main.value = item
+  next()
+}
+
+function next() {
+  if (currentKind.value === 'main' && !main.value) return
+  if (step.value < flow.value.length - 1) step.value += 1
+}
+
+function back() {
+  if (step.value > 0) step.value -= 1
+}
 
 watch(
   () => props.open,
@@ -154,6 +195,7 @@ watch(
       document.body.style.overflow = ''
       return
     }
+    step.value = 0
     main.value = null
     side.value = null
     drink.value = null
@@ -178,11 +220,11 @@ const total = computed(() => {
   return sum
 })
 
-function submit() {
+function submit(bookTable: boolean) {
   if (!main.value) return
   const items = [main.value]
   if (side.value) items.push(side.value)
   if (drink.value) items.push(drink.value)
-  emit('submit', items)
+  emit('submit', items, bookTable)
 }
 </script>

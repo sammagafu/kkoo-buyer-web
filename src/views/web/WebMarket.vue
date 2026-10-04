@@ -22,7 +22,6 @@
       />
 
       <div class="buyer-mhome-greeting buyer-reveal is-visible">
-        <p class="buyer-mhome-greeting__brand" aria-hidden="true">KKOO</p>
         <p class="buyer-mhome-greeting__line">
           {{ localizedGreeting }}, {{ displayNameResolved }}
         </p>
@@ -236,6 +235,7 @@
           :name="store.business_name || t('buyerXp.marketplace.storeFallback')"
           :address="store.business_address"
           :image-url="venueImageUrl(store)"
+          :image-is-logo="venueImageIsLogo(store)"
           kind="grocery"
           icon="solar:cart-large-2-bold"
           :send-to="sendLinkForStore(store)"
@@ -308,7 +308,7 @@ import { useAuthStore } from '@/stores/auth'
 import { formatApiError } from '@/utils/formatApiError'
 import { useBuyerNotifications } from '@/composables/useBuyerNotifications'
 import { useI18n } from 'vue-i18n'
-import { venueImageUrl } from '@/utils/assetUrl'
+import { venueImageIsLogo, venueImageUrl } from '@/utils/assetUrl'
 
 const props = defineProps<{ compact?: boolean; fulfillment?: boolean }>()
 const route = useRoute()

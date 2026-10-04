@@ -13,18 +13,26 @@
           :src="imageUrl"
           :alt="name"
           class="buyer-venue__cover"
+          :class="{ 'buyer-venue__cover--logo': imageIsLogo }"
           loading="lazy"
           @error="imageError = true"
         />
         <div v-else class="buyer-venue__cover buyer-venue__cover--placeholder" aria-hidden="true">
           <Icon :icon="icon" class="buyer-venue__cover-icon" />
         </div>
+        <span
+          v-if="imageUrl && !imageError"
+          class="buyer-venue__kind-icon"
+          aria-hidden="true"
+        >
+          <Icon :icon="icon" />
+        </span>
       </div>
       <div class="buyer-venue__body">
         <div class="buyer-venue__copy">
           <strong class="buyer-venue__name">{{ name }}</strong>
-          <span v-if="address" class="buyer-venue__addr">{{ address }}</span>
           <span v-if="meta" class="buyer-venue__meta">{{ meta }}</span>
+          <span v-if="address" class="buyer-venue__addr">{{ address }}</span>
         </div>
       </div>
     </component>
@@ -58,6 +66,7 @@ withDefaults(
     meta?: string
     icon?: string
     imageUrl?: string | null
+    imageIsLogo?: boolean
     kind?: 'restaurant' | 'grocery' | 'store' | 'hotel'
     sendTo?: RouteLocationRaw
     rideTo?: RouteLocationRaw

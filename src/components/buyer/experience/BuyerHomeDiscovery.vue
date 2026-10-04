@@ -4,7 +4,11 @@
     :class="{ 'buyer-discovery--desktop': desktopLayout }"
     :aria-label="t('buyerXp.home.nearYou')"
   >
-    <BuyerSectionHeader :title="t('buyerXp.home.nearYou')" />
+    <BuyerSectionHeader
+      :title="t('buyerXp.home.nearYou')"
+      :action-label="t('buyerXp.common.seeAll')"
+      :action-to="{ name: 'buyer.nearby' }"
+    />
 
     <div v-if="loading" class="buyer-discovery__status">{{ t('buyerXp.common.loading') }}</div>
     <BuyerEmptyState
@@ -33,14 +37,24 @@
       >
         <span class="buyer-discovery__visual">
           <img
-            v-if="store.image"
+            v-if="store.image && !failedImages[store.key]"
             :src="store.image"
             :alt="store.name"
+            class="buyer-discovery__photo"
+            :class="{ 'buyer-discovery__photo--logo': store.imageIsLogo }"
             loading="lazy"
             decoding="async"
+            @error="onImageError(store.key)"
           />
           <span v-else class="buyer-discovery__mark" aria-hidden="true">
-            <Icon :icon="store.icon" width="28" height="28" />
+            <Icon :icon="store.icon" width="36" height="36" />
+          </span>
+          <span
+            v-if="store.image && !failedImages[store.key]"
+            class="buyer-discovery__kind-icon"
+            aria-hidden="true"
+          >
+            <Icon :icon="store.icon" width="14" height="14" />
           </span>
         </span>
         <span class="buyer-discovery__copy">
@@ -53,13 +67,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, reactive } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
-import { venueImageUrl } from '@/utils/assetUrl'
+import { venueImageIsLogo, venueImageUrl } from '@/utils/assetUrl'
 import { venueDetailLink, type VenueVertical } from '@/utils/buyerDetailLinks'
 
 type Store = {
@@ -78,6 +92,11 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n()
+const failedImages = reactive<Record<string, boolean>>({})
+
+function onImageError(key: string) {
+  failedImages[key] = true
+}
 
 const VERTICAL_META: Record<
   VenueVertical,
@@ -106,6 +125,7 @@ const nearbyStores = computed(() =>
       key: String(id ?? store.business_name),
       name: store.business_name || t('buyerXp.marketplace.storeFallback'),
       image: venueImageUrl(store),
+      imageIsLogo: venueImageIsLogo(store),
       vertical,
       icon: meta.icon,
       kindLabel: t(meta.kindKey),

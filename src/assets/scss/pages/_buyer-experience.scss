@@ -418,8 +418,8 @@ button.buyer-search-bar {
 .buyer-venue--grid {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  padding: 0.55rem;
+  gap: 0.75rem;
+  padding: var(--buyer-card-pad, 1.15rem);
 }
 
 .buyer-venue__tap--grid {
@@ -438,8 +438,8 @@ button.buyer-search-bar {
 
 .buyer-venue__actions--grid {
   flex-wrap: wrap;
-  gap: 0.35rem;
-  padding: 0 0.1rem;
+  gap: 0.5rem;
+  padding: 0.15rem 0.15rem 0;
 }
 
 .buyer-venue__hero--hotel {
@@ -508,42 +508,104 @@ button.buyer-search-bar {
   display: block;
 }
 
+.buyer-venue__cover--logo {
+  object-fit: contain;
+  padding: 0.75rem;
+  background: color-mix(in srgb, var(--buyer-muted-bg, #f4eef8) 80%, #fff 20%);
+}
+
 .buyer-venue__cover--placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--kkoo-accent, #f7a829) 28%, transparent), transparent 55%),
+    linear-gradient(160deg, color-mix(in srgb, var(--kkoo-primary) 16%, #fff) 0%, color-mix(in srgb, var(--kkoo-primary) 8%, #f4eef8) 100%);
 }
 
 .buyer-venue__cover-icon {
-  font-size: 2rem;
-  opacity: 0.72;
-}
-
-.buyer-venue__hero--restaurant .buyer-venue__cover-icon {
-  color: #c47d00;
-}
-
-.buyer-venue__hero--grocery .buyer-venue__cover-icon {
-  color: #0d9488;
-}
-
-.buyer-venue__hero--store .buyer-venue__cover-icon {
+  font-size: 2.35rem;
+  width: 2.35rem;
+  height: 2.35rem;
   color: var(--kkoo-primary);
+  fill: currentColor;
+  opacity: 1;
+}
+
+.buyer-venue__kind-icon {
+  position: absolute;
+  right: 0.35rem;
+  bottom: 0.35rem;
+  display: grid;
+  place-items: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--kkoo-primary);
+  box-shadow: 0 0.2rem 0.45rem rgba(31, 27, 36, 0.14);
+}
+
+.buyer-venue__kind-icon .iconify,
+.buyer-venue__kind-icon svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  display: block;
+}
+
+.buyer-venue__hero--restaurant .buyer-venue__cover--placeholder {
+  color: #9a3412;
+  background:
+    radial-gradient(circle at 70% 15%, rgba(247, 168, 41, 0.42), transparent 50%),
+    linear-gradient(160deg, #fff4e5 0%, #fde8d2 100%);
+}
+
+.buyer-venue__hero--restaurant .buyer-venue__cover-icon,
+.buyer-venue__hero--restaurant .buyer-venue__kind-icon {
+  color: #9a3412;
+}
+
+.buyer-venue__hero--grocery .buyer-venue__cover--placeholder {
+  color: #166534;
+  background:
+    radial-gradient(circle at 25% 80%, rgba(74, 222, 128, 0.28), transparent 48%),
+    linear-gradient(160deg, #eefbf2 0%, #ddf5e5 100%);
+}
+
+.buyer-venue__hero--grocery .buyer-venue__cover-icon,
+.buyer-venue__hero--grocery .buyer-venue__kind-icon {
+  color: #166534;
+}
+
+.buyer-venue__hero--store .buyer-venue__cover-icon,
+.buyer-venue__hero--store .buyer-venue__kind-icon {
+  color: var(--kkoo-primary);
+}
+
+.buyer-venue__hero--hotel .buyer-venue__cover--placeholder {
+  color: #5c308f;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(92, 48, 143, 0.22), transparent 52%),
+    linear-gradient(160deg, #f5f0fa 0%, #ebe3f4 100%);
+}
+
+.buyer-venue__hero--hotel .buyer-venue__cover-icon,
+.buyer-venue__hero--hotel .buyer-venue__kind-icon {
+  color: #5c308f;
 }
 
 .buyer-venue__body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.25rem;
+  gap: 0.45rem;
   min-width: 0;
-  padding: 0.1rem 0.15rem 0.1rem 0;
+  padding: 0.55rem 0.35rem 0.4rem 0.25rem;
 }
 
 .buyer-venue__copy {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.4rem;
   min-width: 0;
 }
 
@@ -582,15 +644,15 @@ button.buyer-search-bar {
 
 .buyer-venue__actions--grid {
   flex-wrap: wrap;
-  gap: 0.35rem;
-  padding: 0 0.1rem;
+  gap: 0.5rem;
+  padding: 0.15rem 0.15rem 0;
 }
 
 @media (max-width: 575.98px) {
   .buyer-venue__tap,
   .buyer-venue__tap--row {
-    grid-template-columns: 5.5rem minmax(0, 1fr);
-    gap: 0.65rem;
+    grid-template-columns: 6.75rem minmax(0, 1fr);
+    gap: 0.7rem;
   }
 
   .buyer-venue__name {
@@ -648,8 +710,16 @@ button.buyer-search-bar {
 
 .buyer-page-head__row {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
+.buyer-page-head__row > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  min-width: 0;
+  padding: 0.2rem 0 0.15rem;
 }
 
 .buyer-page-head__back {
@@ -701,7 +771,7 @@ button.buyer-search-bar {
 }
 
 .buyer-page-head__meta {
-  margin: -0.25rem 0 0;
+  margin: 0;
   font-size: 0.84rem;
   line-height: 1.45;
   color: var(--buyer-muted);
@@ -2650,6 +2720,15 @@ html.theme-dark .buyer-ride-field__hint--warn {
   transition: background 0.15s, border-color 0.15s;
 }
 
+.buyer-filter-chip .iconify,
+.buyer-filter-chip svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+  color: inherit;
+  fill: currentColor;
+}
+
 .buyer-filter-chip--active {
   background: rgba(92, 48, 143, 0.1);
   border-color: rgba(92, 48, 143, 0.35);
@@ -3996,7 +4075,7 @@ html.theme-dark .buyer-ride-field__hint--warn {
 
 .buyer-mhome-header {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto auto 1fr auto;
   align-items: center;
   gap: 0.65rem;
   margin: 0 0 0.15rem;
@@ -4011,16 +4090,33 @@ html.theme-dark .buyer-ride-field__hint--warn {
 }
 
 .buyer-mhome-header__logo {
-  width: 1.75rem;
-  height: 1.75rem;
+  width: calc(2.15rem * var(--kkoo-phi, 1.618));
+  height: calc(2.15rem * var(--kkoo-phi, 1.618));
   object-fit: contain;
 }
 
-.buyer-mhome-header__name {
-  font-size: 0.95rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  color: var(--kkoo-primary);
+.buyer-mhome-header__menu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background: var(--buyer-surface);
+  color: var(--buyer-ink);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+@media (min-width: 992px) {
+  .buyer-mhome-header__menu {
+    display: none;
+  }
+
+  .buyer-mhome-header {
+    grid-template-columns: auto 1fr auto;
+  }
 }
 
 .buyer-mhome-header__location {
@@ -4264,17 +4360,24 @@ html.theme-dark .buyer-mhome-header__badge {
   position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1;
   border-radius: 1.15rem;
   overflow: hidden;
   background: color-mix(in srgb, var(--buyer-muted-bg, #efe9f2) 88%, var(--kkoo-primary) 12%);
 }
 
-.buyer-discovery__visual img {
+.buyer-discovery__visual > img,
+.buyer-discovery__photo {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.buyer-discovery__photo--logo {
+  object-fit: contain;
+  padding: 0.85rem;
+  background: color-mix(in srgb, var(--buyer-muted-bg, #f4eef8) 80%, #fff 20%);
 }
 
 .buyer-discovery__mark {
@@ -4286,6 +4389,15 @@ html.theme-dark .buyer-mhome-header__badge {
   background:
     radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--kkoo-accent, #f7a829) 28%, transparent), transparent 55%),
     linear-gradient(160deg, color-mix(in srgb, var(--kkoo-primary) 16%, #fff) 0%, color-mix(in srgb, var(--kkoo-primary) 8%, #f4eef8) 100%);
+}
+
+.buyer-discovery__mark .iconify,
+.buyer-discovery__mark svg {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: block;
+  color: inherit;
+  fill: currentColor;
 }
 
 .buyer-discovery__place[data-vertical='eats'] .buyer-discovery__mark {
@@ -4314,6 +4426,45 @@ html.theme-dark .buyer-mhome-header__badge {
   background:
     radial-gradient(circle at 20% 20%, rgba(92, 48, 143, 0.22), transparent 52%),
     linear-gradient(160deg, #f5f0fa 0%, #ebe3f4 100%);
+}
+
+.buyer-discovery__kind-icon {
+  position: absolute;
+  right: 0.4rem;
+  bottom: 0.4rem;
+  display: grid;
+  place-items: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--kkoo-primary);
+  box-shadow: 0 0.2rem 0.45rem rgba(31, 27, 36, 0.14);
+}
+
+.buyer-discovery__kind-icon .iconify,
+.buyer-discovery__kind-icon svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  display: block;
+  color: inherit;
+  fill: currentColor;
+}
+
+.buyer-discovery__place[data-vertical='eats'] .buyer-discovery__kind-icon {
+  color: #9a3412;
+}
+
+.buyer-discovery__place[data-vertical='grocery'] .buyer-discovery__kind-icon {
+  color: #166534;
+}
+
+.buyer-discovery__place[data-vertical='pharmacy'] .buyer-discovery__kind-icon {
+  color: #0e7490;
+}
+
+.buyer-discovery__place[data-vertical='hotel'] .buyer-discovery__kind-icon {
+  color: #5c308f;
 }
 
 .buyer-discovery__copy {

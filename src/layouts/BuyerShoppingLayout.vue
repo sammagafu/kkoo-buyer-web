@@ -1,5 +1,19 @@
 <template>
-  <div class="buyer-shopping-shell" :class="{ 'buyer-shopping-shell--mhome': isMobileHome, 'buyer-shopping-shell--ride': isRidePage, 'buyer-shopping-shell--send': isSendPage }">
+  <div
+    class="buyer-shopping-shell"
+    :class="{
+      'buyer-shopping-shell--mhome': isMobileHome,
+      'buyer-shopping-shell--ride': isRidePage,
+      'buyer-shopping-shell--send': isSendPage,
+      'buyer-shopping-shell--nav-open': navOpen,
+    }"
+  >
+    <div
+      v-if="navOpen"
+      class="buyer-nav-scrim"
+      role="presentation"
+      @click="closeNav"
+    />
     <BuyerSideNav class="buyer-shopping-shell__nav" />
     <main class="buyer-shopping-shell__main">
       <RouterView />
@@ -76,6 +90,19 @@ const { modalCampaign, loadAdvertCampaign, dismissModal } = useBuyerCampaigns()
 
 const drawerOpen = ref(false)
 const notifyOpen = ref(false)
+const navOpen = ref(false)
+
+function closeNav() {
+  navOpen.value = false
+}
+
+function toggleNav() {
+  navOpen.value = !navOpen.value
+  if (navOpen.value) {
+    drawerOpen.value = false
+    notifyOpen.value = false
+  }
+}
 
 const itemCountSafe = computed(() => (itemCount.value > 99 ? '99+' : itemCount.value > 0 ? String(itemCount.value) : ''))
 const notificationUnreadSafe = computed(() =>
@@ -86,6 +113,7 @@ function toggleCart() {
   drawerOpen.value = !drawerOpen.value
   if (drawerOpen.value) {
     notifyOpen.value = false
+    navOpen.value = false
     void loadCart()
   }
 }
@@ -94,6 +122,7 @@ function toggleNotifications() {
   notifyOpen.value = !notifyOpen.value
   if (notifyOpen.value) {
     drawerOpen.value = false
+    navOpen.value = false
     if (auth.isAuthenticated) void loadUnreadCount()
   }
 }
@@ -108,12 +137,17 @@ function onVisibilityChange() {
 
 provide('openBuyerNotifications', () => {
   drawerOpen.value = false
+  navOpen.value = false
   notifyOpen.value = true
 })
+provide('toggleBuyerNav', toggleNav)
+provide('closeBuyerNav', closeNav)
+provide('buyerNavOpen', navOpen)
 provide('addToBuyerCart', addToCart)
 provide('refreshBuyerCart', loadCart)
 provide('openBuyerCart', () => {
   notifyOpen.value = false
+  navOpen.value = false
   if (!drawerOpen.value) {
     drawerOpen.value = true
     void loadCart()
@@ -139,6 +173,25 @@ watch(
   },
 )
 
+watch(
+  () => route.fullPath,
+  () => {
+    navOpen.value = false
+  },
+)
+
+watch(navOpen, (open) => {
+  document.body.style.overflow = open ? 'hidden' : ''
+})
+
+function onNavKeydown(e: KeyboardEvent) {
+  if (e.key === 'Escape' && navOpen.value) closeNav()
+}
+
+function onResize() {
+  if (window.innerWidth >= 992) closeNav()
+}
+
 onMounted(() => {
   void loadCart()
   if (auth.isAuthenticated) {
@@ -149,10 +202,15 @@ onMounted(() => {
     if (auth.isAuthenticated) void loadUnreadCount()
   }, 60_000)
   document.addEventListener('visibilitychange', onVisibilityChange)
+  window.addEventListener('keydown', onNavKeydown)
+  window.addEventListener('resize', onResize)
 })
 
 onUnmounted(() => {
   if (notificationPollTimer) clearInterval(notificationPollTimer)
   document.removeEventListener('visibilitychange', onVisibilityChange)
+  window.removeEventListener('keydown', onNavKeydown)
+  window.removeEventListener('resize', onResize)
+  document.body.style.overflow = ''
 })
 </script>

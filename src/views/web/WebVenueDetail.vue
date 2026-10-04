@@ -30,12 +30,6 @@
       <RouterLink :to="rideLink" class="fulfillment-action__btn">{{ t('buyerXp.common.requestBoda') }}</RouterLink>
     </div>
 
-    <BuyerTableBookingPanel
-      v-if="vertical === 'eats' && fulfillmentMode === 'dine_in' && sellerUserId"
-      :seller-user-id="sellerUserId"
-      :restaurant-name="venueName"
-    />
-
     <section class="buyer-surface" aria-label="Catalog">
       <BuyerSearchBar v-if="showSearch" v-model="search" :placeholder="config.searchPlaceholder" />
 
@@ -73,10 +67,26 @@
       />
     </section>
 
-    <div v-if="vertical === 'eats' && comboBuckets.canBuildCombo" class="eats-combo-bar">
-      <button type="button" class="eats-combo-bar__btn" @click="comboOpen = true">
+    <BuyerTableBookingPanel
+      v-if="vertical === 'eats' && fulfillmentMode === 'dine_in' && sellerUserId"
+      id="table-booking"
+      :seller-user-id="sellerUserId"
+      :restaurant-name="venueName"
+    />
+
+    <div v-if="vertical === 'eats'" class="eats-combo-bar">
+      <button
+        v-if="comboBuckets.canBuildCombo"
+        type="button"
+        class="eats-combo-bar__btn"
+        @click="comboOpen = true"
+      >
         <Icon icon="solar:bowl-bold" width="18" height="18" aria-hidden="true" />
         {{ t('buyerXp.eats.comboCta') }}
+      </button>
+      <button type="button" class="eats-combo-bar__btn eats-combo-bar__btn--table" @click="openTableBooking">
+        <Icon icon="solar:chair-2-bold" width="18" height="18" aria-hidden="true" />
+        Book a table
       </button>
     </div>
 
@@ -105,7 +115,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
@@ -380,7 +390,13 @@ async function addProduct(prod: GridProduct, quantity = 1) {
   }
 }
 
-async function addCombo(items: RestaurantMenuItem[]) {
+async function openTableBooking() {
+  fulfillmentMode.value = 'dine_in'
+  await nextTick()
+  document.getElementById('table-booking')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+async function addCombo(items: RestaurantMenuItem[], bookTable = false) {
   let added = 0
   for (const item of items) {
     const ok = await addProductToCart(item)
@@ -390,6 +406,7 @@ async function addCombo(items: RestaurantMenuItem[]) {
     hasCartItems.value = true
     addMessage.value = t('buyerXp.eats.comboAdded')
     comboOpen.value = false
+    if (bookTable) await openTableBooking()
   }
 }
 

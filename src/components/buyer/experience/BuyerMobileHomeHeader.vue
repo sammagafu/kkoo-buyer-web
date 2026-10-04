@@ -1,8 +1,17 @@
 <template>
   <header class="buyer-mhome-header">
-    <router-link :to="BUYER_DASHBOARD_ROUTE" class="buyer-mhome-header__brand" aria-label="KKOO Home">
+    <button
+      type="button"
+      class="buyer-mhome-header__menu"
+      :aria-label="t('buyerXp.nav.openMenu')"
+      :aria-expanded="navOpen"
+      @click="toggleNav"
+    >
+      <Icon icon="solar:hamburger-menu-bold" aria-hidden="true" />
+    </button>
+
+    <router-link :to="BUYER_DASHBOARD_ROUTE" class="buyer-mhome-header__brand" aria-label="Home">
       <img :src="logoSrc" alt="" class="buyer-mhome-header__logo" />
-      <span class="buyer-mhome-header__name">KKOO</span>
     </router-link>
 
     <button type="button" class="buyer-mhome-header__location" @click="$emit('location')">
@@ -23,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject, type Ref, ref } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
 import { useLayoutStore } from '@/stores/layout'
@@ -43,6 +52,8 @@ defineEmits<{
 
 const { t } = useI18n()
 const layoutStore = useLayoutStore()
+const toggleNav = inject<() => void>('toggleBuyerNav', () => {})
+const navOpen = inject<Ref<boolean>>('buyerNavOpen', ref(false))
 
 const logoSrc = computed(() => (layoutStore.layout.theme === 'dark' ? logoDark : logoLight))
 

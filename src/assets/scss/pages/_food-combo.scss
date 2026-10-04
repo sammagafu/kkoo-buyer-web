@@ -227,6 +227,58 @@
   color: var(--kkoo-muted, #6b7280);
 }
 
+.food-combo__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.food-combo__back {
+  align-self: flex-start;
+  border: 0;
+  background: transparent;
+  color: var(--kkoo-brand, #5c308f);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0;
+  cursor: pointer;
+}
+
+.food-combo__review {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: 0.85rem;
+    background: #fff;
+    border: 1px solid rgba(92, 48, 143, 0.12);
+    font-size: 0.88rem;
+  }
+}
+
+.food-combo__book {
+  border: 1.5px solid var(--kkoo-brand, #5c308f);
+  background: #fff;
+  color: var(--kkoo-brand, #5c308f);
+  border-radius: 999px;
+  min-height: 2.75rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
 /* Course filter + sticky combo CTA on venue menu */
 .eats-course-filters {
   display: flex;
@@ -267,7 +319,9 @@
   bottom: 0.75rem;
   z-index: 5;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: 0.55rem;
   pointer-events: none;
   margin-top: 0.75rem;
 }
@@ -290,6 +344,12 @@
   &:hover {
     filter: brightness(1.05);
   }
+}
+
+.eats-combo-bar__btn--table {
+  background: #fff;
+  color: var(--kkoo-brand, #5c308f);
+  box-shadow: 0 8px 22px rgba(31, 27, 36, 0.12);
 }
 
 @media (min-width: 768px) {

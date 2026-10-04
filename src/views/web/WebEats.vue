@@ -69,6 +69,7 @@
         :address="restaurant.business_address"
         :meta="restaurantMeta(restaurant)"
         :image-url="venueImageUrl(restaurant)"
+        :image-is-logo="venueImageIsLogo(restaurant)"
         kind="restaurant"
         icon="solar:chef-hat-bold"
         :send-to="sendLink(restaurant)"
@@ -149,7 +150,7 @@ import BuyerStoreProductCard from '@/components/buyer/BuyerStoreProductCard.vue'
 import BuyerSearchBar from '@/components/buyer/experience/BuyerSearchBar.vue'
 import BuyerVenueCard from '@/components/buyer/experience/BuyerVenueCard.vue'
 import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
-import { resolveAssetUrl, venueImageUrl } from '@/utils/assetUrl'
+import { resolveAssetUrl, venueImageIsLogo, venueImageUrl } from '@/utils/assetUrl'
 import { venueDetailLink } from '@/utils/buyerDetailLinks'
 import { formatApiError } from '@/utils/formatApiError'
 

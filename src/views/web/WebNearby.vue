@@ -26,7 +26,7 @@
           :aria-selected="activeTab === tab.id"
           @click="activeTab = tab.id"
         >
-          <Icon :icon="tab.icon" aria-hidden="true" />
+          <Icon :icon="tab.icon" width="17" height="17" aria-hidden="true" />
           {{ tab.label }}
           <span v-if="tab.count" class="buyer-side-nav__counter">{{ tab.count }}</span>
         </button>
@@ -47,6 +47,7 @@
             :address="venueAddress(r)"
             :meta="venueMeta(r)"
             :image-url="venueImageUrl(r)"
+            :image-is-logo="venueImageIsLogo(r)"
             kind="restaurant"
             icon="solar:chef-hat-bold"
             :send-to="sendLink(r)"
@@ -66,6 +67,7 @@
             :address="venueAddress(g)"
             :meta="venueMeta(g)"
             :image-url="venueImageUrl(g)"
+            :image-is-logo="venueImageIsLogo(g)"
             kind="grocery"
             icon="solar:cart-large-2-bold"
             :send-to="sendLink(g)"
@@ -85,7 +87,8 @@
             :address="venueAddress(h)"
             :meta="venueMeta(h)"
             :image-url="venueImageUrl(h)"
-            kind="store"
+            :image-is-logo="venueImageIsLogo(h)"
+            kind="hotel"
             icon="solar:bed-bold"
             :detail-to="venueLink('hotel', h)"
           />
@@ -115,7 +118,7 @@ import { Icon } from '@iconify/vue'
 import { discoveryApi } from '@/api/discovery'
 import { formatApiError } from '@/utils/formatApiError'
 import { formatBuyerDistance } from '@/utils/buyerFormat'
-import { venueImageUrl } from '@/utils/assetUrl'
+import { venueImageIsLogo, venueImageUrl } from '@/utils/assetUrl'
 import { venueDetailLink, type VenueVertical } from '@/utils/buyerDetailLinks'
 import { buildRideLink } from '@/utils/fulfillmentLinks'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'

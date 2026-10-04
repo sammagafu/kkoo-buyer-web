@@ -31,8 +31,14 @@
               <li v-for="prod in displayProducts" :key="productKey(prod)">
                 <button type="button" class="send-picker__row" @click="selectProduct(prod)">
                   <div class="send-picker__thumb" aria-hidden="true">
-                    <img v-if="imageSrc(prod)" :src="imageSrc(prod)" alt="" loading="lazy" />
-                    <Icon v-else icon="solar:box-bold-duotone" />
+                    <img
+                      v-if="imageSrc(prod) && !failedImages[productKey(prod)]"
+                      :src="imageSrc(prod)"
+                      alt=""
+                      loading="lazy"
+                      @error="failedImages[productKey(prod)] = true"
+                    />
+                    <Icon v-else :icon="emptyIcon" />
                   </div>
                   <div class="send-picker__copy">
                     <p class="send-picker__title">{{ prod.title || 'Product' }}</p>
@@ -50,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { Icon } from '@iconify/vue'
 import { catalogPublicApi } from '@/api/catalog'
 import { superAppApi, type RestaurantListItem, type RestaurantMenuItem } from '@/api/superApp'
@@ -96,6 +102,7 @@ const products = ref<CatalogProduct[]>([])
 const loading = ref(false)
 const error = ref('')
 const search = ref('')
+const failedImages = reactive<Record<string, boolean>>({})
 
 const activeCategory = computed(() => buyForMeCategoryById(props.categoryId ?? 'store'))
 

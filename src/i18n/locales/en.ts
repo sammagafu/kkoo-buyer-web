@@ -2919,6 +2919,8 @@ export default {
       themeLight: 'Switch to light mode',
       themeDark: 'Switch to dark mode',
       language: 'Language',
+      openMenu: 'Open menu',
+      closeMenu: 'Close menu',
     },
     marketplace: {
       overline: 'KkooApp · Dar es Salaam',

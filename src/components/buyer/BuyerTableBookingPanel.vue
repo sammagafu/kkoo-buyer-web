@@ -8,29 +8,30 @@
       <Icon icon="solar:chair-2-bold" class="table-booking__head-icon" aria-hidden="true" />
     </header>
 
-    <div
-      class="table-booking__progress"
-      role="progressbar"
-      :aria-valuenow="bookingProgress"
-      aria-valuemin="0"
-      aria-valuemax="100"
-      aria-label="Reservation progress"
-    >
-      <div class="table-booking__progress-bar" :style="{ width: `${bookingProgress}%` }" />
-      <span class="table-booking__progress-label">{{ bookingProgress }}%</span>
-    </div>
+    <p class="table-booking__lead">How many people, which day, and what time.</p>
 
     <div class="table-booking__fields">
-      <label class="table-booking__field">
-        <span>Guests <em class="table-booking__rec">Recommended</em></span>
-        <input v-model.number="partySize" type="number" min="1" max="20" />
-      </label>
+      <div class="table-booking__field">
+        <span>Guests</span>
+        <div class="table-booking__guests" role="group" aria-label="Guests">
+          <button
+            v-for="n in guestChoices"
+            :key="n"
+            type="button"
+            class="table-booking__guest"
+            :class="{ 'is-selected': partySize === n }"
+            @click="partySize = n"
+          >
+            {{ n }}
+          </button>
+        </div>
+      </div>
       <label class="table-booking__field">
         <span>Date</span>
         <input v-model="date" type="date" :min="minDate" />
       </label>
       <label class="table-booking__field">
-        <span>Time <em class="table-booking__rec">Dinner</em></span>
+        <span>Time</span>
         <select v-model="time">
           <option v-for="slot in timeSlots" :key="slot.value" :value="slot.value">
             {{ slot.label }}
@@ -40,7 +41,7 @@
     </div>
 
     <label class="table-booking__field table-booking__field--full">
-      <span>Notes (optional)</span>
+      <span>Note for the restaurant (optional)</span>
       <input v-model.trim="notes" type="text" placeholder="Birthday, window seat, allergies…" />
     </label>
 
@@ -51,10 +52,7 @@
     <p v-if="success" class="table-booking__status table-booking__status--ok">{{ success }}</p>
 
     <div class="table-booking__actions">
-      <button type="button" class="table-booking__btn table-booking__btn--ghost" :disabled="checking || !canSubmit" @click="checkAvailability">
-        {{ checking ? 'Checking…' : 'Check availability' }}
-      </button>
-      <button type="button" class="table-booking__btn" :disabled="booking || !canSubmit" @click="bookTable">
+      <button type="button" class="table-booking__btn" :disabled="booking || checking || !canSubmit" @click="bookTable">
         {{ reserveCta }}
       </button>
     </div>
@@ -82,6 +80,7 @@ const auth = useAuthStore()
 const router = useRouter()
 const route = useRoute()
 
+const guestChoices = [1, 2, 4, 6]
 const partySize = ref(2)
 const date = ref(defaultDate())
 const time = ref('19:00')
@@ -112,22 +111,11 @@ const minDate = computed(() => new Date().toISOString().slice(0, 10))
 
 const canSubmit = computed(() => Boolean(props.sellerUserId && date.value && time.value && partySize.value > 0))
 
-/** Goal gradient: defaults already fill party + dinner slot — never 0%. */
-const bookingProgress = computed(() => {
-  let pct = 25
-  if (partySize.value > 0) pct = 40
-  if (date.value) pct = Math.max(pct, 55)
-  if (time.value) pct = Math.max(pct, 70)
-  if (availabilityOk.value) pct = Math.max(pct, 85)
-  if (success.value) pct = 100
-  return pct
-})
-
 const reserveCta = computed(() => {
   if (booking.value) return 'Booking…'
-  if (!auth.isAuthenticated) return 'Keep this table'
-  if (availabilityOk.value) return 'Reserve table'
-  return 'Reserve table'
+  if (checking.value) return 'Checking…'
+  if (!auth.isAuthenticated) return 'Book this table'
+  return 'Book this table'
 })
 
 function reservedAtIso(): string | null {
@@ -221,7 +209,6 @@ async function bookTable() {
   error.value = ''
   success.value = ''
   if (!auth.isAuthenticated) {
-    // IKEA + loss aversion: let them customize first, then soft gate
     await router.push({
       name: 'auth.sign-in',
       query: { redirectedFrom: route.fullPath },
@@ -232,6 +219,10 @@ async function bookTable() {
   if (!props.sellerUserId || !at) {
     error.value = 'Pick a date and time.'
     return
+  }
+  if (!availabilityOk.value) {
+    await checkAvailability()
+    if (!availabilityOk.value) return
   }
   booking.value = true
   try {
