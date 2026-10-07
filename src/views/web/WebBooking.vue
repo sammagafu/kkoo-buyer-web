@@ -203,7 +203,7 @@ import BuyerHotelsMap from '@/components/buyer/experience/BuyerHotelsMap.vue'
 import BookingRoomsPanel from '@/components/buyer/experience/BookingRoomsPanel.vue'
 import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 
-type MenuItem = RestaurantMenuItem & { description?: string }
+type MenuItem = RestaurantMenuItem & { description?: string; max_guests?: number }
 type BrowseMode = 'list' | 'map' | 'split'
 
 const { t } = useI18n()
@@ -219,7 +219,7 @@ const hotels = ref<HotelRow[]>([])
 const menuItems = ref<MenuItem[]>([])
 const activeHotelId = ref<number | null>(null)
 const hotelSlug = ref('')
-const loadingHotels = ref(false)
+const loadingHotels = ref(true)
 const loadingMenu = ref(false)
 const hotelError = ref('')
 const menuError = ref('')
@@ -332,14 +332,39 @@ async function selectHotel(h: HotelRow) {
 async function loadMenu(id: number) {
   loadingMenu.value = true
   try {
-    const { data } = await superAppApi.getHotelMenu(id)
-    menuItems.value = flattenMenu(data)
-    if (!menuItems.value.length) {
-      menuItems.value = fallbackMenu
+    const slug = hotelSlug.value || String(id)
+    const [menuRes, roomsRes] = await Promise.all([
+      superAppApi.getHotelMenu(id),
+      superAppApi.getHotelRoomTypes(slug).catch(() => null),
+    ])
+    const rooms = roomsRes?.data?.results ?? []
+    const sameName = (roomName: string | undefined, title: string | undefined) =>
+      String(roomName || '').trim().toLowerCase() === String(title || '').trim().toLowerCase()
+    let items = flattenMenu(menuRes.data).map((item) => {
+      const match = rooms.find((room) => sameName(room.name, item.title))
+      return match?.max_guests && match.max_guests >= 1 ? { ...item, max_guests: match.max_guests } : item
+    })
+    if (!items.length) {
+      items = fallbackMenu.map((item) => ({ ...item }))
       menuError.value = t('buyerXp.booking.demoRoomsNote')
     } else {
       menuError.value = ''
     }
+    items = items.map((item) => {
+      if (item.max_guests && item.max_guests >= 1) return item
+      const match = rooms.find((room) => sameName(room.name, item.title))
+      return match?.max_guests && match.max_guests >= 1 ? { ...item, max_guests: match.max_guests } : item
+    })
+    const extras: MenuItem[] = rooms
+      .filter((room) => room.max_guests && room.max_guests >= 1 && !items.some((item) => sameName(room.name, item.title)))
+      .map((room) => ({
+        id: room.id,
+        title: room.name,
+        description: room.description,
+        base_price: room.price_per_night,
+        max_guests: room.max_guests,
+      }))
+    menuItems.value = [...extras, ...items]
   } catch (e) {
     menuError.value = formatApiError(e, t('buyerXp.booking.couldNotLoad'))
     menuItems.value = fallbackMenu
@@ -356,10 +381,12 @@ function flattenMenu(data: HotelMenuResponse): MenuItem[] {
   return items
 }
 
-async function addToCart(item: MenuItem) {
+async function addToCart(payload: { item: MenuItem; pax?: number }) {
+  const item = payload.item
+  const title = payload.pax ? `${item.title || 'Room'} · ${payload.pax} PAX` : item.title
   await addProductToCart({
     id: item.id,
-    title: item.title,
+    title,
     base_price: item.base_price ?? item.price,
     skus: item.skus,
   })
@@ -382,8 +409,8 @@ watch(visibleHotels, (list) => {
   }
 })
 
-onMounted(async () => {
-  await initLocation()
-  await loadHotels()
+onMounted(() => {
+  void loadHotels()
+  void initLocation().then(() => loadHotels())
 })
 </script>

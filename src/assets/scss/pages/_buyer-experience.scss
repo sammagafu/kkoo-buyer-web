@@ -3675,6 +3675,17 @@ html.theme-dark .buyer-ride-field__hint--warn {
   line-height: 1.35;
 }
 
+.booking-room-row__pax {
+  margin-top: 0.65rem;
+}
+
+.booking-room-row__pax-note {
+  margin: 0.35rem 0 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--buyer-muted);
+}
+
 .booking-room-row__side {
   display: flex;
   align-items: center;

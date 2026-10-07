@@ -17,10 +17,21 @@
     />
 
     <ul v-if="menuItems.length" class="booking-rooms-list">
-      <li v-for="item in menuItems" :key="item.id" class="booking-room-row">
+      <li v-for="item in menuItems" :key="`${item.id}-${item.title}`" class="booking-room-row">
         <div class="booking-room-row__copy">
           <h3 class="booking-room-row__title">{{ item.title || 'Room' }}</h3>
           <p class="booking-room-row__desc">{{ item.description || t('buyerXp.booking.hospitality') }}</p>
+          <SeatCountPicker
+            v-if="paxCap(item)"
+            class="booking-room-row__pax"
+            :model-value="paxFor(item)"
+            :max-seats="paxCap(item) || 1"
+            :label="t('buyerXp.booking.pax')"
+            @update:model-value="setPax(item, $event)"
+          />
+          <p v-if="paxCap(item)" class="booking-room-row__pax-note">
+            {{ t('buyerXp.booking.paxMax', { n: paxCap(item) }) }}
+          </p>
         </div>
         <div class="booking-room-row__side">
           <div class="booking-room-row__prices">
@@ -28,10 +39,11 @@
             <span v-if="compareAt(item)" class="booking-room-row__was">{{ formatPrice(compareAt(item)) }}</span>
           </div>
           <button
+            v-if="item.skus?.length"
             type="button"
             class="booking-room-row__book"
-            :disabled="!item.skus?.length || adding"
-            @click="$emit('add-to-cart', item)"
+            :disabled="adding"
+            @click="$emit('add-to-cart', { item, pax: paxCap(item) ? paxFor(item) : undefined })"
           >
             {{ t('buyerXp.booking.bookRoom') }}
           </button>
@@ -51,13 +63,17 @@
 </template>
 
 <script setup lang="ts">
+import { reactive } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import type { RestaurantMenuItem } from '@/api/superApp'
 import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
+import SeatCountPicker from '@/components/buyer/SeatCountPicker.vue'
 
-type MenuItem = RestaurantMenuItem & { description?: string }
+type MenuItem = RestaurantMenuItem & { description?: string; max_guests?: number }
+
+const paxByItem = reactive<Record<string, number>>({})
 
 withDefaults(
   defineProps<{
@@ -76,7 +92,30 @@ withDefaults(
   },
 )
 
-defineEmits<{ 'add-to-cart': [item: MenuItem] }>()
+defineEmits<{ 'add-to-cart': [payload: { item: MenuItem; pax?: number }] }>()
+
+function itemKey(item: MenuItem) {
+  return String(item.id ?? item.title ?? '')
+}
+
+function paxCap(item: MenuItem): number | null {
+  if (typeof item.max_guests === 'number' && item.max_guests >= 1) return item.max_guests
+  const match = String(item.description || '').match(/(?:sleeps|pax|guests)\s*(\d+)/i)
+  if (match) return Math.max(1, Number(match[1]))
+  return null
+}
+
+function paxFor(item: MenuItem) {
+  const cap = paxCap(item) || 1
+  const saved = paxByItem[itemKey(item)]
+  if (!saved) return Math.min(2, cap)
+  return Math.min(cap, Math.max(1, saved))
+}
+
+function setPax(item: MenuItem, n: number) {
+  const cap = paxCap(item) || 1
+  paxByItem[itemKey(item)] = Math.min(cap, Math.max(1, n))
+}
 
 const { t } = useI18n()
 

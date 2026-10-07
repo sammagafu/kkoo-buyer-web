@@ -70,16 +70,15 @@
           />
         </b-form-group>
 
-        <b-form-group v-if="fulfillmentType === 'dine_in'" :label="t('buyerXp.checkout.partySize')" label-for="party-size" class="mb-0">
-          <b-form-input
-            id="party-size"
-            v-model.number="partySize"
-            type="number"
-            min="1"
-            max="200"
-            :disabled="!isAuthenticated"
+        <div v-if="fulfillmentType === 'dine_in'" class="mb-0">
+          <SeatCountPicker
+            v-model="partySize"
+            :label="t('buyerXp.checkout.partySize')"
+            :max-seats="32"
+            allow-above-max
+            :above-max-limit="200"
           />
-        </b-form-group>
+        </div>
       </div>
 
       <div v-if="needsRx" class="webcheckout-block">
@@ -191,6 +190,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Icon } from '@iconify/vue'
+import SeatCountPicker from '@/components/buyer/SeatCountPicker.vue'
 import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
 import { addressesApi, ordersUserApi, cartApi, paymentsApi } from '@/api'
 import { rewardsUserApi } from '@/api/rewards'

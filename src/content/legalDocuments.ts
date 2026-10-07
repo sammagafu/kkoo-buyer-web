@@ -33,7 +33,7 @@ export const legalDocuments = {
   terms: {
     slug: 'terms-of-use',
     title: 'Terms of Use',
-    lastUpdated: '2026-07-24',
+    lastUpdated: '2026-10-07',
     intro: `These Terms of Use (“Terms”) govern your access to and use of ${BRAND} websites, mobile applications, and related services operated by ${ENTITY} (“${BRAND},” “we,” “us,” or “our”), including marketplace shopping, food and grocery ordering, rides, parcel and courier delivery, merchant tools, referrals, gift vouchers, and payments (together, the “Services”). By creating an account or using the Services, you agree to these Terms and our Privacy Policy, Cookie Policy, Refund Policy, Acceptable Use Policy, and Data Deletion instructions.`,
     sections: [
       {
@@ -55,6 +55,8 @@ export const legalDocuments = {
           {
             type: 'ul',
             items: [
+              'You may browse public catalogues, store pages, and product details without creating an account. An account is required to place an order, pay, save a wishlist, or use other account features.',
+              'Buyer sign-in uses your phone number and a one-time code. There is no password for buyer sign-in.',
               'You must be able to form a binding contract under applicable law. If you are under 18, you may use the Services only with a parent or guardian’s involvement where required.',
               'You must provide accurate registration details (including a valid phone number) and keep them up to date.',
               'You are responsible for safeguarding login credentials, OTP codes, and devices used to access your account.',
@@ -84,7 +86,8 @@ export const legalDocuments = {
             type: 'ul',
             items: [
               'Prices, fees, taxes, delivery charges, and promotions are shown at checkout before you confirm. Currency and local payment methods may vary by market.',
-              'By placing an order or booking a ride/delivery, you authorise payment using your selected method (mobile money, card, wallet, or other available options).',
+              'Through the end of 6 November 2026 (East Africa Time), purchases on the live service may be simulated. A simulated purchase is not a live charge. The receipt says “Demo purchase successful.” After that date, placing an order or booking a ride or delivery authorises a real charge on the payment method you select when real payments are enabled.',
+              'By placing an order or booking a ride/delivery, you authorise payment using your selected method (mobile money, card, wallet, or other available options), except where that purchase is expressly a simulated demo and the receipt says so.',
               'Where money-back or pay-on-delivery flows apply, refunds and settlement follow the rules shown in the app and our Refund Policy.',
               'Promotions, vouchers, loyalty points, and referral rewards are subject to their own programme rules and may be changed or withdrawn.',
               'You are responsible for any customs duties, import fees, or third-party charges that apply to an order.',
@@ -206,7 +209,7 @@ export const legalDocuments = {
   privacy: {
     slug: 'privacy-policy',
     title: 'Privacy Policy',
-    lastUpdated: '2026-07-24',
+    lastUpdated: '2026-10-07',
     intro: `This Privacy Policy explains how ${ENTITY} (“${BRAND},” “we,” “us”) collects, uses, shares, and protects personal data when you use ${BRAND} websites, apps, and Services in the ${PLACE} and other markets where we operate. It should be read with our Cookie Policy and Data Deletion instructions.`,
     sections: [
       {
@@ -241,7 +244,8 @@ export const legalDocuments = {
           {
             type: 'ul',
             items: [
-              'Create and secure accounts, authenticate users (including OTP and optional Google sign-in), and prevent abuse.',
+              'You can browse the public catalogue without an account. Buyer accounts are authenticated with a phone number and a one-time code, not a password.',
+              'Create and secure accounts, authenticate users (including one-time codes and optional Google sign-in), and prevent abuse.',
               'Process orders, rides, deliveries, payouts, refunds, and customer support.',
               'Show relevant catalogue, availability, and city-level services.',
               'Send service messages (order status, security alerts) and, where permitted, marketing you can opt out of.',
@@ -456,7 +460,7 @@ export const legalDocuments = {
   refunds: {
     slug: 'refund-policy',
     title: 'Refund Policy',
-    lastUpdated: '2026-07-24',
+    lastUpdated: '2026-10-07',
     intro: `This Refund Policy explains when and how ${ENTITY} (“${BRAND}”) handles cancellations, returns, and refunds across marketplace, food, grocery, rides, and delivery. Specific options shown in the app for an order always control if they are more specific than this page.`,
     sections: [
       {
@@ -465,6 +469,7 @@ export const legalDocuments = {
           {
             type: 'ul',
             items: [
+              'A receipt that says “Demo purchase successful” is a simulated test payment. No money is taken, so there is no cash refund for that demo charge.',
               'Act quickly: report issues from the order or trip screen as soon as you notice a problem.',
               'Provide clear evidence when requested (photos, videos, order number, description of the issue).',
               `Refunds, where approved, are returned to the original payment method or ${BRAND} wallet, depending on how you paid and what the processor supports.`,

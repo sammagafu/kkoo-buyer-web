@@ -130,6 +130,7 @@ export const buyerXpVerticalsSw = {
       orders: { title: 'Maagizo', subtitle: 'Fuatilia' },
       reservations: { title: 'Uhifadhi', subtitle: 'Meza na hoteli' },
       wallet: { title: 'Pochi', subtitle: 'Salio' },
+      payments: { title: 'Malipo yangu', subtitle: 'Risiti WhatsApp' },
       rewards: { title: 'Zawadi', subtitle: 'Hadi 1%' },
       gamification: { title: 'XP', subtitle: 'Mafanikio' },
       'weekly-pass': { title: 'Pasi', subtitle: 'Changamoto' },
@@ -589,6 +590,12 @@ export const buyerXpVerticalsSw = {
     hintInstagram: 'Kiungo kimenakiliwa — bandika kwenye hadithi, DM, au chapisho la Instagram.',
     hintTiktok: 'Kiungo kimenakiliwa — bandika kwenye maelezo ya TikTok.',
     copyMessage: 'Nakili ujumbe',
+    productSheetSub: 'Shiriki msimbo au fungua WhatsApp na uchague gumzo. Wakiagiza, mauzo yanakuhesabia wewe.',
+    shareCodeLabel: 'Msimbo wa kushiriki',
+    copyCode: 'Nakili msimbo',
+    codeCopied: 'Msimbo umenakiliwa. Wanaweza kuutumia kununua, na mauzo yanabaki kwako.',
+    shareOnWhatsApp: 'Shiriki WhatsApp',
+    ctaPhoneOptional: 'Au tuma kadi ya Nunua sasa kwa namba',
     ctaPhoneLabel: 'Tuma kadi ya Nunua sasa kwenye WhatsApp (inakuhesabia wewe)',
     ctaPhonePlaceholder: '2557…',
     ctaSend: 'Tuma kadi ya Nunua sasa',
@@ -601,6 +608,27 @@ export const buyerXpVerticalsSw = {
       'Pata hadi 1% ya pointi za KKOO kila unaponunua. Tumia pointi zako kwa chakula, safari, maduka na zaidi — punguzo hadi 25% kwa agizo lako.',
     policyTagline:
       'Pata hadi 1% ya pointi za KKOO kila unaponunua. Tumia pointi zako kwa chakula, safari, maduka na zaidi — punguzo hadi 25% kwa agizo lako.',
+  },
+  payments: {
+    title: 'Malipo yangu',
+    meta: 'Risiti za maagizo, safari, na Nunulia. Kila moja hutumwa WhatsApp.',
+    emptyTitle: 'Bado hakuna malipo',
+    emptyMessage: 'Ukishalipa agizo, safari, au ombi la Nunulia, risiti itaonekana hapa na WhatsApp.',
+    whatsappSent: 'Imetumwa WhatsApp',
+    whatsappFailed: 'WhatsApp haijatumwa',
+    whatsappPending: 'WhatsApp inasubiri',
+    sendWhatsApp: 'Tuma WhatsApp',
+    sending: 'Inatuma…',
+    couldNotSend: 'Haikuwezekana kutuma risiti WhatsApp',
+    couldNotLoad: 'Haikuwezekana kupakia malipo',
+    types: {
+      order: 'Agizo',
+      ride: 'Safari',
+      buy_for_me: 'Nunulia',
+      hotel_reservation: 'Malazi',
+      table_reservation: 'Meza',
+      event_ticket: 'Tiketi',
+    },
   },
   wallet: {
     policyTagline:
@@ -625,5 +653,9 @@ export const buyerXpVerticalsSw = {
     listHotels: 'hoteli',
     deliveryGrocery: 'Nunua kutoka {store}, kisha omba boda hadi kwako.',
     deliveryEats: 'Agiza chakula, kisha omba boda kutoka {store} hadi mlangoni.',
+  },
+  booking: {
+    pax: 'Wageni (PAX)',
+    paxMax: 'Chumba hiki kinakaa hadi watu {n}',
   },
 } as const

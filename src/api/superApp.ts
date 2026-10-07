@@ -201,6 +201,18 @@ export const superAppApi = {
   getHotelMenu(sellerId: number | string) {
     return client.get<HotelMenuResponse>(`/super-app/hotels/${sellerId}/menu/`)
   },
+  /** GET /super-app/hotels/:store_slug/room-types/ — includes max_guests (PAX). */
+  getHotelRoomTypes(storeSlugOrId: number | string) {
+    return client.get<{
+      results: Array<{
+        id?: number
+        name?: string
+        description?: string
+        max_guests?: number
+        price_per_night?: number
+      }>
+    }>(`/super-app/hotels/${encodeURIComponent(String(storeSlugOrId))}/room-types/`)
+  },
   /** GET /super-app/grocery-stores/ — list grocery stores. */
   getGroceryStores(params?: { limit?: number; offset?: number }) {
     return client.get<{ results: unknown[] }>('/super-app/grocery-stores/', { params })

@@ -125,6 +125,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScratchCard: typeof import('./src/components/kkoo/ScratchCard.vue')['default']
+    SeatCountPicker: typeof import('./src/components/buyer/SeatCountPicker.vue')['default']
     SignInWithKkooButton: typeof import('./src/components/auth/SignInWithKkooButton.vue')['default']
     StreakCounter: typeof import('./src/components/kkoo/StreakCounter.vue')['default']
     UIComponentCard: typeof import('./src/components/UIComponentCard.vue')['default']

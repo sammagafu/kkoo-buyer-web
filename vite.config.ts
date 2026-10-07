@@ -115,13 +115,14 @@ export default defineConfig({
     port: 5175,
     strictPort: true,
     proxy: {
-      // Dev only — production uses Docker nginx (docker/nginx.conf.template) + host nginx
+      // Dev only — production uses Docker nginx (docker/nginx.conf.template) + host nginx.
+      // KKOO_API_PROXY lets a containerized dev server reach the API on the compose network.
       '/api': {
-        target: 'http://localhost:8000',
+        target: process.env.KKOO_API_PROXY || 'http://localhost:8000',
         changeOrigin: true,
       },
       '/media': {
-        target: 'http://localhost:8000',
+        target: process.env.KKOO_API_PROXY || 'http://localhost:8000',
         changeOrigin: true,
       },
     },

@@ -11,20 +11,8 @@
     <p class="table-booking__lead">How many people, which day, and what time.</p>
 
     <div class="table-booking__fields">
-      <div class="table-booking__field">
-        <span>Guests</span>
-        <div class="table-booking__guests" role="group" aria-label="Guests">
-          <button
-            v-for="n in guestChoices"
-            :key="n"
-            type="button"
-            class="table-booking__guest"
-            :class="{ 'is-selected': partySize === n }"
-            @click="partySize = n"
-          >
-            {{ n }}
-          </button>
-        </div>
+      <div class="table-booking__field table-booking__field--full">
+        <SeatCountPicker v-model="partySize" label="Guests" :max-seats="32" allow-above-max :above-max-limit="80" />
       </div>
       <label class="table-booking__field">
         <span>Date</span>
@@ -68,6 +56,7 @@ import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { superAppApi } from '@/api/superApp'
+import SeatCountPicker from '@/components/buyer/SeatCountPicker.vue'
 import { useAuthStore } from '@/stores/auth'
 import { formatApiError } from '@/utils/formatApiError'
 
@@ -80,7 +69,6 @@ const auth = useAuthStore()
 const router = useRouter()
 const route = useRoute()
 
-const guestChoices = [1, 2, 4, 6]
 const partySize = ref(2)
 const date = ref(defaultDate())
 const time = ref('19:00')

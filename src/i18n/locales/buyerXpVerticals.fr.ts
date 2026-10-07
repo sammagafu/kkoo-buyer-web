@@ -130,6 +130,7 @@ export const buyerXpVerticalsFr = {
       orders: { title: 'Commandes', subtitle: 'Suivi & historique' },
       reservations: { title: 'Réservations', subtitle: 'Tables & hôtels' },
       wallet: { title: 'Portefeuille', subtitle: 'Solde & recharge' },
+      payments: { title: 'Mes paiements', subtitle: 'Reçus WhatsApp' },
       rewards: { title: 'Récompenses', subtitle: 'Jusqu\'à 1 % · valable sur toute commande' },
       gamification: { title: 'XP & séries', subtitle: 'Succès' },
       'weekly-pass': { title: 'Pass hebdo', subtitle: 'Défis' },
@@ -612,6 +613,12 @@ export const buyerXpVerticalsFr = {
     hintInstagram: 'Lien copié — collez dans une story, un DM ou une publication Instagram.',
     hintTiktok: 'Lien copié — collez-le dans la légende TikTok.',
     copyMessage: 'Copier le message',
+    productSheetSub: 'Partagez le code ou ouvrez WhatsApp et choisissez une discussion. S’ils commandent, la vente vous est attribuée.',
+    shareCodeLabel: 'Code de partage',
+    copyCode: 'Copier le code',
+    codeCopied: 'Code copié. Ils peuvent l’utiliser pour acheter, et la vente reste liée à vous.',
+    shareOnWhatsApp: 'Partager sur WhatsApp',
+    ctaPhoneOptional: 'Ou envoyer la carte Acheter maintenant à un numéro',
     ctaPhoneLabel: 'Envoyer une carte Acheter maintenant WhatsApp (suivie pour vous)',
     ctaPhonePlaceholder: '2557…',
     ctaSend: 'Envoyer la carte Acheter maintenant',
@@ -624,6 +631,27 @@ export const buyerXpVerticalsFr = {
       'Gagnez jusqu\'à 1 % en points KKOO sur chaque achat. Utilisez vos points sur la nourriture, les courses, les shops et plus — jusqu\'à 25 % de réduction sur votre commande.',
     policyTagline:
       'Gagnez jusqu\'à 1 % en points KKOO sur chaque achat. Utilisez vos points sur la nourriture, les courses, les shops et plus — jusqu\'à 25 % de réduction sur votre commande.',
+  },
+  payments: {
+    title: 'Mes paiements',
+    meta: 'Reçus des commandes, courses et Achats pour moi. Chacun est envoyé sur WhatsApp.',
+    emptyTitle: 'Aucun paiement',
+    emptyMessage: 'Après un paiement, le reçu apparaît ici et sur WhatsApp.',
+    whatsappSent: 'Envoyé sur WhatsApp',
+    whatsappFailed: 'WhatsApp non envoyé',
+    whatsappPending: 'WhatsApp en attente',
+    sendWhatsApp: 'Envoyer sur WhatsApp',
+    sending: 'Envoi…',
+    couldNotSend: 'Impossible d’envoyer le reçu sur WhatsApp',
+    couldNotLoad: 'Impossible de charger les paiements',
+    types: {
+      order: 'Commande',
+      ride: 'Course',
+      buy_for_me: 'Acheter pour moi',
+      hotel_reservation: 'Séjour',
+      table_reservation: 'Table',
+      event_ticket: 'Billet',
+    },
   },
   wallet: {
     policyTagline:
@@ -648,5 +676,9 @@ export const buyerXpVerticalsFr = {
     listHotels: 'hôtels',
     deliveryGrocery: 'Achetez chez {store}, puis demandez une moto à votre adresse.',
     deliveryEats: 'Commandez, puis demandez une moto depuis {store} jusqu’à chez vous.',
+  },
+  booking: {
+    pax: 'Voyageurs (PAX)',
+    paxMax: 'Cette chambre accueille jusqu’à {n} personnes',
   },
 } as const
