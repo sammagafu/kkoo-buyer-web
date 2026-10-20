@@ -51,6 +51,11 @@ router.beforeEach((to, from, next) => {
       "Shop, eat, send, and order groceries on KkooApp. Money-back, tracking, and rewards — Tanzania's super-app.",
     );
   }
+  const keywords = to.meta.keywords;
+  const keywordsEl = document.querySelector('meta[name="keywords"]');
+  if (keywordsEl && typeof keywords === 'string' && keywords.trim()) {
+    keywordsEl.setAttribute('content', keywords);
+  }
   next();
 });
 

@@ -12,7 +12,15 @@ export const buyerVerticalRoutes = [
   {
     path: BUYER_DASHBOARD_PATH,
     name: 'buyer.marketplace',
-    meta: { title: setTitle('Home'), buyerDashboard: true, ...buyerShell },
+    meta: {
+      title: setTitle('Home'),
+      description:
+        'Browse the KKOO marketplace in Tanzania — shops, deals, and verified sellers. Guest browse; sign in only to checkout.',
+      keywords:
+        'KKOO marketplace, Tanzania shopping, Dar es Salaam online shop, buy online Tanzania, KkooApp',
+      buyerDashboard: true,
+      ...buyerShell,
+    },
     component: () => import('@/views/web/WebMarket.vue'),
   },
   {
@@ -24,19 +32,34 @@ export const buyerVerticalRoutes = [
   {
     path: '/eats',
     name: 'buyer.eats',
-    meta: { title: setTitle('Eats'), ...buyerShell },
+    meta: {
+      title: setTitle('Eats'),
+      description: 'Order food delivery on KKOO — restaurants near you in Tanzania.',
+      keywords: 'food delivery Tanzania, KKOO Eats, Dar es Salaam restaurants, order food online',
+      ...buyerShell,
+    },
     component: () => import('@/views/web/WebEats.vue'),
   },
   {
     path: '/grocery',
     name: 'buyer.grocery',
-    meta: { title: setTitle('Groceries'), ...buyerShell },
+    meta: {
+      title: setTitle('Groceries'),
+      description: 'Grocery delivery on KKOO — fresh produce and pantry to your door.',
+      keywords: 'grocery delivery Tanzania, online groceries, KKOO Mart, supermarket delivery',
+      ...buyerShell,
+    },
     component: () => import('@/views/web/WebGroceries.vue'),
   },
   {
     path: '/pharmacy',
     name: 'buyer.pharmacy',
-    meta: { title: setTitle('Pharmacy'), ...buyerShell },
+    meta: {
+      title: setTitle('Pharmacy'),
+      description: 'Pharmacy and medicine delivery on KKOO — OTC and pharmacy stores.',
+      keywords: 'pharmacy delivery Tanzania, buy medicine online, KKOO pharmacy, OTC delivery',
+      ...buyerShell,
+    },
     component: () => import('@/views/web/WebPharmacy.vue'),
   },
   {
@@ -186,6 +209,12 @@ export const buyerVerticalRoutes = [
     name: 'buyer.wallet',
     meta: { title: setTitle('Wallet'), ...authShell },
     component: () => import('@/views/web/WebWallet.vue'),
+  },
+  {
+    path: '/payments',
+    name: 'buyer.payments',
+    meta: { title: setTitle('My payments'), ...authShell },
+    component: () => import('@/views/web/WebPayments.vue'),
   },
   {
     path: '/gamification',

@@ -8,6 +8,8 @@ export const pagesRoutes = [
             title: setLandingTitle('Home'),
             description:
                 'KkooApp — buy, sell, deliver, and earn in one trusted ecosystem. Marketplace, POS, business tools, riders, referrals, and rewards for East Africa.',
+            keywords:
+                'KKOO, KkooApp, Tanzania marketplace, Dar es Salaam, online shopping, food delivery, grocery, pharmacy, rides, escrow, rewards',
         },
         component: () => import('@/views/marketing/LandingHousePage.vue'),
     },
