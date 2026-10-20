@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Marketing / public pages -->
+  <url><loc>https://kkooapp.co.tz/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://kkooapp.co.tz/app</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kkooapp.co.tz/personal</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kkooapp.co.tz/business</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kkooapp.co.tz/merchant</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://kkooapp.co.tz/sell</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://kkooapp.co.tz/tools</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kkooapp.co.tz/restaurants</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://kkooapp.co.tz/hotels</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://kkooapp.co.tz/vouchers</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/share-earn</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kkooapp.co.tz/courier</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kkooapp.co.tz/community</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/get-started</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kkooapp.co.tz/discover</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://kkooapp.co.tz/mchongo</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/careers</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/about</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kkooapp.co.tz/safety</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/coverage</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/press</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://kkooapp.co.tz/investors</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://kkooapp.co.tz/news</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/support</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kkooapp.co.tz/support/buyers</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/support/sellers</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/support/riders</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/support/restaurants</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/partners/register</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/pages/faqs</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/pages/pricing</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kkooapp.co.tz/landing-premium</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+
+  <!-- Legal -->
+  <url><loc>https://kkooapp.co.tz/terms-of-use</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://kkooapp.co.tz/privacy-policy</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://kkooapp.co.tz/cookie-policy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://kkooapp.co.tz/refund-policy</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://kkooapp.co.tz/acceptable-use</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://kkooapp.co.tz/data-deletion</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+
+  <!-- Buyer shopping (public browse) -->
+  <url><loc>https://kkooapp.co.tz/marketplace</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://kkooapp.co.tz/search</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://kkooapp.co.tz/eats</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kkooapp.co.tz/grocery</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kkooapp.co.tz/pharmacy</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kkooapp.co.tz/services</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://kkooapp.co.tz/nearby</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kkooapp.co.tz/booking</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://kkooapp.co.tz/ride</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kkooapp.co.tz/send</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kkooapp.co.tz/parcel</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kkooapp.co.tz/flash-sales</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kkooapp.co.tz/wholesale</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/invite</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kkooapp.co.tz/referral</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+</urlset>

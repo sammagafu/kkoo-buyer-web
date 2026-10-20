@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Account / checkout flows — low SEO value
+Disallow: /checkout
+Disallow: /orders
+Disallow: /wallet
+Disallow: /payments
+Disallow: /settings
+Disallow: /profile
+Disallow: /messages
+Disallow: /favorites
+Disallow: /auth/
+Disallow: /pay/
+
+Sitemap: https://kkooapp.co.tz/sitemap.xml
