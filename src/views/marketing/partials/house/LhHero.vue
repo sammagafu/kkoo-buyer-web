@@ -34,10 +34,12 @@
 
         <div class="lh-hero__visual">
           <img
-            :src="heroImage"
+            :src="heroImage.src"
+            :srcset="heroImage.srcset"
+            :sizes="heroImage.sizes"
             :alt="t('landingHouse.hero.imageAlt')"
-            width="960"
-            height="1200"
+            :width="heroImage.width"
+            :height="heroImage.height"
             fetchpriority="high"
           />
         </div>
@@ -88,7 +90,7 @@ const rootRef = ref<HTMLElement | null>(null)
   font-weight: 800;
   letter-spacing: -0.045em;
   line-height: 1;
-  color: var(--lh-accent, #f7a829);
+  color: var(--lh-primary, #5c308f);
 }
 
 .lh-hero h1 {

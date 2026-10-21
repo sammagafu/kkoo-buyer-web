@@ -1,0 +1,37 @@
+# KKOOAPP
+
+> Tanzania super-app for shopping, food, groceries, pharmacy, rides, parcels, and hotels. Escrow checkout, live tracking, and rewards for buyers, sellers, and riders.
+
+KKOO (also KkooApp) is a commerce and delivery platform for East Africa. Buyers shop on the web and mobile apps. Sellers run catalog, orders, POS, and payouts. Riders handle delivery and ride jobs.
+
+## Shop
+
+- [Home](https://kkooapp.co.tz/): Marketplace overview and app download
+- [Marketplace](https://kkooapp.co.tz/market): Browse and buy products
+- [Food](https://kkooapp.co.tz/eats): Restaurant and meal delivery
+- [Groceries](https://kkooapp.co.tz/grocery): Grocery delivery
+- [Pharmacy](https://kkooapp.co.tz/pharmacy): Pharmacy delivery
+- [Rides](https://kkooapp.co.tz/ride): Ride hailing
+- [Send / parcels](https://kkooapp.co.tz/send): Buy-for-me and parcel delivery
+- [Hotels](https://kkooapp.co.tz/booking): Hotel and venue booking
+
+## Company
+
+- [About](https://kkooapp.co.tz/about): Who we are
+- [Safety](https://kkooapp.co.tz/safety): Buyer and rider safety
+- [Coverage](https://kkooapp.co.tz/coverage): Cities and service areas
+- [Careers](https://kkooapp.co.tz/careers): Jobs
+- [Support](https://kkooapp.co.tz/support): Help center
+- [Get started](https://kkooapp.co.tz/get-started): Create an account
+
+## Legal
+
+- [Terms of use](https://kkooapp.co.tz/terms-of-use)
+- [Privacy policy](https://kkooapp.co.tz/privacy-policy)
+- [Cookie policy](https://kkooapp.co.tz/cookie-policy)
+- [Refund policy](https://kkooapp.co.tz/refund-policy)
+
+## Optional
+
+- [Sitemap](https://kkooapp.co.tz/sitemap.xml)
+- [AI catalog](https://kkooapp.co.tz/ai-catalog.json)

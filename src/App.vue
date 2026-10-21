@@ -8,11 +8,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, defineAsyncComponent, onMounted } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
-import BuyerBottomNav from '@/components/buyer/BuyerBottomNav.vue'
-import BuyerShoppingLayout from '@/layouts/BuyerShoppingLayout.vue'
 import { useBuyerAppShell } from '@/composables/useBuyerAppShell'
+
+const BuyerBottomNav = defineAsyncComponent(() => import('@/components/buyer/BuyerBottomNav.vue'))
+const BuyerShoppingLayout = defineAsyncComponent(() => import('@/layouts/BuyerShoppingLayout.vue'))
 
 const route = useRoute()
 const { showShell } = useBuyerAppShell()

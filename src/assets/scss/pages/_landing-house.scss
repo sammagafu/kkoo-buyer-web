@@ -17,7 +17,7 @@
   --lh-media-fallback: #e8e8e8;
 
   --lh-text: #1a1a1a;
-  --lh-text-muted: rgba(26, 26, 26, 0.62);
+  --lh-text-muted: #3d3d3d;
   --lh-border: rgba(26, 26, 26, 0.08);
   --lh-border-strong: rgba(26, 26, 26, 0.14);
 
@@ -30,7 +30,7 @@
   --lh-inverse: var(--kkoo-primary-dark, #3b1a5a);
   --lh-inverse-soft: var(--kkoo-primary, #5c308f);
   --lh-inverse-fg: #ffffff;
-  --lh-inverse-muted: rgba(255, 255, 255, 0.78);
+  --lh-inverse-muted: #f3eef8;
   --lh-inverse-border: rgba(255, 255, 255, 0.2);
 
   /* Buttons — KKOO purple + gold, explicit fg for hover/active */
@@ -123,7 +123,7 @@ html[data-bs-theme='dark'] .lh-chrome {
   --lh-media-fallback: #2a2038;
 
   --lh-text: #ede9f5;
-  --lh-text-muted: rgba(237, 233, 245, 0.68);
+  --lh-text-muted: #d8d2e6;
   --lh-border: rgba(255, 255, 255, 0.09);
   --lh-border-strong: rgba(255, 255, 255, 0.14);
 
@@ -2163,7 +2163,7 @@ html[data-bs-theme='dark'] .lh-mega {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 250, 246, 0.5);
+  color: #f4eee8;
 }
 
 .lh-trust-item h3 {
@@ -2364,7 +2364,7 @@ html[data-bs-theme='dark'] .lh-root .lh-process-card__num {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 250, 246, 0.5);
+  color: #f4eee8;
 }
 
 .lh-cta__title {
@@ -2962,7 +2962,14 @@ html[data-bs-theme='dark'] .lh-root .lh-process-card__num {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: var(--lh-space-4);
+  margin: var(--lh-space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lh-footer__social li {
+  margin: 0;
+  padding: 0;
 }
 
 .lh-footer__social-link {
@@ -2972,11 +2979,12 @@ html[data-bs-theme='dark'] .lh-root .lh-process-card__num {
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 250, 246, 0.25);
-  color: var(--lh-inverse-fg);
+  border: 1px solid var(--lh-border-strong);
+  color: var(--lh-text);
 
   &:hover {
-    background: rgba(255, 250, 246, 0.12);
+    background: color-mix(in srgb, var(--lh-primary) 8%, transparent);
+    color: var(--lh-primary);
   }
 }
 
@@ -3125,8 +3133,8 @@ html[data-bs-theme='dark'] .lh-root .lh-process-card__num {
 }
 
 .lh-cookie__btn--primary {
-  background: var(--lh-accent, #5b2d8e);
-  color: #fff;
+  background: var(--lh-btn-primary-bg, #5c308f);
+  color: var(--lh-btn-primary-fg, #ffffff);
 }
 
 /* ─── Download apps band ─── */

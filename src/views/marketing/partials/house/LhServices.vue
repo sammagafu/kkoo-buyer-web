@@ -11,11 +11,14 @@
         <router-link :to="item.to" class="lh-service-tile">
           <div class="lh-service-tile__media">
             <img
-              :src="item.src"
+              :src="item.image.src"
+              :srcset="item.image.srcset"
+              :sizes="item.image.sizes"
               :alt="t(`landingHouse.services.${item.key}.title`)"
-              width="640"
-              height="420"
+              :width="item.image.width"
+              :height="item.image.height"
               loading="lazy"
+              decoding="async"
             />
           </div>
           <div class="lh-service-tile__body">

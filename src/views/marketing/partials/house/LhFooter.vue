@@ -11,25 +11,24 @@
         />
         <p class="lh-footer__tagline">{{ t('landingHouse.footer.meta') }}</p>
         <a class="lh-footer__phone" :href="houseCopy.phoneHref">{{ houseCopy.phone }}</a>
-        <div class="lh-footer__social" role="list">
-          <a
-            v-for="s in companySocialLinks"
-            :key="s.key"
-            :href="s.href"
-            class="lh-footer__social-link"
-            role="listitem"
-            target="_blank"
-            rel="noopener noreferrer"
-            :aria-label="s.label"
-          >
-            <Icon :icon="s.icon" width="18" height="18" />
-          </a>
-        </div>
+        <ul class="lh-footer__social">
+          <li v-for="s in companySocialLinks" :key="s.key">
+            <a
+              :href="s.href"
+              class="lh-footer__social-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              :aria-label="s.label"
+            >
+              <Icon :icon="s.icon" width="18" height="18" />
+            </a>
+          </li>
+        </ul>
       </div>
 
       <div class="lh-footer__columns">
         <nav class="lh-footer__col" :aria-label="t('landing.footerProduct')">
-          <h6 class="lh-footer__heading">{{ t('landing.footerProduct') }}</h6>
+          <h2 class="lh-footer__heading">{{ t('landing.footerProduct') }}</h2>
           <a
             v-for="item in productNav"
             :key="item.id"
@@ -41,21 +40,21 @@
         </nav>
 
         <nav class="lh-footer__col" :aria-label="t('landing.footerCompany')">
-          <h6 class="lh-footer__heading">{{ t('landing.footerCompany') }}</h6>
+          <h2 class="lh-footer__heading">{{ t('landing.footerCompany') }}</h2>
           <RouterLink v-for="item in companyLinks" :key="item.name" :to="{ name: item.name }">
             {{ t(item.labelKey) }}
           </RouterLink>
         </nav>
 
         <nav class="lh-footer__col" :aria-label="t('trust.supportHeading')">
-          <h6 class="lh-footer__heading">{{ t('trust.supportHeading') }}</h6>
+          <h2 class="lh-footer__heading">{{ t('trust.supportHeading') }}</h2>
           <RouterLink v-for="item in supportLinks" :key="item.name" :to="{ name: item.name }">
             {{ t(item.labelKey) }}
           </RouterLink>
         </nav>
 
         <nav class="lh-footer__col" :aria-label="t('trust.legalHeading')">
-          <h6 class="lh-footer__heading">{{ t('trust.legalHeading') }}</h6>
+          <h2 class="lh-footer__heading">{{ t('trust.legalHeading') }}</h2>
           <RouterLink v-for="item in legalLinks" :key="item.name" :to="{ name: item.name }">
             {{ t(item.labelKey) }}
           </RouterLink>

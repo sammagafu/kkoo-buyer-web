@@ -1,18 +1,8 @@
-import heroImage from '@/assets/landing/hero.jpg'
 import logoLight from '@/assets/images/logo-light.svg'
 import logoDark from '@/assets/images/logo-dark.svg'
-import shopImage from '@/assets/landing/services/shop.jpg'
-import foodImage from '@/assets/landing/services/food.jpg'
-import groceriesImage from '@/assets/landing/services/groceries.jpg'
-import rideImage from '@/assets/landing/services/ride.jpg'
-import restaurantsImage from '@/assets/landing/services/restaurants.jpg'
-import hotelsImage from '@/assets/landing/services/hotels.jpg'
-import pharmacyImage from '@/assets/landing/services/pharmacy.jpg'
-import sendImage from '@/assets/landing/services/send.jpg'
-import discoveryImage from '@/assets/landing/services/discovery.jpg'
-import hustleImage from '@/assets/landing/services/hustle.jpg'
 import { buyerRoutes, bizSellerDashboardUrl, bizCrmUrl } from '@/config/landing-links'
 import { bizWebPath } from '@/config/cross-app-links'
+import { landingHeroImage, serviceCardImage } from '@/config/landing-images'
 
 /** Non-translatable brand / contact constants. Copy lives in i18n `landingHouse.*`. */
 export const houseCopy = {
@@ -25,61 +15,61 @@ export const houseCopy = {
 export const houseServices = [
   {
     key: 'shop',
-    src: shopImage,
+    image: serviceCardImage('shop'),
     to: buyerRoutes.marketplace,
     icon: 'solar:cart-large-2-bold',
   },
   {
     key: 'food',
-    src: foodImage,
+    image: serviceCardImage('food'),
     to: buyerRoutes.eats,
     icon: 'solar:cup-hot-bold',
   },
   {
     key: 'restaurants',
-    src: restaurantsImage,
+    image: serviceCardImage('restaurants'),
     to: buyerRoutes.restaurants,
     icon: 'solar:chef-hat-bold',
   },
   {
     key: 'grocery',
-    src: groceriesImage,
+    image: serviceCardImage('groceries'),
     to: buyerRoutes.grocery,
     icon: 'solar:bag-2-bold',
   },
   {
     key: 'ride',
-    src: rideImage,
+    image: serviceCardImage('ride'),
     to: buyerRoutes.ride,
     icon: 'solar:scooter-bold',
   },
   {
     key: 'hotels',
-    src: hotelsImage,
+    image: serviceCardImage('hotels'),
     to: buyerRoutes.booking,
     icon: 'solar:bed-bold',
   },
   {
     key: 'pharmacy',
-    src: pharmacyImage,
+    image: serviceCardImage('pharmacy'),
     to: buyerRoutes.pharmacy,
     icon: 'solar:health-bold',
   },
   {
     key: 'send',
-    src: sendImage,
+    image: serviceCardImage('send'),
     to: buyerRoutes.send,
     icon: 'solar:bag-heart-bold',
   },
   {
     key: 'discovery',
-    src: discoveryImage,
+    image: serviceCardImage('discovery'),
     to: buyerRoutes.discover,
     icon: 'solar:compass-bold',
   },
   {
     key: 'hustle',
-    src: hustleImage,
+    image: serviceCardImage('hustle'),
     to: buyerRoutes.hustle,
     icon: 'solar:bolt-bold',
   },
@@ -91,35 +81,35 @@ export const houseRoles = [
     id: 'sell',
     tone: 'inverse' as const,
     link: { kind: 'route' as const, to: buyerRoutes.merchant },
-    image: foodImage,
+    image: serviceCardImage('food'),
   },
   {
     key: 'pos',
     id: 'pos',
     tone: 'light' as const,
     link: { kind: 'href' as const, href: bizWebPath('/seller/pos') },
-    image: groceriesImage,
+    image: serviceCardImage('groceries'),
   },
   {
     key: 'business',
     id: 'business',
     tone: 'inverse' as const,
     link: { kind: 'href' as const, href: bizCrmUrl },
-    image: shopImage,
+    image: serviceCardImage('shop'),
   },
   {
     key: 'ride',
     id: 'ride',
     tone: 'light' as const,
     link: { kind: 'route' as const, to: buyerRoutes.courier },
-    image: rideImage,
+    image: serviceCardImage('ride'),
   },
   {
     key: 'earn',
     id: 'earn',
     tone: 'inverse' as const,
     link: { kind: 'route' as const, to: buyerRoutes.shareEarn },
-    image: foodImage,
+    image: serviceCardImage('food'),
   },
 ] as const
 
@@ -130,7 +120,7 @@ export const houseTrust = [
   { key: 'registered', icon: 'solar:buildings-bold' },
 ] as const
 
-export const houseHeroImage = heroImage
+export const houseHeroImage = landingHeroImage
 export const houseLogoLight = logoLight
 export const houseLogoDark = logoDark
 

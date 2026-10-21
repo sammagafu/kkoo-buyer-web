@@ -18,18 +18,22 @@ function fit() {
   const inner = innerEl.value
   if (!root || !inner) return
 
-  inner.style.transform = 'none'
-  inner.style.width = ''
+  requestAnimationFrame(() => {
+    inner.style.transform = 'none'
+    inner.style.width = ''
 
-  const available = root.clientHeight
-  const needed = inner.scrollHeight
-  if (available < 1 || needed < 1) return
+    requestAnimationFrame(() => {
+      const available = root.clientHeight
+      const needed = inner.scrollHeight
+      if (available < 1 || needed < 1) return
 
-  const scale = Math.min(1, available / needed)
-  if (scale < 0.999) {
-    inner.style.transform = `scale(${scale})`
-    inner.style.width = `${100 / scale}%`
-  }
+      const scale = Math.min(1, available / needed)
+      if (scale < 0.999) {
+        inner.style.transform = `scale(${scale})`
+        inner.style.width = `${100 / scale}%`
+      }
+    })
+  })
 }
 
 onMounted(async () => {

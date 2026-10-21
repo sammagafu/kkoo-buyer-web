@@ -4,6 +4,7 @@
 
 <script setup lang="ts">
 import flatpickr from 'flatpickr'
+import 'flatpickr/dist/flatpickr.css'
 
 import { onMounted } from 'vue'
 import type { InputType } from 'bootstrap-vue-next'

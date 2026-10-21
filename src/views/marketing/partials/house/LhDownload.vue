@@ -56,10 +56,12 @@
         <div class="lh-download__phone">
           <img
             class="lh-download__phone-screen"
-            :src="phoneScreen"
+            :src="phoneScreen.src"
+            :srcset="phoneScreen.srcset"
+            :sizes="phoneScreen.sizes"
             alt=""
-            width="463"
-            height="925"
+            :width="phoneScreen.width"
+            :height="phoneScreen.height"
             loading="lazy"
             decoding="async"
           />
@@ -75,7 +77,7 @@ import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
 import { appLinks } from '@/config/app-links'
 import { useHouseReveal } from '@/composables/useHouseReveal'
-import phoneScreen from '@/assets/landing/download-phone-apps.png'
+import { landingPhoneImage as phoneScreen } from '@/config/landing-images'
 
 const { t } = useI18n()
 const rootRef = ref<HTMLElement | null>(null)

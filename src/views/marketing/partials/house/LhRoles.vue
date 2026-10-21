@@ -43,11 +43,14 @@
 
         <div class="lh-solutions__media" aria-hidden="true">
           <img
-            :src="role.image"
+            :src="role.image.src"
+            :srcset="role.image.srcset"
+            :sizes="role.image.sizes"
             :alt="t(`landingHouse.roles.${role.key}.imageAlt`)"
-            width="480"
-            height="480"
+            :width="role.image.width"
+            :height="role.image.height"
             loading="lazy"
+            decoding="async"
           />
         </div>
       </li>

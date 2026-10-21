@@ -9,6 +9,7 @@ import {
   isStoreSubdomainHost,
   storeSlugFromHostname,
 } from '@/utils/storePublicUrl'
+import { loadAppStyles, needsFullAppStyles } from '@/styles/loadAppStyles'
 
 const hostSlugAtBoot =
   typeof window !== 'undefined' ? storeSlugFromHostname() : null
@@ -36,7 +37,10 @@ const router = createRouter({
   },
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  if (needsFullAppStyles(to.path)) {
+    await loadAppStyles()
+  }
   const title = to.meta.title;
   if (title) {
     document.title = title.toString();

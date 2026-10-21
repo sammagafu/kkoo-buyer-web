@@ -38,6 +38,31 @@ server {
         add_header Cache-Control "public, max-age=31536000, immutable";
     }
 
+    location /images/ {
+        try_files $uri =404;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+
+    location /fonts/ {
+        try_files $uri =404;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+
+    location = /llms.txt {
+        try_files $uri =404;
+        add_header Content-Type "text/plain; charset=utf-8";
+    }
+
+    location = /llms-full.txt {
+        try_files $uri =404;
+        add_header Content-Type "text/plain; charset=utf-8";
+    }
+
+    location = /ai-catalog.json {
+        try_files $uri =404;
+        add_header Content-Type "application/json";
+    }
+
     location / {
         try_files $uri $uri/ /index.html;
     }

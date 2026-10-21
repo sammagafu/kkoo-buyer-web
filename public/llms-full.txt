@@ -1,0 +1,57 @@
+# KKOOAPP
+
+> Tanzania super-app for shopping, food, groceries, pharmacy, rides, parcels, and hotels. Escrow checkout, live tracking, and rewards for buyers, sellers, and riders.
+
+KKOO (also KkooApp) is a commerce and delivery platform for East Africa. Shop on the web or mobile apps. Sellers run catalog, orders, POS, and payouts. Riders handle delivery and ride jobs.
+
+Contact: +255 788 419 991. Support: https://kkooapp.co.tz/support
+
+## Buyer
+
+- [Home](https://kkooapp.co.tz/): Marketplace overview and app download
+- [Marketplace](https://kkooapp.co.tz/market): Browse and buy products
+- [Food](https://kkooapp.co.tz/eats): Restaurant and meal delivery
+- [Groceries](https://kkooapp.co.tz/grocery): Grocery delivery
+- [Pharmacy](https://kkooapp.co.tz/pharmacy): Pharmacy delivery
+- [Rides](https://kkooapp.co.tz/ride): Ride hailing
+- [Send / parcels](https://kkooapp.co.tz/send): Buy-for-me and parcel delivery
+- [Hotels](https://kkooapp.co.tz/booking): Hotel and venue booking
+- [Discover](https://kkooapp.co.tz/discover): Places and services nearby
+- [Get started](https://kkooapp.co.tz/get-started): Create an account
+- [Personal](https://kkooapp.co.tz/personal): For everyday buyers
+
+## Partners
+
+- [Sell](https://kkooapp.co.tz/merchant): Become a seller
+- [Business](https://kkooapp.co.tz/business): Business tools
+- [Courier](https://kkooapp.co.tz/courier): Ride and delivery work
+- [Share and earn](https://kkooapp.co.tz/share-earn): Referrals
+- [Restaurants](https://kkooapp.co.tz/restaurants): Restaurant partners
+- [Partner register](https://kkooapp.co.tz/partners/register): API and partnerships
+
+## Company
+
+- [About](https://kkooapp.co.tz/about)
+- [Safety](https://kkooapp.co.tz/safety)
+- [Coverage](https://kkooapp.co.tz/coverage)
+- [Careers](https://kkooapp.co.tz/careers)
+- [Press](https://kkooapp.co.tz/press)
+- [Investors](https://kkooapp.co.tz/investors)
+- [News](https://kkooapp.co.tz/news)
+- [Support](https://kkooapp.co.tz/support)
+- [Community](https://kkooapp.co.tz/community)
+
+## Legal
+
+- [Terms of use](https://kkooapp.co.tz/terms-of-use)
+- [Privacy policy](https://kkooapp.co.tz/privacy-policy)
+- [Cookie policy](https://kkooapp.co.tz/cookie-policy)
+- [Refund policy](https://kkooapp.co.tz/refund-policy)
+- [Acceptable use](https://kkooapp.co.tz/acceptable-use)
+- [Data deletion](https://kkooapp.co.tz/data-deletion)
+
+## Optional
+
+- [Sitemap](https://kkooapp.co.tz/sitemap.xml)
+- [AI catalog](https://kkooapp.co.tz/ai-catalog.json)
+- [Short llms.txt](https://kkooapp.co.tz/llms.txt)

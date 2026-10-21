@@ -5,6 +5,7 @@
 
 <script setup lang="ts">
 import Choices from 'choices.js'
+import 'choices.js/src/styles/choices.scss'
 import type { InputType } from 'bootstrap-vue-next'
 import { onMounted } from 'vue'
 

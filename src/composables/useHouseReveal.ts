@@ -20,12 +20,6 @@ export function useHouseReveal(
       return
     }
 
-    const rect = node.getBoundingClientRect()
-    if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
-      show()
-      return
-    }
-
     observer = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting) {

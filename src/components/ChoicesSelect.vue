@@ -12,6 +12,7 @@
 
 <script setup lang="ts">
 import Choices from 'choices.js'
+import 'choices.js/src/styles/choices.scss'
 // import {type Options} from "choices.js/src/scripts/interfaces/options"
 import { onMounted } from 'vue'
 
