@@ -53,7 +53,11 @@ export const paymentsApi = {
     return client.get<{
       receipt?: PaymentReceiptRow
       deliveries?: PaymentReceiptDelivery[]
+      pdf_url?: string
     }>(`/payments/receipts/${id}/`)
+  },
+  downloadReceiptPdf(id: number) {
+    return client.get<Blob>(`/payments/receipts/${id}/pdf/`, { responseType: 'blob' })
   },
   resendReceiptWhatsApp(id: number) {
     return client.post<{ receipt_id?: number; whatsapp_status?: string; already_sent?: boolean }>(
@@ -72,6 +76,8 @@ export type PaymentReceiptRow = {
   whatsapp_status?: string
   is_test?: boolean
   summary_json?: Record<string, unknown> | string
+  pdf_url?: string
+  pdf_path?: string
 }
 
 export type PaymentReceiptDelivery = {

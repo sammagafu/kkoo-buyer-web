@@ -659,6 +659,7 @@ export const buyerXpVerticalsSw = {
     couldNotLoad: 'Haikuwezekana kupakia malipo',
     details: 'Maelezo ya risiti',
     openDetails: 'Angalia maelezo',
+    downloadPdf: 'Pakua PDF',
     closeDetails: 'Funga',
     ref: 'Kumbukumbu ya malipo',
     when: 'Tarehe na saa',

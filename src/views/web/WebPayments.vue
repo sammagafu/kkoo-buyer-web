@@ -55,6 +55,13 @@
               {{ t('buyerXp.payments.openDetails') }}
             </button>
             <button
+              type="button"
+              class="buyer-venue__chip"
+              @click.stop="downloadPdf(row)"
+            >
+              {{ t('buyerXp.payments.downloadPdf') }}
+            </button>
+            <button
               v-if="row.whatsapp_status !== 'sent'"
               type="button"
               class="buyer-venue__chip buyer-venue__chip--primary"
@@ -105,6 +112,9 @@
         </div>
       </div>
       <div class="buyer-order-card-v2__foot">
+        <button type="button" class="buyer-venue__chip" @click="downloadPdf(detail)">
+          {{ t('buyerXp.payments.downloadPdf') }}
+        </button>
         <button type="button" class="buyer-venue__chip" @click="detail = null">
           {{ t('buyerXp.payments.closeDetails') }}
         </button>
@@ -246,11 +256,36 @@ async function openDetails(row: PaymentReceiptRow) {
   try {
     const { data } = await paymentsApi.getReceipt(row.id)
     if (data.receipt) {
-      detail.value = { ...row, ...data.receipt, whatsapp_status: row.whatsapp_status }
+      detail.value = {
+        ...row,
+        ...data.receipt,
+        whatsapp_status: row.whatsapp_status,
+        pdf_url: data.pdf_url || data.receipt.pdf_url || row.pdf_url,
+      }
     }
     deliveries.value = data.deliveries ?? []
   } catch {
     deliveries.value = []
+  }
+}
+
+async function downloadPdf(row?: PaymentReceiptRow | null) {
+  if (!row?.id) return
+  const direct = (row.pdf_url || '').trim()
+  if (direct) {
+    window.open(direct, '_blank', 'noopener')
+    return
+  }
+  try {
+    const { data } = await paymentsApi.downloadReceiptPdf(row.id)
+    const href = URL.createObjectURL(data)
+    const a = document.createElement('a')
+    a.href = href
+    a.download = `KKOO-${row.payment_ref || row.id}.pdf`
+    a.click()
+    URL.revokeObjectURL(href)
+  } catch (e) {
+    sendError.value = formatApiError(e, t('buyerXp.payments.couldNotLoad'))
   }
 }
 

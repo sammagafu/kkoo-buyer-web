@@ -676,6 +676,7 @@ export const buyerXpVerticalsFr = {
     couldNotLoad: 'Impossible de charger les paiements',
     details: 'Details du recu',
     openDetails: 'Voir les details',
+    downloadPdf: 'Telecharger le PDF',
     closeDetails: 'Fermer',
     ref: 'Reference de paiement',
     when: 'Date et heure',

@@ -791,6 +791,7 @@ export const buyerXpVerticals = {
     couldNotLoad: 'Could not load payments',
     details: 'Receipt details',
     openDetails: 'View details',
+    downloadPdf: 'Download PDF',
     closeDetails: 'Close',
     ref: 'Payment ref',
     when: 'Date & time',
