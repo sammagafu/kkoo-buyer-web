@@ -39,11 +39,13 @@
           </div>
 
           <div class="menu-slide__visual">
-            <img
+            <KkooMediaImg
               v-if="singleProductImage"
               :src="singleProductImage"
+              media-slot="detail"
               :alt="singleProduct?.title || 'Featured product'"
-              class="menu-slide__image"
+              img-class="menu-slide__image"
+              lcp
             />
             <div v-else class="menu-slide__image menu-slide__image--placeholder">
               {{ singleProduct?.title || 'Menu item' }}
@@ -62,7 +64,7 @@
 
           <div class="menu-slide__combo-grid">
             <article v-for="product in comboProducts" :key="product.id" class="combo-card">
-              <img v-if="productImage(product)" :src="productImage(product) || ''" :alt="product.title || ''" class="combo-card__image" />
+              <KkooMediaImg v-if="productImage(product)" :src="productImage(product)" media-slot="card" :alt="product.title || ''" img-class="combo-card__image" />
               <div v-else class="combo-card__image combo-card__image--placeholder">{{ product.title || 'Item' }}</div>
               <div class="combo-card__body">
                 <div class="combo-card__title">{{ product.title || 'Untitled item' }}</div>
@@ -87,6 +89,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { superAppApi, type MenuDisplayProduct, type MenuDisplayResponse, type MenuDisplaySlide } from '@/api/superApp'
 import { resolveAssetUrl } from '@/utils/assetUrl'
+import KkooMediaImg from '@/components/kkoo/KkooMediaImg.vue'
 
 const route = useRoute()
 

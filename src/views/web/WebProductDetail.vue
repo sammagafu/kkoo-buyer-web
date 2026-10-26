@@ -25,10 +25,13 @@
     <template v-else-if="product">
       <article class="buyer-detail-card">
         <div v-if="imageUrl" class="mb-3">
-          <img
+          <KkooMediaImg
             :src="imageUrl"
+            media-slot="detail"
             :alt="product.title || ''"
-            style="width: 100%; max-height: 320px; object-fit: cover; border-radius: 1rem"
+            lcp
+            sizes="(max-width: 768px) 100vw, 720px"
+            img-class="buyer-product-hero"
           />
         </div>
         <p v-if="product.store_name" class="buyer-page-head__meta mb-2">{{ product.store_name }}</p>
@@ -122,6 +125,7 @@ import { catalogPublicApi, catalogSellerApi } from '@/api/catalog'
 import { reviewsApi } from '@/api/reviews'
 import { useAuthStore } from '@/stores/auth'
 import { resolveAssetUrl } from '@/utils/assetUrl'
+import KkooMediaImg from '@/components/kkoo/KkooMediaImg.vue'
 import { formatApiError } from '@/utils/formatApiError'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerProductGridSection, { type GridProduct } from '@/components/buyer/experience/BuyerProductGridSection.vue'
@@ -371,6 +375,13 @@ onMounted(load)
   font-size: 0.8rem;
   font-weight: 700;
   color: var(--kkoo-secondary, #f7a829);
+}
+
+.buyer-product-hero {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 1rem;
 }
 
 .buyer-detail-actions__btn--active {

@@ -1,6 +1,4 @@
-import heroImage from '@/assets/landing/hero.jpg'
-import foodImage from '@/assets/landing/services/food.jpg'
-import rideImage from '@/assets/landing/services/ride.jpg'
+import { landingSrc } from '@/config/landing-images'
 import { buyerRoutes, bizSellerRegisterUrl } from '@/config/landing-links'
 
 const env = import.meta.env
@@ -12,9 +10,9 @@ export const riderWhatsAppApplyUrl =
 export const creatorSignupUrl = { name: 'pages.share-earn' } as const
 
 export const heroMockupSlides = [
-  { key: 'hero', image: heroImage, altKey: 'landing.premium.heroMockupAlt' },
-  { key: 'food-local', image: foodImage, altKey: 'landing.heroShowcase.foodLocal.tab' },
-  { key: 'ride', image: rideImage, altKey: 'landing.premium.heroMockupAlt' },
+  { key: 'hero', image: landingSrc('hero'), altKey: 'landing.premium.heroMockupAlt' },
+  { key: 'food-local', image: landingSrc('food'), altKey: 'landing.heroShowcase.foodLocal.tab' },
+  { key: 'ride', image: landingSrc('ride'), altKey: 'landing.premium.heroMockupAlt' },
 ] as const
 
 export const audienceSwitcherItems = [

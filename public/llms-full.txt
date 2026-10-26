@@ -53,5 +53,5 @@ Contact: +255 788 419 991. Support: https://kkooapp.co.tz/support
 ## Optional
 
 - [Sitemap](https://kkooapp.co.tz/sitemap.xml)
-- [AI catalog](https://kkooapp.co.tz/ai-catalog.json)
+- [AI catalog](https://kkooapp.co.tz/.well-known/ai-catalog.json)
 - [Short llms.txt](https://kkooapp.co.tz/llms.txt)

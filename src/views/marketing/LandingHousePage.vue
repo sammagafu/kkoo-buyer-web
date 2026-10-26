@@ -16,17 +16,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { defineAsyncComponent, ref } from 'vue'
 import LhHeader from '@/views/marketing/partials/house/LhHeader.vue'
 import LhHero from '@/views/marketing/partials/house/LhHero.vue'
-import LhServices from '@/views/marketing/partials/house/LhServices.vue'
-import LhFeatures from '@/views/marketing/partials/house/LhFeatures.vue'
-import LhTrust from '@/views/marketing/partials/house/LhTrust.vue'
-import LhRoles from '@/views/marketing/partials/house/LhRoles.vue'
-import LhDownload from '@/views/marketing/partials/house/LhDownload.vue'
-import LhCta from '@/views/marketing/partials/house/LhCta.vue'
 import LhFooter from '@/views/marketing/partials/house/LhFooter.vue'
 import LhCookieConsent from '@/views/marketing/partials/house/LhCookieConsent.vue'
+import '@/assets/scss/pages/_landing-house-below.scss'
+
+const LhServices = defineAsyncComponent(() => import('@/views/marketing/partials/house/LhServices.vue'))
+const LhFeatures = defineAsyncComponent(() => import('@/views/marketing/partials/house/LhFeatures.vue'))
+const LhTrust = defineAsyncComponent(() => import('@/views/marketing/partials/house/LhTrust.vue'))
+const LhRoles = defineAsyncComponent(() => import('@/views/marketing/partials/house/LhRoles.vue'))
+const LhDownload = defineAsyncComponent(() => import('@/views/marketing/partials/house/LhDownload.vue'))
+const LhCta = defineAsyncComponent(() => import('@/views/marketing/partials/house/LhCta.vue'))
 
 const rootRef = ref<HTMLElement | null>(null)
 </script>

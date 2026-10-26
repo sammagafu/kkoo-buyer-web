@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div class="buyer-ride-panel" :class="{ 'buyer-ride-panel--options': phase === 'options' }">
+    <div class="buyer-ride-panel" :class="{ 'buyer-ride-panel--ready': hasRoute }">
       <header class="buyer-ride-panel__head">
         <div class="buyer-ride-panel__brand">
           <span class="buyer-ride-panel__logo" aria-hidden="true">{{
@@ -42,8 +42,7 @@
         </RouterLink>
       </header>
 
-      <!-- Plan phase -->
-      <section v-if="phase === 'plan'" class="buyer-ride-panel__body" :aria-label="isParcel ? t('buyerXp.parcel.title') : t('buyerXp.ride.findTrip')">
+      <section class="buyer-ride-panel__body" :aria-label="isParcel ? t('buyerXp.parcel.title') : t('buyerXp.ride.findTrip')">
         <h1 class="buyer-ride-panel__title">{{ isParcel ? t('buyerXp.parcel.title') : t('buyerXp.ride.findTrip') }}</h1>
 
         <div class="buyer-ride-route">
@@ -109,35 +108,7 @@
           />
         </div>
 
-        <p v-if="stepError" class="buyer-ride-msg buyer-ride-msg--err">{{ stepError }}</p>
-
-        <button
-          type="button"
-          class="buyer-ride-cta"
-          :disabled="!hasRoute || quoting"
-          @click="onSearch"
-        >
-          {{ quoting ? t('buyerXp.ride.quoteLoading') : t('buyerXp.ride.search') }}
-        </button>
-      </section>
-
-      <!-- Options phase -->
-      <section v-else class="buyer-ride-panel__body" :aria-label="t('buyerXp.ride.stepRideTitle')">
-        <button type="button" class="buyer-ride-back" :disabled="submitting" @click="backToPlan">
-          <Icon icon="solar:arrow-left-linear" aria-hidden="true" />
-          {{ t('buyerXp.ride.stepBack') }}
-        </button>
-
-        <BuyerRideRouteSummary
-          flat
-          :pickup-title="pickupTitle"
-          :dropoff-title="dropoffTitle"
-          :pickup-address="pickup.label"
-          :dropoff-address="dropoff.label"
-          :aria-label="t('buyerXp.ride.routeSummary')"
-        />
-
-        <div v-if="!isParcel" class="buyer-ride-vehicles" role="radiogroup" :aria-label="vehicleLabel">
+        <div v-if="hasRoute && !isParcel" class="buyer-ride-vehicles" role="radiogroup" :aria-label="vehicleLabel">
           <button
             v-for="v in vehicles"
             :key="v.id"
@@ -152,24 +123,25 @@
           </button>
         </div>
 
-        <div v-if="quoting" class="buyer-ride-fare">
+        <div v-if="hasRoute && quoting" class="buyer-ride-fare">
           <span class="buyer-ride-fare__label">{{ t('buyerXp.ride.quoteLoading') }}</span>
         </div>
-        <div v-else-if="estimatedFare != null" class="buyer-ride-fare">
+        <div v-else-if="hasRoute && estimatedFare != null" class="buyer-ride-fare">
           <span class="buyer-ride-fare__label">{{ fareLabel }}</span>
           <strong class="buyer-ride-fare__amount">{{ formatPrice(estimatedFare) }}</strong>
         </div>
 
-        <p v-if="!auth.isAuthenticated" class="buyer-ride-msg buyer-ride-msg--hint">
+        <p v-if="hasRoute && !auth.isAuthenticated" class="buyer-ride-msg buyer-ride-msg--hint">
           {{ isParcel ? t('buyerXp.parcel.signInPrompt') : t('buyerXp.ride.signInPrompt') }}
         </p>
+        <p v-if="stepError" class="buyer-ride-msg buyer-ride-msg--err">{{ stepError }}</p>
         <p v-if="bookingError" class="buyer-ride-msg buyer-ride-msg--err">{{ bookingError }}</p>
 
         <button
           type="button"
           class="buyer-ride-cta"
-          :disabled="primaryDisabled"
-          @click="onPrimaryAction"
+          :disabled="!hasRoute || submitting"
+          @click="onStartTrip"
         >
           <Icon :icon="primaryIcon" aria-hidden="true" />
           {{ primaryLabel }}
@@ -187,7 +159,6 @@ import { Icon } from '@iconify/vue'
 import { GoogleMap, Marker } from 'vue3-google-map'
 import { ridesApi } from '@/api/rides'
 import RidePlaceField from '@/components/buyer/RidePlaceField.vue'
-import BuyerRideRouteSummary from '@/components/buyer/experience/BuyerRideRouteSummary.vue'
 import { useAuthStore } from '@/stores/auth'
 import { isAuthSessionError } from '@/utils/authRedirect'
 
@@ -207,7 +178,6 @@ const { t } = useI18n()
 const auth = useAuthStore()
 
 type PlacePin = { label: string; lat: number | null; lng: number | null; mapPlaceId: number | null }
-type Phase = 'plan' | 'options'
 
 const pickup = reactive<PlacePin>({ label: '', lat: null, lng: null, mapPlaceId: null })
 const dropoff = reactive<PlacePin>({ label: '', lat: null, lng: null, mapPlaceId: null })
@@ -218,7 +188,6 @@ const quoting = ref(false)
 const bookingError = ref('')
 const stepError = ref('')
 const estimatedFare = ref<number | null>(null)
-const phase = ref<Phase>('plan')
 const mapRef = ref<{ map?: { fitBounds: (b: unknown, p?: number) => void; panTo: (c: { lat: number; lng: number }) => void; setZoom: (z: number) => void } } | null>(null)
 const mapZoom = ref(13)
 
@@ -240,10 +209,10 @@ const fareLabel = computed(() =>
   isParcel.value ? t('buyerXp.parcel.estimatedFare') : t('buyerXp.ride.estimatedFare'),
 )
 const submitLabel = computed(() =>
-  isParcel.value ? t('buyerXp.parcel.sendParcel') : t('buyerXp.ride.requestRide'),
+  isParcel.value ? t('buyerXp.parcel.sendParcel') : t('buyerXp.ride.startTrip'),
 )
 const submittingLabel = computed(() =>
-  isParcel.value ? t('buyerXp.parcel.sending') : t('buyerXp.ride.requesting'),
+  isParcel.value ? t('buyerXp.parcel.sending') : t('buyerXp.ride.startingTrip'),
 )
 const submitIcon = computed(() => (isParcel.value ? 'solar:box-bold' : 'solar:scooter-bold'))
 const historyLabel = computed(() => t('buyerXp.ride.historyTitle'))
@@ -281,8 +250,6 @@ const primaryLabel = computed(() => {
 })
 
 const primaryIcon = computed(() => submitIcon.value)
-
-const primaryDisabled = computed(() => submitting.value || quoting.value || !canBook.value)
 
 const mapCenter = computed(() => {
   if (pickup.lat != null && pickup.lng != null && dropoff.lat == null) {
@@ -374,13 +341,6 @@ function swapRoute() {
   dropoff.lng = p.lng
   dropoff.mapPlaceId = p.mapPlaceId
   estimatedFare.value = null
-  if (phase.value === 'options') void refreshQuote()
-}
-
-function backToPlan() {
-  stepError.value = ''
-  bookingError.value = ''
-  phase.value = 'plan'
 }
 
 async function refreshQuote() {
@@ -408,38 +368,36 @@ async function refreshQuote() {
   }
 }
 
-async function onSearch() {
+function onVehicleSelect(id: string) {
+  vehicleType.value = id
+}
+
+function onStartTrip() {
+  void submit()
+}
+
+async function submit() {
   stepError.value = ''
   bookingError.value = ''
   if (!hasRoute.value) {
     stepError.value = t('buyerXp.ride.routeRequired')
     return
   }
-  const ok = await refreshQuote()
-  if (!ok) {
-    stepError.value = t('buyerXp.ride.quoteUnavailable')
-    return
-  }
-  phase.value = 'options'
-}
-
-function onVehicleSelect(id: string) {
-  vehicleType.value = id
-  void refreshQuote()
-}
-
-function onPrimaryAction() {
-  void submit()
-}
-
-async function submit() {
-  bookingError.value = ''
-  if (!canBook.value || estimatedFare.value == null) return
 
   if (!auth.isAuthenticated) {
     await router.push({ name: 'auth.sign-in', query: { redirectedFrom: route.fullPath } })
     return
   }
+
+  if (estimatedFare.value == null || estimatedFare.value <= 0) {
+    const ok = await refreshQuote()
+    if (!ok || estimatedFare.value == null) {
+      stepError.value = t('buyerXp.ride.quoteUnavailable')
+      return
+    }
+  }
+
+  if (!canBook.value || estimatedFare.value == null) return
 
   submitting.value = true
   try {
@@ -457,9 +415,13 @@ async function submit() {
       trip_type: isParcel.value ? 'parcel' : 'passenger',
       rider_notes: notes.value.trim() || undefined,
     })
-    const id = (data as { id?: number })?.id
-    if (id) {
-      await router.push({ name: 'buyer.ride.detail', params: { id: String(id) }, query: { booked: '1' } })
+    const booked = data as { id?: number; payment_gateway_url?: string }
+    if (booked.payment_gateway_url) {
+      window.location.href = booked.payment_gateway_url
+      return
+    }
+    if (booked.id) {
+      await router.push({ name: 'buyer.ride.detail', params: { id: String(booked.id) }, query: { booked: '1' } })
     }
   } catch (e: unknown) {
     if (isAuthSessionError(e)) return
@@ -474,22 +436,13 @@ async function submit() {
 }
 
 watch(
-  () => [pickup.lat, pickup.lng, dropoff.lat, dropoff.lng] as const,
+  () => [pickup.lat, pickup.lng, dropoff.lat, dropoff.lng, vehicleType.value] as const,
   () => {
     estimatedFare.value = null
-    if (phase.value === 'options') {
-      phase.value = 'plan'
-    }
     fitMapToRoute()
+    if (hasRoute.value) void refreshQuote()
   },
 )
-
-watch(hasRoute, (ok) => {
-  if (!ok) {
-    phase.value = 'plan'
-    estimatedFare.value = null
-  }
-})
 
 watch(mapRef, (el) => {
   if (el?.map) fitMapToRoute()

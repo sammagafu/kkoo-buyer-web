@@ -102,7 +102,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useAuthDisplay } from '@/composables/useAuthDisplay'
 import { useBuyerGreeting } from '@/composables/useBuyerGreeting'
 import { useBuyerNotifications } from '@/composables/useBuyerNotifications'
-import { resolveAssetUrl } from '@/utils/assetUrl'
+import { sizedAssetUrl } from '@/utils/assetUrl'
 import { BUYER_DASHBOARD_ROUTE } from '@/constants/buyerDashboard'
 import { supportedLocales, setLocale, type LocaleCode } from '@/i18n'
 import logoLight from '@/assets/images/logo-light.svg'
@@ -147,7 +147,7 @@ const userLink = computed<RouteLocationRaw>(() =>
 
 const avatarUrl = computed(() => {
   const u = user.value as { avatar_url?: string; avatar?: string } | null
-  return resolveAssetUrl(u?.avatar_url ?? u?.avatar) ?? ''
+  return sizedAssetUrl(u?.avatar_url ?? u?.avatar, 'thumb') ?? ''
 })
 
 const initials = computed(() => {
@@ -169,7 +169,6 @@ const shopLinks = computed((): NavItem[] => {
   { name: 'home', labelKey: 'buyerXp.nav.home', icon: 'solar:home-2-bold', to: BUYER_DASHBOARD_ROUTE, match: ['buyer.marketplace', 'buyer.dashboard', 'buyer.market'] },
   { name: 'eats', labelKey: 'buyerXp.nav.eats', icon: 'solar:cup-hot-bold', to: { name: 'buyer.eats' }, match: ['buyer.eats', 'buyer.eats.store'] },
   { name: 'grocery', labelKey: 'buyerXp.nav.groceries', icon: 'solar:bag-2-bold', to: { name: 'buyer.grocery' }, match: ['buyer.grocery', 'buyer.grocery.store'] },
-  { name: 'pharmacy', labelKey: 'buyerXp.nav.pharmacy', icon: 'solar:health-bold', to: { name: 'buyer.pharmacy' }, match: ['buyer.pharmacy', 'buyer.pharmacy.reminders', 'buyer.pharmacy.store'] },
   { name: 'send', labelKey: 'buyerXp.nav.send', icon: 'solar:cart-large-2-bold', to: { name: 'buyer.send' }, match: ['buyer.send'] },
   { name: 'parcel', labelKey: 'buyerXp.nav.parcel', icon: 'solar:box-bold', to: { name: 'buyer.parcel' }, match: ['buyer.parcel'] },
   { name: 'search', labelKey: 'buyerXp.nav.search', icon: 'solar:magnifer-bold', to: { name: 'buyer.search' }, match: ['buyer.search'] },
@@ -182,7 +181,7 @@ const accountLinks = computed((): NavItem[] => {
   void locale.value
   return [
   { name: 'orders', labelKey: 'buyerXp.nav.orders', icon: 'solar:bag-check-bold', to: { name: 'buyer.orders' }, match: ['buyer.orders', 'buyer.order'] },
-  { name: 'wallet', labelKey: 'buyerXp.nav.wallet', icon: 'solar:wallet-bold', to: { name: 'buyer.wallet' }, match: ['buyer.wallet'] },
+  { name: 'payments', labelKey: 'buyerXp.nav.payments', icon: 'solar:bill-list-bold', to: { name: 'buyer.payments' }, match: ['buyer.payments'] },
   { name: 'rewards', labelKey: 'buyerXp.nav.rewards', icon: 'solar:gift-bold', to: { name: 'buyer.rewards' }, match: ['buyer.rewards', 'buyer.referral', 'buyer.share-earn', 'buyer.gamification', 'buyer.weekly-pass'] },
   { name: 'favorites', labelKey: 'buyerXp.nav.saved', icon: 'solar:heart-bold', to: { name: 'buyer.favorites' }, match: ['buyer.favorites'] },
   { name: 'messages', labelKey: 'buyerXp.nav.messages', icon: 'solar:chat-round-bold', to: { name: 'buyer.messages' }, match: ['buyer.messages', 'buyer.messages.thread'] },

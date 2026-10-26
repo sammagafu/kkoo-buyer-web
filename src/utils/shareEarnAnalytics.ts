@@ -9,7 +9,14 @@ export type ShareEarningsPayload = {
   units_sold?: number
   commission_pending?: number
   commission_paid?: number
+  available_to_payout?: number
   sales?: ShareSaleRow[]
+  payouts?: Array<{
+    id?: number
+    amount?: number
+    phone_number?: string
+    status?: string
+  }>
 }
 
 export type ShareSaleRow = {

@@ -5,7 +5,9 @@
       :title="t('courier.hero.title1')"
       :title-accent="t('courier.hero.title2')"
       :lead="t('courier.hero.lead')"
-      :image="courierHeroImage"
+      :image="rideHero.src"
+      :srcset="rideHero.srcset"
+      :sizes="rideHero.sizes"
       :image-alt="t('courier.hero.imageAlt')"
       :badge-label="t('courier.hero.overlay.runsLabel')"
       :badge-title="t('courier.hero.overlay.runsValue')"
@@ -26,7 +28,17 @@
 
         <div class="courier-quick-grid">
           <RouterLink to="/parcel" class="courier-quick-card">
-            <img :src="groceriesImage" :alt="t('courier.sections.services.parcel.title')" class="courier-quick-card__img" loading="lazy" />
+            <img
+              :src="parcelImg.src"
+              :srcset="parcelImg.srcset"
+              :sizes="parcelImg.sizes"
+              :width="parcelImg.width"
+              :height="parcelImg.height"
+              :alt="t('courier.sections.services.parcel.title')"
+              class="courier-quick-card__img"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="courier-quick-card__body">
               <h3>{{ t('courier.sections.services.parcel.title') }}</h3>
               <p>{{ t('courier.sections.services.parcel.copy') }}</p>
@@ -34,7 +46,17 @@
           </RouterLink>
 
           <RouterLink to="/send" class="courier-quick-card">
-            <img :src="foodImage" :alt="t('courier.sections.services.sendMe.title')" class="courier-quick-card__img" loading="lazy" />
+            <img
+              :src="foodImg.src"
+              :srcset="foodImg.srcset"
+              :sizes="foodImg.sizes"
+              :width="foodImg.width"
+              :height="foodImg.height"
+              :alt="t('courier.sections.services.sendMe.title')"
+              class="courier-quick-card__img"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="courier-quick-card__body">
               <h3>{{ t('courier.sections.services.sendMe.title') }}</h3>
               <p>{{ t('courier.sections.services.sendMe.copy') }}</p>
@@ -71,11 +93,12 @@ import { RouterLink } from 'vue-router'
 import MarketingLayout from './MarketingLayout.vue'
 import VerticalHero from './components/VerticalHero.vue'
 import LhButton from './partials/house/LhButton.vue'
-import courierHeroImage from '@/assets/images/landing/services/ride.jpg'
-import foodImage from '@/assets/images/landing/services/food.jpg'
-import groceriesImage from '@/assets/images/landing/services/groceries.jpg'
+import { serviceCardImage } from '@/config/landing-images'
 
 const { t } = useI18n()
+const rideHero = serviceCardImage('ride')
+const parcelImg = serviceCardImage('groceries')
+const foodImg = serviceCardImage('food')
 </script>
 
 <style scoped>

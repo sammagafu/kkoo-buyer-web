@@ -25,7 +25,7 @@
 
           <nav v-if="relatedLinks.length" class="lp-legal-related" aria-label="Related legal pages">
             <p class="lp-legal-related__label">Related</p>
-            <ul>
+            <ul role="list">
               <li v-for="link in relatedLinks" :key="link.to">
                 <router-link :to="link.to">{{ link.label }}</router-link>
               </li>
@@ -75,7 +75,7 @@ const relatedLinks = computed(() => {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--lh-text-muted, rgba(26, 26, 26, 0.55));
+  color: var(--lh-text-muted, #3d3d3d);
 }
 
 .lp-legal-title {
@@ -86,7 +86,7 @@ const relatedLinks = computed(() => {
 .lp-legal-updated {
   margin: 0 0 1.75rem;
   font-size: 0.875rem;
-  color: var(--lh-text-muted, rgba(26, 26, 26, 0.55));
+  color: var(--lh-text-muted, #3d3d3d);
 }
 
 .lp-legal-intro {
@@ -144,7 +144,7 @@ const relatedLinks = computed(() => {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--lh-text-muted, rgba(26, 26, 26, 0.55));
+  color: var(--lh-text-muted, #3d3d3d);
 }
 
 .lp-legal-related ul {

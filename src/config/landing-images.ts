@@ -57,3 +57,13 @@ export const landingPhoneImage: LandingResponsiveImage = {
   width: 400,
   height: 800,
 }
+
+/** Compact src for templates that only take a URL (still a sized WebP, not the 1720px JPEG). */
+export function landingSrc(
+  key: 'hero' | 'phone' | 'cat' | LandingServiceImageKey,
+): string {
+  if (key === 'hero') return landingHeroImage.src
+  if (key === 'phone') return landingPhoneImage.src
+  if (key === 'cat') return serviceCardImage('discovery').src
+  return serviceCardImage(key).src
+}

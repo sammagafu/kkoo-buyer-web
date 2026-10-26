@@ -31,7 +31,51 @@
         <span class="buyer-stat-card__value">{{ summary.recommendationPoints }}</span>
         <span class="buyer-stat-card__label">{{ t('buyerXp.shareEarn.recommendationPoints') }}</span>
       </div>
+      <div class="buyer-stat-card">
+        <span class="buyer-stat-card__value">{{ formatBuyerMoney(availableToPayout) }}</span>
+        <span class="buyer-stat-card__label">{{ t('buyerXp.shareEarn.availableCredit') }}</span>
+      </div>
     </div>
+
+    <section v-if="!loading && !error" class="buyer-detail-card">
+      <BuyerSectionHeader :title="t('buyerXp.shareEarn.cashoutTitle')" :subtitle="t('buyerXp.shareEarn.cashoutBody')" />
+      <label class="share-earn-field-label" for="share-earn-payout-phone">{{ t('buyerXp.shareEarn.cashoutPhone') }}</label>
+      <input
+        id="share-earn-payout-phone"
+        v-model="payoutPhone"
+        class="share-earn-field-input"
+        type="tel"
+        inputmode="tel"
+        :placeholder="t('buyerXp.shareEarn.ctaPhonePlaceholder')"
+      >
+      <p class="share-earn-hint">{{ t('buyerXp.shareEarn.cashoutMin') }}</p>
+      <div class="buyer-btn-row">
+        <button
+          type="button"
+          class="buyer-venue__chip buyer-venue__chip--primary"
+          :disabled="payoutBusy || availableToPayout < 1000"
+          @click="requestPayout"
+        >
+          {{ payoutBusy ? t('buyerXp.shareEarn.cashoutSending') : t('buyerXp.shareEarn.cashoutCta') }}
+        </button>
+      </div>
+      <p v-if="payoutMsg" class="share-earn-hint">{{ payoutMsg }}</p>
+      <p v-if="payoutError" class="buyer-xp-toast buyer-xp-toast--err">{{ payoutError }}</p>
+      <template v-if="payouts.length">
+        <p class="share-earn-hint">{{ t('buyerXp.shareEarn.payoutsTitle') }}</p>
+        <div class="buyer-hub-list">
+          <article v-for="(row, i) in payouts" :key="String(row.id ?? i)" class="buyer-detail-card">
+            <div class="buyer-detail-row">
+              <div>
+                <strong>{{ formatBuyerMoney(row.amount) }}</strong>
+                <p class="share-earn-meta">{{ row.phone_number }}</p>
+              </div>
+              <span v-if="row.status" :class="orderStatusPillClass(row.status)">{{ row.status }}</span>
+            </div>
+          </article>
+        </div>
+      </template>
+    </section>
 
     <section v-if="!loading" class="buyer-surface">
       <BuyerSectionHeader :title="t('buyerXp.shareEarn.analyticsTitle')" :subtitle="t('buyerXp.shareEarn.analyticsSub')" />
@@ -142,6 +186,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '@/stores/auth'
 import { referralApi } from '@/api/referral'
 import { sharesApi } from '@/api/shares'
 import { rewardsUserApi } from '@/api/rewards'
@@ -174,12 +219,24 @@ const referralShareUrl = ref('')
 const referralShareText = ref('')
 const copiedReferral = ref(false)
 const copiedLink = ref(false)
+const payoutPhone = ref('')
+const payoutBusy = ref(false)
+const payoutMsg = ref('')
+const payoutError = ref('')
+const auth = useAuthStore()
 
 const summary = computed(() =>
   computeShareEarnSummary(stats.value, earnings.value, transactions.value),
 )
 
 const sales = computed(() => (earnings.value?.sales ?? []) as ShareSaleRow[])
+const availableToPayout = computed(() => Number(earnings.value?.available_to_payout ?? 0))
+const payouts = computed(() => (earnings.value?.payouts ?? []) as Array<{
+  id?: number
+  amount?: number
+  phone_number?: string
+  status?: string
+}>)
 
 const monthly = computed(() => groupShareEarnByMonth(sales.value, transactions.value))
 
@@ -242,9 +299,38 @@ function copyReferralLink() {
   copyText(referralShareUrl.value || referralShareText.value, copiedLink)
 }
 
-async function loadEarnings() {
-  const { data } = await sharesApi.getEarnings()
-  earnings.value = (data ?? null) as ShareEarningsPayload | null
+function toE164(raw: string) {
+  const digits = raw.replace(/\D/g, '')
+  if (!digits) return ''
+  if (digits.startsWith('255')) return `+${digits}`
+  if (digits.startsWith('0')) return `+255${digits.slice(1)}`
+  return `+255${digits}`
+}
+
+function prefillsPayoutPhone() {
+  const existing = String((auth.user as { phone_number?: string } | null)?.phone_number ?? '')
+  if (existing) payoutPhone.value = existing.replace(/^\+255/, '')
+}
+
+async function requestPayout() {
+  const phone = toE164(payoutPhone.value)
+  if (phone.length < 12) {
+    payoutError.value = t('buyerXp.shareEarn.cashoutFailed')
+    return
+  }
+  payoutBusy.value = true
+  payoutError.value = ''
+  payoutMsg.value = ''
+  try {
+    await sharesApi.requestPayout({ phone_number: phone })
+    payoutMsg.value = t('buyerXp.shareEarn.cashoutSuccess')
+    const { data } = await sharesApi.getEarnings()
+    earnings.value = (data ?? null) as ShareEarningsPayload | null
+  } catch (e) {
+    payoutError.value = formatApiError(e, t('buyerXp.shareEarn.cashoutFailed'))
+  } finally {
+    payoutBusy.value = false
+  }
 }
 
 async function load() {
@@ -271,6 +357,7 @@ async function load() {
     referralCode.value = codePayload?.code ?? ''
     referralShareUrl.value = codePayload?.share_url ?? ''
     referralShareText.value = codePayload?.share_text ?? ''
+    if (!payoutPhone.value) prefillsPayoutPhone()
   } catch (e) {
     error.value = formatApiError(e, t('buyerXp.common.couldNotLoad'))
   } finally {
@@ -288,6 +375,21 @@ onMounted(load)
   font-weight: 700;
   letter-spacing: 0.08em;
   margin: 0 0 0.75rem;
+}
+
+.share-earn-field-label {
+  display: block;
+  font-size: 0.8125rem;
+  margin: 0.25rem 0 0.35rem;
+}
+
+.share-earn-field-input {
+  width: 100%;
+  max-width: 22rem;
+  border: 1px solid var(--bs-border-color, #d9d9d9);
+  border-radius: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.35rem;
 }
 
 .share-earn-hint {

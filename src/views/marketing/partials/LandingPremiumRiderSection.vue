@@ -111,7 +111,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
-import rideImage from '@/assets/landing/services/ride.jpg'
+import { landingSrc } from '@/config/landing-images'
 import { buyerRoutes } from '@/config/landing-links'
 import { useKkooPricing } from '@/composables/useKkooPricing'
 import {
@@ -127,6 +127,7 @@ import {
 } from '@/config/landing-audiences'
 
 const { t } = useI18n()
+const rideImage = landingSrc('ride')
 const { config: pricingConfig, source: pricingSource, load: loadPricing } = useKkooPricing()
 const tripsPerDay = ref(8)
 

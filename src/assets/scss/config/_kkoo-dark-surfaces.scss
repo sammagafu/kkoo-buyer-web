@@ -297,6 +297,11 @@ html.theme-dark {
     color: #fcd34d;
   }
 
+  .buyer-status-pill--danger {
+    background: rgba(239, 68, 68, 0.22);
+    color: #fca5a5;
+  }
+
   .buyer-venue__chip:not(.buyer-venue__chip--primary) {
     background: var(--buyer-chip-bg);
     border-color: var(--buyer-border-strong);
@@ -681,6 +686,29 @@ html.theme-dark {
     background: var(--buyer-surface);
     border-color: var(--buyer-border);
     color: var(--buyer-ink);
+  }
+
+  .buyer-ride-trip-card__main,
+  .buyer-ride-trip-card__main:hover,
+  .buyer-ride-trip-card__main:visited {
+    color: var(--buyer-ink);
+  }
+
+  .buyer-ride-trip-card__type {
+    background: rgba(201, 160, 232, 0.18);
+    color: #e9d5ff;
+  }
+
+  .buyer-ride-trip-card__id,
+  .buyer-ride-trip-card__fare strong,
+  .buyer-ride-route-summary__value {
+    color: var(--buyer-ink);
+  }
+
+  .buyer-ride-trip-card__when,
+  .buyer-ride-trip-card__fare-label,
+  .buyer-ride-route-summary__label {
+    color: var(--buyer-muted);
   }
 
   // Web app download page

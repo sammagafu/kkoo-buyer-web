@@ -31,11 +31,11 @@
               <li v-for="prod in displayProducts" :key="productKey(prod)">
                 <button type="button" class="send-picker__row" @click="selectProduct(prod)">
                   <div class="send-picker__thumb" aria-hidden="true">
-                    <img
+                    <KkooMediaImg
                       v-if="imageSrc(prod) && !failedImages[productKey(prod)]"
                       :src="imageSrc(prod)"
+                      media-slot="thumb"
                       alt=""
-                      loading="lazy"
                       @error="failedImages[productKey(prod)] = true"
                     />
                     <Icon v-else :icon="emptyIcon" />
@@ -61,6 +61,7 @@ import { Icon } from '@iconify/vue'
 import { catalogPublicApi } from '@/api/catalog'
 import { superAppApi, type RestaurantListItem, type RestaurantMenuItem } from '@/api/superApp'
 import { resolveAssetUrl } from '@/utils/assetUrl'
+import KkooMediaImg from '@/components/kkoo/KkooMediaImg.vue'
 import {
   distanceSurchargeTzs,
   formatDistanceLabel,

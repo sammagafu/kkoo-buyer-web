@@ -36,14 +36,12 @@
         role="listitem"
       >
         <span class="buyer-discovery__visual">
-          <img
+          <KkooMediaImg
             v-if="store.image && !failedImages[store.key]"
             :src="store.image"
+            media-slot="card"
             :alt="store.name"
-            class="buyer-discovery__photo"
-            :class="{ 'buyer-discovery__photo--logo': store.imageIsLogo }"
-            loading="lazy"
-            decoding="async"
+            :img-class="['buyer-discovery__photo', store.imageIsLogo ? 'buyer-discovery__photo--logo' : ''].join(' ')"
             @error="onImageError(store.key)"
           />
           <span v-else class="buyer-discovery__mark" aria-hidden="true">
@@ -74,6 +72,7 @@ import { useI18n } from 'vue-i18n'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
 import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 import { venueImageIsLogo, venueImageUrl } from '@/utils/assetUrl'
+import KkooMediaImg from '@/components/kkoo/KkooMediaImg.vue'
 import { venueDetailLink, type VenueVertical } from '@/utils/buyerDetailLinks'
 
 type Store = {

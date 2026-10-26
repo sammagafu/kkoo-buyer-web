@@ -84,13 +84,21 @@ const moodLine = computed(() => {
 
 const moodHint = computed(() => 'Mood changes with the hour — because admins are human too.')
 
+let moveRaf = 0
+
 function onMove(e: MouseEvent) {
   const el = e.currentTarget as HTMLElement
-  const r = el.getBoundingClientRect()
-  spotlightStyle.value = {
-    '--fx-x': `${((e.clientX - r.left) / r.width) * 100}%`,
-    '--fx-y': `${((e.clientY - r.top) / r.height) * 100}%`,
-  }
+  const x = e.clientX
+  const y = e.clientY
+  if (moveRaf) cancelAnimationFrame(moveRaf)
+  moveRaf = requestAnimationFrame(() => {
+    moveRaf = 0
+    const r = el.getBoundingClientRect()
+    spotlightStyle.value = {
+      '--fx-x': `${((x - r.left) / r.width) * 100}%`,
+      '--fx-y': `${((y - r.top) / r.height) * 100}%`,
+    }
+  })
 }
 
 function onLeave() {

@@ -8,13 +8,12 @@
       @click="onMainClick"
     >
       <div class="buyer-venue__hero" :class="`buyer-venue__hero--${kind}`">
-        <img
+        <KkooMediaImg
           v-if="imageUrl && !imageError"
           :src="imageUrl"
+          media-slot="card"
           :alt="name"
-          class="buyer-venue__cover"
-          :class="{ 'buyer-venue__cover--logo': imageIsLogo }"
-          loading="lazy"
+          :img-class="['buyer-venue__cover', imageIsLogo ? 'buyer-venue__cover--logo' : ''].join(' ')"
           @error="imageError = true"
         />
         <div v-else class="buyer-venue__cover buyer-venue__cover--placeholder" aria-hidden="true">
@@ -56,6 +55,7 @@ import { ref } from 'vue'
 import { RouterLink, type RouteLocationRaw } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
+import KkooMediaImg from '@/components/kkoo/KkooMediaImg.vue'
 
 const { t } = useI18n()
 

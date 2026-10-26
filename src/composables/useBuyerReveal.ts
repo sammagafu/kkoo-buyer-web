@@ -15,13 +15,16 @@ function revealNode(
 
   node.style.setProperty('--buyer-reveal-delay', `${Math.min(index * 70, 420)}ms`)
 
-  const rect = node.getBoundingClientRect()
-  if (rect.top < window.innerHeight * 0.92) {
-    node.classList.add('is-visible')
-    return
+  const revealIfVisible = () => {
+    const rect = node.getBoundingClientRect()
+    if (rect.top < window.innerHeight * 0.92) {
+      node.classList.add('is-visible')
+      return
+    }
+    observer?.observe(node)
   }
 
-  observer?.observe(node)
+  requestAnimationFrame(revealIfVisible)
 }
 
 /** Staggered house-style reveal for dashboard sections / tiles (incl. async v-if blocks). */

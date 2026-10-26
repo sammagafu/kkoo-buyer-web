@@ -86,7 +86,7 @@ export const legalDocuments = {
             type: 'ul',
             items: [
               'Prices, fees, taxes, delivery charges, and promotions are shown at checkout before you confirm. Currency and local payment methods may vary by market.',
-              'Through the end of 6 November 2026 (East Africa Time), purchases on the live service may be simulated. A simulated purchase is not a live charge. The receipt says “Demo purchase successful.” After that date, placing an order or booking a ride or delivery authorises a real charge on the payment method you select when real payments are enabled.',
+              'Through the end of 6 November 2026 (East Africa Time), purchases on the live service may be simulated. A simulated purchase is not a live charge. The WhatsApp receipt is labeled TEST receipt. After that date, placing an order or booking a ride or delivery authorises a real charge on the payment method you select when real payments are enabled.',
               'By placing an order or booking a ride/delivery, you authorise payment using your selected method (mobile money, card, wallet, or other available options), except where that purchase is expressly a simulated demo and the receipt says so.',
               'Where money-back or pay-on-delivery flows apply, refunds and settlement follow the rules shown in the app and our Refund Policy.',
               'Promotions, vouchers, loyalty points, and referral rewards are subject to their own programme rules and may be changed or withdrawn.',
@@ -469,7 +469,7 @@ export const legalDocuments = {
           {
             type: 'ul',
             items: [
-              'A receipt that says “Demo purchase successful” is a simulated test payment. No money is taken, so there is no cash refund for that demo charge.',
+              'A receipt labeled TEST receipt is a simulated test payment. No money is taken, so there is no cash refund for that test charge.',
               'Act quickly: report issues from the order or trip screen as soon as you notice a problem.',
               'Provide clear evidence when requested (photos, videos, order number, description of the issue).',
               `Refunds, where approved, are returned to the original payment method or ${BRAND} wallet, depending on how you paid and what the processor supports.`,

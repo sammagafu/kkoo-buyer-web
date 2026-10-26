@@ -34,15 +34,12 @@
       </section>
 
       <b-alert v-if="!isAuthenticated" variant="warning" show class="mb-4">
-        <p class="mb-3 mb-md-0">Sign in to pay with your KKOO Wallet.</p>
+        <p class="mb-3 mb-md-0">Sign in to pay with mobile money or card.</p>
         <KkooAccountButton variant="primary" size="sm" :redirect-from="redirectFrom" force-sign-in />
       </b-alert>
 
       <section v-else class="buyer-detail-card">
         <h2 class="h5 mb-3">Payment</h2>
-        <p v-if="walletBalance != null" class="small text-muted mb-3">
-          Wallet balance: <strong>{{ formatMoney(walletBalance) }}</strong>
-        </p>
         <p v-if="paymentMethodsLoading" class="text-muted small mb-3">Loading payment methods…</p>
         <b-form-group v-else-if="paymentOptions.length" label="Payment method" class="mb-3">
           <b-form-select v-model="paymentMethod" :options="paymentOptions" />
@@ -69,7 +66,6 @@ import { useRoute } from 'vue-router'
 import KkooAccountButton from '@/components/auth/KkooAccountButton.vue'
 import { paymentsApi } from '@/api/payments'
 import { getPublicSmartCart, paySmartCart, type SmartCartSession } from '@/api/smartCart'
-import { getWalletBalance } from '@/api/wallet'
 import { useAuthStore } from '@/stores/auth'
 import { formatApiError } from '@/utils/formatApiError'
 
@@ -88,7 +84,6 @@ const loading = ref(true)
 const loadError = ref('')
 const paying = ref(false)
 const payError = ref('')
-const walletBalance = ref<number | null>(null)
 const paymentMethod = ref('')
 const paymentOptions = ref<{ value: string; text: string }[]>([])
 const paymentMethodsLoading = ref(false)
@@ -113,14 +108,13 @@ function formatMoney(val: number) {
 async function loadPaymentMethods() {
   paymentMethodsLoading.value = true
   try {
-    const options: { value: string; text: string }[] = [
-      { value: 'wallet', text: 'KKOO Wallet' },
-    ]
+    const options: { value: string; text: string }[] = []
     const { data } = await paymentsApi.listMethods()
     for (const m of data?.results ?? []) {
       if (m.is_enabled === false) continue
       const code = String(m.code || '').toLowerCase()
       const provider = String(m.provider || '').toLowerCase()
+      if (code === 'wallet' || code === 'kkoo_wallet' || code === 'deposit_balance') continue
       let payCode = ''
       if (SMART_CART_ONLINE.has(code)) payCode = code
       else if (SMART_CART_ONLINE.has(provider)) payCode = provider
@@ -132,8 +126,8 @@ async function loadPaymentMethods() {
       paymentMethod.value = options[0]?.value ?? ''
     }
   } catch {
-    paymentOptions.value = [{ value: 'wallet', text: 'KKOO Wallet' }]
-    paymentMethod.value = 'wallet'
+    paymentOptions.value = []
+    paymentMethod.value = ''
   } finally {
     paymentMethodsLoading.value = false
   }
@@ -152,16 +146,6 @@ async function loadCart() {
     loadError.value = formatApiError(e, 'Cart not found')
   } finally {
     loading.value = false
-  }
-}
-
-async function loadWallet() {
-  if (!isAuthenticated.value) return
-  try {
-    const { wallet } = await getWalletBalance()
-    walletBalance.value = wallet.balance
-  } catch {
-    walletBalance.value = null
   }
 }
 
@@ -189,13 +173,11 @@ async function pay() {
 }
 
 watch(isAuthenticated, async () => {
-  await loadWallet()
-  await loadPaymentMethods()
+  if (isAuthenticated.value) await loadPaymentMethods()
 })
 
 onMounted(async () => {
   await loadCart()
-  await loadWallet()
   if (isAuthenticated.value) await loadPaymentMethods()
   pollTimer = setInterval(loadCart, 3000)
 })

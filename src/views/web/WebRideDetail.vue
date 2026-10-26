@@ -45,6 +45,49 @@
           <span class="buyer-ride-detail-meta__label">{{ t('buyerXp.ride.vehicleLabel') }}</span>
           <span class="buyer-ride-detail-meta__value">{{ vehicleLabel }}</span>
         </div>
+        <div v-if="hasMapsLinks" class="buyer-ride-maps">
+          <button
+            type="button"
+            class="buyer-venue__chip buyer-venue__chip--primary"
+            :aria-expanded="mapsDrawerOpen"
+            @click="mapsDrawerOpen = !mapsDrawerOpen"
+          >
+            <Icon icon="solar:map-point-bold" aria-hidden="true" />
+            {{ t('buyerXp.ride.openGoogleMaps') }}
+          </button>
+          <div v-if="mapsDrawerOpen" class="buyer-ride-maps__drawer" role="menu">
+            <a
+              v-if="routeMapsUrl"
+              :href="routeMapsUrl"
+              target="_blank"
+              rel="noopener"
+              class="buyer-ride-maps__link"
+              role="menuitem"
+            >
+              {{ t('buyerXp.ride.openRouteInMaps') }}
+            </a>
+            <a
+              v-if="pickupMapsUrl"
+              :href="pickupMapsUrl"
+              target="_blank"
+              rel="noopener"
+              class="buyer-ride-maps__link"
+              role="menuitem"
+            >
+              {{ t('buyerXp.ride.openPickupInMaps') }}
+            </a>
+            <a
+              v-if="dropoffMapsUrl"
+              :href="dropoffMapsUrl"
+              target="_blank"
+              rel="noopener"
+              class="buyer-ride-maps__link"
+              role="menuitem"
+            >
+              {{ t('buyerXp.ride.openDropoffInMaps') }}
+            </a>
+          </div>
+        </div>
       </section>
 
       <section v-if="tracking || isActiveTrip" class="buyer-detail-card buyer-ride-detail-tracking">
@@ -153,6 +196,43 @@ const pickupEta = computed(() => {
   return ''
 })
 
+const mapsDrawerOpen = ref(false)
+
+function mapsSearchUrl(lat: number, lng: number) {
+  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
+}
+
+function rideCoord(row: RideRow | null, latKey: string, lngKey: string) {
+  if (!row) return null
+  const lat = Number(row[latKey])
+  const lng = Number(row[lngKey])
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null
+  return { lat, lng }
+}
+
+const pickupMapsUrl = computed(() => {
+  const c = rideCoord(ride.value, 'pickup_lat', 'pickup_lng')
+  return c ? mapsSearchUrl(c.lat, c.lng) : ''
+})
+
+const dropoffMapsUrl = computed(() => {
+  const c = rideCoord(ride.value, 'dropoff_lat', 'dropoff_lng')
+  return c ? mapsSearchUrl(c.lat, c.lng) : ''
+})
+
+const routeMapsUrl = computed(() => {
+  const pickup = rideCoord(ride.value, 'pickup_lat', 'pickup_lng')
+  const drop = rideCoord(ride.value, 'dropoff_lat', 'dropoff_lng')
+  if (pickup && drop) {
+    return `https://www.google.com/maps/dir/?api=1&origin=${pickup.lat},${pickup.lng}&destination=${drop.lat},${drop.lng}&travelmode=driving`
+  }
+  return dropoffMapsUrl.value || pickupMapsUrl.value
+})
+
+const hasMapsLinks = computed(
+  () => Boolean(routeMapsUrl.value || pickupMapsUrl.value || dropoffMapsUrl.value),
+)
+
 const mapUrl = computed(() => {
   const link = tracking.value?.gps_track_link ?? tracking.value?.map_url
   if (link) return String(link)
@@ -160,9 +240,9 @@ const mapUrl = computed(() => {
   const lat = Number(loc?.lat ?? loc?.latitude)
   const lng = Number(loc?.lng ?? loc?.longitude)
   if (Number.isFinite(lat) && Number.isFinite(lng)) {
-    return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
+    return mapsSearchUrl(lat, lng)
   }
-  return ''
+  return routeMapsUrl.value
 })
 
 const isActiveTrip = computed(() => {

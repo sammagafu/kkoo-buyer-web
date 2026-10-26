@@ -26,12 +26,12 @@ function getSavedLocale(): string {
     for (const lang of langs) {
       const base = (lang ?? '').toLowerCase().split('-')[0]
       if (base === 'sw' || base === 'fr') return base
-      if (base === 'en') return 'en'
+      if (base === 'en') return 'sw'
     }
   } catch {
     // ignore (SSR or restricted environments)
   }
-  return 'en'
+  return 'sw'
 }
 
 export const supportedLocales = [

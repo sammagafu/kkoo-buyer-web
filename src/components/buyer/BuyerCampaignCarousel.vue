@@ -17,10 +17,14 @@
         :aria-hidden="index !== activeIndex"
       >
         <div class="buyer-promo-fs__media">
-          <img
+          <KkooMediaImg
             v-if="campaignImageUrl(camp)"
             :src="campaignImageUrl(camp)"
+            media-slot="detail"
             :alt="camp.title"
+            sizes="100vw"
+            :lcp="index === 0"
+            :loading="index === 0 ? 'eager' : 'lazy'"
           />
           <div v-else class="buyer-promo-fs__fallback" aria-hidden="true" />
         </div>
@@ -72,7 +76,7 @@
                 :to="productThumbTo(prod)"
                 :title="prod.title || undefined"
               >
-                <img :src="prod.image" :alt="prod.title || 'Product'" loading="lazy" decoding="async" />
+                <KkooMediaImg :src="prod.image" media-slot="thumb" :alt="prod.title || 'Product'" />
               </RouterLink>
             </div>
             <component
@@ -113,6 +117,7 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 import { Icon } from '@iconify/vue'
+import KkooMediaImg from '@/components/kkoo/KkooMediaImg.vue'
 import type { BuyerCampaign } from '@/api/campaigns'
 import { campaignCtaRoute, campaignImageUrl, campaignProductThumbs } from '@/composables/useBuyerCampaigns'
 import { daysUntil, isPreorderCampaign } from '@/utils/preorderCountdown'

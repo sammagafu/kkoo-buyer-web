@@ -87,18 +87,24 @@
             :index="index"
             :item="item"
             :can-remove="items.length > 1"
-            :emphasize-pick="!item.selection && !item.name.trim()"
+            :emphasize-pick="!item.selection && !item.name.trim() && !item.photos.length"
             @remove="removeItem(index)"
             @pick="openPicker(index)"
             @quantity="(q) => setQuantity(index, q)"
             @update-name="(v) => updateItemName(index, v)"
             @update-price="(v) => updateItemPrice(index, v)"
+            @add-photos="(files) => addPhotos(index, files)"
+            @remove-photo="(i) => removePhoto(index, i)"
           />
         </div>
 
         <button type="button" class="send-items-panel__add" @click="addItemAndFocus">
           <Icon icon="solar:add-circle-bold" aria-hidden="true" />
           {{ t('buyerXp.send.addAnotherItem') }}
+        </button>
+        <button type="button" class="send-items-panel__add send-items-panel__add--photo" @click="addPhotoItem">
+          <Icon icon="solar:camera-bold" aria-hidden="true" />
+          {{ t('buyerXp.send.findPhotoCta') }}
         </button>
       </section>
 
@@ -352,6 +358,27 @@ function updateItemPrice(index: number, price: number) {
   items.value[index].price = price
 }
 
+function addPhotos(index: number, files: File[]) {
+  const item = items.value[index]
+  if (!item) return
+  const room = Math.max(0, 5 - item.photos.length)
+  item.photos.push(...files.slice(0, room))
+}
+
+function removePhoto(index: number, photoIndex: number) {
+  items.value[index]?.photos.splice(photoIndex, 1)
+}
+
+function addPhotoItem() {
+  addItem()
+  nextTick(() => {
+    const cards = document.querySelectorAll('.send-item-editor')
+    const last = cards[cards.length - 1] as HTMLElement | undefined
+    last?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    last?.querySelector<HTMLInputElement>('input[type="file"]')?.click()
+  })
+}
+
 function openPicker(index: number) {
   pickerItemIndex.value = index
   pickerOpen.value = true
@@ -368,7 +395,8 @@ function onProductPicked(selection: BuyForMeProductSelection) {
 function buildPayload() {
   const apiItems: Record<string, unknown>[] = []
   for (const item of items.value) {
-    const name = item.selection?.productTitle || item.name.trim()
+    const typed = item.selection?.productTitle || item.name.trim()
+    const name = typed || (item.photos.length ? t('buyerXp.send.findPhotoName') : '')
     if (!name) continue
     const cat = buyForMeCategoryById(item.categoryId)
     const price = lineUnitTotal(item)
@@ -442,7 +470,31 @@ async function submit() {
 
   submitting.value = true
   try {
-    await buyForMeApi.create(payload as never)
+    const pendingPhotos = items.value.map((item) => ({
+      name: item.selection?.productTitle || item.name.trim() || t('buyerXp.send.findPhotoName'),
+      files: [...item.photos],
+    }))
+    const { data } = await buyForMeApi.create(payload as never)
+    const requestId = data?.request?.id ?? data?.id
+    if (requestId) {
+      for (const row of pendingPhotos) {
+        for (const file of row.files) {
+          const form = new FormData()
+          form.append('file', file)
+          form.append('type', 'item_photo')
+          form.append('notes', row.name)
+          try {
+            await buyForMeApi.uploadAttachment(requestId, form)
+          } catch {
+            /* request already created */
+          }
+        }
+      }
+    }
+    if (data?.payment_gateway_url) {
+      window.location.href = data.payment_gateway_url
+      return
+    }
     successModal.value = true
     items.value = [newItemDraft(categoryId.value)]
     notes.value = ''

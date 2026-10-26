@@ -228,11 +228,7 @@ import { premiumRegionCards, type PremiumRegionCard } from '@/config/landing-pre
 import { superAppEarnCards, superAppServiceGroups } from '@/config/landing-superapp'
 import { useLandingPillar } from '@/composables/useLandingPillar'
 import { useLandingScroll } from '@/composables/useLandingScroll'
-import heroImage from '@/assets/landing/hero.jpg'
-import shopImage from '@/assets/landing/services/shop.jpg'
-import foodImage from '@/assets/landing/services/food.jpg'
-import catImage from '@/assets/landing/cat.jpg'
-import groceriesImage from '@/assets/images/landing/services/groceries.jpg'
+import { landingSrc } from '@/config/landing-images'
 import avatar1 from '@/assets/images/users/avatar-1.jpg'
 import avatar2 from '@/assets/images/users/avatar-2.jpg'
 import avatar3 from '@/assets/images/users/avatar-3.jpg'
@@ -278,11 +274,12 @@ const consumerItems = superAppServiceGroups.consumer.flatMap((g) => g.items)
 const serviceCards = consumerItems.slice(0, 6)
 const featuredServiceIndex = 1
 
+const heroImage = landingSrc('hero')
 const showcaseItems = [
-  { key: 'market', wide: true, image: shopImage, titleKey: 'landing.navMarketplace', descKey: 'landing.superApp.marketplaceDesc', altKey: 'landing.navMarketplace' },
-  { key: 'eats', wide: false, image: foodImage, titleKey: 'landing.navEats', descKey: 'landing.superApp.eatsDesc', altKey: 'landing.navEats' },
-  { key: 'grocery', wide: false, image: groceriesImage, titleKey: 'landing.navGrocery', descKey: 'landing.superApp.groceryDesc', altKey: 'landing.navGrocery' },
-  { key: 'community', wide: false, image: catImage, titleKey: 'landing.navCommunity', descKey: 'landing.superApp.communityDesc', altKey: 'landing.navCommunity' },
+  { key: 'market', wide: true, image: landingSrc('shop'), titleKey: 'landing.navMarketplace', descKey: 'landing.superApp.marketplaceDesc', altKey: 'landing.navMarketplace' },
+  { key: 'eats', wide: false, image: landingSrc('food'), titleKey: 'landing.navEats', descKey: 'landing.superApp.eatsDesc', altKey: 'landing.navEats' },
+  { key: 'grocery', wide: false, image: landingSrc('groceries'), titleKey: 'landing.navGrocery', descKey: 'landing.superApp.groceryDesc', altKey: 'landing.navGrocery' },
+  { key: 'community', wide: false, image: landingSrc('cat'), titleKey: 'landing.navCommunity', descKey: 'landing.superApp.communityDesc', altKey: 'landing.navCommunity' },
 ]
 
 type Testimonial = { name: string; role: string; text: string; initials: string }

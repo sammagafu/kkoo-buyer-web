@@ -18,7 +18,15 @@
     <p v-else-if="error" class="buyer-xp-toast buyer-xp-toast--err">{{ error }}</p>
 
     <section v-else-if="rows.length" class="buyer-orders-list">
-      <article v-for="row in rows" :key="row.id" class="buyer-order-card-v2">
+      <article
+        v-for="row in rows"
+        :key="row.id"
+        class="buyer-order-card-v2"
+        role="button"
+        tabindex="0"
+        @click="openDetails(row)"
+        @keydown.enter.prevent="openDetails(row)"
+      >
         <div class="buyer-order-card-v2__body">
           <div class="buyer-order-card-v2__thumb" aria-hidden="true">
             <Icon :icon="typeIcon(row.payment_type)" />
@@ -26,6 +34,7 @@
           <div class="buyer-order-card-v2__info">
             <div class="buyer-order-card-v2__info-top">
               <p class="buyer-order-card-v2__title">{{ typeLabel(row.payment_type) }}</p>
+              <span v-if="row.is_test" class="buyer-venue__chip">{{ t('buyerXp.payments.testBadge') }}</span>
             </div>
             <p class="buyer-order-card-v2__variant">{{ row.payment_ref }}</p>
             <p v-if="summaryLine(row)" class="buyer-order-card-v2__variant">{{ summaryLine(row) }}</p>
@@ -39,11 +48,18 @@
           </div>
           <div class="buyer-order-card-v2__actions">
             <button
+              type="button"
+              class="buyer-venue__chip"
+              @click.stop="openDetails(row)"
+            >
+              {{ t('buyerXp.payments.openDetails') }}
+            </button>
+            <button
               v-if="row.whatsapp_status !== 'sent'"
               type="button"
               class="buyer-venue__chip buyer-venue__chip--primary"
               :disabled="sendingId === row.id"
-              @click="sendWhatsApp(row)"
+              @click.stop="sendWhatsApp(row)"
             >
               {{ sendingId === row.id ? t('buyerXp.payments.sending') : t('buyerXp.payments.sendWhatsApp') }}
             </button>
@@ -60,14 +76,48 @@
       :message="t('buyerXp.payments.emptyMessage')"
     />
     <p v-if="sendError" class="buyer-xp-toast buyer-xp-toast--err">{{ sendError }}</p>
+
+    <section v-if="detail" class="buyer-order-card-v2" style="margin-top: 20px">
+      <div class="buyer-order-card-v2__body">
+        <div class="buyer-order-card-v2__info">
+          <div class="buyer-order-card-v2__info-top">
+            <p class="buyer-order-card-v2__title">{{ t('buyerXp.payments.details') }}</p>
+            <span v-if="detail.is_test" class="buyer-venue__chip">{{ t('buyerXp.payments.testBadge') }}</span>
+          </div>
+          <p class="buyer-order-card-v2__variant">{{ typeLabel(detail.payment_type) }}</p>
+          <p class="buyer-order-card-v2__price">{{ formatBuyerMoney(detail.amount) }} {{ detail.currency || 'TZS' }}</p>
+          <p class="buyer-order-card-v2__variant">{{ t('buyerXp.payments.ref') }}: {{ detail.payment_ref }}</p>
+          <p v-if="detail.created_at" class="buyer-order-card-v2__variant">
+            {{ t('buyerXp.payments.when') }}: {{ formatWhen(detail.created_at) }}
+          </p>
+          <template v-if="detailLines.length">
+            <p class="buyer-order-card-v2__title" style="margin-top: 12px">{{ t('buyerXp.payments.summary') }}</p>
+            <p v-for="line in detailLines" :key="line.label" class="buyer-order-card-v2__variant">
+              {{ line.label }}: {{ line.value }}
+            </p>
+          </template>
+          <template v-if="deliveries.length">
+            <p class="buyer-order-card-v2__title" style="margin-top: 12px">{{ t('buyerXp.payments.deliveries') }}</p>
+            <p v-for="d in deliveries" :key="d.id || `${d.channel}-${d.sent_at}`" class="buyer-order-card-v2__variant">
+              {{ d.channel }} · {{ d.status }}<template v-if="d.target"> · {{ d.target }}</template>
+            </p>
+          </template>
+        </div>
+      </div>
+      <div class="buyer-order-card-v2__foot">
+        <button type="button" class="buyer-venue__chip" @click="detail = null">
+          {{ t('buyerXp.payments.closeDetails') }}
+        </button>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
-import { paymentsApi, type PaymentReceiptRow } from '@/api/payments'
+import { paymentsApi, type PaymentReceiptDelivery, type PaymentReceiptRow } from '@/api/payments'
 import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 import { formatApiError } from '@/utils/formatApiError'
 import { formatBuyerMoney } from '@/utils/buyerFormat'
@@ -78,6 +128,31 @@ const loading = ref(false)
 const error = ref('')
 const sendError = ref('')
 const sendingId = ref<number | null>(null)
+const detail = ref<PaymentReceiptRow | null>(null)
+const deliveries = ref<PaymentReceiptDelivery[]>([])
+
+const detailLines = computed(() => summaryEntries(detail.value))
+
+function summaryEntries(row?: PaymentReceiptRow | null) {
+  const summary = typeof row?.summary_json === 'string' ? parseSummary(row.summary_json) : row?.summary_json
+  if (!summary) return [] as { label: string; value: string }[]
+  const skip = new Set([
+    'order_id',
+    'table_reservation_id',
+    'passenger_ride_id',
+    'proxy_shopping_request_id',
+    'event_ticket_purchase_id',
+    'hotel_reservation_id',
+    'amount',
+    'total_amount',
+  ])
+  return Object.entries(summary)
+    .filter(([key, value]) => !skip.has(key) && String(value ?? '').trim() !== '')
+    .map(([key, value]) => ({
+      label: key.replaceAll('_', ' '),
+      value: String(value),
+    }))
+}
 
 function typeLabel(type?: string) {
   const key = `buyerXp.payments.types.${type || 'order'}`
@@ -162,6 +237,20 @@ async function load() {
     rows.value = []
   } finally {
     loading.value = false
+  }
+}
+
+async function openDetails(row: PaymentReceiptRow) {
+  detail.value = row
+  deliveries.value = []
+  try {
+    const { data } = await paymentsApi.getReceipt(row.id)
+    if (data.receipt) {
+      detail.value = { ...row, ...data.receipt, whatsapp_status: row.whatsapp_status }
+    }
+    deliveries.value = data.deliveries ?? []
+  } catch {
+    deliveries.value = []
   }
 }
 

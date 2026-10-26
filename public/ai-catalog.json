@@ -1,30 +1,27 @@
 {
-  "version": "1.0",
-  "name": "KKOOAPP",
-  "alternateName": "KKOO",
-  "description": "Tanzania marketplace and delivery super-app for shopping, food, groceries, pharmacy, rides, parcels, and hotels.",
-  "url": "https://kkooapp.co.tz/",
-  "publisher": {
-    "name": "KKOOAPP",
-    "url": "https://kkooapp.co.tz/about"
-  },
-  "contact": {
-    "phone": "+255788419991",
-    "url": "https://kkooapp.co.tz/support"
-  },
-  "locales": ["en", "sw", "fr"],
-  "sameAs": [
-    "https://kkooapp.co.tz/llms.txt",
-    "https://kkooapp.co.tz/sitemap.xml"
-  ],
-  "pages": [
-    { "title": "Home", "url": "https://kkooapp.co.tz/", "description": "Buy, sell, deliver, and earn on KKOO." },
-    { "title": "Marketplace", "url": "https://kkooapp.co.tz/market", "description": "Shop products with escrow checkout." },
-    { "title": "Food delivery", "url": "https://kkooapp.co.tz/eats", "description": "Order meals in Tanzania." },
-    { "title": "Groceries", "url": "https://kkooapp.co.tz/grocery", "description": "Grocery delivery." },
-    { "title": "Pharmacy", "url": "https://kkooapp.co.tz/pharmacy", "description": "Pharmacy delivery." },
-    { "title": "Rides", "url": "https://kkooapp.co.tz/ride", "description": "Ride hailing." },
-    { "title": "Support", "url": "https://kkooapp.co.tz/support", "description": "Help for buyers, sellers, and riders." },
-    { "title": "Privacy policy", "url": "https://kkooapp.co.tz/privacy-policy", "description": "How KKOO handles personal data." }
+  "specVersion": "1.0",
+  "entries": [
+    {
+      "identifier": "urn:air:kkooapp:site-summary",
+      "displayName": "KKOOAPP site summary",
+      "type": "text/markdown; profile=\"urn:air:agent-skills\"",
+      "url": "https://kkooapp.co.tz/llms.txt",
+      "representativeQueries": [
+        "What is KKOOAPP?",
+        "How do I shop on KKOO in Tanzania?",
+        "Where can I order food delivery with KKOO?"
+      ]
+    },
+    {
+      "identifier": "urn:air:kkooapp:site-full",
+      "displayName": "KKOOAPP pages for AI agents",
+      "type": "text/markdown; profile=\"urn:air:agent-skills\"",
+      "url": "https://kkooapp.co.tz/llms-full.txt",
+      "representativeQueries": [
+        "How do I become a KKOO seller?",
+        "How do I work as a KKOO courier?",
+        "Where is the KKOO privacy policy?"
+      ]
+    }
   ]
 }

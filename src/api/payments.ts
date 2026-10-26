@@ -46,4 +46,39 @@ export const paymentsApi = {
       params: { order_id, ref },
     })
   },
+  listReceipts() {
+    return client.get<{ results?: PaymentReceiptRow[] }>('/payments/receipts/')
+  },
+  getReceipt(id: number) {
+    return client.get<{
+      receipt?: PaymentReceiptRow
+      deliveries?: PaymentReceiptDelivery[]
+    }>(`/payments/receipts/${id}/`)
+  },
+  resendReceiptWhatsApp(id: number) {
+    return client.post<{ receipt_id?: number; whatsapp_status?: string; already_sent?: boolean }>(
+      `/payments/receipts/${id}/whatsapp/`,
+    )
+  },
+}
+
+export type PaymentReceiptRow = {
+  id: number
+  created_at?: string
+  payment_type?: string
+  payment_ref?: string
+  amount?: number
+  currency?: string
+  whatsapp_status?: string
+  is_test?: boolean
+  summary_json?: Record<string, unknown> | string
+}
+
+export type PaymentReceiptDelivery = {
+  id?: number
+  channel?: string
+  status?: string
+  target?: string
+  sent_at?: string
+  last_error?: string
 }

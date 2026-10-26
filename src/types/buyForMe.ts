@@ -20,6 +20,7 @@ export type BuyForMeItemDraft = {
   price: number
   quantity: number
   selection: BuyForMeProductSelection | null
+  photos: File[]
 }
 
 export function lineUnitTotal(item: BuyForMeItemDraft) {
@@ -35,5 +36,6 @@ export function newItemDraft(categoryId: string, initialName = ''): BuyForMeItem
     price: 0,
     quantity: 1,
     selection: null,
+    photos: [],
   }
 }

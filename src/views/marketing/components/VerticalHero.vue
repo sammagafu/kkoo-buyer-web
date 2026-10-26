@@ -25,10 +25,14 @@
           <img
             v-if="image"
             :src="image"
+            :srcset="srcset"
+            :sizes="sizes"
             :alt="imageAlt || ''"
             width="960"
             height="1200"
-            loading="lazy"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
           />
           <div v-else class="vx-media__placeholder" aria-hidden="true">
             <Icon icon="solar:gallery-bold-duotone" class="vx-media__placeholder-icon" />
@@ -48,6 +52,8 @@ defineProps<{
   titleAccent?: string
   lead?: string
   image?: string
+  srcset?: string
+  sizes?: string
   imageAlt?: string
   badgeLabel?: string
   badgeTitle?: string

@@ -1545,12 +1545,15 @@ button.buyer-search-bar {
   flex-direction: column;
   gap: 0.85rem;
   padding: 1rem 1rem 0.9rem;
-  color: inherit;
+  color: var(--buyer-ink);
   text-decoration: none;
 }
 
-.buyer-ride-trip-card__main:hover {
-  color: inherit;
+.buyer-ride-trip-card__main:hover,
+.buyer-ride-trip-card__main:focus,
+.buyer-ride-trip-card__main:visited {
+  color: var(--buyer-ink);
+  text-decoration: none;
 }
 
 .buyer-ride-trip-card__head {
@@ -2299,6 +2302,35 @@ button.buyer-search-bar {
   align-items: center;
   gap: 0.4rem;
   margin-top: 0.85rem;
+}
+
+.buyer-ride-maps {
+  margin-top: 0.9rem;
+}
+
+.buyer-ride-maps__drawer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 0.55rem;
+  padding: 0.55rem;
+  border-radius: 14px;
+  background: var(--buyer-surface-2, #f6f4f8);
+}
+
+.buyer-ride-maps__link {
+  display: block;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  color: var(--buyer-ink);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.buyer-ride-maps__link:hover,
+.buyer-ride-maps__link:focus-visible {
+  background: rgba(108, 43, 217, 0.08);
 }
 
 .buyer-ride-detail-actions {

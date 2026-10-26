@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-    <div v-if="visible" class="lh-cookie" role="dialog" aria-labelledby="lh-cookie-title" aria-live="polite">
+    <div v-if="visible" class="lh-cookie" role="dialog" aria-modal="true" aria-labelledby="lh-cookie-title" aria-live="polite">
       <div class="lh-cookie__panel">
         <div class="lh-cookie__copy">
           <h2 id="lh-cookie-title" class="lh-cookie__title">{{ t('trust.cookieTitle') }}</h2>

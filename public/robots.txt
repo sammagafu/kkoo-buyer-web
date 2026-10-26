@@ -14,3 +14,4 @@ Disallow: /auth/
 Disallow: /pay/
 
 Sitemap: https://kkooapp.co.tz/sitemap.xml
+Agentmap: https://kkooapp.co.tz/.well-known/ai-catalog.json

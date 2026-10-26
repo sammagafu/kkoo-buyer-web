@@ -1,9 +1,4 @@
-import heroImage from '@/assets/landing/hero.jpg'
-import shopImage from '@/assets/landing/services/shop.jpg'
-import foodImage from '@/assets/landing/services/food.jpg'
-import rideImage from '@/assets/landing/services/ride.jpg'
-import catImage from '@/assets/landing/cat.jpg'
-import groceriesImage from '@/assets/images/landing/services/groceries.jpg'
+import { landingSrc } from '@/config/landing-images'
 import type { RouteLocationRaw } from 'vue-router'
 import { buyerRoutes } from '@/config/landing-links'
 import type { SuperAppPillarId } from '@/config/landing-superapp'
@@ -51,18 +46,18 @@ export type PremiumShowcaseItem = {
 }
 
 const showcaseImages: Record<string, string> = {
-  eats: foodImage,
-  grocery: groceriesImage,
-  marketplace: shopImage,
-  send: rideImage,
-  ride: rideImage,
-  courier: rideImage,
-  restaurants: foodImage,
-  hotels: heroImage,
-  booking: heroImage,
-  vouchers: shopImage,
-  'share-earn': heroImage,
-  community: catImage,
+  eats: landingSrc('food'),
+  grocery: landingSrc('groceries'),
+  marketplace: landingSrc('shop'),
+  send: landingSrc('send'),
+  ride: landingSrc('ride'),
+  courier: landingSrc('ride'),
+  restaurants: landingSrc('food'),
+  hotels: landingSrc('hotels'),
+  booking: landingSrc('hotels'),
+  vouchers: landingSrc('shop'),
+  'share-earn': landingSrc('hero'),
+  community: landingSrc('cat'),
 }
 
 export const premiumShowcaseItems: PremiumShowcaseItem[] = superAppServiceGroups.consumer
@@ -71,14 +66,14 @@ export const premiumShowcaseItems: PremiumShowcaseItem[] = superAppServiceGroups
   .map((item) => ({
     key: item.key,
     icon: item.icon,
-    image: showcaseImages[item.key] ?? heroImage,
+    image: showcaseImages[item.key] ?? landingSrc('hero'),
     titleKey: item.labelKey,
     descKey: item.descKey,
     altKey: item.labelKey,
     to: item.to,
   }))
 
-export const premiumHeroImage = heroImage
+export const premiumHeroImage = landingSrc('hero')
 
 export const premiumStats: PremiumStat[] = [
   { key: 'users', value: '50K+', labelKey: 'landing.premium.statUsers', icon: 'solar:users-group-rounded-bold' },
@@ -90,7 +85,7 @@ export const premiumStats: PremiumStat[] = [
 export const premiumRegionCards: PremiumRegionCard[] = [
   {
     key: 'buyers',
-    image: foodImage,
+    image: landingSrc('food'),
     labelKey: 'landing.sisyphus.regionBuyersLabel',
     altKey: 'landing.sisyphus.regionBuyersAlt',
     icon: 'solar:bag-smile-bold',
@@ -98,7 +93,7 @@ export const premiumRegionCards: PremiumRegionCard[] = [
   },
   {
     key: 'sellers',
-    image: shopImage,
+    image: landingSrc('shop'),
     labelKey: 'landing.sisyphus.regionSellersLabel',
     altKey: 'landing.sisyphus.regionSellersAlt',
     icon: 'solar:shop-2-bold',
@@ -106,7 +101,7 @@ export const premiumRegionCards: PremiumRegionCard[] = [
   },
   {
     key: 'riders',
-    image: rideImage,
+    image: landingSrc('ride'),
     labelKey: 'landing.sisyphus.regionRidersLabel',
     altKey: 'landing.sisyphus.regionRidersAlt',
     icon: 'solar:scooter-bold',
@@ -114,7 +109,7 @@ export const premiumRegionCards: PremiumRegionCard[] = [
   },
   {
     key: 'business',
-    image: heroImage,
+    image: landingSrc('hero'),
     labelKey: 'landing.sisyphus.regionBusinessLabel',
     altKey: 'landing.sisyphus.regionBusinessAlt',
     icon: 'solar:chart-2-bold',
@@ -137,7 +132,7 @@ export const premiumServiceCards: PremiumServiceCard[] = superAppServiceGroups.c
 export const premiumFeaturedServiceIndex = 1
 
 // Legacy exports
-export const premiumHeroMockupImage = heroImage
+export const premiumHeroMockupImage = landingSrc('hero')
 export const premiumFeatures = [] as const
 export const premiumTrustKeys = [] as const
 export const premiumAccentCycle = ['food', 'grocery', 'ride', 'shop', 'purple', 'teal'] as const

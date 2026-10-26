@@ -28,6 +28,43 @@
       </div>
     </div>
 
+    <section v-if="!loading && !error" class="buyer-rewards__panel">
+      <BuyerSectionHeader :title="t('buyerXp.rewards.cashoutTitle')" :subtitle="t('buyerXp.rewards.cashoutBody')" />
+      <label class="buyer-rewards__field-label" for="rewards-cashout-points">{{ t('buyerXp.rewards.pointsAmount') }}</label>
+      <input
+        id="rewards-cashout-points"
+        v-model="pointsAmount"
+        class="buyer-rewards__field-input"
+        type="number"
+        min="0"
+        inputmode="numeric"
+      >
+      <label class="buyer-rewards__field-label" for="rewards-cashout-phone">{{ t('buyerXp.rewards.phone') }}</label>
+      <input
+        id="rewards-cashout-phone"
+        v-model="payoutPhone"
+        class="buyer-rewards__field-input"
+        type="tel"
+        inputmode="tel"
+        placeholder="2557…"
+      >
+      <p v-if="cashValue > 0" class="buyer-rewards__hint">
+        {{ t('buyerXp.rewards.cashValue') }}: {{ formatBuyerMoney(cashValue) }}
+      </p>
+      <div class="buyer-btn-row">
+        <button
+          type="button"
+          class="buyer-venue__chip buyer-venue__chip--primary"
+          :disabled="payoutBusy || !canCashOut"
+          @click="requestPointsCashout"
+        >
+          {{ payoutBusy ? t('buyerXp.rewards.cashoutSending') : t('buyerXp.rewards.cashoutCta') }}
+        </button>
+      </div>
+      <p v-if="payoutMsg" class="buyer-rewards__hint">{{ payoutMsg }}</p>
+      <p v-if="payoutError" class="buyer-xp-toast buyer-xp-toast--err">{{ payoutError }}</p>
+    </section>
+
     <section class="buyer-rewards__panel">
       <BuyerSectionHeader :title="t('buyerXp.rewards.giftVouchers')" />
       <BuyerEmptyState
@@ -112,10 +149,24 @@ const balance = ref<{ total_balance?: number; available_balance?: number } | nul
 const redemption = ref<{ min_redemption_points?: number; points_to_cash_rate?: number } | null>(null)
 const vouchers = ref<GiftVoucherRow[]>([])
 const transactions = ref<Record<string, unknown>[]>([])
+const pointsAmount = ref('')
+const payoutPhone = ref('')
+const payoutBusy = ref(false)
+const payoutMsg = ref('')
+const payoutError = ref('')
 
 const totalPoints = computed(() => Math.round(balance.value?.total_balance ?? 0))
 const availablePoints = computed(() =>
   Math.round(balance.value?.available_balance ?? balance.value?.total_balance ?? 0),
+)
+const minPoints = computed(() => Number(redemption.value?.min_redemption_points ?? 100))
+const cashRate = computed(() => Number(redemption.value?.points_to_cash_rate ?? 10))
+const pointsToCash = computed(() => Number(pointsAmount.value) || 0)
+const cashValue = computed(() => pointsToCash.value * cashRate.value)
+const canCashOut = computed(() =>
+  pointsToCash.value >= minPoints.value &&
+  pointsToCash.value <= availablePoints.value &&
+  payoutPhone.value.replace(/\D/g, '').length >= 9,
 )
 
 function activityPoints(tx: Record<string, unknown>): number {
@@ -142,6 +193,39 @@ function formatActivityPoints(tx: Record<string, unknown>): string {
   const pts = activityPoints(tx)
   const sign = pts > 0 ? '+' : ''
   return `${sign}${pts} pts`
+}
+
+function toE164(raw: string) {
+  const digits = raw.replace(/\D/g, '')
+  if (!digits) return ''
+  if (digits.startsWith('255')) return `+${digits}`
+  if (digits.startsWith('0')) return `+255${digits.slice(1)}`
+  return `+255${digits}`
+}
+
+async function requestPointsCashout() {
+  const phone = toE164(payoutPhone.value)
+  if (!canCashOut.value || phone.length < 12) {
+    payoutError.value = t('buyerXp.rewards.cashoutFailed')
+    return
+  }
+  payoutBusy.value = true
+  payoutError.value = ''
+  payoutMsg.value = ''
+  try {
+    await rewardsUserApi.createRedemption({
+      redemption_type: 'cash_payout',
+      points_amount: pointsToCash.value,
+      payout_method: 'mpesa',
+      payout_account: phone,
+    })
+    payoutMsg.value = t('buyerXp.rewards.cashoutSuccess')
+    await load()
+  } catch (e) {
+    payoutError.value = formatApiError(e, t('buyerXp.rewards.cashoutFailed'))
+  } finally {
+    payoutBusy.value = false
+  }
 }
 
 function formatTxDate(iso: string): string {
@@ -411,6 +495,27 @@ onMounted(load)
 
 .buyer-rewards__row-amount[data-tone='out'] {
   color: #9a3412;
+}
+
+.buyer-rewards__field-label {
+  display: block;
+  font-size: 0.8125rem;
+  margin: 0.35rem 0 0.3rem;
+}
+
+.buyer-rewards__field-input {
+  width: 100%;
+  max-width: 22rem;
+  border: 1px solid var(--bs-border-color, #d9d9d9);
+  border-radius: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.buyer-rewards__hint {
+  margin: 0.55rem 0 0;
+  font-size: 0.875rem;
+  opacity: 0.85;
 }
 
 .buyer-rewards__policy {

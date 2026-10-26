@@ -78,9 +78,11 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
-import imgLeft from '@/assets/images/landing/services/shop.jpg'
-import imgMid from '@/assets/images/landing/hero.jpg'
-import imgRight from '@/assets/images/landing/services/groceries.jpg'
+import { landingSrc } from '@/config/landing-images'
+
+const imgLeft = landingSrc('shop')
+const imgMid = landingSrc('hero')
+const imgRight = landingSrc('groceries')
 
 const { t, locale } = useI18n()
 

@@ -41,7 +41,7 @@ export const buyForMeApi = {
     }>('/buy-for-me/pricing/')
   },
   create(payload: BuyForMeCreatePayload) {
-    return client.post<{ id?: number; request?: BuyForMeRequest }>('/buy-for-me/', payload)
+    return client.post<{ id?: number; request?: BuyForMeRequest; payment_gateway_url?: string; simulated?: boolean }>('/buy-for-me/', payload)
   },
   list() {
     return client.get<{ results?: BuyForMeRequest[] } | BuyForMeRequest[]>('/buy-for-me/')
@@ -54,5 +54,8 @@ export const buyForMeApi = {
   },
   hold(id: number | string) {
     return client.post(`/buy-for-me/${id}/hold/`)
+  },
+  uploadAttachment(id: number | string, formData: FormData) {
+    return client.post(`/buy-for-me/${id}/attachments/`, formData)
   },
 }

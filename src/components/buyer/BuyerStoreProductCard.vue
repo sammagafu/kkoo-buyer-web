@@ -9,12 +9,12 @@
         <div class="store-product-card__featured-visual">
           <button type="button" class="store-product-card__visual" @click="emit('open')">
             <div class="store-product-card__image-wrap store-product-card__image-wrap--featured">
-              <img
+              <KkooMediaImg
                 v-if="imageUrl && !imageError"
                 :src="imageUrl"
+                media-slot="card"
                 :alt="title || t('buyerXp.products.productFallback')"
-                class="store-product-card__image store-product-card__image--cover"
-                loading="lazy"
+                img-class="store-product-card__image store-product-card__image--cover"
                 @error="imageError = true"
               />
               <div v-else class="store-product-card__image store-product-card__placeholder" aria-hidden="true">
@@ -67,12 +67,12 @@
     <template v-else>
       <button type="button" class="store-product-card__visual" @click="emit('open')">
         <div class="store-product-card__image-wrap">
-          <img
+          <KkooMediaImg
             v-if="imageUrl && !imageError"
             :src="imageUrl"
+            media-slot="card"
             :alt="title || t('buyerXp.products.productFallback')"
-            class="store-product-card__image store-product-card__image--cover"
-            loading="lazy"
+            img-class="store-product-card__image store-product-card__image--cover"
             @error="imageError = true"
           />
           <div v-else class="store-product-card__image store-product-card__placeholder" aria-hidden="true">
@@ -115,6 +115,7 @@ import { computed, ref } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useI18n } from 'vue-i18n'
 import { useProductFavorite } from '@/composables/useProductFavorite'
+import KkooMediaImg from '@/components/kkoo/KkooMediaImg.vue'
 
 const { t } = useI18n()
 

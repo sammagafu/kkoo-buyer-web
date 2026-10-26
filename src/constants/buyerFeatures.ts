@@ -15,7 +15,6 @@ export const BUYER_SERVICE_TILES: BuyerFeatureTile[] = [
   { id: 'market', title: 'Buy', subtitle: 'Marketplace', icon: 'solar:shop-bold', routeName: 'buyer.marketplace', tone: 'primary' },
   { id: 'eats', title: 'Eat', subtitle: 'Restaurants', icon: 'solar:chef-hat-bold', routeName: 'buyer.eats', tone: 'orange' },
   { id: 'grocery', title: 'Groceries', subtitle: 'Stores near you', icon: 'solar:cart-large-2-bold', routeName: 'buyer.grocery', tone: 'teal' },
-  { id: 'pharmacy', title: 'Pharmacy', subtitle: 'Medicines & reminders', icon: 'solar:health-bold', routeName: 'buyer.pharmacy', tone: 'teal' },
   { id: 'ride', title: 'Move', subtitle: 'Rides & delivery', icon: 'solar:scooter-bold', routeName: 'buyer.ride', tone: 'purple' },
   { id: 'send', title: 'Send me', subtitle: 'Shop for you', icon: 'solar:bag-heart-bold', routeName: 'buyer.send', tone: 'pink' },
   { id: 'hotels', title: 'Stays', subtitle: 'Hotels & booking', icon: 'solar:bed-bold', routeName: 'buyer.booking', tone: 'purple' },
@@ -27,7 +26,7 @@ export const BUYER_SERVICE_TILES: BuyerFeatureTile[] = [
 export const BUYER_ACCOUNT_TILES: BuyerFeatureTile[] = [
   { id: 'orders', title: 'Orders', subtitle: 'Track & history', icon: 'solar:bag-check-bold', routeName: 'buyer.orders', auth: true },
   { id: 'reservations', title: 'Reservations', subtitle: 'Tables & hotels', icon: 'solar:calendar-bold', routeName: 'buyer.reservations', auth: true },
-  { id: 'wallet', title: 'Wallet', subtitle: 'Balance & top-up', icon: 'solar:wallet-bold', routeName: 'buyer.wallet', auth: true },
+  { id: 'payments', title: 'My payments', subtitle: 'Receipts on WhatsApp', icon: 'solar:bill-list-bold', routeName: 'buyer.payments', auth: true },
   { id: 'rewards', title: 'Rewards', subtitle: 'Up to 1% back · redeem on any order', icon: 'solar:gift-bold', routeName: 'buyer.rewards', auth: true },
   { id: 'gamification', title: 'XP & streaks', subtitle: 'Achievements', icon: 'solar:medal-ribbons-star-bold', routeName: 'buyer.gamification', auth: true },
   { id: 'weekly-pass', title: 'Weekly pass', subtitle: 'Challenges', icon: 'solar:ticket-bold', routeName: 'buyer.weekly-pass', auth: true },

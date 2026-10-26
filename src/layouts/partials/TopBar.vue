@@ -228,7 +228,7 @@ function setLocale(code: LocaleCode) {
 }
 
 import DropDown from "@/components/DropDown.vue";
-import { resolveAssetUrl } from '@/utils/assetUrl';
+import { sizedAssetUrl } from '@/utils/assetUrl';
 import { buyerWebPath, adminWebPath, bizWebPath } from '@/config/cross-app-links'
 
 const router = useRouter();
@@ -327,7 +327,7 @@ async function loadChatUnread() {
 
 const topbarAvatarUrl = computed(() => {
   const u = auth.user as { avatar_url?: string; avatar?: string } | null;
-  return resolveAssetUrl(u?.avatar_url ?? u?.avatar) ?? '';
+  return sizedAssetUrl(u?.avatar_url ?? u?.avatar, 'thumb') ?? '';
 });
 
 const topbarUserShortName = computed(() => {

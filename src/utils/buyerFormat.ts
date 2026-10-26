@@ -26,10 +26,25 @@ export function orderStatusPillClass(status: unknown) {
 }
 
 export function rideStatusPillClass(status: unknown) {
-  const s = String(status ?? '').toLowerCase()
+  const s = String(status ?? '').toLowerCase().replace(/-/g, '_')
   if (s === 'delivered' || s === 'completed') return 'buyer-status-pill buyer-status-pill--ok'
-  if (s === 'cancelled' || s === 'canceled' || s === 'failed') return 'buyer-status-pill'
-  if (['assigned', 'en_route', 'accepted', 'searching', 'pending', 'scheduled'].includes(s)) {
+  if (s === 'cancelled' || s === 'canceled' || s === 'failed') {
+    return 'buyer-status-pill buyer-status-pill--danger'
+  }
+  if (
+    [
+      'assigned',
+      'en_route',
+      'accepted',
+      'searching',
+      'pending',
+      'scheduled',
+      'picked_up',
+      'in_progress',
+      'arriving',
+      'driver_arrived',
+    ].includes(s)
+  ) {
     return 'buyer-status-pill buyer-status-pill--warn'
   }
   return 'buyer-status-pill'

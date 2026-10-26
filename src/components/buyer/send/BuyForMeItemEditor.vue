@@ -39,6 +39,20 @@
     </div>
 
     <template v-else>
+      <div class="send-item-editor__photos">
+        <div v-if="previews.length" class="send-item-editor__thumbs">
+          <figure v-for="(src, i) in previews" :key="src" class="send-item-editor__thumb">
+            <img :src="src" alt="" />
+            <button type="button" class="send-item-editor__thumb-remove" @click="$emit('removePhoto', i)">×</button>
+          </figure>
+        </div>
+        <label class="send-item-editor__photo-btn">
+          <Icon icon="solar:camera-bold" aria-hidden="true" />
+          {{ t('buyerXp.send.findPhotoCta') }}
+          <input type="file" accept="image/*" capture="environment" multiple hidden @change="onFiles" />
+        </label>
+        <p class="send-item-editor__photo-hint">{{ t('buyerXp.send.photoHint') }}</p>
+      </div>
       <label class="send-form__field send-form__field--full">
         <span>Product name (manual)</span>
         <input
@@ -73,10 +87,12 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onBeforeUnmount } from 'vue'
 import { Icon } from '@iconify/vue'
+import { useI18n } from 'vue-i18n'
 import type { BuyForMeItemDraft } from '@/types/buyForMe'
 
-defineProps<{
+const props = defineProps<{
   index: number
   item: BuyForMeItemDraft
   canRemove: boolean
@@ -89,7 +105,23 @@ const emit = defineEmits<{
   quantity: [value: number]
   updateName: [value: string]
   updatePrice: [value: number]
+  addPhotos: [files: File[]]
+  removePhoto: [index: number]
 }>()
+
+const { t } = useI18n()
+const previews = computed(() => (props.item.photos ?? []).map((file) => URL.createObjectURL(file)))
+
+onBeforeUnmount(() => {
+  for (const src of previews.value) URL.revokeObjectURL(src)
+})
+
+function onFiles(event: Event) {
+  const input = event.target as HTMLInputElement
+  const files = Array.from(input.files ?? [])
+  input.value = ''
+  if (files.length) emit('addPhotos', files)
+}
 
 function formatPrice(val?: number | null) {
   if (val == null) return '—'

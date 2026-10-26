@@ -40,7 +40,9 @@
             :alt="t('landingHouse.hero.imageAlt')"
             :width="heroImage.width"
             :height="heroImage.height"
+            loading="eager"
             fetchpriority="high"
+            decoding="async"
           />
         </div>
       </div>

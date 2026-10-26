@@ -14,7 +14,7 @@
             <h2 class="buyer-promo-modal__title">{{ campaign.title }}</h2>
 
             <div v-if="imageUrl" class="buyer-promo-modal__media">
-              <img :src="imageUrl" :alt="campaign.title" />
+              <KkooMediaImg :src="imageUrl" media-slot="detail" :alt="campaign.title" sizes="(max-width: 640px) 90vw, 480px" />
             </div>
 
             <p v-if="campaign.gift_label || campaign.gift_voucher_id" class="buyer-promo-modal__gift">
@@ -65,6 +65,7 @@ import type { RouteLocationRaw } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import type { BuyerCampaign } from '@/api/campaigns'
 import { campaignCtaRoute, campaignImageUrl } from '@/composables/useBuyerCampaigns'
+import KkooMediaImg from '@/components/kkoo/KkooMediaImg.vue'
 import { daysUntil, isPreorderCampaign } from '@/utils/preorderCountdown'
 
 const props = defineProps<{

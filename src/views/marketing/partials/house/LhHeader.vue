@@ -136,15 +136,20 @@ watch(megaOpen, (open) => {
   document.body.style.overflow = prevBodyOverflow
 })
 
-const onScroll = () => {
-  const header = headerRef.value
-  if (!header) return
-  header.dataset.scrolled = window.scrollY > 12 ? 'true' : 'false'
+let scrollRaf = 0
 
+const applyScrolled = () => {
+  scrollRaf = 0
+  const scrolled = window.scrollY > 12 ? 'true' : 'false'
+  const header = headerRef.value
+  if (header) header.dataset.scrolled = scrolled
   const root = document.querySelector('.lh-root') as HTMLElement | null
-  if (root) {
-    root.dataset.scrolled = window.scrollY > 12 ? 'true' : 'false'
-  }
+  if (root) root.dataset.scrolled = scrolled
+}
+
+const onScroll = () => {
+  if (scrollRaf) return
+  scrollRaf = requestAnimationFrame(applyScrolled)
 }
 
 const onKeyDown = (e: KeyboardEvent) => {
@@ -158,6 +163,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  if (scrollRaf) cancelAnimationFrame(scrollRaf)
   window.removeEventListener('scroll', onScroll)
   window.removeEventListener('keydown', onKeyDown)
   document.body.style.overflow = prevBodyOverflow

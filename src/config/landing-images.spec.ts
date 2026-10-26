@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { landingHeroImage, landingPhoneImage, serviceCardImage } from '@/config/landing-images'
+import { landingHeroImage, landingPhoneImage, landingSrc, serviceCardImage } from '@/config/landing-images'
 import { needsFullAppStyles } from '@/styles/loadAppStyles'
 
 describe('landing responsive images', () => {
@@ -19,6 +19,13 @@ describe('landing responsive images', () => {
 
   it('provides a compact phone mock', () => {
     expect(landingPhoneImage.srcset).toContain('400w')
+  })
+
+  it('maps compact srcs to sized WebP, not original JPEGs', () => {
+    expect(landingSrc('hero')).toBe('/images/landing/hero-960.webp')
+    expect(landingSrc('food')).toBe('/images/landing/services/food-820.webp')
+    expect(landingSrc('cat')).toBe('/images/landing/services/discovery-820.webp')
+    expect(landingSrc('send')).toBe('/images/landing/services/send-820.webp')
   })
 })
 

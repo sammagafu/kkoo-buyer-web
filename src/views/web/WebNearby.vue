@@ -128,7 +128,7 @@ import BuyerEmptyState from '@/components/buyer/experience/BuyerEmptyState.vue'
 
 type TabId = 'all' | 'restaurants' | 'groceries' | 'hotels'
 
-const loading = ref(false)
+const loading = ref(true)
 const error = ref('')
 const { t } = useI18n()
 const searchTerm = ref('')
@@ -216,24 +216,14 @@ function rideLinkFor(row: Record<string, unknown>) {
   })
 }
 
+let lastLat = FALLBACK.lat
+let lastLng = FALLBACK.lng
+
 async function load() {
   loading.value = true
   error.value = ''
-  let lat = FALLBACK.lat
-  let lng = FALLBACK.lng
-  usedGps.value = false
   try {
-    const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
-      navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 8000 }),
-    )
-    lat = pos.coords.latitude
-    lng = pos.coords.longitude
-    usedGps.value = true
-  } catch {
-    // fallback coords
-  }
-  try {
-    const { data } = await discoveryApi.nearby({ lat, lng, radius_km: 8 })
+    const { data } = await discoveryApi.nearby({ lat: lastLat, lng: lastLng, radius_km: 8 })
     restaurants.value = (data?.restaurants ?? []) as Record<string, unknown>[]
     groceries.value = (data?.shops ?? data?.grocery_stores ?? []) as Record<string, unknown>[]
     hotels.value = (data?.hotels ?? []) as Record<string, unknown>[]
@@ -244,5 +234,25 @@ async function load() {
   }
 }
 
-onMounted(load)
+function refreshFromGps() {
+  if (!navigator.geolocation) return
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const lat = pos.coords.latitude
+      const lng = pos.coords.longitude
+      const moved = Math.abs(lat - lastLat) > 0.0001 || Math.abs(lng - lastLng) > 0.0001
+      lastLat = lat
+      lastLng = lng
+      usedGps.value = true
+      if (moved || !restaurants.value.length) void load()
+    },
+    () => {},
+    { enableHighAccuracy: false, timeout: 8000, maximumAge: 60_000 },
+  )
+}
+
+onMounted(() => {
+  void load()
+  refreshFromGps()
+})
 </script>

@@ -1336,11 +1336,7 @@ import { kkooIcon, kkooIconFromLegacy, KKOO_ICON_CHECK } from '@/utils/kkooIcons
 import { appLinks } from '@/config/app-links'
 import { landingApi, type LandingStatItem } from '@/api/landing'
 
-// Import images
-import heroImg from '@/assets/landing/hero.jpg'
-import catImg from '@/assets/landing/cat.jpg'
-import shopImg from '@/assets/landing/services/shop.jpg'
-import foodImg from '@/assets/landing/services/food.jpg'
+import { landingSrc } from '@/config/landing-images'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -1418,8 +1414,10 @@ watch(
   },
 )
 
-const heroImage = heroImg
-const ctaImage = catImg
+const heroImage = landingSrc('hero')
+const ctaImage = landingSrc('cat')
+const shopImg = landingSrc('shop')
+const foodImg = landingSrc('food')
 // NOTE: "Radion-style showcase" section removed.
 
 const bi = kkooIcon
@@ -1643,7 +1641,7 @@ const whyPillars = computed(() =>
 type LandingStat = LandingStatItem
 
 const defaultStats = (): LandingStat[] => [
-  { key: 'wallets', value: '100K+', label: 'Active wallets', icon: 'bi bi-people-fill', featured: true },
+  { key: 'users', value: '100K+', label: 'Active buyers', icon: 'bi bi-people-fill', featured: true },
   { key: 'skus', value: '1,000+', label: 'SKUs in catalog', icon: 'bi bi-box-seam-fill', featured: true },
   { key: 'orders_paid', value: '50K+', label: 'Orders paid', icon: 'bi bi-arrow-left-right', featured: false },
   { key: 'apps', value: '2', label: 'Apps in the ecosystem', icon: 'bi bi-grid-fill', featured: false },

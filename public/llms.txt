@@ -2,7 +2,7 @@
 
 > Tanzania super-app for shopping, food, groceries, pharmacy, rides, parcels, and hotels. Escrow checkout, live tracking, and rewards for buyers, sellers, and riders.
 
-KKOO (also KkooApp) is a commerce and delivery platform for East Africa. Buyers shop on the web and mobile apps. Sellers run catalog, orders, POS, and payouts. Riders handle delivery and ride jobs.
+KKOO (also called KkooApp) is a commerce and delivery platform for East Africa. Buyers shop on the web and mobile apps. Sellers run catalog, orders, POS, and payouts. Riders handle delivery and ride jobs. Start at the [home page](https://kkooapp.co.tz/) or read the [full agent summary](https://kkooapp.co.tz/llms-full.txt).
 
 ## Shop
 
@@ -34,4 +34,4 @@ KKOO (also KkooApp) is a commerce and delivery platform for East Africa. Buyers 
 ## Optional
 
 - [Sitemap](https://kkooapp.co.tz/sitemap.xml)
-- [AI catalog](https://kkooapp.co.tz/ai-catalog.json)
+- [AI catalog](https://kkooapp.co.tz/.well-known/ai-catalog.json)

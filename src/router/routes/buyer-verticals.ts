@@ -207,8 +207,7 @@ export const buyerVerticalRoutes = [
   {
     path: '/wallet',
     name: 'buyer.wallet',
-    meta: { title: setTitle('Wallet'), ...authShell },
-    component: () => import('@/views/web/WebWallet.vue'),
+    redirect: { name: 'buyer.share-earn' },
   },
   {
     path: '/payments',

@@ -44,7 +44,7 @@ export const ridesApi = {
       notes: payload.notes ?? payload.rider_notes,
       fare: payload.fare,
     }
-    return client.post<{ id?: number; message?: string }>(
+    return client.post<{ id?: number; message?: string; payment_gateway_url?: string; simulated?: boolean }>(
       '/logistics/passenger/rides/',
       body,
     )

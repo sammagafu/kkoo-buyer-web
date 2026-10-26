@@ -33,7 +33,7 @@ export function useBuyerAppShell() {
     const name = String(route.name ?? '')
     if (name === 'buyer.search' || name === 'buyer.product' || name === 'buyer.category') return 'shop'
     if (name === 'buyer.orders' || name === 'buyer.order') return 'orders'
-    if (name === 'buyer.profile' || name === 'buyer.settings') return 'profile'
+    if (name === 'buyer.profile' || name === 'buyer.settings' || name === 'buyer.payments') return 'profile'
     if (name === 'buyer.marketplace' || name === 'buyer.dashboard' || name === 'buyer.market') return 'home'
     if (HOME_ROUTES.has(name)) return 'home'
     return 'home'

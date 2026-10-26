@@ -434,7 +434,11 @@ async function loadPaymentMethods() {
   try {
     const { data } = await paymentsApi.listMethods({ country_code: 'TZ' })
     // Only methods the backend marks enabled — never invent a local list.
-    paymentMethods.value = (data?.results ?? []).filter((m) => m.is_enabled !== false && !!m.code)
+    paymentMethods.value = (data?.results ?? []).filter((m) => {
+      if (m.is_enabled === false || !m.code) return false
+      const code = String(m.code).toLowerCase()
+      return code !== 'wallet' && code !== 'kkoo_wallet' && code !== 'deposit_balance'
+    })
     const preferred =
       paymentMethods.value.find((m) => m.code === 'selcom') ??
       paymentMethods.value.find((m) => m.provider === 'selcom' || m.kind === 'online') ??

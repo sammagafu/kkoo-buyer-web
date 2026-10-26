@@ -16,12 +16,14 @@
         :aria-hidden="index !== activeIndex"
       >
         <div class="buyer-promo-strip__media">
-          <img
+          <KkooMediaImg
             v-if="campaignImageUrl(camp)"
             :src="campaignImageUrl(camp)"
+            media-slot="detail"
             :alt="camp.title"
-            loading="lazy"
-            decoding="async"
+            sizes="100vw"
+            :lcp="index === 0"
+            :loading="index === 0 ? 'eager' : 'lazy'"
           />
           <div v-else class="buyer-promo-strip__fallback" aria-hidden="true" />
         </div>
@@ -95,6 +97,7 @@ import type { RouteLocationRaw } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import type { BuyerCampaign } from '@/api/campaigns'
 import { campaignCtaRoute, campaignImageUrl } from '@/composables/useBuyerCampaigns'
+import KkooMediaImg from '@/components/kkoo/KkooMediaImg.vue'
 import { daysUntil, isPreorderCampaign } from '@/utils/preorderCountdown'
 
 const props = defineProps<{

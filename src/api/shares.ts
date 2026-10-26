@@ -48,6 +48,22 @@ export const sharesApi = {
     return client.get<{ share_code?: string; product?: unknown }>('/shares/land/', { params: { ref } })
   },
   getEarnings() {
-    return client.get<{ units_sold?: number; commission_pending?: number; commission_paid?: number; sales?: unknown[] }>('/shares/earnings/')
+    return client.get<{
+      units_sold?: number
+      commission_pending?: number
+      commission_paid?: number
+      available_to_payout?: number
+      sales?: unknown[]
+      payouts?: unknown[]
+    }>('/shares/earnings/')
+  },
+  requestPayout(body: { phone_number: string; amount?: number }) {
+    return client.post<{
+      ok?: boolean
+      amount?: number
+      phone_number?: string
+      status?: string
+      error?: string
+    }>('/shares/payout-request/', body)
   },
 }

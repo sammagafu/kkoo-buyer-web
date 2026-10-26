@@ -59,6 +59,7 @@ const restrictedMessage = computed(() => {
 })
 
 const links = computed<Array<{ labelKey: string; subtitleKey: string; icon: string; to: RouteLocationRaw }>>(() => [
+  { labelKey: 'buyerXp.settings.payments', subtitleKey: 'buyerXp.settings.paymentsSub', icon: 'solar:bill-list-bold', to: { name: 'buyer.payments' } },
   { labelKey: 'buyerXp.settings.editProfile', subtitleKey: 'buyerXp.settings.editProfileSub', icon: 'solar:user-id-bold', to: { name: 'account.profile' } },
   { labelKey: 'buyerXp.settings.notifications', subtitleKey: 'buyerXp.settings.notificationsSub', icon: 'solar:bell-bold', to: { name: 'account.notifications' } },
   { labelKey: 'buyerXp.settings.backupCodes', subtitleKey: 'buyerXp.settings.backupCodesSub', icon: 'solar:shield-keyhole-bold', to: { name: 'account.backup-codes' } },

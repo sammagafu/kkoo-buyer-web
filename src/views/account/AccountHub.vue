@@ -154,7 +154,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { ROLES } from '@/acl'
 import VerticalLayout from '@/layouts/VerticalLayout.vue'
 import { BUYER_ACCOUNT_ROLE, useAuthStore, type AccountRole } from '@/stores/auth'
-import { resolveAssetUrl } from '@/utils/assetUrl'
+import { sizedAssetUrl } from '@/utils/assetUrl'
 import { adminWebPath, bizWebPath } from '@/config/cross-app-links'
 import { bizSellerAccountUrl, bizSellerRegisterUrl } from '@/config/landing-links'
 
@@ -192,7 +192,7 @@ const displayName = computed(() => {
 
 const hubAvatarUrl = computed(() => {
   const u = user.value as { avatar_url?: string; avatar?: string } | null
-  return resolveAssetUrl(u?.avatar_url ?? u?.avatar) ?? ''
+  return sizedAssetUrl(u?.avatar_url ?? u?.avatar, 'thumb') ?? ''
 })
 
 const contactLine = computed(() => {

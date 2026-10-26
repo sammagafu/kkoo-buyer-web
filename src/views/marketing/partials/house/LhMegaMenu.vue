@@ -10,7 +10,7 @@
     >
       <div class="lh-mega__backdrop" @click="emit('close')" />
 
-      <div class="lh-mega__panel" role="document">
+      <div class="lh-mega__panel">
         <header class="lh-mega__head">
           <div class="lh-mega__head-copy">
             <p class="lh-mega__brand">{{ houseCopy.brand }}</p>

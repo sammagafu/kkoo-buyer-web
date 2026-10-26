@@ -26,11 +26,12 @@
 
           <div v-if="preview" class="product-share-sheet__card">
             <div class="product-share-sheet__visual">
-              <img
+              <KkooMediaImg
                 v-if="preview.imageUrl"
                 :src="preview.imageUrl"
+                media-slot="card"
                 :alt="preview.title || ''"
-                class="product-share-sheet__image"
+                img-class="product-share-sheet__image"
               />
               <div v-else class="product-share-sheet__image product-share-sheet__placeholder">
                 <Icon icon="solar:gallery-minimalistic-bold-duotone" />
@@ -47,6 +48,15 @@
           <p v-else-if="error" class="buyer-xp-toast buyer-xp-toast--err">{{ error }}</p>
 
           <template v-else-if="shareLink()">
+            <div v-if="shareCode" class="product-share-sheet__code">
+              <div>
+                <p class="product-share-sheet__step">{{ t('buyerXp.shareEarn.shareCodeLabel') }}</p>
+                <p class="product-share-sheet__code-value">{{ shareCode }}</p>
+              </div>
+              <button type="button" class="product-share-sheet__action" @click="copyCode">
+                {{ copiedCode ? t('buyerXp.common.copied') : t('buyerXp.shareEarn.copyCode') }}
+              </button>
+            </div>
             <p class="product-share-sheet__link text-break">{{ shareLink() }}</p>
 
             <p class="product-share-sheet__step">{{ t('buyerXp.shareEarn.chooseApp') }}</p>
@@ -84,23 +94,37 @@
               </div>
 
               <template v-if="selectedAppId === 'whatsapp'">
-                <p class="product-share-sheet__step">{{ t('buyerXp.shareEarn.ctaPhoneLabel') }}</p>
-                <input
-                  v-model="ctaPhone"
-                  type="tel"
-                  class="product-share-sheet__phone"
-                  inputmode="tel"
-                  autocomplete="tel"
-                  :placeholder="t('buyerXp.shareEarn.ctaPhonePlaceholder')"
-                />
                 <button
                   type="button"
                   class="product-share-sheet__action product-share-sheet__cta-send"
-                  :disabled="ctaSending || !ctaPhone.trim()"
-                  @click="sendWhatsAppCta"
+                  @click="openWhatsApp"
                 >
-                  {{ ctaSending ? t('buyerXp.shareEarn.ctaSending') : t('buyerXp.shareEarn.ctaSend') }}
+                  {{ t('buyerXp.shareEarn.shareOnWhatsApp') }}
                 </button>
+                <template v-if="whatsappReady">
+                  <button type="button" class="product-share-sheet__optional" @click="showPhone = !showPhone">
+                    {{ t('buyerXp.shareEarn.ctaPhoneOptional') }}
+                  </button>
+                  <template v-if="showPhone">
+                    <p class="product-share-sheet__step">{{ t('buyerXp.shareEarn.ctaPhoneLabel') }}</p>
+                    <input
+                      v-model="ctaPhone"
+                      type="tel"
+                      class="product-share-sheet__phone"
+                      inputmode="tel"
+                      autocomplete="tel"
+                      :placeholder="t('buyerXp.shareEarn.ctaPhonePlaceholder')"
+                    />
+                    <button
+                      type="button"
+                      class="product-share-sheet__action product-share-sheet__cta-send"
+                      :disabled="ctaSending || !ctaPhone.trim()"
+                      @click="sendWhatsAppCta"
+                    >
+                      {{ ctaSending ? t('buyerXp.shareEarn.ctaSending') : t('buyerXp.shareEarn.ctaSend') }}
+                    </button>
+                  </template>
+                </template>
               </template>
             </template>
 
@@ -128,6 +152,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
+import KkooMediaImg from '@/components/kkoo/KkooMediaImg.vue'
 import { useI18n } from 'vue-i18n'
 import { sharesApi } from '@/api/shares'
 import { useProductShareEarn } from '@/composables/useProductShareEarn'
@@ -155,12 +180,35 @@ const {
 
 const copiedLink = ref(false)
 const copiedMessage = ref(false)
+const copiedCode = ref(false)
 const selectedAppId = ref<ShareAppId | null>(null)
 const actionHint = ref('')
 const ctaPhone = ref('')
 const ctaSending = ref(false)
+const showPhone = ref(false)
 
 const selectedApp = computed(() => SHARE_APPS.find((a) => a.id === selectedAppId.value) ?? null)
+const shareCode = computed(() => String(result.value?.code ?? '').trim())
+const whatsappReady = computed(() => result.value?.whatsapp_ready === true)
+
+function messageWithCode() {
+  const msg = shareMessage()
+  const code = shareCode.value
+  if (!code || msg.includes(code)) return msg
+  return `${msg}\nCode: ${code}`
+}
+
+function openWhatsApp() {
+  const msg = messageWithCode()
+  if (!msg) return
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer')
+}
+
+function copyCode() {
+  copyText(shareCode.value, copiedCode).then((ok) => {
+    if (ok) actionHint.value = t('buyerXp.shareEarn.codeCopied')
+  })
+}
 
 async function copyText(value: string, flag?: typeof copiedLink) {
   if (!value) return false
@@ -242,10 +290,12 @@ function onKeydown(e: KeyboardEvent) {
 watch(open, () => {
   copiedLink.value = false
   copiedMessage.value = false
+  copiedCode.value = false
   selectedAppId.value = open.value ? 'whatsapp' : null
   actionHint.value = ''
   ctaPhone.value = ''
   ctaSending.value = false
+  showPhone.value = false
 })
 
 onMounted(() => document.addEventListener('keydown', onKeydown))
@@ -325,6 +375,38 @@ onUnmounted(() => document.removeEventListener('keydown', onKeydown))
   font-size: 1rem;
   font-weight: 600;
   color: var(--buyer-accent, #0d9488);
+}
+
+.product-share-sheet__code {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.85rem;
+  background: rgba(13, 148, 136, 0.08);
+}
+
+.product-share-sheet__code-value {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  word-break: break-all;
+}
+
+.product-share-sheet__optional {
+  display: block;
+  margin: -0.35rem 0 0.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--buyer-accent, #0d9488);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
 }
 
 .product-share-sheet__link {

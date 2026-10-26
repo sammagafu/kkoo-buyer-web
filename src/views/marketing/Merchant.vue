@@ -5,7 +5,9 @@
       :title="t('merchant.heroTitle')"
       :title-accent="t('merchant.heroTitleAccent')"
       :lead="t('merchant.heroDesc')"
-      :image="shopImage"
+      :image="shopImage.src"
+      :srcset="shopImage.srcset"
+      :sizes="shopImage.sizes"
       :image-alt="t('merchant.visual.primaryImageAlt')"
       :badge-label="t('merchant.visual.primaryBadgeLabel')"
       :badge-title="t('merchant.visual.primaryBadgeTitle')"
@@ -79,9 +81,10 @@ import MkProcessGrid from './components/toolkit/MkProcessGrid.vue'
 import MkCtaPanel from './components/toolkit/MkCtaPanel.vue'
 import LhButton from './partials/house/LhButton.vue'
 import { bizSellerRegisterUrl, bizSignInUrl } from '@/config/landing-links'
-import shopImage from '@/assets/images/landing/services/shop.jpg'
+import { serviceCardImage } from '@/config/landing-images'
 
 const { t } = useI18n()
+const shopImage = serviceCardImage('shop')
 
 const benefits = computed(() =>
   [1, 2, 3, 4].map((n) => ({

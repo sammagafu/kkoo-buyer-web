@@ -1,10 +1,7 @@
 import type { RouteLocationRaw } from 'vue-router'
 import { bizSellerRegisterUrl, buyerRoutes } from '@/config/landing-links'
 import type { SuperAppPillarId } from '@/config/landing-superapp'
-import heroImage from '@/assets/landing/hero.jpg'
-import shopImage from '@/assets/landing/services/shop.jpg'
-import rideImage from '@/assets/landing/services/ride.jpg'
-import sendImage from '@/assets/landing/services/Untitled-2.jpg'
+import { landingSrc } from '@/config/landing-images'
 
 /** KKOO brand palette — purple, gold, ink only */
 const KKOO_BRAND = {
@@ -55,7 +52,7 @@ export const premiumHeroSlides: HeroShowcaseSlide[] = [
     key: 'home',
     layout: 'download',
     pillar: 'buy',
-    image: heroImage,
+    image: landingSrc('hero'),
     tint: brandTint('buy'),
     wordLeftKey: 'landing.premium.downloadHeroTitle',
     wordRightKey: 'landing.premium.downloadHeroAccent',
@@ -70,7 +67,7 @@ export const premiumHeroSlides: HeroShowcaseSlide[] = [
   {
     key: 'send',
     pillar: 'go',
-    image: sendImage,
+    image: landingSrc('send'),
     tint: brandTint('go'),
     wordLeftKey: 'landing.heroShowcase.send.wordLeft',
     wordRightKey: 'landing.heroShowcase.send.wordRight',
@@ -85,7 +82,7 @@ export const premiumHeroSlides: HeroShowcaseSlide[] = [
   {
     key: 'sell',
     pillar: 'sell',
-    image: shopImage,
+    image: landingSrc('shop'),
     tint: brandTint('sell'),
     wordLeftKey: 'landing.heroShowcase.sell.wordLeft',
     wordRightKey: 'landing.heroShowcase.sell.wordRight',
@@ -100,7 +97,7 @@ export const premiumHeroSlides: HeroShowcaseSlide[] = [
   {
     key: 'deliver',
     pillar: 'sell',
-    image: rideImage,
+    image: landingSrc('ride'),
     tint: brandTint('sell'),
     wordLeftKey: 'landing.heroShowcase.deliver.wordLeft',
     wordRightKey: 'landing.heroShowcase.deliver.wordRight',
@@ -115,7 +112,7 @@ export const premiumHeroSlides: HeroShowcaseSlide[] = [
   {
     key: 'business',
     pillar: 'sell',
-    image: heroImage,
+    image: landingSrc('hero'),
     tint: brandTint('sell'),
     wordLeftKey: 'landing.heroShowcase.business.wordLeft',
     wordRightKey: 'landing.heroShowcase.business.wordRight',

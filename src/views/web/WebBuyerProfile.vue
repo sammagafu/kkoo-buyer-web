@@ -105,7 +105,7 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { BUYER_ACCOUNT_ROLE, useAuthStore } from '@/stores/auth'
-import { resolveAssetUrl } from '@/utils/assetUrl'
+import { sizedAssetUrl } from '@/utils/assetUrl'
 import { useBuyerFeatureTiles } from '@/composables/useBuyerFeatureTiles'
 import { useAccountWorkspaces } from '@/composables/useAccountWorkspaces'
 import BuyerSectionHeader from '@/components/buyer/experience/BuyerSectionHeader.vue'
@@ -138,7 +138,7 @@ const contactLine = computed(() => {
 
 const avatarUrl = computed(() => {
   const u = user.value as { avatar_url?: string; avatar?: string } | null
-  return resolveAssetUrl(u?.avatar_url ?? u?.avatar) ?? ''
+  return sizedAssetUrl(u?.avatar_url ?? u?.avatar, 'thumb') ?? ''
 })
 
 const initials = computed(() => {

@@ -5,7 +5,9 @@
       :title="t('business.heroTitle')"
       :title-accent="t('business.heroTitleAccent')"
       :lead="t('business.heroDesc')"
-      :image="shopImage"
+      :image="shopImage.src"
+      :srcset="shopImage.srcset"
+      :sizes="shopImage.sizes"
       :image-alt="t('businessPage.hero.imageAlt')"
       :badge-label="t('businessPage.hero.overlayKicker')"
       :badge-title="t('businessPage.hero.overlayTitle')"
@@ -93,9 +95,10 @@ import MkProcessGrid from './components/toolkit/MkProcessGrid.vue'
 import MkCtaPanel from './components/toolkit/MkCtaPanel.vue'
 import LhButton from './partials/house/LhButton.vue'
 import { bizSellerDashboardUrl, bizSignInUrl, buyerRoutes } from '@/config/landing-links'
-import shopImage from '@/assets/images/landing/services/shop.jpg'
+import { serviceCardImage } from '@/config/landing-images'
 
 const { t } = useI18n()
+const shopImage = serviceCardImage('shop')
 
 const capabilities = computed(() => [
   {
